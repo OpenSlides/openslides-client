@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
 import { Restriction } from '@app/domain/models/motions/motion-state';
@@ -37,9 +37,7 @@ interface WorkflowConfiguration {
 /**
  * Filter the motion list
  */
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
     /**
      * set the storage key name
@@ -201,7 +199,8 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
     private operator = inject(OperatorService);
     private meetingSettingsService = inject(MeetingSettingsService);
 
-    public constructor(store: ActiveFiltersService) {
+    public constructor() {
+        const store = inject(ActiveFiltersService);
         super(store);
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();

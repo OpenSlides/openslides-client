@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { MotionFormattingRepresentation } from '@app/domain/models/motions/motion';
 import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/motions.constants';
@@ -70,17 +70,13 @@ interface MotionFormatDiffServices {
     lineNumberingService: LineNumberingService;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionFormatService {
-    public constructor(
-        private diffFactory: DiffServiceFactory,
-        private amendmentController: AmendmentControllerService,
-        private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private settings: MeetingSettingsService,
-        private translate: TranslateService
-    ) {}
+    private diffFactory = inject(DiffServiceFactory);
+    private amendmentController = inject(AmendmentControllerService);
+    private changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    private settings = inject(MeetingSettingsService);
+    private translate = inject(TranslateService);
 
     /**
      * Format the motion text using the line numbering and change

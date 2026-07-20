@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injector, Service } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Id } from '@app/domain/definitions/key-types';
 import { ActionWorker } from '@app/domain/models/action-worker/action-worker';
@@ -12,9 +12,7 @@ import { StoppedWaitingForActionDialogComponent } from '../components/stopped-wa
 import { WaitForActionBannerComponent } from '../components/wait-for-action-banner/wait-for-action-banner.component';
 import { WaitForActionData, WaitForActionReason } from '../definitions';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class WaitForActionDialogService {
     public get currentReasonObservable(): Observable<WaitForActionReason> {
         return this._currentReasonObservable;
@@ -64,12 +62,10 @@ export class WaitForActionDialogService {
 
     private _snapshots = new BehaviorSubject<(Partial<ActionWorker> & { closed: number })[]>([]);
 
-    public constructor(
-        private injector: Injector,
-        private dialog: MatDialog,
-        private repo: ActionWorkerRepositoryService,
-        private bannerService: BannerService
-    ) {}
+    private injector = inject(Injector);
+    private dialog = inject(MatDialog);
+    private repo = inject(ActionWorkerRepositoryService);
+    private bannerService = inject(BannerService);
 
     public addNewDialog(reason: WaitForActionReason, data: WaitForActionData): void {
         this.removeAllDates(data.workerId);

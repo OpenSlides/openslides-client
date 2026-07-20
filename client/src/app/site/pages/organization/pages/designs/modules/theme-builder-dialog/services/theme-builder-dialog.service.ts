@@ -1,11 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ThemeBuilderDialogService extends BaseDialogService {
     public async open(data: any): Promise<MatDialogRef<any, any>> {
         const module = await import(`../theme-builder-dialog.module`);

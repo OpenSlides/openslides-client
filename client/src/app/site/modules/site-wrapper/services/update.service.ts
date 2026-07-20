@@ -1,11 +1,9 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { SwUpdate, VersionReadyEvent } from '@angular/service-worker';
 import { StorageService } from '@app/gateways/storage.service';
 import { filter, Observable, Subject } from 'rxjs';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class UpdateService {
     /**
      * @returns the updateSubscription
@@ -20,6 +18,8 @@ export class UpdateService {
     }
 
     private _nextVersionAvailableSubject = new Subject<void>();
+    private swUpdate = inject(SwUpdate);
+    private store = inject(StorageService);
 
     /**
      * Constructor.
@@ -27,11 +27,8 @@ export class UpdateService {
      *
      * @param swUpdate Service Worker update service
      */
-    public constructor(
-        private swUpdate: SwUpdate,
-        private store: StorageService
-    ) {
-        swUpdate.versionUpdates
+    public constructor() {
+        this.swUpdate.versionUpdates
             .pipe(filter(event => event.type === `VERSION_READY`))
             .subscribe((version: VersionReadyEvent) => this.checkVersion(version));
     }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Ids } from '@app/domain/definitions/key-types';
 import { PERSONAL_NOTE_ID } from '@app/domain/models/motions/motions.constants';
 import { CellFillingDefinition, XlsxExportService } from '@app/gateways/export/xlsx-export.service';
@@ -22,9 +22,7 @@ interface MotionXlsxExportConfig {
 /**
  * Service to export motion elements to XLSX
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionXlsxExportService {
     /**
      * Determine the default font size
@@ -64,12 +62,10 @@ export class MotionXlsxExportService {
         }
     };
 
-    public constructor(
-        private xlsx: XlsxExportService,
-        private translate: TranslateService,
-        private motionService: MotionControllerService,
-        private commentRepo: MotionCommentSectionControllerService
-    ) {}
+    private xlsx = inject(XlsxExportService);
+    private translate = inject(TranslateService);
+    private motionService = inject(MotionControllerService);
+    private commentRepo = inject(MotionCommentSectionControllerService);
 
     /**
      * Export motions as XLSX

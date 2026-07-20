@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Data, Router, UrlSegment, UrlTree } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
 import { firstValueFrom } from 'rxjs';
@@ -7,16 +7,12 @@ import { FallbackRoutesService } from './fallback-routes.service';
 import { OpenSlidesRouterService } from './openslides-router.service';
 import { OperatorService } from './operator.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class RerouteService {
-    public constructor(
-        private router: Router,
-        private fallbackRoutesService: FallbackRoutesService,
-        private operator: OperatorService,
-        private osRouter: OpenSlidesRouterService
-    ) {}
+    private router = inject(Router);
+    private fallbackRoutesService = inject(FallbackRoutesService);
+    private operator = inject(OperatorService);
+    private osRouter = inject(OpenSlidesRouterService);
 
     /**
      * Handles a forbidden route. If the route is "/" (start page), It is tried to

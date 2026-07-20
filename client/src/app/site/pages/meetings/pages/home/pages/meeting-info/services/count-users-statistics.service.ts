@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { HttpService } from '@app/gateways/http.service';
 import { UserRepositoryService } from '@app/gateways/repositories/users';
 import { AUTOUPDATE_DEFAULT_ENDPOINT } from '@app/site/services/autoupdate';
@@ -22,9 +22,7 @@ export interface CountUserStatistics {
 
 const CONNECTION_COUNT_PATH = `/system/${AUTOUPDATE_DEFAULT_ENDPOINT}/connection_count`;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class CountUsersStatisticsService {
     public get lastUpdated(): number {
         return this._lastUpdated;
@@ -32,10 +30,8 @@ export class CountUsersStatisticsService {
 
     private _lastUpdated: number;
 
-    public constructor(
-        private http: HttpService,
-        private userRepo: UserRepositoryService
-    ) {}
+    private http = inject(HttpService);
+    private userRepo = inject(UserRepositoryService);
 
     /**
      * Starts counting users.

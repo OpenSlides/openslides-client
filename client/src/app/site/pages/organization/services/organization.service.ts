@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ModelRequestService } from '@app/site/services/model-request.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -13,9 +13,7 @@ import { ViewOrganization } from '../view-models/view-organization';
  */
 export const ORGANIZATION_ID = 1;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class OrganizationService {
     public get organizationObservable(): Observable<ViewOrganization | null> {
         return this.organizationSubject;
@@ -35,11 +33,11 @@ export class OrganizationService {
 
     private _hasInitiated = false;
 
-    public constructor(
-        private repo: OrganizationRepositoryService,
-        private modelRequestService: ModelRequestService,
-        lifecycle: LifecycleService
-    ) {
+    private repo = inject(OrganizationRepositoryService);
+    private modelRequestService = inject(ModelRequestService);
+
+    public constructor() {
+        const lifecycle = inject(LifecycleService);
         lifecycle.openslidesBooted.subscribe(async () => await this.setupModelSubscription());
         lifecycle.openslidesShutdowned.subscribe(() => this.destroy());
     }

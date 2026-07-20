@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { _ } from '@ngx-translate/core';
 
@@ -10,11 +10,10 @@ import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { StructureLevelAction } from './structure-level.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class StructureLevelRepositoryService extends BaseMeetingRelatedRepository<ViewStructureLevel, StructureLevel> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, StructureLevel);
     }
 

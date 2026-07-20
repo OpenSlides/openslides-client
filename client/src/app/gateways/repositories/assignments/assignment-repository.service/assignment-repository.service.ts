@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { AgendaItemRepositoryService } from '@app/gateways/repositories/agenda';
@@ -12,17 +12,14 @@ import { CreateResponse } from '../../base-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentAction } from './assignment.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewAssignment,
     Assignment
 > {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
+        const agendaItemRepo = inject(AgendaItemRepositoryService);
         super(repositoryServiceCollector, Assignment, agendaItemRepo);
     }
 

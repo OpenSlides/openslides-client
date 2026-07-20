@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
 import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, Subject } from 'rxjs';
@@ -16,9 +16,7 @@ export interface MeetingIdChangedEvent extends MeetingIdDifferEvent {
     hasChanged: boolean;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ActiveMeetingIdService {
     public get meetingIdChanged(): Observable<MeetingIdChangedEvent> {
         return this._meetingIdChangedSubject.pipe(
@@ -44,10 +42,10 @@ export class ActiveMeetingIdService {
     // undefined to specify it is not initialized
     private readonly _meetingIdSubject = new BehaviorSubject<Id | null>(undefined);
 
-    public constructor(
-        router: Router,
-        private DS: MeetingDataStoreService
-    ) {
+    private DS = inject(MeetingDataStoreService);
+
+    public constructor() {
+        const router = inject(Router);
         router.events
             .pipe(
                 filter((event): boolean => event instanceof RoutesRecognized),

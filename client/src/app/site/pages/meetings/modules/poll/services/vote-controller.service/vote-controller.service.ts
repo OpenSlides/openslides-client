@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Vote } from '@app/domain/models/poll/vote';
 import { VoteRepositoryService } from '@app/gateways/repositories/polls/vote-repository.service';
@@ -9,15 +9,14 @@ import { Observable } from 'rxjs';
 
 import { ViewPoll, ViewVote } from '../../../../pages/polls';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class VoteControllerService extends BaseMeetingControllerService<ViewVote, Vote> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: VoteRepositoryService,
-        private operator: OperatorService
-    ) {
+    protected override repo: VoteRepositoryService;
+    private operator = inject(OperatorService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(VoteRepositoryService);
         super(controllerServiceCollector, Vote, repo);
     }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Id, Ids } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
@@ -34,33 +34,28 @@ import { MotionWorkflowControllerService } from '../../../modules/workflows/serv
 import { MotionControllerService } from '../../../services/common/motion-controller.service';
 import { ViewMotion } from '../../../view-models';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class MotionMultiselectService {
+    private repo = inject(MotionControllerService);
+    private translate = inject(TranslateService);
+    private promptService = inject(PromptService);
+    private choiceService = inject(ChoiceService);
+    private userRepo = inject(ParticipantControllerService);
+    private workflowRepo = inject(MotionWorkflowControllerService);
+    private categoryRepo = inject(MotionCategoryControllerService);
+    private submitterRepo = inject(MotionSubmitterControllerService);
+    private tagRepo = inject(TagControllerService);
+    private personalNoteRepo = inject(PersonalNoteControllerService);
+    private agendaRepo = inject(AgendaItemControllerService);
+    private motionBlockRepo = inject(MotionBlockControllerService);
+    private treeService = inject(TreeService);
+    private spinnerService = inject(SpinnerService);
+    private listOfSpeakersRepo = inject(ListOfSpeakersControllerService);
+    private snackbar = inject(MatSnackBar);
+    private modelRequestService = inject(ModelRequestService);
+    private actionService = inject(ActionService);
+
     private messageForSpinner = this.translate.instant(`Motions are in process. Please wait ...`);
-
-    public constructor(
-        private repo: MotionControllerService,
-        private translate: TranslateService,
-        private promptService: PromptService,
-        private choiceService: ChoiceService,
-        private userRepo: ParticipantControllerService,
-        private workflowRepo: MotionWorkflowControllerService,
-        private categoryRepo: MotionCategoryControllerService,
-        private submitterRepo: MotionSubmitterControllerService,
-        private tagRepo: TagControllerService,
-        private personalNoteRepo: PersonalNoteControllerService,
-        private agendaRepo: AgendaItemControllerService,
-        private motionBlockRepo: MotionBlockControllerService,
-        private treeService: TreeService,
-        private spinnerService: SpinnerService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService,
-        private snackbar: MatSnackBar,
-        private modelRequestService: ModelRequestService,
-        private actionService: ActionService
-    ) {}
-
     /**
      * Deletes the given motions. Asks for confirmation.
      *

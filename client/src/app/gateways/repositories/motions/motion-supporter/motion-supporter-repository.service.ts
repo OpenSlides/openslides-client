@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionSupporter } from '@app/domain/models/motions/motion-supporter';
 import { Action } from '@app/gateways/actions';
@@ -8,9 +8,7 @@ import { BaseMeetingRelatedRepository } from '../../base-meeting-related-reposit
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionSupporterAction } from './motion-supporter.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionSupporterRepositoryService extends BaseMeetingRelatedRepository<
     ViewMotionSupporter,
     MotionSupporter
@@ -18,7 +16,8 @@ export class MotionSupporterRepositoryService extends BaseMeetingRelatedReposito
     public getVerboseName = (plural = false): string =>
         this.translate.instant(plural ? `Motion supporters` : `Motion supporter`);
 
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, MotionSupporter);
     }
 

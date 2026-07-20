@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Projector } from '@app/domain/models/projector/projector';
@@ -14,11 +14,10 @@ import { ProjectorAction, ScrollScaleDirection } from './projector.action';
 /**
  * Manages all projector instances.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<ViewProjector, Projector> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, Projector);
     }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Fqid, Id } from '@app/domain/definitions/key-types';
 import { Meeting } from '@app/domain/models/meetings/meeting';
 import { Motion } from '@app/domain/models/motions';
@@ -15,15 +15,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingService } from '../../pages/meetings/services/active-meeting.service';
 import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchResponseEntry } from './definitions';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GlobalSearchService {
-    public constructor(
-        private translate: TranslateService,
-        private http: HttpService,
-        private activeMeeting: ActiveMeetingService
-    ) {}
+    private translate = inject(TranslateService);
+    private http = inject(HttpService);
+    private activeMeeting = inject(ActiveMeetingService);
 
     public async searchChange(
         searchTerm: string,

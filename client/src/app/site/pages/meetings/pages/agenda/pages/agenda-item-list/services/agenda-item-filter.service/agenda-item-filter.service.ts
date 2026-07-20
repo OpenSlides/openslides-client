@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ItemTypeChoices } from '@app/domain/models/agenda/agenda-item';
 import { Assignment } from '@app/domain/models/assignments/assignment';
 import { Motion } from '@app/domain/models/motions/motion';
@@ -8,13 +8,10 @@ import { BaseFilterListService, OsFilter, OsFilterOption } from '@app/site/base/
 import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda/view-models';
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
 
 import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaItem> {
     /**
      * set the storage key name
@@ -29,15 +26,10 @@ export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaIte
 
     /**
      * Constructor. Also creates the dynamic filter options
-     *
-     * @param store
-     * @param translate Translation service
      */
-    public constructor(
-        store: ActiveFiltersService,
-        private translate: TranslateService,
-        tagRepo: TagControllerService
-    ) {
+    public constructor() {
+        const store = inject(ActiveFiltersService);
+        const tagRepo = inject(TagControllerService);
         super(store);
 
         this.updateFilterForRepo({

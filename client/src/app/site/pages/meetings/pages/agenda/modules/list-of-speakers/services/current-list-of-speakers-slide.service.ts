@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { PROJECTIONDEFAULT } from '@app/domain/models/projector/projection-default';
 import { MeetingProjectionType } from '@app/gateways/repositories/meeting-repository.service';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
@@ -7,14 +7,10 @@ import { ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models'
 import { ViewProjector } from '../../../../projectors';
 import { ProjectorControllerService } from '../../../../projectors/services/projector-controller.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class CurrentListOfSpeakersSlideService {
-    public constructor(
-        private projectorService: ProjectorControllerService,
-        private activeMeetingIdService: ActiveMeetingIdService
-    ) {}
+    private projectorService = inject(ProjectorControllerService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
 
     /**
      * @returns the slide build descriptor for the overlay or slide

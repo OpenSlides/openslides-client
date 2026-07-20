@@ -1,11 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Displayable, Identifiable } from '@app/domain/interfaces';
 import { FlatNode, OSTreeNode, TreeIdNode, TreeNodeWithoutItem } from '@app/infrastructure/definitions/tree';
 import { findIndexInSortedArray } from '@app/infrastructure/utils';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class TreeService {
     /**
      * Returns the weight casted to a number from a given model.

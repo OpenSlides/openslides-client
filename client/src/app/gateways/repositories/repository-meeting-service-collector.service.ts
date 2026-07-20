@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -12,9 +12,7 @@ import { ViewModelStoreService } from '../../site/services/view-model-store.serv
 import { ActionService } from '../actions';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class RepositoryMeetingServiceCollectorService {
     public get DS(): DataStoreService {
         return this.repositoryServiceCollector.DS;
@@ -44,12 +42,10 @@ export class RepositoryMeetingServiceCollectorService {
         return this.repositoryServiceCollector.collectionToKeyUpdatesObservableMap;
     }
 
-    public constructor(
-        private repositoryServiceCollector: RepositoryServiceCollectorService,
-        public activeMeetingIdService: ActiveMeetingIdService,
-        public activeMeetingService: ActiveMeetingService,
-        public meetingSettingsService: MeetingSettingsService
-    ) {}
+    private repositoryServiceCollector = inject(RepositoryServiceCollectorService);
+    public activeMeetingIdService = inject(ActiveMeetingIdService);
+    public activeMeetingService = inject(ActiveMeetingService);
+    public meetingSettingsService = inject(MeetingSettingsService);
 
     /**
      * Allows repositories to register if there have been updates on a certain key of their model,

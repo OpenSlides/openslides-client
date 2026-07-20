@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { inject, Injectable, Injector } from '@angular/core';
+import { inject, Injector, Service } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
@@ -27,9 +27,7 @@ export interface RequestSettings {
     catchError?: boolean;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class HttpService {
     private _actionWorkerWatch: ActionWorkerWatchService;
     private get actionWorkerWatch(): ActionWorkerWatchService {

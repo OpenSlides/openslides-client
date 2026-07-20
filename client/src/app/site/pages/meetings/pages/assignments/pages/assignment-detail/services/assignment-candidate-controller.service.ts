@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { AssignmentCandidate } from '@app/domain/models/assignments/assignment-candidate';
@@ -8,15 +8,16 @@ import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base
 import { ViewAssignmentCandidate } from '@app/site/pages/meetings/pages/assignments';
 import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class AssignmentCandidateControllerService extends BaseMeetingControllerService<
     ViewAssignmentCandidate,
     AssignmentCandidate
 > {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: AssignmentCandidateRepositoryService
-    ) {
+    protected override repo: AssignmentCandidateRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(AssignmentCandidateRepositoryService);
         super(controllerServiceCollector, AssignmentCandidate, repo);
     }
 

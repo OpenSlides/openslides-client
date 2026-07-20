@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { inject, OnDestroy, Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ids } from '@app/domain/definitions/key-types';
@@ -30,9 +30,7 @@ export interface AgendaForwardDialogPayload {
     showSkippedItemWarning: boolean;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AgendaForwardDialogService
     extends BaseDialogService<AgendaForwardDialogComponent, AgendaForwardDialogPayload, AgendaForwardDialogReturnData>
     implements OnDestroy
@@ -53,15 +51,15 @@ export class AgendaForwardDialogService
     private _committeeMeetingSubscription: Subscription;
     private _activeMeetingSubscription: Subscription;
 
-    public constructor(
-        private translate: TranslateService,
-        private repo: AgendaItemControllerService,
-        private snackbar: MatSnackBar,
-        private activeMeeting: ActiveMeetingService,
-        private autoupdate: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService,
-        private operator: OperatorService
-    ) {
+    private translate = inject(TranslateService);
+    private repo = inject(AgendaItemControllerService);
+    private snackbar = inject(MatSnackBar);
+    private activeMeeting = inject(ActiveMeetingService);
+    private autoupdate = inject(AutoupdateService);
+    private modelRequestBuilder = inject(ModelRequestBuilderService);
+    private operator = inject(OperatorService);
+
+    public constructor() {
         super();
 
         this.updateCommitteeMeetingSubscription();

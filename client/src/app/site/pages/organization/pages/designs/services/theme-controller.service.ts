@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Theme } from '@app/domain/models/theme/theme';
@@ -9,15 +9,14 @@ import { ControllerServiceCollectorService } from '@app/site/services/controller
 
 import { ViewTheme } from '../view-models';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ThemeControllerService extends BaseController<ViewTheme, Theme> {
-    public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: ThemeRepositoryService,
-        private orgaRepo: OrganizationControllerService
-    ) {
+    protected override repo: ThemeRepositoryService;
+    private orgaRepo = inject(OrganizationControllerService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(ControllerServiceCollectorService);
+        const repo = inject(ThemeRepositoryService);
         super(controllerServiceCollector, Theme, repo);
     }
 

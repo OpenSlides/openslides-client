@@ -1,5 +1,5 @@
 import { ComponentType } from '@angular/cdk/portal';
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PollContentObject } from '@app/domain/models/poll';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
@@ -8,12 +8,10 @@ import { PollControllerService } from '@app/site/pages/meetings/modules/poll/ser
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { firstValueFrom } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export abstract class BasePollDialogService<V extends PollContentObject, C = any> {
-    public constructor(
-        private controller: PollControllerService,
-        private dialogService: MatDialog
-    ) {}
+    private controller = inject(PollControllerService);
+    private dialogService = inject(MatDialog);
 
     public async open(data: Partial<PollDialogData> | ViewPoll<V>): Promise<void> {
         const dialogRef = this.dialogService.open<C, Partial<PollDialogData> | ViewPoll<V>, PollDialogResult>(

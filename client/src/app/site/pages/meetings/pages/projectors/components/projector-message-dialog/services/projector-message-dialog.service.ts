@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';
@@ -6,9 +6,7 @@ import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 import { ProjectorMessageDialogComponent } from '../components/projector-message-dialog/projector-message-dialog.component';
 import { MessageDialogData } from '../definitions';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ProjectorMessageDialogService extends BaseDialogService<
     ProjectorMessageDialogComponent,
     Partial<MessageDialogData>,

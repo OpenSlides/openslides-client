@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { DefaultErrorMap, ErrorMap, isMapError, UrlFragmentToHttpErrorMap } from './error-map-utils';
@@ -13,11 +13,9 @@ interface GetHttpErrorMapOptions {
     data?: any;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ErrorMapService {
-    public constructor(private translate: TranslateService) {}
+    private translate = inject(TranslateService);
 
     /**
      * Takes an error message and tries to match it to a cleaner version in the corresponding ErrorMap.

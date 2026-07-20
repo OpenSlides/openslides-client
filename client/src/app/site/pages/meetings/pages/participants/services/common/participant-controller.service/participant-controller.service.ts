@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { MeetingUser } from '@app/domain/models/meeting-users/meeting-user';
@@ -52,9 +52,7 @@ export const MEETING_RELATED_FORM_CONTROLS = [
     `locked_out`
 ];
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ParticipantControllerService extends BaseMeetingControllerService<ViewUser, User> {
     private _participantListSubject = new BehaviorSubject<ViewUser[]>([]);
 
@@ -62,18 +60,19 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     private _participantIdMapSubject = new BehaviorSubject<Record<number, ViewUser>>({});
 
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: UserRepositoryService,
-        private meetingUserRepo: MeetingUserRepositoryService,
-        public meetingController: MeetingControllerService,
-        private userController: UserControllerService,
-        private userDeleteDialog: UserDeleteDialogService,
-        private userScopePresenter: GetUserScopePresenterService,
-        private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService,
-        private userService: UserService,
-        private actions: ActionService
-    ) {
+    protected override repo: UserRepositoryService;
+    private meetingUserRepo = inject(MeetingUserRepositoryService);
+    public meetingController = inject(MeetingControllerService);
+    private userController = inject(UserControllerService);
+    private userDeleteDialog = inject(UserDeleteDialogService);
+    private userScopePresenter = inject(GetUserScopePresenterService);
+    private userRelatedModelsPresenter = inject(GetUserRelatedModelsPresenterService);
+    private userService = inject(UserService);
+    private actions = inject(ActionService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(UserRepositoryService);
         super(controllerServiceCollector, User, repo);
 
         let meetingUserIds = [];
