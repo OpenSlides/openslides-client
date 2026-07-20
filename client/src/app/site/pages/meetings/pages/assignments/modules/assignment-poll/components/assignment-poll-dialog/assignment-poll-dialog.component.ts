@@ -145,7 +145,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
             options.push([{ key: `approval`, title: null }]);
         } else {
             for (const option of assignment.candidates) {
-                options.push({ key: `meeting_user-${option.id}`, title: option.getTitle() });
+                options.push({ key: `meeting_user-${option.meeting_user_id}`, title: option.getTitle() });
             }
         }
 
