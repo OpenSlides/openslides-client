@@ -329,7 +329,6 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
      * Information to display the correct icons on footer when importing participants
      */
     protected getSummaryInformation(item: string): string[] {
-        console.log(item);
         return (
             {
                 total: ['group', 'accent'],

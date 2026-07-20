@@ -64,7 +64,7 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
         this.email = this.setValue(this.data?.['email']) as string;
         this.member_number = this.setValue(this.data?.['member_number']) as string;
         this.structure_levels = this.data?.['structure_level'] as string[];
-        this.groups = this.data?.['groups']?.[0];
+        this.groups = this.data?.['groups'] as string[];
         this.number = this.setValue(this.data?.['number']) as string;
         this.vote_weight = this.setValue(this.data?.['vote_weight']) as string;
         this.gender = this.setValue(this.data?.['gender']) as string;
@@ -179,7 +179,7 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
     }
 
     public get hasGroups(): boolean {
-        return this.groups?.length > 0 ? true : false;
+        return this.getGroups.length > 0 ? true : false;
     }
 
     public set setState(value: BackendImportState) {

@@ -21,6 +21,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
+import { Group } from '@app/domain/models/users/group';
 import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
@@ -46,6 +47,7 @@ import { END_POSITION, START_POSITION } from '@app/ui/modules/scrolling-table/di
 import { _, TranslateService } from '@ngx-translate/core';
 import { map, Observable, of, Subscription } from 'rxjs';
 
+import { ViewGroup } from '../../../../modules';
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
@@ -463,7 +465,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Remove:
                 return `remove`;
             default:
-                return `mood_bad`; // fallback: Error
+                // ad hoc check for updated structure levels and groups
+                if ((item.info as string) === 'updated') {
+                    return 'autorenew';
+                }
+                return 'mood_bad';
         }
     }
 
@@ -800,6 +806,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             ) {
                 const updatedUser = user.getModel();
                 const changes: Partial<Record<keyof ViewUser, { old?: unknown; new: unknown | unknown[] }>> = {};
+                this.compareStructureLevel(item?.structure_levels, user?.structure_level().split(','));
+                const userGroups: ViewGroup[] = user?.groups(this.activeMeetingIdService.meetingId) || [];
+                const changedGroups = this.compareGroups(item?.groups, userGroups);
                 for (const key of Object.keys(updatedUser) as (keyof ViewUser)[]) {
                     if (key in item) {
                         const importedValue = item[key as keyof ViewImportedParticipant];
@@ -813,13 +822,13 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             };
                         }
                     }
-                    if (item.is_locked_out !== user.is_locked_out) {
+                    if (item.is_locked_out !== user.is_locked_out && user.is_locked_out !== undefined) {
                         changes['locked_out'] = {
                             old: user.is_locked_out,
                             new: item.is_locked_out
                         };
                     }
-                    if (item.is_present !== user.isPresentInMeeting()) {
+                    if (item.is_present !== user.isPresentInMeeting() && user.isPresentInMeeting() !== undefined) {
                         changes['is_present'] = {
                             old: user.isPresentInMeeting(),
                             new: item.is_present
@@ -858,10 +867,16 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             new: item.voteWeight
                         };
                     }
-                    if (item.external !== user.external) {
+                    if (item.external !== user.external && user.external !== undefined) {
                         changes['external'] = {
                             old: user.external,
                             new: item.external
+                        };
+                    }
+                    if (changedGroups.new.length) {
+                        changes['groups'] = {
+                            old: changedGroups.old,
+                            new: changedGroups.new
                         };
                     }
                 }
@@ -874,5 +889,46 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             }
         }
         return '';
+    }
+
+    private compareStructureLevel(
+        newSL: string[],
+        oldSL: string[]
+    ): {
+        old: string[];
+        new: string[];
+    } {
+        // No need to check new items as they are calculated by the backend
+        const commonSL = newSL.filter(sl => oldSL.includes(sl['value'])).sort();
+        const diffSL = newSL.filter(sl => !oldSL.includes(sl['value']) && sl['id']).sort();
+        diffSL.filter(sl => {
+            sl['info'] = 'updated';
+        });
+        return {
+            old: oldSL,
+            new: commonSL.concat(diffSL)
+        };
+    }
+
+    private compareGroups(
+        newGroups: string[],
+        oldGroups: ViewGroup[]
+    ): {
+        old: string[];
+        new: string[];
+    } {
+        const oldGroupNames = oldGroups.map((g: Group) => g.name).sort();
+        const addedGroups = newGroups
+            .filter(newgroup => !oldGroupNames.includes(newgroup['value'] as string) && newgroup['id'])
+            .sort();
+        addedGroups.filter(g => {
+            if (g['info'] === 'done') {
+                g['info'] = 'updated';
+            }
+        });
+        return {
+            old: oldGroupNames,
+            new: addedGroups
+        };
     }
 }
