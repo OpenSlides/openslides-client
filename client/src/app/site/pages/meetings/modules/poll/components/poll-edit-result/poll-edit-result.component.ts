@@ -144,36 +144,51 @@ export class PollEditResultComponent implements OnInit {
                         data.nota +
                         data.options.reduce((p, c) => p + c.value.yes + c.value.no + c.value.abstain, 0)
                 );
+        } else {
+            this.resultForm
+                .total_ballots()
+                .value.set(
+                    data.invalid +
+                        data.abstain +
+                        data.nota +
+                        data.options.reduce((p, c) => Math.max(c.value.yes + c.value.no + c.value.abstain, p), 0)
+                );
         }
     }
 
     public serializeResult(): Record<string, unknown> {
         const m = this.model();
-        const serializedOptions: Record<string, number | string> = {};
+        const serializedOptions: Record<string, number | string | Record<string, number | string>> = {};
 
-        if (this.configType() === `approval`) {
-            const option = m.options[0];
-            serializedOptions[`yes`] = option?.value.yes ?? VOTE_UNDOCUMENTED;
-            serializedOptions[`no`] = option?.value.no ?? VOTE_UNDOCUMENTED;
-            if (this.pollConfigDataLax().allow_abstain) {
-                serializedOptions[`abstain`] = option?.value.abstain ?? VOTE_UNDOCUMENTED;
-            }
+        if (this.configType() === `approval` || this.configType() === `rating_approval`) {
+            this.options().forEach((option, idx) => {
+                const formOpt = m.options[idx];
+                serializedOptions[option.key] = {
+                    yes: formOpt?.value.yes ?? VOTE_UNDOCUMENTED,
+                    no: formOpt?.value.no ?? VOTE_UNDOCUMENTED
+                };
+                if (this.pollConfigDataLax().allow_abstain) {
+                    serializedOptions[option.key][`abstain`] = formOpt?.value.abstain ?? VOTE_UNDOCUMENTED;
+                }
 
-            if (option?.majority_value) {
-                serializedOptions[option.majority_value] = VOTE_MAJORITY;
-            }
+                if (formOpt?.majority_value) {
+                    serializedOptions[option.key][formOpt.majority_value] = VOTE_MAJORITY;
+                }
+            });
         } else {
-            this.options().forEach((option, index) => {
-                if (m.options[index]?.majority) {
+            this.options().forEach((option, idx) => {
+                if (m.options[idx]?.majority) {
                     serializedOptions[option.key] = VOTE_MAJORITY;
                 } else {
-                    serializedOptions[option.key] = m.options[index]?.value.yes ?? VOTE_UNDOCUMENTED;
+                    serializedOptions[option.key] = m.options[idx]?.value.yes ?? VOTE_UNDOCUMENTED;
                 }
             });
         }
 
         return {
-            ...serializedOptions,
+            ...(this.configType() === `approval`
+                ? (serializedOptions[this.options()[0].key] as Record<string, number | string>)
+                : serializedOptions),
             ...(m.invalid !== null ? { invalid: m.invalid } : {}),
             ...(m.total_ballots !== null ? { total_ballots: m.total_ballots } : {}),
             ...(this.showAbstain() ? { abstain: m.abstain } : {}),

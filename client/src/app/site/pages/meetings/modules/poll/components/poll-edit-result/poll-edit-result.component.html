@@ -92,7 +92,7 @@
             <mat-label>Total ballots</mat-label>
             <input matInput type="number" [formField]="resultForm.total_ballots" />
         </mat-form-field>
-        @if (!usesMajority()) {
+        @if (!usesMajority() && configType() !== 'rating_score') {
             <button
                 matIconButton
                 type="button"
