@@ -151,13 +151,26 @@ export class PollEditResultComponent implements OnInit {
         const m = this.model();
         const serializedOptions: Record<string, number | string> = {};
 
-        this.options().forEach((option, index) => {
-            if (m.options[index]?.majority) {
-                serializedOptions[option.key] = VOTE_MAJORITY;
-            } else {
-                serializedOptions[option.key] = m.options[index]?.value.yes ?? VOTE_UNDOCUMENTED;
+        if (this.configType() === `approval`) {
+            const option = m.options[0];
+            serializedOptions[`yes`] = option?.value.yes ?? VOTE_UNDOCUMENTED;
+            serializedOptions[`no`] = option?.value.no ?? VOTE_UNDOCUMENTED;
+            if (this.pollConfigDataLax().allow_abstain) {
+                serializedOptions[`abstain`] = option?.value.abstain ?? VOTE_UNDOCUMENTED;
             }
-        });
+
+            if (option?.majority_value) {
+                serializedOptions[option.majority_value] = VOTE_MAJORITY;
+            }
+        } else {
+            this.options().forEach((option, index) => {
+                if (m.options[index]?.majority) {
+                    serializedOptions[option.key] = VOTE_MAJORITY;
+                } else {
+                    serializedOptions[option.key] = m.options[index]?.value.yes ?? VOTE_UNDOCUMENTED;
+                }
+            });
+        }
 
         return {
             ...serializedOptions,
