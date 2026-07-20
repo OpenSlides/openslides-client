@@ -2,11 +2,14 @@
 
 <form>
     @for (option of options(); track option.key; let i = $index) {
-        <div class="option">
-            @switch (configType()) {
-                @case ('approval')
-                @case ('rating_score')
-                @case ('selection') {
+        @if (options().length > 1 && (configType() === 'approval' || configType() === 'rating_approval')) {
+            <h3>{{ option.title }}</h3>
+        }
+
+        @switch (configType()) {
+            @case ('rating_score')
+            @case ('selection') {
+                <div class="option">
                     <mat-form-field class="option-amount">
                         <mat-label>{{ option.title }}</mat-label>
                         <input matInput type="number" [formField]="resultForm.options[i].value.yes" />
@@ -15,12 +18,48 @@
                     <mat-checkbox class="option-majority" [formField]="resultForm.options[i].majority">
                         {{ 'majority' | translate }}
                     </mat-checkbox>
-                }
-                @case ('rating_approval') {
-                    OPTIONS
-                }
+                </div>
             }
-        </div>
+            @case ('approval')
+            @case ('rating_approval') {
+                <mat-radio-group [formField]="resultForm.options[i].majority_value">
+                    <div class="option">
+                        <mat-form-field class="option-amount">
+                            <mat-label>{{ 'Yes' | translate }}</mat-label>
+                            <input matInput type="number" [formField]="resultForm.options[i].value.yes" />
+                        </mat-form-field>
+
+                        <mat-radio-button class="option-majority" value="yes">
+                            {{ 'majority' | translate }}
+                        </mat-radio-button>
+                    </div>
+
+                    <div class="option">
+                        <mat-form-field class="option-amount">
+                            <mat-label>{{ 'No' | translate }}</mat-label>
+                            <input matInput type="number" [formField]="resultForm.options[i].value.no" />
+                        </mat-form-field>
+
+                        <mat-radio-button class="option-majority" value="no">
+                            {{ 'majority' | translate }}
+                        </mat-radio-button>
+                    </div>
+
+                    @if (pollConfigDataLax().allow_abstain) {
+                        <div class="option">
+                            <mat-form-field class="option-amount">
+                                <mat-label>{{ 'Abstain' | translate }}</mat-label>
+                                <input matInput type="number" [formField]="resultForm.options[i].value.abstain" />
+                            </mat-form-field>
+
+                            <mat-radio-button class="option-majority" value="abstain">
+                                {{ 'majority' | translate }}
+                            </mat-radio-button>
+                        </div>
+                    }
+                </mat-radio-group>
+            }
+        }
     }
 
     @if (showAbstain()) {
@@ -53,13 +92,15 @@
             <mat-label>Total ballots</mat-label>
             <input matInput type="number" [formField]="resultForm.total_ballots" />
         </mat-form-field>
-        <button
-            matIconButton
-            type="button"
-            [attr.aria-label]="'Update total ballots' | translate"
-            (click)="updateTotalBallots()"
-        >
-            <mat-icon>calculate</mat-icon>
-        </button>
+        @if (!usesMajority()) {
+            <button
+                matIconButton
+                type="button"
+                [attr.aria-label]="'Update total ballots' | translate"
+                (click)="updateTotalBallots()"
+            >
+                <mat-icon>calculate</mat-icon>
+            </button>
+        }
     </div>
 </form>

@@ -5,7 +5,17 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { AnyPollConfig, Poll, VOTE_MAJORITY, VOTE_UNDOCUMENTED } from '@app/domain/models/poll';
+import { MatRadioModule } from '@angular/material/radio';
+import {
+    ABSTAIN_KEY,
+    AnyPollConfig,
+    NO_KEY,
+    Poll,
+    SingleVoteOptionKey,
+    VOTE_MAJORITY,
+    VOTE_UNDOCUMENTED,
+    YES_KEY
+} from '@app/domain/models/poll';
 import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
 import { PollConfigRatingApproval } from '@app/domain/models/poll/poll-config-rating-approval';
 import { PollConfigRatingScore } from '@app/domain/models/poll/poll-config-rating-score';
@@ -23,6 +33,7 @@ interface OptionValue {
 interface OptionFormEntry {
     value: OptionValue;
     majority: boolean;
+    majority_value: SingleVoteOptionKey | null;
 }
 
 interface PollEditResultModel {
@@ -43,6 +54,7 @@ interface PollEditResultModel {
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
+        MatRadioModule,
         FormField,
         TranslatePipe
     ],
@@ -66,18 +78,25 @@ export class PollEditResultComponent implements OnInit {
 
     private optionSchema = schema<OptionFormEntry>(option => {
         disabled(option.value.yes, {
-            when: ({ valueOf }) => valueOf(option.majority)
+            when: ({ valueOf }) => valueOf(option.majority) || valueOf(option.majority_value) === YES_KEY
         });
         disabled(option.value.no, {
-            when: ({ valueOf }) => valueOf(option.majority)
+            when: ({ valueOf }) => valueOf(option.majority) || valueOf(option.majority_value) === NO_KEY
         });
         disabled(option.value.abstain, {
-            when: ({ valueOf }) => valueOf(option.majority)
+            when: ({ valueOf }) => valueOf(option.majority) || valueOf(option.majority_value) === ABSTAIN_KEY
         });
     });
 
     public readonly resultForm = form(this.model, s => {
         applyEach(s.options, this.optionSchema);
+    });
+
+    public usesMajority = computed(() => {
+        return this.resultForm
+            .options()
+            .value()
+            .some(o => o.majority || o.majority_value);
     });
 
     public showAbstain = computed(() => {
@@ -97,7 +116,8 @@ export class PollEditResultComponent implements OnInit {
                 no: null,
                 abstain: null
             },
-            majority: result[opt.key] === VOTE_MAJORITY
+            majority: result[opt.key] === VOTE_MAJORITY,
+            majority_value: result[opt.key] === VOTE_MAJORITY ? YES_KEY : null
         }));
 
         this.model.set({
