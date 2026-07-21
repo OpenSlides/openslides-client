@@ -23,39 +23,53 @@
             @case ('approval')
             @case ('rating_approval') {
                 <mat-radio-group [formField]="resultForm.options[i].majority_value">
-                    <div class="option">
-                        <mat-form-field class="option-amount">
-                            <mat-label>{{ 'Yes' | translate }}</mat-label>
-                            <input matInput type="number" [formField]="resultForm.options[i].value.yes" />
-                        </mat-form-field>
-
-                        <mat-radio-button class="option-majority" value="yes">
-                            {{ 'majority' | translate }}
-                        </mat-radio-button>
-                    </div>
-
-                    <div class="option">
-                        <mat-form-field class="option-amount">
-                            <mat-label>{{ 'No' | translate }}</mat-label>
-                            <input matInput type="number" [formField]="resultForm.options[i].value.no" />
-                        </mat-form-field>
-
-                        <mat-radio-button class="option-majority" value="no">
-                            {{ 'majority' | translate }}
-                        </mat-radio-button>
-                    </div>
-
-                    @if (pollConfigDataLax().allow_abstain) {
+                    <ng-template #option let-key="key" let-label="label">
                         <div class="option">
                             <mat-form-field class="option-amount">
-                                <mat-label>{{ 'Abstain' | translate }}</mat-label>
-                                <input matInput type="number" [formField]="resultForm.options[i].value.abstain" />
+                                <mat-label>{{ label }}</mat-label>
+                                <input matInput type="number" [formField]="resultForm.options[i].value[key]" />
                             </mat-form-field>
 
-                            <mat-radio-button class="option-majority" value="abstain">
+                            <mat-radio-button class="option-majority" [value]="key">
                                 {{ 'majority' | translate }}
                             </mat-radio-button>
+
+                            @if (resultForm.options[i].majority_value().value() === key) {
+                                <button
+                                    mat-icon-button
+                                    [attr.aria-label]="'Unselect majority' | translate"
+                                    (click)="resultForm.options[i].majority_value().value.set(null)"
+                                >
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            }
                         </div>
+                    </ng-template>
+
+                    <ng-container
+                        [ngTemplateOutlet]="option"
+                        [ngTemplateOutletContext]="{
+                            label: 'Yes' | translate,
+                            key: 'yes'
+                        }"
+                    />
+
+                    <ng-container
+                        [ngTemplateOutlet]="option"
+                        [ngTemplateOutletContext]="{
+                            label: 'No' | translate,
+                            key: 'no'
+                        }"
+                    />
+
+                    @if (pollConfigDataLax().allow_abstain) {
+                        <ng-container
+                            [ngTemplateOutlet]="option"
+                            [ngTemplateOutletContext]="{
+                                label: 'Abstain' | translate,
+                                key: 'abstain'
+                            }"
+                        />
                     }
                 </mat-radio-group>
             }

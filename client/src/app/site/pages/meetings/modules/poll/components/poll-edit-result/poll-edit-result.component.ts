@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, OnInit, signal } from '@angular/core';
 import { applyEach, disabled, form, FormField, schema } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
@@ -56,7 +57,8 @@ interface PollEditResultModel {
         MatInputModule,
         MatRadioModule,
         FormField,
-        TranslatePipe
+        TranslatePipe,
+        NgTemplateOutlet
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
