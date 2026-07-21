@@ -116,8 +116,8 @@
     "@types/qrcode": "^1.5.6",
     "@types/tinycolor2": "^1.4.6",
     "@types/video.js": "^7.3.58",
-    "@typescript-eslint/eslint-plugin": "^8.64.0",
-    "@typescript-eslint/parser": "^8.64.0",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
     "@vendure/ngx-translate-extract": "^10.2.0",
     "angular-eslint": "^22.1.0",
     "eslint": "^9.39.5",
@@ -140,7 +140,7 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.64.0"
+    "typescript-eslint": "^8.65.0"
   },
   "browser": {
     "fs": false
