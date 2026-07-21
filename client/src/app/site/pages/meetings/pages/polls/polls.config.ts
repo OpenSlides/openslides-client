@@ -1,5 +1,6 @@
 import { Poll } from '@app/domain/models/poll/poll';
 import { PollBallot } from '@app/domain/models/poll/poll-ballot';
+import { PollBallotUser } from '@app/domain/models/poll/poll-ballot-user';
 import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
 import { PollConfigRatingApproval } from '@app/domain/models/poll/poll-config-rating-approval';
 import { PollConfigRatingScore } from '@app/domain/models/poll/poll-config-rating-score';
@@ -7,6 +8,7 @@ import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selecti
 import { PollConfigStvScottish } from '@app/domain/models/poll/poll-config-stv-scottish';
 import { PollOption } from '@app/domain/models/poll/poll-option';
 import { PollBallotRepositoryService } from '@app/gateways/repositories/polls/poll-ballot-repository.service';
+import { PollBallotUserRepositoryService } from '@app/gateways/repositories/polls/poll-ballot-user-repository.service';
 import { PollConfigApprovalRepositoryService } from '@app/gateways/repositories/polls/poll-config-approval-repository.service';
 import { PollConfigRatingApprovalRepositoryService } from '@app/gateways/repositories/polls/poll-config-rating-approval-repository.service';
 import { PollConfigRatingScoreRepositoryService } from '@app/gateways/repositories/polls/poll-config-rating-score-repository.service';
@@ -26,6 +28,7 @@ import {
     ViewPollConfigStvScottish,
     ViewPollOption
 } from './view-models';
+import { ViewPollBallotUser } from './view-models/poll-ballot-user';
 
 export const PollsAppConfig: AppConfig = {
     name: `poll`,
@@ -74,6 +77,11 @@ export const PollsAppConfig: AppConfig = {
             model: PollBallot,
             viewModel: ViewPollBallot,
             repository: PollBallotRepositoryService
+        },
+        {
+            model: PollBallotUser,
+            viewModel: ViewPollBallotUser,
+            repository: PollBallotUserRepositoryService
         }
     ]
 };

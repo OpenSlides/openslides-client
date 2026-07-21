@@ -57,7 +57,7 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
             case 'valid':
                 return this.validBallots;
             case 'cast':
-                return this.poll.ballot_ids?.length || 0;
+                return this.poll.ballot_user_ids?.length || 0;
             case 'entitled':
                 return null;
             case 'entitled_present':

@@ -23,7 +23,7 @@ export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfi
             case 'valid':
                 return this.validBallots;
             case 'cast':
-                return this.poll.ballot_ids.length;
+                return this.poll.ballot_user_ids?.length || 0;
             case 'entitled':
                 return null;
             case 'entitled_present':

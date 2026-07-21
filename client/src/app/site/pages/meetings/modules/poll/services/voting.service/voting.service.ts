@@ -1,7 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { PollState } from '@app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
-import { ViewPoll, ViewPollBallot } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPollBallotUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-ballot-user';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
@@ -68,21 +69,20 @@ export class VotingService {
             user = this.operator.user.getMeetingUser();
         }
 
-        return this.pollRepo.pollBallotsByUser(poll.id, user.id).pipe(map(ballots => !!ballots.length));
+        return this.pollRepo.pollBallotUsersByUser(poll.id, user.id).pipe(map(ballots => !!ballots.length));
     }
 
     /**
      * checks whether the operator can vote on the given poll
      */
-    public votingProhibited(poll: ViewPoll, user?: ViewUser): Observable<VotingProhibition | null> {
-        // TODO: [potatojuicemachine::10.07.2026] user being undefined will throw here. Not sure what the correct fix would be.
+    public votingProhibited(poll: ViewPoll, user: ViewUser): Observable<VotingProhibition | null> {
         return combineLatest([
             this.userRepo.getViewModelObservable(user.id),
             this.pollRepo.getViewModelObservable(poll.id),
-            this.pollRepo.pollBallotsByUser(poll.id, user.id)
+            this.pollRepo.pollBallotUsersByUser(poll.id, user.getMeetingUser().id)
         ]).pipe(
-            map(([user, poll, ballots]) => {
-                return this.getVotingProhibitionReason(poll, user, ballots);
+            map(([user, poll, ballotUsers]) => {
+                return this.getVotingProhibitionReason(poll, user, ballotUsers);
             })
         );
     }
@@ -90,7 +90,7 @@ export class VotingService {
     private getVotingProhibitionReason(
         poll: ViewPoll,
         user: ViewUser,
-        ballots: ViewPollBallot[]
+        ballots: ViewPollBallotUser[]
     ): VotingProhibition | null {
         if (this.operator.isAnonymous) {
             return VotingProhibition.USER_IS_ANONYMOUS;
