@@ -8,10 +8,15 @@
     .result-table-wrapper {
         height: fit-content;
         width: 100%;
-    }
-
-    .result-table {
-        min-width: 280px !important;
+        .result-table {
+            min-width: auto !important;
+            tr {
+                border-bottom: 0;
+            }
+            tr.votesvalid {
+                border-top: 1px solid rgba(255, 255, 255, 0.12);
+            }
+        }
     }
 
     .doughnut-chart-normal {
@@ -25,7 +30,6 @@
     container: result / inline-size;
 }
 
-/* TODO: Fix result percent column never displayed no matter what size */
 @container result (width > 500px) {
     .result-wrapper {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -34,6 +38,29 @@
         .doughnut-chart-normal {
             margin-top: -35px;
             width: 200px;
+        }
+    }
+}
+
+.result-wrapper .result-table-wrapper {
+    container: result / inline-size;
+
+    @container result (width > 300px) {
+        .result-table {
+            tr {
+                .result-col,
+                .result-col-percent {
+                    display: table-cell;
+                }
+
+                .result-col-header {
+                    min-width: 110px;
+                }
+
+                .result-col-small {
+                    display: none;
+                }
+            }
         }
     }
 }

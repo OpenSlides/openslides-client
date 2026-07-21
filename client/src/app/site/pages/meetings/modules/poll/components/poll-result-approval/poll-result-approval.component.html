@@ -1,10 +1,13 @@
 <div class="result-container">
     <div class="result-wrapper">
-        <table class="result-table">
-            <tbody>
+        <div class="result-table-wrapper">
+            <table class="result-table">
+                <col />
+                <col width="1" />
+                <col width="1" />
                 <tr>
-                    <th class="left-header"></th>
-                    <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
+                    <th></th>
+                    <th class="result-col-header" colspan="2">{{ 'Votes' | translate }}</th>
                 </tr>
 
                 <ng-template
@@ -17,7 +20,7 @@
                 >
                     <tr class="result-row" [class]="votingOption">
                         <!-- YNA/Valid etc -->
-                        <td class="label-column">
+                        <td>
                             @let label = votingLabel ? votingLabel : (votingOption | pollKeyVerbose | translate);
 
                             @if (icon) {
@@ -31,28 +34,23 @@
                             }
                         </td>
 
-                        <!-- Percent numbers -->
-                        <td class="result-cell-definition percent-column">
+                        <td class="result-col-percent">
                             @if (percent !== null) {
-                                <span>{{ percent | pollParseNumber }}%</span>
+                                {{ percent | pollParseNumber }}%
                             }
                         </td>
-
-                        <!-- Votes -->
-                        <td class="result-cell-definition amount-column">
-                            {{ amount | pollParseNumber }}
+                        <td class="result-col">
+                            {{ amount || 0 }}
                         </td>
 
-                        <td class="result-cell-definition amount-column-small" colspan="2">
-                            {{ amount | pollParseNumber }}
-                        </td>
-                    </tr>
+                        <td class="result-col-small" colspan="2">
+                            <span class="amount">{{ amount || 0 }}</span>
 
-                    <tr class="result-percent-small" [class]="votingOption">
-                        <td class="result-cell-definition percent-column" colspan="3">
-                            @if (percent !== null) {
-                                <span>{{ percent | pollParseNumber }}%</span>
-                            }
+                            <div class="result-percent-small">
+                                @if (percent !== null) {
+                                    {{ percent | pollParseNumber }}%
+                                }
+                            </div>
                         </td>
                     </tr>
                 </ng-template>
@@ -117,8 +115,8 @@
                         }"
                     />
                 }
-            </tbody>
-        </table>
+            </table>
+        </div>
 
         <div class="doughnut-chart-normal">
             <os-chart type="doughnut" [data]="chartData()"></os-chart>
