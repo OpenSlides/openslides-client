@@ -65,12 +65,12 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             if (data.visibility !== undefined) patch[`visibility`] = data.visibility;
             if (data.options !== undefined && !data.options.some(option => option.meeting_user_id))
                 patch[`options`] = data.options.map(option => option.text);
-            if (data.config?.allow_abstain !== undefined) patch[`allow_abstain`] = !!data.config.allow_abstain;
-            if (data.config?.allow_nota !== undefined) patch[`allow_nota`] = !!data.config.allow_nota;
-            if (data.config?.strike_out !== undefined) patch[`strike_out`] = !!data.config.strike_out;
-            if (data.config?.display_chart !== undefined) patch[`display_chart`] = !!data.config.display_chart;
+            if (data.config?.allow_abstain !== undefined) patch[`allow_abstain`] = data.config.allow_abstain;
+            if (data.config?.allow_nota !== undefined) patch[`allow_nota`] = data.config.allow_nota;
+            if (data.config?.strike_out !== undefined) patch[`strike_out`] = data.config.strike_out;
+            if (data.config?.display_chart !== undefined) patch[`display_chart`] = data.config.display_chart;
             if (data.config?.onehundred_percent_base !== undefined)
-                patch[`onehundred_percent_base`] = !!data.config.onehundred_percent_base;
+                patch[`onehundred_percent_base`] = data.config.onehundred_percent_base;
             this.pollForm.patchValue(patch);
         }
     }

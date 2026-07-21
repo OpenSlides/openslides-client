@@ -44,7 +44,7 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             allow_general_abstain: [false],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator()]],
-            display_chart: [``]
+            display_chart: [`table`]
         });
     }
 
@@ -81,9 +81,11 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             `min_options_amount`,
             `strike_out`,
             `display_chart`,
-            `live_vote_enabled`
+            `live_vote_enabled`,
+            `display_chart`
         ]) {
             if (this.data() && this.data()[field] !== undefined) patch[field] = this.data()[field];
+            if (this.data() && this.data().config[field] !== undefined) patch[field] = this.data().config[field];
         }
 
         this.form.patchValue(patch);

@@ -68,7 +68,8 @@ export class TopicPollService extends PollService {
                 allow_nota: this.defaultAllowNota,
                 strike_out: this.defaultActiveStrikeOut,
                 display_chart: this.defaultDisplayChart,
-                voting_type: this.defaultVotingType
+                voting_type: this.defaultVotingType,
+                onehundred_percent_base: this.defaultPercentBase
             }
         };
 
