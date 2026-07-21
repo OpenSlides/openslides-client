@@ -10,11 +10,8 @@
         width: 100%;
         .result-table {
             min-width: auto !important;
-            tr {
-                border-bottom: 0;
-            }
             tr.votesvalid {
-                border-top: 1px solid rgba(255, 255, 255, 0.12);
+                border-bottom: 0;
             }
         }
     }

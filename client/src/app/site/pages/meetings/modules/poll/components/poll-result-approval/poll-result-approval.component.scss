@@ -13,3 +13,16 @@
         }
     }
 }
+
+.result-wrapper {
+    .result-table-wrapper {
+        .result-table {
+            tr {
+                border-bottom: 0;
+            }
+            tr.votesvalid {
+                border-top: 1px solid rgba(255, 255, 255, 0.12);
+            }
+        }
+    }
+}
