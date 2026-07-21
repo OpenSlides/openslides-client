@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { VOTE_MAJORITY } from '@app/domain/models/poll';
 import { ApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-approval';
 import { ThemeService } from '@app/site/services/theme.service';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
@@ -51,7 +52,12 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             return [];
         }
 
-        const showPercent = this.config().onehundredPercentBaseNum && this.onehundredPercentBase() !== `disabled`;
+        const showPercent =
+            this.config().onehundredPercentBaseNum &&
+            this.onehundredPercentBase() !== `disabled` &&
+            +results.yes !== VOTE_MAJORITY &&
+            +results.no !== VOTE_MAJORITY &&
+            +results.abstain !== VOTE_MAJORITY;
         const rows = [
             {
                 key: `Y`,
