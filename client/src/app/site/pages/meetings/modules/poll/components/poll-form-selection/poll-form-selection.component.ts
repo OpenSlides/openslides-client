@@ -88,6 +88,10 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             if (this.data() && this.data().config[field] !== undefined) patch[field] = this.data().config[field];
         }
 
+        if (patch[`onehundred_percent_base`] === `yes_no`) {
+            patch[`onehundred_percent_base`] = `valid`;
+        }
+
         this.form.patchValue(patch);
     }
 

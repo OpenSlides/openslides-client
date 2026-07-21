@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, effect, inject, Input, input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, effect, inject, input, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
