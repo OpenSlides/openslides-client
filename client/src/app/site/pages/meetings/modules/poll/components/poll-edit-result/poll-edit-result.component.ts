@@ -103,7 +103,7 @@ export class PollEditResultComponent implements OnInit {
 
     public showAbstain = computed(() => {
         const cfg = this.pollConfigDataLax();
-        return cfg.min_options_amount === 0 && cfg.min_vote_sum === 0;
+        return cfg.min_options_amount === 0 && (cfg.min_vote_sum === 0 || cfg.min_vote_sum === undefined);
     });
 
     public showNota = computed(() => {
