@@ -66,6 +66,30 @@
                     <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="row" />
                 }
 
+                @if (nota() !== null) {
+                    @let notaOption =
+                        config().strike_out ? ('General approval' | translate) : ('General rejection' | translate);
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: nota(),
+                            percent: notaPercent(),
+                            votingOption: notaOption
+                        }"
+                    />
+                }
+
+                @if (generalAbstain() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: generalAbstain(),
+                            percent: generalAbstainPercent(),
+                            votingOption: 'General abstain' | translate
+                        }"
+                    />
+                }
+
                 @if (validBallots() !== null) {
                     <ng-container
                         [ngTemplateOutlet]="resultRow"
@@ -119,30 +143,6 @@
                             amount: invalidBallots(),
                             percent: invalidBallotsPercent(),
                             votingOption: 'Invalid votes' | translate
-                        }"
-                    />
-                }
-
-                @if (nota() !== null) {
-                    @let notaOption =
-                        config().strike_out ? ('General approval' | translate) : ('General rejection' | translate);
-                    <ng-container
-                        [ngTemplateOutlet]="resultRow"
-                        [ngTemplateOutletContext]="{
-                            amount: nota(),
-                            percent: notaPercent(),
-                            votingOption: notaOption
-                        }"
-                    />
-                }
-
-                @if (generalAbstain() !== null) {
-                    <ng-container
-                        [ngTemplateOutlet]="resultRow"
-                        [ngTemplateOutletContext]="{
-                            amount: generalAbstain(),
-                            percent: generalAbstainPercent(),
-                            votingOption: 'General abstain' | translate
                         }"
                     />
                 }
