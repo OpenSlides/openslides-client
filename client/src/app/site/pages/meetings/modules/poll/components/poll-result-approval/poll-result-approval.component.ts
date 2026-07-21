@@ -118,6 +118,19 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             });
     });
 
+    public displayChart = computed<boolean>(() => {
+        const chartData = this.chartData();
+        if (chartData.some(e => e.data[0] < 0)) {
+            return false;
+        }
+
+        if (!chartData.some(e => e.data[0] > 0)) {
+            return false;
+        }
+
+        return true;
+    });
+
     public totalVoteSum = computed<number>(() => {
         return this.config().totalVotes!;
     });

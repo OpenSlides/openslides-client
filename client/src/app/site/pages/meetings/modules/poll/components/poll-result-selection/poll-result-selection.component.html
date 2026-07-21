@@ -47,11 +47,11 @@
                             }
                         </td>
                         <td class="result-col">
-                            {{ amount || 0 }}
+                            {{ amount || 0 | pollParseNumber }}
                         </td>
 
                         <td class="result-col-small" colspan="2">
-                            <span class="amount">{{ amount || 0 }}</span>
+                            <span class="amount">{{ amount || 0 | pollParseNumber }}</span>
 
                             <div class="result-percent-small">
                                 @if (percent !== null) {
@@ -149,7 +149,7 @@
             </table>
         </div>
 
-        @if (config().display_chart === `pie`) {
+        @if (displayChart()) {
             <div class="doughnut-chart-normal">
                 <os-chart type="doughnut" [data]="chartData()"></os-chart>
             </div>
