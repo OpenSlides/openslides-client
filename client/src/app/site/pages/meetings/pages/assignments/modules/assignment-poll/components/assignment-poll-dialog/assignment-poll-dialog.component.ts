@@ -3,7 +3,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
-import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import {
     BasePollDialogComponent,
     PollMethodPayload,
@@ -57,13 +56,13 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
         switch (this.getSelectedMethod()) {
             case `approval`:
-                return this.approvalForm()?.form.valid;
+                return this.approvalForm()?.form?.valid;
             case `selection`:
-                return this.selectionForm()?.form.valid;
+                return this.selectionForm()?.form?.valid;
             case `rating_approval`:
-                return this.ratingApprovalForm()?.form.valid;
+                return this.ratingApprovalForm()?.form?.valid;
             case `rating_score`:
-                return this.ratingScoreForm()?.form.valid;
+                return this.ratingScoreForm()?.form?.valid;
         }
 
         return false;
@@ -89,9 +88,8 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public constructor() {
         super();
 
-        if (this.pollData?.config_id) {
-            const collection = collectionFromFqid(this.pollData?.config_id);
-            this.method = collection.replace(`poll_config_`, ``);
+        if (this.pollData?.config?.method) {
+            this.method = this.pollData.config.method;
             this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.method));
         }
 

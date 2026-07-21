@@ -38,6 +38,8 @@ const TAB_METHOD_MAP = [`selection`, `approval`];
 export class TopicPollDialogComponent extends BasePollDialogComponent {
     public majority: string;
 
+    public method = `selection`;
+
     private approvalForm = viewChild(PollFormApprovalComponent);
     private selectionPollForm = viewChild.required(PollFormSelectionComponent);
 
@@ -65,6 +67,14 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
 
     private pollService = inject(PollService);
     private translate = inject(TranslateService);
+
+    public constructor() {
+        super();
+        if (this.pollData?.config?.method) {
+            this.method = this.pollData.config.method;
+            this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.method));
+        }
+    }
 
     public override methodPayload(): PollMethodPayload {
         return {

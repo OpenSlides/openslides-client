@@ -83,7 +83,8 @@ export class AssignmentPollService extends PollService {
                 allow_nota: this.defaultAllowNota,
                 strike_out: this.defaultActiveStrikeOut,
                 onehundred_percent_base: this.defaultPercentBase,
-                display_chart: this.defaultDisplayChart
+                display_chart: this.defaultDisplayChart,
+                method: this.defaultVotingType
             }
         };
 
