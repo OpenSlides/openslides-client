@@ -68,10 +68,7 @@
             <h3 class="motion-h3" [attr.aria-label]="'Reason text' | translate">
                 {{ 'Reason' | translate }}
             </h3>
-            <div
-                class="break-too-long-word motion-text underlined-links"
-                [innerHtml]="motion.reason | trust: 'html'"
-            ></div>
+            <div class="motion-text underlined-links" [innerHtml]="motion.reason | trust: 'html'"></div>
         </div>
     }
 
@@ -87,7 +84,7 @@
                     <mat-list dense>
                         @for (file of sortedAttachments$ | async; track file.id) {
                             <mat-list-item class="attachment-entry">
-                                <a class="break-too-long-word" target="_blank" [routerLink]="file.url">
+                                <a target="_blank" [routerLink]="file.url">
                                     <mat-icon class="attachment-icon">{{ file.getIcon() }}</mat-icon>
                                     {{ file.getTitle() }}
                                 </a>
