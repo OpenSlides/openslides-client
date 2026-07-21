@@ -1,6 +1,6 @@
 <os-head-bar
     [editMode]="hasEdits"
-    [isSaveButtonEnabled]="orgaSettingsForm?.valid"
+    [isSaveButtonEnabled]="$safeNavigationMigration(orgaSettingsForm?.valid)"
     (cancelEditEvent)="revertChanges()"
     (saveEvent)="onSubmit()"
 >
@@ -43,7 +43,7 @@
                         <os-list-search-selector
                             formControlName="time_zone"
                             [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
-                            [inputListValues]="time_zones()"
+                            [inputListValues]="timeZones()"
                         ></os-list-search-selector>
                     </mat-form-field>
                 </div>

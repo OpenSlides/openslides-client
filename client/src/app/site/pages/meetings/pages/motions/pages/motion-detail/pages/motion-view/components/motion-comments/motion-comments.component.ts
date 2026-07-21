@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ViewMotion, ViewMotionComment, ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
+import { OperatorService } from '@app/site/services/operator.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { Observable } from 'rxjs';
-import { ViewMotion, ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { MotionCommentSectionControllerService } from '../../../../../../modules/comments/services/motion-comment-section-controller.service';
 

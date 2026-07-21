@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
 
 import { getParticipantDetailSubscription } from '../../../../participants.subscription';
 
@@ -7,6 +7,7 @@ import { getParticipantDetailSubscription } from '../../../../participants.subsc
     selector: `os-participant-detail`,
     templateUrl: `./participant-detail.component.html`,
     styleUrls: [`./participant-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ParticipantDetailComponent extends BaseModelRequestHandlerComponent {

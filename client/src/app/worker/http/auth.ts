@@ -1,5 +1,6 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { environment } from 'src/environments/environment';
+import { Id } from '@app/domain/definitions/key-types';
+
+import { environment } from '../../../environments/environment';
 
 export class WorkerHttpAuth {
     private serverTimeOffset = 0;

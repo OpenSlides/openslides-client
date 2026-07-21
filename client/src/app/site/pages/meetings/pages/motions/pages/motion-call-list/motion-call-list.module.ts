@@ -5,9 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { SortingModule } from 'src/app/ui/modules/sorting';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { SortingModule } from '@app/ui/modules/sorting';
 
 import { MotionsExportModule } from '../../services/export/motions-export.module';
 import { MotionCallListComponent } from './components/motion-call-list/motion-call-list.component';

@@ -6,8 +6,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { SearchSelectorModule } from '@app/ui/modules/search-selector';
 
 import { ParticipantListInfoDialogComponent } from './components/participant-list-info-dialog/participant-list-info-dialog.component';
 

@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { UntypedFormControl } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/motions.constants';
+import { ViewMotionChangeRecommendation } from '@app/site/pages/meetings/pages/motions';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom } from 'rxjs';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { verboseChangeRecoMode } from '../../../../../../../../../../../domain/models/motions/motions.constants';
 import { ViewUnifiedChange } from '../../../../../../modules/change-recommendations/view-models/view-unified-change';

@@ -6,10 +6,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { ImportListModule } from 'src/app/ui/modules/import-list';
-import { SpinnerModule } from 'src/app/ui/modules/spinner';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { ImportListModule } from '@app/ui/modules/import-list';
+import { SpinnerModule } from '@app/ui/modules/spinner';
 
 import { TopicImportComponent } from './components/topic-import/topic-import.component';
 import { TopicImportMainComponent } from './components/topic-import-main/topic-import-main.component';

@@ -1,8 +1,8 @@
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Input, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TooltipPosition } from '@angular/material/tooltip';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewUnifiedChange } from '@app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
 import { getRecommendationTypeName } from '../../../../../../definitions/recommendation-type-names';
 import { ViewUnifiedChangeType } from '../../../../../../modules/change-recommendations/definitions/index';

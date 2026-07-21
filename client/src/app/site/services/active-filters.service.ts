@@ -1,18 +1,14 @@
-import { Injectable } from '@angular/core';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ActiveFiltersStoreService } from 'src/app/ui/modules/list/definitions';
+import { inject, Service } from '@angular/core';
+import { StorageService } from '@app/gateways/storage.service';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { ActiveFiltersStoreService } from '@app/ui/modules/list/definitions';
 
 import { OsFilter } from '../base/base-filter.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ActiveFiltersService implements ActiveFiltersStoreService {
-    public constructor(
-        private store: StorageService,
-        private activeMeetingIdService: ActiveMeetingIdService
-    ) {}
+    private store = inject(StorageService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
 
     public async save<V>(storageKey: string, filterDefinitions: OsFilter<V>[]): Promise<void> {
         return await this.store.set(this.calcStorageKey(storageKey), filterDefinitions);

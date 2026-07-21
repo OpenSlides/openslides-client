@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Action } from '@app/gateways/actions';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { getUnixTime } from 'date-fns';
-import { Action } from 'src/app/gateways/actions';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
 import { Id } from '../../domain/definitions/key-types';
 import { Identifiable } from '../../domain/interfaces/identifiable';
@@ -36,15 +36,13 @@ export interface MeetingUserModifiedFields {
     removedAdmins?: ViewUser[];
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meeting> {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollectorService,
-        private meetingSettingsDefinitionProvider: MeetingSettingsDefinitionService,
-        private orgaSettingsService: OrganizationSettingsService
-    ) {
+    private meetingSettingsDefinitionProvider = inject(MeetingSettingsDefinitionService);
+    private orgaSettingsService = inject(OrganizationSettingsService);
+
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
         super(repositoryServiceCollector, Meeting);
     }
 

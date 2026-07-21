@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, Input, OnDestroy } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core';
 import { AbstractControl, UntypedFormGroup } from '@angular/forms';
+import { Permission } from '@app/domain/definitions/permission';
+import { SubscriptionConfig } from '@app/domain/interfaces/subscription-config';
+import { ItemTypeChoices } from '@app/domain/models/agenda/agenda-item';
+import { BaseMeetingModelRequestHandler } from '@app/site/pages/meetings/base/base-meeting-model-request-handler.component';
+import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
+import { getAgendaListMinimalSubscriptionConfig } from '@app/site/pages/meetings/pages/agenda/agenda.subscription';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
-import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { BaseMeetingModelRequestHandler } from 'src/app/site/pages/meetings/base/base-meeting-model-request-handler.component';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { getAgendaListMinimalSubscriptionConfig } from 'src/app/site/pages/meetings/pages/agenda/agenda.subscription';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { AgendaContentObjectFormService } from '../../services/agenda-content-object-form.service';
 
@@ -15,6 +15,7 @@ import { AgendaContentObjectFormService } from '../../services/agenda-content-ob
     selector: `os-agenda-content-object-form`,
     templateUrl: `./agenda-content-object-form.component.html`,
     styleUrls: [`./agenda-content-object-form.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AgendaContentObjectFormComponent

@@ -9,10 +9,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { ChipComponent } from 'src/app/ui/modules/chip';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar/head-bar.module';
-import { ListModule } from 'src/app/ui/modules/list';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { ChipComponent } from '@app/ui/modules/chip';
+import { HeadBarModule } from '@app/ui/modules/head-bar/head-bar.module';
+import { ListModule } from '@app/ui/modules/list';
 
 import { GenderListComponent } from './components/gender-list/gender-list.component';
 import { GenderListRoutingModule } from './gender-list-routing.module';

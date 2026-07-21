@@ -1,7 +1,7 @@
 import { Directive, Input, ViewChild } from '@angular/core';
 import { MatDatepicker, MatDateRangePicker } from '@angular/material/datepicker';
-import { KeyCode } from 'src/app/infrastructure/utils/key-code';
-import { BaseFormFieldControlComponent } from 'src/app/ui/base/base-form-field-control';
+import { KeyCode } from '@app/infrastructure/utils/key-code';
+import { BaseFormFieldControlComponent } from '@app/ui/base/base-form-field-control';
 
 @Directive()
 export abstract class BaseDatepickerComponent extends BaseFormFieldControlComponent<any> {

@@ -1,28 +1,27 @@
-import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Speaker } from 'src/app/domain/models/speakers/speaker';
-import { SPECIAL_SPEECH_STATES, SpeechState } from 'src/app/domain/models/speakers/speech-state';
+import { inject, Service } from '@angular/core';
+import { Id, UnsafeHtml } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Speaker } from '@app/domain/models/speakers/speaker';
+import { SPECIAL_SPEECH_STATES, SpeechState } from '@app/domain/models/speakers/speech-state';
 import {
     PointOfOrderInformation,
     SpeakerRepositoryService
-} from 'src/app/gateways/repositories/speakers/speaker-repository.service';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
+} from '@app/gateways/repositories/speakers/speaker-repository.service';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { map, Observable } from 'rxjs';
 
 import { MeetingControllerServiceCollectorService } from '../../../../../services/meeting-controller-service-collector.service';
 import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class SpeakerControllerService extends BaseMeetingControllerService<ViewSpeaker, Speaker> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: SpeakerRepositoryService,
-        protected userRepo: UserControllerService
-    ) {
+    protected userRepo = inject(UserControllerService);
+    protected override repo: SpeakerRepositoryService;
+
+    public constructor() {
+        const repo = inject(SpeakerRepositoryService);
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
         super(controllerServiceCollector, Speaker, repo);
     }
 

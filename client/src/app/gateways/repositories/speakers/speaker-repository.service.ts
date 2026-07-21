@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
-import { Speaker } from 'src/app/domain/models/speakers/speaker';
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
-import { ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
+import { inject, Service } from '@angular/core';
+import { Id, UnsafeHtml } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { ListOfSpeakers } from '@app/domain/models/list-of-speakers/list-of-speakers';
+import { Speaker } from '@app/domain/models/speakers/speaker';
+import { SpeechState } from '@app/domain/models/speakers/speech-state';
+import { ViewSpeaker } from '@app/site/pages/meetings/pages/agenda';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
@@ -16,11 +16,10 @@ export interface PointOfOrderInformation {
     point_of_order_category_id?: Id;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewSpeaker, Speaker> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, Speaker);
     }
 

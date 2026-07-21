@@ -5,9 +5,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { ScrollingTableModule } from '@app/ui/modules/scrolling-table';
 import { NgxFileDropModule } from 'ngx-file-drop';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
 
 import { FileUploadComponent } from './components/file-upload/file-upload.component';
 

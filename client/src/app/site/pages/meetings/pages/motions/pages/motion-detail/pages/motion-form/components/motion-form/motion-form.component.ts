@@ -8,6 +8,21 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Id, UnsafeHtml } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { HasSequentialNumber, Selectable } from '@app/domain/interfaces';
+import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
+import { Motion } from '@app/domain/models/motions/motion';
+import { GetForwardingCommitteesPresenterService } from '@app/gateways/presenter/get-forwarding-committees-presenter.service';
+import { RawUser, UserRepositoryService } from '@app/gateways/repositories/users';
+import { deepCopy } from '@app/infrastructure/utils/transform-functions';
+import { isUniqueAmong } from '@app/infrastructure/utils/validators/is-unique-among';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import {
     auditTime,
@@ -21,21 +36,6 @@ import {
     Subscription,
     tap
 } from 'rxjs';
-import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { HasSequentialNumber, Selectable } from 'src/app/domain/interfaces';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
-import { RawUser, UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
-import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../../../participants/participants.subscription';

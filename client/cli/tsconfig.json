@@ -3,8 +3,10 @@
     "compilerOptions": {
         "baseUrl": "../",
         "module": "commonjs",
+        "types": ["node"],
         "paths": {
             "*": ["*"]
-        }
+        },
+        "rootDir": ".."
     }
 }

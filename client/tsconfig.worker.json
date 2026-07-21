@@ -8,7 +8,8 @@
       "es2018",
       "webworker"
     ],
-    "types": []
+    "types": [],
+    "rootDir": "./src/app"
   },
   "include": [
     "src/**/*.worker.ts"

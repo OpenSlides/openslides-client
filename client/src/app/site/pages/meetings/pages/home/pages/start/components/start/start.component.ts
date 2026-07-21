@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Permission } from '@app/domain/definitions/permission';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
     selector: `os-start`,
     templateUrl: `./start.component.html`,
     styleUrls: [`./start.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class StartComponent extends BaseMeetingComponent implements OnInit {

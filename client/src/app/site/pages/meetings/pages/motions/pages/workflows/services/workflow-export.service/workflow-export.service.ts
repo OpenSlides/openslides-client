@@ -1,20 +1,16 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { MotionState } from '@app/domain/models/motions/motion-state';
+import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
+import { ViewMotionWorkflow } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
-import { MotionState } from 'src/app/domain/models/motions/motion-state';
-import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import { ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionStateControllerService } from '../../../../modules/states/services';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class WorkflowExportService {
-    public constructor(
-        private translate: TranslateService,
-        private stateRepo: MotionStateControllerService
-    ) {}
+    private translate = inject(TranslateService);
+    private stateRepo = inject(MotionStateControllerService);
 
     public exportWorkflows(...workflows: ViewMotionWorkflow[]): void {
         const workflowKeysToCopy: (keyof MotionWorkflow)[] = [`name`];

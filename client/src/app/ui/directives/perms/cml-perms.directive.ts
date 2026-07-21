@@ -1,6 +1,6 @@
 import { Directive, Input, TemplateRef } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
+import { Id } from '@app/domain/definitions/key-types';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
 
 import { BasePermsDirective } from './base-perms.directive';
 

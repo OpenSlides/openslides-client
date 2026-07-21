@@ -9,18 +9,18 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { SpeechState } from '@app/domain/models/speakers/speech-state';
+import { SpeakerRepositoryService } from '@app/gateways/repositories/speakers/speaker-repository.service';
+import { StructureLevelListOfSpeakersRepositoryService } from '@app/gateways/repositories/structure-level-list-of-speakers';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ViewListOfSpeakers, ViewSpeaker } from '@app/site/pages/meetings/pages/agenda';
+import { DurationService } from '@app/site/services/duration.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, merge, mergeMap, Subscription, tap } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
-import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
-import { StructureLevelListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/structure-level-list-of-speakers';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { CurrentSpeakingStructureLevelSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
 import { CurrentStructureLevelListSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';

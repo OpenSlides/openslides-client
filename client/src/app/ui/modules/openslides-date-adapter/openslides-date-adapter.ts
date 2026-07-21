@@ -1,25 +1,23 @@
-import { Inject, Injectable, Optional } from '@angular/core';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { inject, Service } from '@angular/core';
 import { DateFnsAdapter } from '@angular/material-date-fns-adapter';
+import { langToTimeLocale } from '@app/infrastructure/utils';
 import { TranslateService } from '@ngx-translate/core';
-import { langToTimeLocale } from 'src/app/infrastructure/utils';
 
 /**
  * A custom DateAdapter for the datetimepicker in the config. Uses MomentDateAdapter for localisation.
  * Is needed to subscribe to language changes
  */
-@Injectable()
+@Service()
 export class OpenSlidesDateAdapter extends DateFnsAdapter {
-    public constructor(
-        protected translate: TranslateService,
-        @Optional() @Inject(MAT_DATE_LOCALE) dateLocale: string
-    ) {
-        super(dateLocale);
+    private translate = inject(TranslateService);
+
+    public constructor() {
+        super();
         // subscribe to language changes to change localisation of dates accordingly
         // DateAdapter seems not to be a singleton so we do that in this subclass instead of app.component
-        this.updateLocaleByName(translate.getCurrentLang());
-        translate.onLangChange.subscribe(() => {
-            this.updateLocaleByName(translate.getCurrentLang());
+        this.updateLocaleByName(this.translate.getCurrentLang());
+        this.translate.onLangChange.subscribe(() => {
+            this.updateLocaleByName(this.translate.getCurrentLang());
         });
     }
 

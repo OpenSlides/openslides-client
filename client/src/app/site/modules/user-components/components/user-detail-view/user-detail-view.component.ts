@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChild,
@@ -19,13 +20,13 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
+import { createEmailValidator } from '@app/infrastructure/utils/validators/email';
+import { getGenderListSubscriptionConfig } from '@app/site/pages/organization/pages/accounts/pages/gender/gender.subscription';
+import { GenderControllerService } from '@app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { TranslateService } from '@ngx-translate/core';
 import { map, OperatorFunction, Subscription } from 'rxjs';
-import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
-import { getGenderListSubscriptionConfig } from 'src/app/site/pages/organization/pages/accounts/pages/gender/gender.subscription';
-import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
 import { OneOfValidator } from '../../validators';
@@ -34,6 +35,7 @@ import { OneOfValidator } from '../../validators';
     selector: `os-user-detail-view`,
     templateUrl: `./user-detail-view.component.html`,
     styleUrls: [`./user-detail-view.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class UserDetailViewComponent extends BaseUiComponent implements OnInit, AfterViewInit {

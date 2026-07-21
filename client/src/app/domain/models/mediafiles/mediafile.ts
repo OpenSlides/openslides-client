@@ -1,4 +1,4 @@
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 
 import { Id } from '../../definitions/key-types';
 import { HasOwnerId } from '../../interfaces/has-owner-id';

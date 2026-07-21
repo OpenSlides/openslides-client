@@ -1,6 +1,6 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
-import { DEFAULT_FIELDSET } from 'src/app/site/services/model-request-builder';
+import { Id } from '@app/domain/definitions/key-types';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
+import { DEFAULT_FIELDSET } from '@app/site/services/model-request-builder';
 
 import { ViewPoll } from '../pages/polls';
 import { pollModelRequest } from '../pages/polls/polls.subscription';

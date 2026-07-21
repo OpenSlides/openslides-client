@@ -10,12 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
-import { VerticalTabGroupModule } from 'src/app/ui/modules/vertical-tab-group';
-import { PipesModule } from 'src/app/ui/pipes';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-listing';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
+import { VerticalTabGroupModule } from '@app/ui/modules/vertical-tab-group';
+import { PipesModule } from '@app/ui/pipes';
 
 import { ChatGroupDialogModule } from '../../modules/chat-group-dialog/chat-group-dialog.module';
 import { ChatGroupListRoutingModule } from './chat-group-list-routing.module';

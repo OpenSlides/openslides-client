@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { VotingPrivacyWarningDialogService } from 'src/app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { BasePollComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { VotingPrivacyWarningDialogService } from '@app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
+import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
+import { OperatorService } from '@app/site/services/operator.service';
 
 import { ViewTopic } from '../../../../view-models';
 import { TopicPollPdfService } from '../../services/topic-poll-pdf.service/topic-poll-pdf.service';
@@ -14,6 +14,7 @@ import { TopicPollPdfService } from '../../services/topic-poll-pdf.service/topic
     selector: `os-topic-poll`,
     templateUrl: `./topic-poll.component.html`,
     styleUrls: [`./topic-poll.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TopicPollComponent extends BasePollComponent<ViewTopic> implements OnInit {

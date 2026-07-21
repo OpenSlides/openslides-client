@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Tag } from 'src/app/domain/models/tag/tag';
-import { TagRepositoryService } from 'src/app/gateways/repositories/tags/tag-repository.service';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { Identifiable } from '@app/domain/interfaces';
+import { Tag } from '@app/domain/models/tag/tag';
+import { TagRepositoryService } from '@app/gateways/repositories/tags/tag-repository.service';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewTag } from '../../view-models';
 

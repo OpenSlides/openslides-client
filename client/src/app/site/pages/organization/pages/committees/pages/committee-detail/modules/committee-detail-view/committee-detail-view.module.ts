@@ -7,12 +7,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { RouterModule } from '@angular/router';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { HeadToolbarComponent } from 'src/app/ui/modules/head-toolbar/head-toolbar.component';
-import { ListModule } from 'src/app/ui/modules/list';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { DirectivesModule } from '@app/ui/directives';
+import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-listing';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { HeadToolbarComponent } from '@app/ui/modules/head-toolbar/head-toolbar.component';
+import { ListModule } from '@app/ui/modules/list';
 
 import { IconContainerComponent } from '../../../../../../../../../ui/modules/icon-container/icon-container.component';
 import { CommitteeComponentsModule } from '../../../../modules/committee-components.module';

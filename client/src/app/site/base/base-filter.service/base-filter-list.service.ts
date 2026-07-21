@@ -1,8 +1,8 @@
 import { Directive } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { ViewModelListProvider } from '@app/ui/base/view-model-list-provider';
+import { ActiveFiltersStoreService, FilterListService } from '@app/ui/modules/list/definitions/filter-service';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
-import { ActiveFiltersStoreService, FilterListService } from 'src/app/ui/modules/list/definitions/filter-service';
 
 import { BaseViewModel } from '../base-view-model';
 import { OsFilter, OsFilterIndicator, OsFilterOption, OsFilterOptionCondition, OsHideFilterSetting } from './os-filter';

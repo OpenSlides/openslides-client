@@ -3,7 +3,7 @@
     @let isMobile = vp.isMobileSubject | async;
     <os-head-bar
         mainActionTooltip="New amendment"
-        [goBack]="motion?.hasLeadMotion"
+        [goBack]="$safeNavigationMigration(motion?.hasLeadMotion)"
         [hasMainButton]="perms.isAllowed('can_create_amendments', motion)"
         [nav]="false"
         (mainEvent)="createAmendment()"
@@ -203,13 +203,13 @@
 <ng-template #contentTemplate>
     @if (originMotionsLoaded.length) {
         <mat-tab-group mat-align-tabs="start" mat-stretch-tabs="false" [(selectedIndex)]="originMotionTabSelected">
-            <mat-tab [label]="motion?.meeting?.name">
+            <mat-tab [label]="$safeNavigationMigration(motion?.meeting?.name)">
                 <div class="motion-tab-content">
                     <ng-container *ngTemplateOutlet="motionContentTemplate"></ng-container>
                 </div>
             </mat-tab>
             @for (originMotion of originMotionsLoaded; track originMotion.id) {
-                <mat-tab [label]="originMotion?.meeting?.name">
+                <mat-tab [label]="$safeNavigationMigration(originMotion?.meeting?.name)">
                     <div class="motion-tab-content">
                         <mat-card class="os-card original-motion-card">
                             <mat-card-content>

@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { User } from 'src/app/domain/models/users/user';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { UserScope } from 'src/app/site/services/user.service';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { User } from '@app/domain/models/users/user';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { UserScope } from '@app/site/services/user.service';
 
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
@@ -23,9 +23,9 @@ interface PresenterData {
 
 type PresenterResult = Partial<User>[][];
 
-@Injectable({ providedIn: `root` })
+@Service()
 export class SearchUsersPresenterService {
-    public constructor(private presenter: PresenterService) {}
+    private presenter = inject(PresenterService);
 
     public async call(
         {

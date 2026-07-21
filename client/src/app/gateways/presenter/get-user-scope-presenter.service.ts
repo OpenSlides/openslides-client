@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { UserScope } from 'src/app/site/services/user.service';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { UserScope } from '@app/site/services/user.service';
 
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
@@ -21,11 +21,9 @@ interface GetUserScopeIdentifiedScope {
 
 export type GetUserScopePresenterResult = Record<Id, GetUserScopeIdentifiedScope>;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GetUserScopePresenterService {
-    public constructor(private presenter: PresenterService) {}
+    private presenter = inject(PresenterService);
 
     public async call(payload: GetUserScopePresenterPayload): Promise<GetUserScopePresenterResult> {
         return await this.presenter.call(Presenter.GET_USER_SCOPE, payload);

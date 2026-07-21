@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ViewMediafile, ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
+import { ViewProjection, ViewProjector } from '@app/site/pages/meetings/pages/projectors';
 import { combineLatest, map, merge, mergeMap, Observable, of } from 'rxjs';
-import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { ViewProjection, ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
 
 import { ProjectionControllerService } from '../../services/projection-controller.service';
 
@@ -9,6 +9,7 @@ import { ProjectionControllerService } from '../../services/projection-controlle
     selector: `os-presentation-controls`,
     templateUrl: `./presentation-controls.component.html`,
     styleUrls: [`./presentation-controls.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class PresentationControlsComponent {

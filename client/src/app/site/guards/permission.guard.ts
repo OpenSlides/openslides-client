@@ -1,20 +1,16 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Route, Router, UrlSegment, UrlTree } from '@angular/router';
 
 import { AuthCheckService } from '../services/auth-check.service';
 import { OpenSlidesRouterService } from '../services/openslides-router.service';
 import { RerouteService } from '../services/reroute.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PermissionGuard {
-    public constructor(
-        private router: Router,
-        private reroute: RerouteService,
-        private osRouter: OpenSlidesRouterService,
-        private authCheck: AuthCheckService
-    ) {}
+    private authCheck = inject(AuthCheckService);
+    private osRouter = inject(OpenSlidesRouterService);
+    private reroute = inject(RerouteService);
+    private router = inject(Router);
 
     public async canLoad(route: Route, segments: UrlSegment[]): Promise<boolean | UrlTree> {
         const url = this.getCurrentNavigationUrl();

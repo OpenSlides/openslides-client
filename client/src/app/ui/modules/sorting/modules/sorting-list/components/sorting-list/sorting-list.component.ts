@@ -1,13 +1,23 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, ContentChild, EventEmitter, Input, OnDestroy, Output, TemplateRef } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    ContentChild,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    Output,
+    TemplateRef
+} from '@angular/core';
+import { Selectable } from '@app/domain/interfaces/selectable';
+import { Mutex } from '@app/infrastructure/utils/promises';
 import { Observable, Subscription } from 'rxjs';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { Mutex } from 'src/app/infrastructure/utils/promises';
 
 @Component({
     selector: `os-sorting-list`,
     templateUrl: `./sorting-list.component.html`,
     styleUrls: [`./sorting-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SortingListComponent<T extends Selectable = Selectable> implements OnDestroy {

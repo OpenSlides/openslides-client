@@ -1,7 +1,7 @@
-import { HasAgendaItemId, HasListOfSpeakersId } from 'src/app/domain/interfaces';
-import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { AgendaListTitle, HasAgendaItem, HasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
+import { HasAgendaItemId, HasListOfSpeakersId } from '@app/domain/interfaces';
+import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { AgendaListTitle, HasAgendaItem, HasListOfSpeakers } from '@app/site/pages/meetings/pages/agenda';
 
 import { AgendaItemRepositoryService } from './agenda/agenda-item-repository.service';
 import { AgendaItemContentObjectRepository } from './base-agenda-item-content-object-repository';

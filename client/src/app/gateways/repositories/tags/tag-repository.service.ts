@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Tag } from 'src/app/domain/models/tag/tag';
-import { ViewTag } from 'src/app/site/pages/meetings/pages/motions';
+import { Identifiable } from '@app/domain/interfaces';
+import { Tag } from '@app/domain/models/tag/tag';
+import { ViewTag } from '@app/site/pages/meetings/pages/motions';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';

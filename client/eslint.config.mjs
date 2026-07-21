@@ -32,6 +32,7 @@ export default tseslint.config({
     },
     processor: angular.processInlineTemplates,
     rules: {
+        "@angular-eslint/prefer-on-push-component-change-detection": ["off"],
         "@angular-eslint/prefer-standalone": ["off"],
         "@angular-eslint/prefer-inject": ["off"],
         "@angular-eslint/component-selector": ["error", {

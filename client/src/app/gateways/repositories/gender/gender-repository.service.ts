@@ -1,20 +1,19 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Gender } from 'src/app/domain/models/gender/gender';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { ViewGender } from 'src/app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Gender } from '@app/domain/models/gender/gender';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { ViewGender } from '@app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
+import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { Action } from '../../actions';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { GenderAction } from './gender.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GenderRepositoryService extends BaseRepository<ViewGender, Gender> {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
         super(repositoryServiceCollector, Gender);
     }
 

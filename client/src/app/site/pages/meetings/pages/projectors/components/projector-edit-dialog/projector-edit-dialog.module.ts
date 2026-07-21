@@ -12,7 +12,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 
 import { ProjectorComponent } from '../../../../modules/projector/components/projector/projector.component';
 import { ProjectorModule } from '../../../../modules/projector/projector.module';

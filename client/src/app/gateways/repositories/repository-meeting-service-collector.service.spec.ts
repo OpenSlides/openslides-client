@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { DataStoreService } from '@app/site/services/data-store.service';
+import { RelationManagerService } from '@app/site/services/relation-manager.service';
+import { ViewModelStoreService } from '@app/site/services/view-model-store.service';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, skip } from 'rxjs';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { DataStoreService } from 'src/app/site/services/data-store.service';
-import { RelationManagerService } from 'src/app/site/services/relation-manager.service';
-import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
 import { ActionService } from '../actions';
 import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';

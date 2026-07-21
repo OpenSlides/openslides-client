@@ -107,20 +107,25 @@
                                             <!-- FIRST VAL -->
                                             {{
                                                 displayPercent(
-                                                    entry.genderEntryMap.get(gender.id)?.present /
-                                                        entry.presentUserIds.length
+                                                    $safeNavigationMigration(
+                                                        entry.genderEntryMap.get(gender.id)?.present
+                                                    ) / entry.presentUserIds.length
                                                 )
                                             }}
-                                            {{ entry.genderEntryMap.get(gender.id)?.present }}
-                                        }
+                                        </div>
+                                    }
+                                </div>
+                                <div class="justify-center bold">
+                                    <div>
+                                        {{
+                                            $safeNavigationMigration(entry.genderEntryMap.get(gender.id)?.label)
+                                                | translate
+                                        }}
                                     </div>
-                                    <div class="center bold margin-auto">
-                                        <!-- SECOND VAL -->
-                                        {{ entry.genderEntryMap.get(gender.id)?.label | translate }}
-                                    </div>
-                                    <div class="text text-medium margin-auto align-left">
-                                        @if (entry.getTotalCount(gender.id)) {
-                                            <!-- THIRD VAL -->
+                                </div>
+                                <div class="text align-left">
+                                    @if (entry.getTotalCount(gender.id)) {
+                                        <div class="text-medium">
                                             {{ entry.getTotalCount(gender.id) }}
                                             {{ displayPercent(entry.getTotalCount(gender.id) / entry.getTotalCount()) }}
                                         }

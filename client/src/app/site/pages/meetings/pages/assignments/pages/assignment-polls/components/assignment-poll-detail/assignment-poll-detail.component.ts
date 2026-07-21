@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { VoteValue } from 'src/app/domain/models/poll';
+import { Permission } from '@app/domain/definitions/permission';
+import { VoteValue } from '@app/domain/models/poll';
 import {
     BasePollDetailComponent,
     BaseVoteData
-} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewOption, ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+} from '@app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { ViewOption, ViewPoll, ViewVote } from '@app/site/pages/meetings/pages/polls';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 
 import { isSortedList, SortedList } from '../../../../../polls/view-models/sorted-list';
 import {

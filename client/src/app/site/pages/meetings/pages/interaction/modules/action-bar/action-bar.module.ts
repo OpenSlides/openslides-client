@@ -5,8 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { PipesModule } from 'src/app/ui/pipes';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { PipesModule } from '@app/ui/pipes';
 
 import { ActionBarComponent } from './components/action-bar/action-bar.component';
 

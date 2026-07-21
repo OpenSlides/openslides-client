@@ -1,23 +1,19 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Motion } from '@app/domain/models/motions/motion';
+import { CreateResponse } from '@app/gateways/repositories/base-repository';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { viewModelListEqual } from '@app/infrastructure/utils';
 import { distinctUntilChanged, map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { viewModelListEqual } from 'src/app/infrastructure/utils';
 
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../motion-controller.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AmendmentControllerService {
-    public constructor(
-        private controller: MotionControllerService,
-        private repo: MotionRepositoryService
-    ) {}
+    private controller = inject(MotionControllerService);
+    private repo = inject(MotionRepositoryService);
 
     public getViewModelObservable(amendmentId: Id): Observable<ViewMotion | null> {
         return this.controller.getViewModelObservable(amendmentId);

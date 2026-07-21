@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FULL_FIELDSET } from '@app/domain/fieldsets/misc';
+import { OrganizationRepositoryService } from '@app/gateways/repositories/organization-repository.service';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, firstValueFrom, map } from 'rxjs';
-import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
-import { OrganizationRepositoryService } from 'src/app/gateways/repositories/organization-repository.service';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 const INFO_SUBSCRIPTION = `meeting_info`;
 
@@ -13,6 +13,7 @@ const INFO_SUBSCRIPTION = `meeting_info`;
     selector: `os-meeting-info`,
     templateUrl: `./meeting-info.component.html`,
     styleUrls: [`./meeting-info.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MeetingInfoComponent extends BaseMeetingComponent implements OnInit {

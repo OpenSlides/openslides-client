@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
+import { Permission } from '@app/domain/definitions/permission';
 import {
     BasePollDetailComponent,
     BaseVoteData
-} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+} from '@app/site/pages/meetings/modules/poll/base/base-poll-detail.component';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { TranslateService } from '@ngx-translate/core';
 
 import { MotionPollService } from '../../../../modules/motion-poll/services';
 import { MotionPollDialogService } from '../../../../modules/motion-poll/services/motion-poll-dialog.service';

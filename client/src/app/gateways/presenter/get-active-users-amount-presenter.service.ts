@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
@@ -7,11 +7,9 @@ interface GetActiveUsersPresenterResult {
     active_users_amount: number;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GetActiveUsersAmountPresenterService {
-    public constructor(private presenter: PresenterService) {}
+    private presenter = inject(PresenterService);
 
     public async call(): Promise<number> {
         const response = await this.presenter.call<GetActiveUsersPresenterResult>(Presenter.GET_ACTIVE_USER_AMOUNT, {});

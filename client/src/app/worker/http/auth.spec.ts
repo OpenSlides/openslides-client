@@ -1,6 +1,6 @@
 import fetchMock from 'fetch-mock';
-import { environment } from 'src/environments/environment';
 
+import { environment } from '../../../environments/environment';
 import { WorkerHttpAuth } from './auth';
 
 const AUTH_TOKENS = {

@@ -1,21 +1,22 @@
-import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ProjectorMessage } from 'src/app/domain/models/projector/projector-message';
-import { ProjectorMessageRepositoryService } from 'src/app/gateways/repositories/projector-messages/projector-message-repository.service';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewProjectorMessage } from 'src/app/site/pages/meetings/pages/projectors';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { ProjectorMessage } from '@app/domain/models/projector/projector-message';
+import { ProjectorMessageRepositoryService } from '@app/gateways/repositories/projector-messages/projector-message-repository.service';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { ViewProjectorMessage } from '@app/site/pages/meetings/pages/projectors';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProjectorMessageControllerService extends BaseMeetingControllerService<
     ViewProjectorMessage,
     ProjectorMessage
 > {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: ProjectorMessageRepositoryService
-    ) {
+    protected override repo: ProjectorMessageRepositoryService;
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(ProjectorMessageRepositoryService);
         super(controllerServiceCollector, ProjectorMessage, repo);
+        this.repo = repo;
     }
 
     public create(payload: any): Promise<Identifiable> {

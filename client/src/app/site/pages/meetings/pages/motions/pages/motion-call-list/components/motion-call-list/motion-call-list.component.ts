@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { FlatNode } from 'src/app/infrastructure/definitions/tree';
-import { ViewMotion, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { FlatNode } from '@app/infrastructure/definitions/tree';
+import { ViewMotion, ViewTag } from '@app/site/pages/meetings/pages/motions';
 import {
     BaseSortTreeViewComponent,
     SortTreeFilterId,
     SortTreeFilterOption
-} from 'src/app/ui/base/base-sort-tree-view-component';
+} from '@app/ui/base/base-sort-tree-view-component';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { TagControllerService } from '../../../../modules/tags/services';
@@ -19,6 +19,7 @@ import { MotionPdfExportService } from '../../../../services/export/motion-pdf-e
     selector: `os-motion-call-list`,
     templateUrl: `./motion-call-list.component.html`,
     styleUrls: [`./motion-call-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionCallListComponent extends BaseSortTreeViewComponent<ViewMotion> implements OnInit {

@@ -1,6 +1,6 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { Id } from '@app/domain/definitions/key-types';
+import { MeetingUser } from '@app/domain/models/meeting-users/meeting-user';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { ViewSpeaker } from '../pages/agenda';
 import { ViewAssignmentCandidate } from '../pages/assignments';

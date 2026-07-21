@@ -11,11 +11,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
-import { ListModule } from 'src/app/ui/modules/list';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { DirectivesModule } from '@app/ui/directives';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
+import { ListModule } from '@app/ui/modules/list';
+import { SearchSelectorModule } from '@app/ui/modules/search-selector';
 
 import { ChartComponent } from './components/chart/chart.component';
 import { CheckInputComponent } from './components/check-input/check-input.component';

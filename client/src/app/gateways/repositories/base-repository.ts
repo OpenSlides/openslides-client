@@ -1,12 +1,12 @@
+import { HasSequentialNumber, Identifiable } from '@app/domain/interfaces';
+import { OnAfterAppsLoaded } from '@app/infrastructure/definitions/hooks/after-apps-loaded';
+import { ListUpdateData } from '@app/infrastructure/utils';
+import { getIntlCollatorForLang } from '@app/infrastructure/utils';
+import { Deferred } from '@app/infrastructure/utils/promises';
+import { OsSortProperty } from '@app/site/base/base-sort.service';
+import { SortListService } from '@app/ui/modules/list';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription } from 'rxjs';
-import { HasSequentialNumber, Identifiable } from 'src/app/domain/interfaces';
-import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
-import { ListUpdateData } from 'src/app/infrastructure/utils';
-import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { OsSortProperty } from 'src/app/site/base/base-sort.service';
-import { SortListService } from 'src/app/ui/modules/list';
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';

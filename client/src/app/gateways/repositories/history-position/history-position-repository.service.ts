@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HistoryPosition } from 'src/app/domain/models/history-position/history-position';
+import { inject, Service } from '@angular/core';
+import { HistoryPosition } from '@app/domain/models/history-position/history-position';
 
 import { BaseRepository } from '../base-repository';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { ViewHistoryPosition } from './view-history-position';
-@Injectable({
-    providedIn: `root`
-})
+
+@Service()
 export class HistoryPositionRepositoryService extends BaseRepository<ViewHistoryPosition, HistoryPosition> {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
         super(repositoryServiceCollector, HistoryPosition);
     }
 

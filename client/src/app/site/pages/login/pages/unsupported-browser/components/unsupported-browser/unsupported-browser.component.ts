@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 
 import { BrowserRecommendation, BrowserSupportService } from '../../../../services/browser-support.service';
 
@@ -6,6 +6,7 @@ import { BrowserRecommendation, BrowserSupportService } from '../../../../servic
     selector: `os-unsupported-browser`,
     templateUrl: `./unsupported-browser.component.html`,
     styleUrls: [`./unsupported-browser.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class UnsupportedBrowserComponent implements OnInit {

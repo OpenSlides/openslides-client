@@ -1,4 +1,4 @@
-import { CustomOverlayConfig } from 'src/app/ui/modules/openslides-overlay';
+import { CustomOverlayConfig } from '@app/ui/modules/openslides-overlay';
 
 export interface SpinnerConfig extends CustomOverlayConfig {
     /**

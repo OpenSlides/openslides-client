@@ -13,22 +13,22 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Id } from '@app/domain/definitions/key-types';
+import { Selectable } from '@app/domain/interfaces/selectable';
+import { SpeakerState } from '@app/domain/models/speakers/speaker-state';
+import { SPECIAL_SPEECH_STATES, SpeechState } from '@app/domain/models/speakers/speech-state';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewListOfSpeakers, ViewSpeaker } from '@app/site/pages/meetings/pages/agenda';
+import { SpeakerControllerService } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
+import { InteractionService } from '@app/site/pages/meetings/pages/interaction/services/interaction.service';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { SortingListComponent } from '@app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable, startWith } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
-import { SPECIAL_SPEECH_STATES, SpeechState } from 'src/app/domain/models/speakers/speech-state';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewListOfSpeakers, ViewSpeaker } from 'src/app/site/pages/meetings/pages/agenda';
-import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
-import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { SortingListComponent } from 'src/app/ui/modules/sorting/modules/sorting-list/components/sorting-list/sorting-list.component';
 
 import { UserSelectionData } from '../../../participant-search-selector';
 import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-speakers-content-title.directive';

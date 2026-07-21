@@ -1,11 +1,11 @@
 import { Directive } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { BaseController } from 'src/app/site/base/base-controller';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { Id } from '@app/domain/definitions/key-types';
+import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { BaseController } from '@app/site/base/base-controller';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 
 import { ActiveMeetingService } from '../services/active-meeting.service';
 import { ActiveMeetingIdService } from '../services/active-meeting-id.service';

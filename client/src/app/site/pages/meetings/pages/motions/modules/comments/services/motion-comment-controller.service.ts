@@ -1,20 +1,19 @@
-import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
-import { MotionCommentRepositoryService } from 'src/app/gateways/repositories/motions';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionComment } from '@app/domain/models/motions/motion-comment';
+import { MotionCommentRepositoryService } from '@app/gateways/repositories/motions';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewMotionComment } from '../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionCommentControllerService extends BaseMeetingControllerService<ViewMotionComment, MotionComment> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionCommentRepositoryService
-    ) {
+    protected override repo: MotionCommentRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(MotionCommentRepositoryService);
         super(controllerServiceCollector, MotionComment, repo);
     }
 

@@ -1,20 +1,18 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { BaseFilterListService, OsFilter, OsHideFilterSetting } from '@app/site/base/base-filter.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { DelegationType } from '@app/site/pages/meetings/view-models/delegation-type';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { GenderControllerService } from '@app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
+import { ActiveFiltersService } from '@app/site/services/active-filters.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { BaseFilterListService, OsFilter, OsHideFilterSetting } from 'src/app/site/base/base-filter.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { DelegationType } from 'src/app/site/pages/meetings/view-models/delegation-type';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ParticipantListFilterService extends BaseFilterListService<ViewUser> {
     /**
      * set the storage key name
@@ -48,14 +46,14 @@ export class ParticipantListFilterService extends BaseFilterListService<ViewUser
     private _voteWeightEnabled: boolean;
     private _voteDelegationEnabled: boolean;
 
-    public constructor(
-        store: ActiveFiltersService,
-        groupRepo: GroupControllerService,
-        structureRepo: StructureLevelControllerService,
-        genderRepo: GenderControllerService,
-        private meetingSettings: MeetingSettingsService,
-        private operator: OperatorService
-    ) {
+    private meetingSettings = inject(MeetingSettingsService);
+    private operator = inject(OperatorService);
+
+    public constructor() {
+        const store = inject(ActiveFiltersService);
+        const groupRepo = inject(GroupControllerService);
+        const structureRepo = inject(StructureLevelControllerService);
+        const genderRepo = inject(GenderControllerService);
         super(store);
         this.updateFilterForRepo({
             repo: groupRepo,

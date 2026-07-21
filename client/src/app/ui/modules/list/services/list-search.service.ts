@@ -1,5 +1,5 @@
+import { Identifiable } from '@app/domain/interfaces';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
 
 import { SearchService } from '../definitions/search-service';
 

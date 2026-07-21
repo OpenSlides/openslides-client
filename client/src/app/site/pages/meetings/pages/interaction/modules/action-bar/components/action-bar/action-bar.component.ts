@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { fadeInAnim, fadeInOutAnim } from '@app/infrastructure/animations';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { InteractionService } from '@app/site/pages/meetings/pages/interaction/services/interaction.service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable } from 'rxjs';
-import { fadeInAnim, fadeInOutAnim } from 'src/app/infrastructure/animations';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
 
 import { ApplauseService } from '../../../../services/applause.service';
 import { CallRestrictionService } from '../../../../services/call-restriction.service';

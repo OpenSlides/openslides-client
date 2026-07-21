@@ -1,8 +1,8 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Selectable } from '@app/domain/interfaces';
+import { GetValidTimezonesPresenterService } from '@app/gateways/presenter/get-valid-timezones';
 import { TZDate } from '@date-fns/tz';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Selectable } from 'src/app/domain/interfaces';
-import { GetValidTimezonesPresenterService } from 'src/app/gateways/presenter/get-valid-timezones';
 
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { ORGANIZATION_ID } from '../pages/organization/services/organization.service';
@@ -26,9 +26,7 @@ class SearchSelectorHelper implements Selectable {
     }
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class TimeZoneService {
     private activeMeetingRepo = inject(ActiveMeetingService);
     private organizationRepo = inject(OrganizationControllerService);

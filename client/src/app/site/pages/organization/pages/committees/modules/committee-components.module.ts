@@ -9,9 +9,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { ChipComponent } from 'src/app/ui/modules/chip';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
+import { DirectivesModule } from '@app/ui/directives';
+import { ChipComponent } from '@app/ui/modules/chip';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
 
 import { MeetingTimeComponent } from '../../../../../../ui/modules/meeting-time/meeting-time.component';
 import { OpenSlidesTranslationModule } from '../../../../../modules/translations';

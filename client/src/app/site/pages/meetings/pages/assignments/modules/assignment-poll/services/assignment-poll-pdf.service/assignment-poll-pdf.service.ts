@@ -1,27 +1,22 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { PollMethod } from '@app/domain/models/poll/poll-constants';
+import { AbstractPollData, BasePollPdfService } from '@app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
-import { PollMethod } from 'src/app/domain/models/poll/poll-constants';
-import {
-    AbstractPollData,
-    BasePollPdfService
-} from 'src/app/site/pages/meetings/modules/poll/base/base-poll-pdf.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
 import { ViewAssignment } from '../../../../view-models';
 import { AssignmentPollService } from '../assignment-poll.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AssignmentPollPdfService extends BasePollPdfService {
-    public constructor(
-        meetingSettingsService: MeetingSettingsService,
-        protected override translate: TranslateService,
-        private assignmentRepo: AssignmentControllerService,
-        pollService: AssignmentPollService
-    ) {
+    protected override translate = inject(TranslateService);
+    private assignmentRepo = inject(AssignmentControllerService);
+
+    public constructor() {
+        const meetingSettingsService = inject(MeetingSettingsService);
+        const pollService = inject(AssignmentPollService);
         super(pollService);
         meetingSettingsService
             .get(`assignment_poll_ballot_paper_number`)
