@@ -43,18 +43,6 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
     }
 
     public initForm(): void {
-        effect(() => this.loadData());
-    }
-
-    public getSerialzedForm(): Record<string, unknown> {
-        return {
-            ...this.form.value,
-            min_options_amount: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_options_amount`],
-            min_vote_sum: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_vote_sum`]
-        };
-    }
-
-    private loadData(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [this.data().config.onehundred_percent_base],
             allow_general_abstain: [false],
@@ -67,6 +55,14 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
             max_vote_sum: [this.optionAmount(), [Validators.required, Validators.min(1)]],
             min_vote_sum: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_vote_sum`)]]
         });
+    }
+
+    public getSerialzedForm(): Record<string, unknown> {
+        return {
+            ...this.form.value,
+            min_options_amount: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_options_amount`],
+            min_vote_sum: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_vote_sum`]
+        };
     }
 
     private minOptionsAmountValidator(dependant: string): ValidatorFn {

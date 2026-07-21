@@ -17,8 +17,6 @@ import { PollFormBaseComponent } from '../poll-config-form-base.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollFormApprovalComponent extends PollFormBaseComponent {
-    private _data: Partial<ViewPoll>;
-
     public validPercentBases: [ApprovalOnehundredPercentBase, string][] = [
         [`yes_no`, _('Yes/No')],
         [`yes_no_abstain`, _('Yes/No/Abstain')],
