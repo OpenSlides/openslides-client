@@ -131,6 +131,19 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
         return colors;
     }
 
+    public displayChart = computed<boolean>(() => {
+        const chartData = this.chartData();
+        if (chartData.some(e => e.data[0] < 0)) {
+            return false;
+        }
+
+        if (!chartData.some(e => e.data[0] > 0)) {
+            return false;
+        }
+
+        return this.config().display_chart === `pie`;
+    });
+
     public totalVoteSum = computed<number>(() => {
         return this.config().totalVotes!;
     });

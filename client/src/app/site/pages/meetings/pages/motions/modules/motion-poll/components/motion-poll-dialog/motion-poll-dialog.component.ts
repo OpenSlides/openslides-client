@@ -11,7 +11,7 @@ import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/c
 import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { PollFormApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: `os-motion-poll-dialog`,
@@ -46,7 +46,6 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
     }
 
     private pollService = inject(PollService);
-    private translate = inject(TranslateService);
 
     public override methodPayload(): PollMethodPayload {
         const config = { ...this.approvalFormValue };
@@ -61,14 +60,7 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
     }
 
     public analogPollOptions(): { key: string; title: string }[] {
-        const options = [
-            { key: `yes`, title: this.translate.instant(`Yes`) },
-            { key: `no`, title: this.translate.instant(`No`) }
-        ];
-
-        if (this.approvalFormValue.allow_abstain) {
-            options.push({ key: `abstain`, title: this.translate.instant(`Abstain`) });
-        }
+        const options = [{ key: `approval`, title: null }];
 
         return options;
     }

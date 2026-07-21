@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -9,6 +9,7 @@ import {
     PollMethodPayload,
     PollOptionsPayload
 } from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
 import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { PollFormApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { PollFormRatingApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-rating-approval/poll-form-rating-approval.component';
@@ -19,13 +20,12 @@ import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
-const TAB_METHOD_MAP = [`selection`, `rating_approval`, `rating_score`, `approval`];
-
 @Component({
     selector: `os-assignment-poll-dialog`,
     templateUrl: `./assignment-poll-dialog.component.html`,
     styleUrls: [`./assignment-poll-dialog.component.scss`],
     imports: [
+        PollEditResultComponent,
         PollFormComponent,
         PollFormApprovalComponent,
         PollFormSelectionComponent,
@@ -43,6 +43,24 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     private selectionForm = viewChild(PollFormSelectionComponent);
     private ratingApprovalForm = viewChild(PollFormRatingApprovalComponent);
     private ratingScoreForm = viewChild(PollFormRatingScoreComponent);
+
+    private tabMethodMap = computed(() => {
+        const methods = [];
+        if (!this.hasMultipleOptions) {
+            methods.push(`approval`);
+            if (this.allowCumulative()) {
+                methods.push(`rating_score`);
+            }
+        } else {
+            methods.push(`selection`, `rating_approval`);
+            if (this.allowCumulative()) {
+                methods.push(`rating_score`);
+            }
+            methods.push(`approval`);
+        }
+
+        return methods;
+    });
 
     public method = `rating_approval`;
 
@@ -89,18 +107,18 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public constructor() {
         super();
 
-        if (this.pollData?.config_id) {
-            const collection = collectionFromFqid(this.pollData?.config_id);
-            this.method = collection.replace(`poll_config_`, ``);
-            this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.method));
-        }
-
         this.meetingSettingsService
             .get(`poll_enable_max_votes_per_option`)
             .pipe(takeUntilDestroyed())
             .subscribe(v => {
                 this.allowCumulative.set(v);
             });
+
+        if (this.pollData?.config_id) {
+            const collection = collectionFromFqid(this.pollData?.config_id);
+            this.method = collection.replace(`poll_config_`, ``);
+            this.selectedTab.set(this.tabMethodMap().indexOf(this.method));
+        }
     }
 
     public override methodPayload(): PollMethodPayload {
@@ -119,19 +137,22 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         };
     }
 
-    private getSelectedMethod(): string {
-        if (!this.hasMultipleOptions) {
-            if (this.selectedTab() != 1) {
-                return `approval`;
-            }
+    public analogPollOptions(): { key: string; title: string }[] {
+        const assignment = this.pollData?.content_object as ViewAssignment;
 
-            return `rating_score`;
+        const options = [];
+        if (this.getSelectedMethod() === `approval`) {
+            options.push([{ key: `approval`, title: null }]);
+        } else {
+            for (const option of assignment.candidates) {
+                options.push({ key: `meeting_user-${option.meeting_user_id}`, title: option.getTitle() });
+            }
         }
 
-        return TAB_METHOD_MAP[this.selectedTab()];
+        return options;
     }
 
-    private getMethodConfig(): unknown {
+    public getMethodConfig(): unknown {
         switch (this.getSelectedMethod()) {
             case `approval`:
                 return { ...this.approvalForm()?.getSerialzedForm() };
@@ -143,5 +164,9 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
                 return { ...this.ratingScoreForm()?.getSerialzedForm() };
         }
         return {};
+    }
+
+    public getSelectedMethod(): string {
+        return this.tabMethodMap()[this.selectedTab()];
     }
 }
