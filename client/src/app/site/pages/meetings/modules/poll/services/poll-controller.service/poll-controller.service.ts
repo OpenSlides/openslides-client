@@ -1,24 +1,25 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Fqid } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Poll } from '@app/domain/models/poll/poll';
+import { PollState } from '@app/domain/models/poll/poll-constants';
+import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
+import { VoteRepositoryService } from '@app/gateways/repositories/polls/vote-repository.service';
+import { viewModelListEqual } from '@app/infrastructure/utils';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { distinctUntilChanged, map, Observable } from 'rxjs';
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { PollState } from 'src/app/domain/models/poll/poll-constants';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
-import { viewModelListEqual } from 'src/app/infrastructure/utils';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewPoll } from '../../../../pages/polls';
 
-@Injectable({ providedIn: `root` })
+@Service()
 export class PollControllerService extends BaseMeetingControllerService<ViewPoll, Poll> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: PollRepositoryService,
-        protected voteRepo: VoteRepositoryService
-    ) {
+    protected override repo: PollRepositoryService;
+    protected voteRepo = inject(VoteRepositoryService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(PollRepositoryService);
         super(controllerServiceCollector, Poll, repo);
 
         this.getViewModelListObservableOfStarted()

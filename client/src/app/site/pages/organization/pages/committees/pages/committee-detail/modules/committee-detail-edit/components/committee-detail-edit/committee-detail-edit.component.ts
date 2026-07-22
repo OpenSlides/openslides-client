@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { CML } from '@app/domain/definitions/organization-permission';
+import { Identifiable } from '@app/domain/interfaces';
+import { Selectable } from '@app/domain/interfaces/selectable';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OrganizationTagControllerService } from '@app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { OsOptionSelectionChanged } from '@app/ui/modules/search-selector';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, OperatorFunction } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { CML } from 'src/app/domain/definitions/organization-permission';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { OsOptionSelectionChanged } from 'src/app/ui/modules/search-selector';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
 import { ViewCommittee } from '../../../../../../view-models';
@@ -28,6 +28,7 @@ const RECEIVE_FORWARDING_DISABLED_TOOLTIP = _(`You can change this option only i
     selector: `os-committee-detail-edit`,
     templateUrl: `./committee-detail-edit.component.html`,
     styleUrls: [`./committee-detail-edit.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommitteeDetailEditComponent extends BaseComponent implements OnInit {

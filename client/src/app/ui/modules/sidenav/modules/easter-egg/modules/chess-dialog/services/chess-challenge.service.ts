@@ -1,15 +1,13 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { NotifyResponse, NotifyService } from '@app/gateways/notify.service';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ChessDialogModule } from '../chess-dialog.module';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ChessChallengeService {
     private notifyService = inject(NotifyService);
     private dialog = inject(MatDialog);

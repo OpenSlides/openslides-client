@@ -1,17 +1,15 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { CsvExportForBackendService } from '@app/gateways/export/csv-export.service/csv-export-for-backend.service';
+import { BaseBackendImportService } from '@app/site/base/base-import.service/base-backend-import.service';
+import { ImportServiceCollectorService } from '@app/site/services/import-service-collector.service';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
-import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.service/csv-export-for-backend.service';
-import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { COMMITTEE_CSV_EXPORT_EXAMPLE } from '../../../../export';
 import { CommitteeControllerService } from '../../../../services/committee-controller.service';
 import { committeeHeadersAndVerboseNames } from '../../definitions';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class CommitteeImportService extends BaseBackendImportService {
     public override errorList = {
         Duplicates: _(`This committee already exists`)
@@ -30,7 +28,8 @@ export class CommitteeImportService extends BaseBackendImportService {
     private exporter = inject(CsvExportForBackendService);
     private repo = inject(CommitteeControllerService);
 
-    public constructor(importServiceCollector: ImportServiceCollectorService) {
+    public constructor() {
+        const importServiceCollector = inject(ImportServiceCollectorService);
         super(importServiceCollector);
     }
 

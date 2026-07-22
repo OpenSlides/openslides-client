@@ -1,14 +1,14 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Permission } from '@app/domain/definitions/permission';
+import { PROJECTIONDEFAULT } from '@app/domain/models/projector/projection-default';
+import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewTag } from '@app/site/pages/meetings/pages/motions';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { MultiProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
+import { ComponentServiceCollectorService } from '@app/site/services/component-service-collector.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { SortListService } from '@app/ui/modules/list';
 import { TranslateService } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
-import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { MultiProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
-import { ComponentServiceCollectorService } from 'src/app/site/services/component-service-collector.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { SortListService } from 'src/app/ui/modules/list';
 
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
@@ -20,6 +20,7 @@ import { MotionMultiselectService } from '../../services/motion-multiselect.serv
     selector: `os-motion-multiselect-actions`,
     templateUrl: `./motion-multiselect-actions.component.html`,
     styleUrls: [`./motion-multiselect-actions.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionMultiselectActionsComponent extends BaseUiComponent implements OnInit {

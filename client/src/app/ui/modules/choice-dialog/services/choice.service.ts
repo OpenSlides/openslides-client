@@ -1,13 +1,13 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Selectable } from '@app/domain/interfaces';
 import { firstValueFrom, Observable } from 'rxjs';
-import { Selectable } from 'src/app/domain/interfaces';
 
 import { infoDialogSettings } from '../../../../infrastructure/utils/dialog-settings';
 import { ChoiceDialogComponent } from '../choice-dialog.component';
 import { ChoiceAnswer, ChoiceDialogConfig } from '../definitions';
 
-@Injectable({ providedIn: `root` })
+@Service()
 export class ChoiceService {
     private dialog = inject(MatDialog);
 

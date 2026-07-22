@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Permission } from 'src/app/domain/definitions/permission';
+import { Permission } from '@app/domain/definitions/permission';
 
 import { PermissionGuard } from '../../../../guards/permission.guard';
 import { AgendaMainComponent } from './components/agenda-main/agenda-main.component';

@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { ProjectorCountdownDialogComponent } from '../components/projector-countdown-dialog/projector-countdown-dialog.component';
 import { CountdownDialogData } from '../definitions';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProjectorCountdownDialogService extends BaseDialogService<
     ProjectorCountdownDialogComponent,
     Partial<CountdownDialogData>,

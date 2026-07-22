@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { UnsafeHtml } from '@app/domain/definitions/key-types';
+import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/motions.constants';
+import { LineRange } from '@app/site/pages/meetings/pages/motions/definitions';
+import { ViewUnifiedChange } from '@app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { TranslateService } from '@ngx-translate/core';
-import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
-import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
 import { DiffLinesInParagraph } from '../../../../../../definitions/index';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';

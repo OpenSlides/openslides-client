@@ -1,13 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Route, Router, UrlSegment, UrlTree } from '@angular/router';
 
 import { AuthCheckService } from '../services/auth-check.service';
 import { OpenSlidesRouterService } from '../services/openslides-router.service';
 import { RerouteService } from '../services/reroute.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PermissionGuard {
     private authCheck = inject(AuthCheckService);
     private osRouter = inject(OpenSlidesRouterService);

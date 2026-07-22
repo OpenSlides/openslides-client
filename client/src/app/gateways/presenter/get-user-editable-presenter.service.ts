@@ -1,5 +1,5 @@
-import { inject, Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
 
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
@@ -13,9 +13,7 @@ type GetUserEditableIdentifiedScope = Record<string, [boolean, string?]>;
 
 export type GetUserEditablePresenterResult = Record<Id, GetUserEditableIdentifiedScope>;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GetUserEditablePresenterService {
     private presenter = inject(PresenterService);
 

@@ -1,31 +1,29 @@
-import { Injectable, TemplateRef } from '@angular/core';
+import { inject, Service, TemplateRef } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ActiveMeetingIdService } from '../../../services/active-meeting-id.service';
 import { MediafileDeleteDialogComponent } from '../components/mediafile-delete-dialog/mediafile-delete-dialog.component';
 import { ViewMediafile } from '../view-models';
 import { MediafileControllerService } from './mediafile-controller.service';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class MediafileCommonService {
     private get activeMeetingId(): number {
         return this.meetingIdService.meetingId!;
     }
 
-    public constructor(
-        private meetingIdService: ActiveMeetingIdService,
-        private router: Router,
-        private repo: MediafileControllerService,
-        private promptService: PromptService,
-        private translate: TranslateService,
-        private dialog: MatDialog
-    ) {}
+    private meetingIdService = inject(ActiveMeetingIdService);
+    private router = inject(Router);
+    private repo = inject(MediafileControllerService);
+    private promptService = inject(PromptService);
+    private translate = inject(TranslateService);
+    private dialog = inject(MatDialog);
 
     /**
      * Given a directory will navigate to the directories page, if no directory is given it will navigate to the base folder.

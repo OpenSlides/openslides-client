@@ -1,11 +1,11 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { BannerDefinition, BannerService } from '@app/site/modules/site-wrapper/services/banner.service';
+import { AuthService } from '@app/site/services/auth.service';
+import { ModelRequestService } from '@app/site/services/model-request.service';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, first, firstValueFrom, map, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BannerDefinition, BannerService } from 'src/app/site/modules/site-wrapper/services/banner.service';
-import { AuthService } from 'src/app/site/services/auth.service';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
 
 import { LifecycleService } from '../../../services/lifecycle.service';
 import { ViewMeeting } from '../view-models/view-meeting';
@@ -15,9 +15,7 @@ import { ArchiveStatusService } from './archive-status.service';
 import { MeetingControllerService } from './meeting-controller.service';
 import { MeetingSettingsDefinitionService } from './meeting-settings-definition.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ActiveMeetingService {
     public get guestsEnabled(): boolean {
         const activeMeeting = this._meetingSubject.getValue();

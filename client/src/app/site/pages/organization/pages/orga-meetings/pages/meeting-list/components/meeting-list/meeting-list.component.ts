@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { BaseListViewComponent } from '@app/site/base/base-list-view.component';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ColumnRestriction } from '@app/ui/modules/list';
+import { PromptService } from '@app/ui/modules/prompt-dialog/services/prompt.service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ColumnRestriction } from 'src/app/ui/modules/list';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog/services/prompt.service';
 
 import { MeetingCsvExportService } from '../../services/meeting-export.service';
 import { MeetingListFilterService } from '../../services/meeting-list-filter/meeting-list-filter.service';

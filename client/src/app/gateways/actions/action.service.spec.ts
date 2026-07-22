@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { QueryParams } from 'src/app/infrastructure/definitions/http';
+import { QueryParams } from '@app/infrastructure/definitions/http';
 
 import { HttpService } from '../http.service';
 import { Action, createEmptyAction } from './action';

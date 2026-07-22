@@ -11,12 +11,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { UserComponentsModule } from 'src/app/site/modules/user-components';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
-import { PipesModule } from 'src/app/ui/pipes';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { UserComponentsModule } from '@app/site/modules/user-components';
+import { DirectivesModule } from '@app/ui/directives';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { SearchSelectorModule } from '@app/ui/modules/search-selector';
+import { PipesModule } from '@app/ui/pipes';
 
 import { CommitteeCommonServiceModule } from '../../../committees/services/committee-common-service.module';
 import { AccountCommonServiceModule } from '../../services/common/account-common-service.module';

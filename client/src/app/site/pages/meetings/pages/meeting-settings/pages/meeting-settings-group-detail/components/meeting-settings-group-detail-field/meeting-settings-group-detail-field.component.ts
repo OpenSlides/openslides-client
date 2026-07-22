@@ -10,17 +10,17 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { MeetingSettingsDefinitionService } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
+import { SettingsInput } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { ParentErrorStateMatcher } from '@app/ui/modules/search-selector/validators';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
-import { SettingsInput } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
 import { AllocationListConfig } from '../allocation-list/allocation-list.component';

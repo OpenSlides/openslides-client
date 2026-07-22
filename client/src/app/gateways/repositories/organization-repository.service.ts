@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { inject, Service } from '@angular/core';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 
 import { Organization, OrganizationAction, OrganizationSetting } from '../../domain/models/organizations/organization';
 import { ViewOrganization } from '../../site/pages/organization/view-models/view-organization';
@@ -7,11 +7,10 @@ import { Fieldsets } from '../../site/services/model-request-builder';
 import { BaseRepository } from './base-repository';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class OrganizationRepositoryService extends BaseRepository<ViewOrganization, Organization> {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
         super(repositoryServiceCollector, Organization);
     }
 

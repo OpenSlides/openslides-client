@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentTable, TableCell } from 'pdfmake/interfaces';
-import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
 
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../../common/motion-controller.service';
@@ -9,15 +9,11 @@ import { MotionControllerService } from '../../common/motion-controller.service'
 /**
  * Creates a PDF list for amendments
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AmendmentListPdfService {
-    public constructor(
-        private motionService: MotionControllerService,
-        private translate: TranslateService,
-        private htmlToPdfService: HtmlToPdfService
-    ) {}
+    private motionService = inject(MotionControllerService);
+    private translate = inject(TranslateService);
+    private htmlToPdfService = inject(HtmlToPdfService);
 
     /**
      * Also required by amendment-detail. Should be own service

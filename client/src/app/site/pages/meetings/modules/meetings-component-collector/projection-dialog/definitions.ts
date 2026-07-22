@@ -1,5 +1,5 @@
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { MultiProjectionBuildDescriptor, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { MultiProjectionBuildDescriptor, ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
 
 export interface ProjectionDialogReturnType {
     action: `project` | `bulkAddToPreview` | `addToPreview` | `hide`;

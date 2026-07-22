@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Subject } from 'rxjs';
 
 import { Permission } from '../../../../domain/definitions/permission';
@@ -12,9 +12,7 @@ export interface MainMenuEntry extends BaseMenuEntry<Permission> {}
 /**
  * Collects main menu entries and provides them to the main menu component.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MainMenuService {
     /**
      * A list of sorted entries.
@@ -33,8 +31,6 @@ export class MainMenuService {
     public get entries(): MainMenuEntry[] {
         return this._entries;
     }
-
-    public constructor() {}
 
     /**
      * Adds entries to the mainmenu.

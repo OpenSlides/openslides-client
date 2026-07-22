@@ -5,10 +5,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { MeetingsComponentCollectorModule } from '@app/site/pages/meetings/modules/meetings-component-collector';
+import { DirectivesModule } from '@app/ui/directives';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
 
 import { AssignmentCommonServiceModule } from '../../services/assignment-common-service.module';
 import { AssignmentExportServiceModule } from '../../services/assignment-export-service.module';

@@ -1,14 +1,12 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Router } from '@angular/router';
-import { FileExportService } from 'src/app/gateways/export/file-export.service/file-export.service';
-import { ExportMeetingPresenterService } from 'src/app/gateways/presenter/export-meeting-presenter.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { FileExportService } from '@app/gateways/export/file-export.service/file-export.service';
+import { ExportMeetingPresenterService } from '@app/gateways/presenter/export-meeting-presenter.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 
 import { AccountFilterService } from '../../../accounts/services/common/account-filter.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class MeetingService {
     private router = inject(Router);
     private accountFilterService = inject(AccountFilterService);

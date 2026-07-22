@@ -5,8 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
 
 import { DetailViewComponent } from './components/detail-view/detail-view.component';
 import { DetailViewNavigatorComponent } from './components/detail-view-navigator/detail-view-navigator.component';

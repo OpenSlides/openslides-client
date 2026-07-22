@@ -7,11 +7,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { ChipComponent } from 'src/app/ui/modules/chip';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { ListModule } from 'src/app/ui/modules/list';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { DirectivesModule } from '@app/ui/directives';
+import { ChipComponent } from '@app/ui/modules/chip';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { ListModule } from '@app/ui/modules/list';
 
 import { OrganizationTagsRoutingModule } from './organization-tags-routing.module';
 import { OrganizationTagMainModule } from './pages/organization-tag-main/organization-tag-main.module';

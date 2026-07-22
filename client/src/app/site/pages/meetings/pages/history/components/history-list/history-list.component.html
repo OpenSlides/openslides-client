@@ -26,7 +26,6 @@
                             formControlName="id"
                             [disabled]="!modelSelectForm.get('collection').value"
                             [inputListValues]="models"
-                            [multiple]="false"
                             (openedChange)="resetListValues($event)"
                         ></os-list-search-selector>
                     </mat-form-field>

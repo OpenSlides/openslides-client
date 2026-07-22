@@ -1,20 +1,19 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Gender } from 'src/app/domain/models/gender/gender';
-import { GenderRepositoryService } from 'src/app/gateways/repositories/gender/gender-repository.service';
-import { BaseController } from 'src/app/site/base/base-controller';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Gender } from '@app/domain/models/gender/gender';
+import { GenderRepositoryService } from '@app/gateways/repositories/gender/gender-repository.service';
+import { BaseController } from '@app/site/base/base-controller';
+import { ControllerServiceCollectorService } from '@app/site/services/controller-service-collector.service';
 
 import { ViewGender } from '../view-models/view-gender';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GenderControllerService extends BaseController<ViewGender, Gender> {
-    public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: GenderRepositoryService
-    ) {
+    protected override repo: GenderRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(ControllerServiceCollectorService);
+        const repo = inject(GenderRepositoryService);
         super(controllerServiceCollector, Gender, repo);
     }
 

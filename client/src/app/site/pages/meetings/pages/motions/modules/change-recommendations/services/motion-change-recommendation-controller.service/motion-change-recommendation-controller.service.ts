@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionChangeRecommendation } from '@app/domain/models/motions/motion-change-recommendation';
+import { ChangeRecoMode, ModificationType } from '@app/domain/models/motions/motions.constants';
+import { MotionChangeRecommendationRepositoryService } from '@app/gateways/repositories/motions';
+import { viewModelListEqual } from '@app/infrastructure/utils';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { distinctUntilChanged, map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
-import { ChangeRecoMode, ModificationType } from 'src/app/domain/models/motions/motions.constants';
-import { MotionChangeRecommendationRepositoryService } from 'src/app/gateways/repositories/motions';
-import { viewModelListEqual } from 'src/app/infrastructure/utils';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { LineRange } from '../../../../definitions';
 import { ViewMotion } from '../../../../view-models';
@@ -16,18 +16,17 @@ import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-mo
 import { DiffServiceFactory } from '../diff-factory.service';
 import { MotionDiffService } from '../motion-diff.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionChangeRecommendationControllerService extends BaseMeetingControllerService<
     ViewMotionChangeRecommendation,
     MotionChangeRecommendation
 > {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionChangeRecommendationRepositoryService,
-        private diffServiceFactory: DiffServiceFactory
-    ) {
+    protected override repo: MotionChangeRecommendationRepositoryService;
+    private diffServiceFactory = inject(DiffServiceFactory);
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(MotionChangeRecommendationRepositoryService);
         super(controllerServiceCollector, MotionChangeRecommendation, repo);
     }
 

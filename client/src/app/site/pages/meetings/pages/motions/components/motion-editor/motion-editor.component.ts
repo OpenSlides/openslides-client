@@ -1,5 +1,8 @@
-import { AfterViewInit, Component, forwardRef, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, forwardRef, inject } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Permission } from '@app/domain/definitions/permission';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import OfficePaste from '@intevation/tiptap-extension-office-paste';
 import { Extension } from '@tiptap/core';
 import { Bold } from '@tiptap/extension-bold';
@@ -10,9 +13,6 @@ import { Italic } from '@tiptap/extension-italic';
 import { Paragraph } from '@tiptap/extension-paragraph';
 import { Text } from '@tiptap/extension-text';
 import { UndoRedo } from '@tiptap/extensions';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { EditorComponent } from '../../../../../../../ui/modules/editor/components/editor/editor.component';
 import {
@@ -29,6 +29,7 @@ import { TextStyle } from '../../../../../../../ui/modules/editor/components/edi
     templateUrl: `../../../../../../../ui/modules/editor/components/editor/editor.component.html`,
     styleUrls: [`../../../../../../../ui/modules/editor/components/editor/editor.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => MotionEditorComponent), multi: true }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionEditorComponent extends EditorComponent implements AfterViewInit {

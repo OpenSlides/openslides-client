@@ -1,15 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { OsFilter } from '@app/site/base/base-filter.service';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
-import { OsFilter } from 'src/app/site/base/base-filter.service';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { MotionControllerService } from '../../common/motion-controller.service';
 import { MotionListFilterService } from '../motion-list-filter.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AmendmentListFilterService extends MotionListFilterService {
     /**
      * Private accessor for an amendment id
@@ -43,12 +40,11 @@ export class AmendmentListFilterService extends MotionListFilterService {
         this.updateStorageKey();
     }
 
-    public constructor(
-        store: ActiveFiltersService,
-        protected override translate: TranslateService,
-        motionRepo: MotionControllerService
-    ) {
-        super(store);
+    protected override translate = inject(TranslateService);
+
+    public constructor() {
+        const motionRepo = inject(MotionControllerService);
+        super();
 
         this.updateFilterForRepo({
             repo: motionRepo,

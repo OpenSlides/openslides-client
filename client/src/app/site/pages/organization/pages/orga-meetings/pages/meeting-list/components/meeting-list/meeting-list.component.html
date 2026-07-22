@@ -118,7 +118,7 @@
                     }
                     @if (meeting.committee?.name) {
                         <os-icon-container class="committee" icon="layers">
-                            {{ meeting.committee?.name | translate }}
+                            {{ $safeNavigationMigration(meeting.committee?.name) | translate }}
                         </os-icon-container>
                     }
                 </div>
@@ -176,7 +176,7 @@
 
     <div *osScrollingTableCell="'menu'; row as meeting; config: { width: 40 }">
         <button
-            *osCmlPerms="CML.can_manage; committeeId: meeting.committee?.id"
+            *osCmlPerms="CML.can_manage; committeeId: $safeNavigationMigration(meeting.committee?.id)"
             data-cy="meetingListSingleMenuTrigger"
             mat-icon-button
             [disabled]="isMultiSelect"

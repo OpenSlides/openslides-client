@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
+import { Service } from '@angular/core';
+import { Settings } from '@app/domain/models/meetings/meeting';
 
 import { meetingSettingsDefaults } from '../../../../../domain/definitions/meeting-settings-defaults';
 import { isSettingsInput, meetingSettings, SettingsGroup, SettingsInput } from './meeting-settings-definitions';
 
 export type SettingsMap = { [key in keyof Settings]: SettingsInput };
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingSettingsDefinitionService {
     public get settings(): SettingsGroup[] {
         return meetingSettings;

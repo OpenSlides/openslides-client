@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { PollDialogData } from '@app/site/pages/meetings/modules/poll/definitions';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { map, Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionPollService } from '../../../../../../modules/motion-poll/services/motion-poll.service/motion-poll.service';
 import { MotionPollDialogService } from '../../../../../../modules/motion-poll/services/motion-poll-dialog.service';

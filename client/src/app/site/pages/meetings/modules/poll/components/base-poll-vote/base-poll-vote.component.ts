@@ -1,8 +1,6 @@
 import { ChangeDetectorRef, Directive, inject, Input, OnInit } from '@angular/core';
 import { UntypedFormControl, Validators } from '@angular/forms';
-import { _ } from '@ngx-translate/core';
-import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id } from '@app/domain/definitions/key-types';
 import {
     GlobalVote,
     IdentifiedVotingData,
@@ -11,14 +9,16 @@ import {
     PollType,
     VoteValue,
     VotingData
-} from 'src/app/domain/models/poll';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewOption, ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { CustomIcon } from 'src/app/ui/modules/custom-icon/definitions';
+} from '@app/domain/models/poll';
+import { BaseComponent } from '@app/site/base/base.component';
+import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewOption, ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { CustomIcon } from '@app/ui/modules/custom-icon/definitions';
+import { _ } from '@ngx-translate/core';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VoteControllerService } from '../../services/vote-controller.service';

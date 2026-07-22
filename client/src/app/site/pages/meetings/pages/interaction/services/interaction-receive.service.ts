@@ -1,4 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { NotifyService } from '@app/gateways/notify.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import {
     BehaviorSubject,
@@ -12,8 +14,6 @@ import {
     startWith,
     Subscription
 } from 'rxjs';
-import { NotifyService } from 'src/app/gateways/notify.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { BroadcastService } from './broadcast.service';
@@ -33,9 +33,7 @@ interface InteractionReceiveSetupServices {
     callRestrictionService: CallRestrictionService;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class InteractionReceiveService {
     private conferenceStateSubject = new BehaviorSubject<ConferenceState>(ConferenceState.none);
     public conferenceStateObservable = this.conferenceStateSubject as Observable<ConferenceState>;
@@ -82,12 +80,10 @@ export class InteractionReceiveService {
     private _lazyServices: InteractionReceiveSetupServices;
     private _inviteSubscription: Subscription;
 
-    private _kickObservable = this.notifyService.getMessageObservable<kickMessage>(KickMessage);
+    private notifyService = inject(NotifyService);
+    private activeMeetingService = inject(ActiveMeetingService);
 
-    public constructor(
-        private notifyService: NotifyService,
-        private activeMeetingService: ActiveMeetingService
-    ) {}
+    private _kickObservable = this.notifyService.getMessageObservable<kickMessage>(KickMessage);
 
     public startListening(lazyServices: InteractionReceiveSetupServices): void {
         if (this._inviteSubscription) {

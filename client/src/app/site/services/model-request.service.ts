@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { isValidId } from '@app/infrastructure/utils';
+import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
 import { filter, first, Observable, Subscription } from 'rxjs';
-import { isValidId } from 'src/app/infrastructure/utils';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { AU_PAUSE_ON_INACTIVITY_TIMEOUT, AutoupdateService, ModelSubscription } from './autoupdate';
 import { ModelData } from './autoupdate/utils';
@@ -23,17 +23,15 @@ interface ModelSubscriptionMapEntry {
 
 export const SUBSCRIPTION_SUFFIX = `:subscription`;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ModelRequestService {
     private _modelSubscriptionMap = new Map<string, ModelSubscriptionMapEntry>();
 
-    public constructor(
-        private autoupdateService: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService,
-        private visibilityService: WindowVisibilityService
-    ) {
+    private autoupdateService = inject(AutoupdateService);
+    private modelRequestBuilder = inject(ModelRequestBuilderService);
+    private visibilityService = inject(WindowVisibilityService);
+
+    public constructor() {
         this.visibilityService.hiddenFor(Math.max(0, AU_PAUSE_ON_INACTIVITY_TIMEOUT - 500)).subscribe(() => {
             for (const key of this._modelSubscriptionMap.keys()) {
                 if (this._modelSubscriptionMap.get(key).unusedSubscription?.closed) {

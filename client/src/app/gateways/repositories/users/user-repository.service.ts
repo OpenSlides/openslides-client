@@ -1,13 +1,13 @@
-import { inject, Injectable } from '@angular/core';
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { UserAction } from 'src/app/gateways/repositories/users/user-action';
-import { ViewStructureLevel } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
+import { inject, Service } from '@angular/core';
+import { Fqid } from '@app/domain/definitions/key-types';
+import { MeetingUser } from '@app/domain/models/meeting-users/meeting-user';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { UserAction } from '@app/gateways/repositories/users/user-action';
+import { ViewStructureLevel } from '@app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { Id } from '../../../domain/definitions/key-types';
 import { Displayable } from '../../../domain/interfaces/displayable';
@@ -78,15 +78,14 @@ interface LevelAndNumberInformation {
 
 export type FullNameInformation = ShortNameInformation & LevelAndNumberInformation;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     private activeMeetingIdService = inject(ActiveMeetingIdService);
     private meetingSettingsService = inject(MeetingSettingsService);
     private meetingUserRepo = inject(MeetingUserRepositoryService);
 
-    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
         super(repositoryServiceCollector, User);
     }
 

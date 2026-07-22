@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+import { Id } from '@app/domain/definitions/key-types';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { PointOfOrderDialogComponent } from '../components/point-of-order-dialog/point-of-order-dialog.component';
 
@@ -11,9 +11,7 @@ export interface PointOfOrderData {
     point_of_order_category_id?: Id;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class PointOfOrderDialogService extends BaseDialogService<
     PointOfOrderDialogComponent,
     PointOfOrderData,

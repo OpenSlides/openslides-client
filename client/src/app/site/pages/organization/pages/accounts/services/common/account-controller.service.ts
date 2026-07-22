@@ -1,34 +1,33 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { Identifiable } from '@app/domain/interfaces';
+import { User } from '@app/domain/models/users/user';
+import { Action } from '@app/gateways/actions';
+import { UserRepositoryService } from '@app/gateways/repositories/users';
+import { BaseController } from '@app/site/base/base-controller';
+import { UserDeleteDialogService } from '@app/site/modules/user-components';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { ControllerServiceCollectorService } from '@app/site/services/controller-service-collector.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { User } from 'src/app/domain/models/users/user';
-import { Action } from 'src/app/gateways/actions';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { BaseController } from 'src/app/site/base/base-controller';
-import { UserDeleteDialogService } from 'src/app/site/modules/user-components';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ControllerServiceCollectorService } from 'src/app/site/services/controller-service-collector.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AccountControllerService extends BaseController<ViewUser, User> {
     private _committee_users_set = new Set<Id>();
 
-    public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: UserRepositoryService,
-        private userDeleteDialog: UserDeleteDialogService,
-        private prompt: PromptService,
-        private operator: OperatorService
-    ) {
+    protected override repo: UserRepositoryService;
+    private userDeleteDialog = inject(UserDeleteDialogService);
+    private prompt = inject(PromptService);
+    private operator = inject(OperatorService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(ControllerServiceCollectorService);
+        const repo = inject(UserRepositoryService);
         super(controllerServiceCollector, User, repo);
         this.operator.user.committee_managements$.subscribe(committees => {
             const userIdsSet = new Set(committees.flatMap(committee => committee.user_ids ?? []));

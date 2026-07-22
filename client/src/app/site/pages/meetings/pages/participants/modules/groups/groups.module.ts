@@ -9,8 +9,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
 
 import { GroupListComponent } from './components/group-list/group-list.component';
 import { GroupsRoutingModule } from './groups-routing.module';

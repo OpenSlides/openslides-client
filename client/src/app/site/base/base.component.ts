@@ -2,9 +2,9 @@ import { Directive, inject, OnDestroy } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { StorageService } from '@app/gateways/storage.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { TranslateService } from '@ngx-translate/core';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { CML, OML } from '../../domain/definitions/organization-permission';
 import { Permission } from '../../domain/definitions/permission';
