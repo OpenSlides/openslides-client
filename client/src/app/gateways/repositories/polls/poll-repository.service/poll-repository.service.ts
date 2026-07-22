@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { inject } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Poll } from '@app/domain/models/poll/poll';
 import { PollState, PollVisibility } from '@app/domain/models/poll/poll-constants';
