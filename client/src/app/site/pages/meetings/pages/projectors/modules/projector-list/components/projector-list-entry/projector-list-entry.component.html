@@ -17,14 +17,13 @@
             <button
                 mat-icon-button
                 matTooltip="{{
-                    'Sets this projector as the reference for the autopilot and the the current list of speakers'
+                    'Sets this projector as the reference for the autopilot and the current list of speakers'
                         | translate
                 }}"
                 (click)="setProjectorAsReference()"
             >
                 @if (projector.isReferenceProjector) {
                     <mat-icon class="grey-icon">star</mat-icon>
-                    fwmotion
                 }
                 @if (!projector.isReferenceProjector) {
                     <mat-icon class="grey-icon">star_border</mat-icon>

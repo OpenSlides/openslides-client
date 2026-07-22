@@ -6,6 +6,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { ListModule } from '@app/ui/modules/list';
@@ -23,6 +24,7 @@ import { TagsRoutingModule } from './tags-routing.module';
         MatButtonModule,
         MatInputModule,
         MatDialogModule,
+        MatTooltipModule,
         ReactiveFormsModule,
         HeadBarModule,
         ListModule,
