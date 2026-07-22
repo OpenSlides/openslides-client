@@ -1,18 +1,29 @@
 <mat-dialog-content>
     <div class="poll-config" [class.hidden]="analogPollFormOpen()">
         <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled" [optionEdit]="selectedTab() === 0">
-            <mat-tab-group [(selectedIndex)]="selectedTab">
-                <mat-tab [label]="'Selection' | translate">
-                    <div class="tab-content">
-                        <os-poll-form-selection [data]="pollData" [optionAmount]="options.value().length" />
-                    </div>
-                </mat-tab>
-                <mat-tab [label]="'Approval' | translate">
-                    <div class="tab-content">
+            @if (pollData.isCreated === false) {
+                @switch (this.getSelectedMethod()) {
+                    @case ('approval') {
                         <os-poll-form-approval [data]="pollData" />
-                    </div>
-                </mat-tab>
-            </mat-tab-group>
+                    }
+                    @case ('selection') {
+                        <os-poll-form-selection [data]="pollData" [optionAmount]="options.value().length" />
+                    }
+                }
+            } @else {
+                <mat-tab-group [(selectedIndex)]="selectedTab">
+                    <mat-tab [label]="'Selection' | translate">
+                        <div class="tab-content">
+                            <os-poll-form-selection [data]="pollData" [optionAmount]="options.value().length" />
+                        </div>
+                    </mat-tab>
+                    <mat-tab [label]="'Approval' | translate">
+                        <div class="tab-content">
+                            <os-poll-form-approval [data]="pollData" />
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+            }
         </os-poll-form>
     </div>
 

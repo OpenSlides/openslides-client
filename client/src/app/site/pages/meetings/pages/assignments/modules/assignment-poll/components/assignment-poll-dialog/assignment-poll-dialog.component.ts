@@ -62,8 +62,6 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         return methods;
     });
 
-    public method = `rating_approval`;
-
     public get isEVotingEnabled(): boolean {
         return this.pollService.isElectronicVotingEnabled;
     }
@@ -107,13 +105,17 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public constructor() {
         super();
 
+        this.allowCumulative.set(this.meetingSettingsService.instant(`poll_enable_max_votes_per_option`));
+        let method = this.pollData?.config?.method;
         if (this.pollData?.config_id) {
             const collection = collectionFromFqid(this.pollData?.config_id);
-            this.method = collection.replace(`poll_config_`, ``);
-        } else if (this.pollData?.config?.method) {
-            this.method = this.pollData.config.method;
+            method = collection.replace(`poll_config_`, ``);
         }
-        this.selectedTab.set(this.tabMethodMap().indexOf(this.method));
+        if (method === `rating_score`) {
+            this.allowCumulative.set(true);
+        }
+
+        this.selectedTab.set(this.tabMethodMap().indexOf(method));
 
         this.meetingSettingsService
             .get(`poll_enable_max_votes_per_option`)

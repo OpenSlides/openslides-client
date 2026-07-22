@@ -6,6 +6,7 @@ import { Poll } from '@app/domain/models/poll/poll';
 import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
 import { Topic } from '@app/domain/models/topics/topic';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import { ViewModelRelations } from '@app/site/base/base-view-model';
 import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
 import { ViewPollBallot, ViewPollOption } from '@app/site/pages/meetings/pages/polls';
@@ -108,7 +109,17 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 
     public getProjectiondefault(): ProjectiondefaultValue {
-        return PROJECTIONDEFAULT.poll;
+        if (!this.content_object_id) {
+            return null;
+        }
+
+        if (collectionFromFqid(this.content_object_id) === Assignment.COLLECTION) {
+            return PROJECTIONDEFAULT.assignmentPoll;
+        } else if (collectionFromFqid(this.content_object_id) === Motion.COLLECTION) {
+            return PROJECTIONDEFAULT.motionPoll;
+        }
+
+        return PROJECTIONDEFAULT.topicPoll;
     }
 
     public override getDetailStateUrl(): string {
@@ -147,7 +158,7 @@ export class ViewPoll<C extends PollContentObject = any>
                 : [];
         return {
             content_object_id: this.fqid,
-            projectionDefault: PROJECTIONDEFAULT.poll,
+            projectionDefault: this.getProjectiondefault(),
             type: `poll`,
             getDialogTitle: this.getTitle,
             slideOptions

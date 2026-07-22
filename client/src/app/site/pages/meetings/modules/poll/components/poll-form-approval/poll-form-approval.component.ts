@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,29 +27,23 @@ export class PollFormApprovalComponent extends PollFormBaseComponent {
         [`disabled`, _('Disabled (no percents)')]
     ];
 
-    public readonly data = input<Partial<ViewPoll>>({});
-
-    public initForm(): void {
+    protected initForm(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
             allow_abstain: [false]
         });
+    }
 
-        effect(this.updateData.bind(this));
+    protected getPatchedFormData(data: Partial<ViewPoll>): Record<string, unknown> {
+        const patch: Record<string, any> = {};
+        if (data.config?.allow_abstain !== undefined) patch[`allow_abstain`] = data.config.allow_abstain;
+        if (data.config?.onehundred_percent_base !== undefined)
+            patch[`onehundred_percent_base`] = data.config.onehundred_percent_base;
+
+        return patch;
     }
 
     public getSerialzedForm(): Record<string, unknown> {
         return this.form.value;
-    }
-
-    private updateData(): void {
-        const data = this.data();
-        if (data && this.form) {
-            const patch: Record<string, any> = {};
-            if (data.config?.allow_abstain !== undefined) patch[`allow_abstain`] = data.config.allow_abstain;
-            if (data.config?.onehundred_percent_base !== undefined)
-                patch[`onehundred_percent_base`] = data.config.onehundred_percent_base;
-            this.form.patchValue(patch);
-        }
     }
 }

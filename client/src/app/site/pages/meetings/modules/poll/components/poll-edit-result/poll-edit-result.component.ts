@@ -112,15 +112,45 @@ export class PollEditResultComponent implements OnInit {
 
     public ngOnInit(): void {
         const result = this.pollData().result ? JSON.parse(this.pollData().result) : {};
-        const builtOptions = this.options().map(opt => ({
-            value: {
-                yes: isNaN(+result[opt.key]) ? null : (result[opt.key] ?? null),
-                no: null,
-                abstain: null
-            },
-            majority: result[opt.key] === VOTE_MAJORITY,
-            majority_value: result[opt.key] === VOTE_MAJORITY ? YES_KEY : null
-        }));
+        const builtOptions =
+            this.configType() === 'approval'
+                ? [
+                      {
+                          value: {
+                              yes: this.parseResultAmount(result?.yes),
+                              no: this.parseResultAmount(result?.no),
+                              abstain: this.parseResultAmount(result?.abstain)
+                          },
+                          majority: null,
+                          majority_value: this.getResultOptionMajorityKey(result)
+                      }
+                  ]
+                : this.options().map(opt => {
+                      const rOpt = result[opt.key] ?? {};
+                      const majorityValue = this.getResultOptionMajorityKey(rOpt);
+
+                      if (this.configType() === 'rating_approval') {
+                          return {
+                              value: {
+                                  yes: this.parseResultAmount(rOpt.yes),
+                                  no: this.parseResultAmount(rOpt.no),
+                                  abstain: this.parseResultAmount(rOpt.abstain)
+                              },
+                              majority: null,
+                              majority_value: majorityValue
+                          };
+                      }
+
+                      return {
+                          value: {
+                              yes: this.parseResultAmount(rOpt),
+                              no: null,
+                              abstain: null
+                          },
+                          majority: rOpt === VOTE_MAJORITY,
+                          majority_value: majorityValue
+                      };
+                  });
 
         this.model.set({
             options: builtOptions,
@@ -196,5 +226,30 @@ export class PollEditResultComponent implements OnInit {
             ...(this.showAbstain() ? { abstain: m.abstain } : {}),
             ...(this.showNota() ? { nota: m.nota } : {})
         };
+    }
+
+    private parseResultAmount(amount: any): number | null {
+        if (isNaN(+amount)) {
+            return null;
+        }
+
+        const parsedAmount = +amount;
+        if (parsedAmount === VOTE_UNDOCUMENTED || parsedAmount === VOTE_MAJORITY) {
+            return null;
+        }
+
+        return amount ?? null;
+    }
+
+    private getResultOptionMajorityKey(rOpt: any): SingleVoteOptionKey {
+        if (rOpt?.yes === VOTE_MAJORITY) {
+            return YES_KEY;
+        } else if (rOpt?.no === VOTE_MAJORITY) {
+            return NO_KEY;
+        } else if (rOpt?.abstain === VOTE_MAJORITY) {
+            return ABSTAIN_KEY;
+        }
+
+        return null;
     }
 }
