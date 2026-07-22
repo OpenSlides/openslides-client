@@ -219,7 +219,7 @@
                     <!-- Category -->
                     @if (motion.category) {
                         <div class="ellipsis-overflow">
-                            <os-icon-container icon="category" [attr.aria-label]="'Category' | translate">
+                            <os-icon-container icon="category" [attr.aria-label]="('Category' | translate) + ' ' + (motion.category.parent ? motion.category.parent.toString() + ' ' : '') + motion.category.toString()">
                                 @if (motion.category.parent) {
                                     <div class="ellipsis-overflow">
                                         {{ motion.category.parent.toString() }}
@@ -232,7 +232,7 @@
                     <!-- Motion Block -->
                     @if (motion.block) {
                         <div class="ellipsis-overflow spacer-top-5">
-                            <os-icon-container icon="widgets" [attr.aria-label]="'Motion block' | translate">
+                            <os-icon-container icon="widgets" [attr.aria-label]="('Motion block' | translate) + ' ' + motion.block.title">
                                 {{ motion.block.title }}
                             </os-icon-container>
                         </div>
@@ -240,7 +240,7 @@
                     <!-- Tags -->
                     @if (motion.tags && motion.tags.length) {
                         <div class="ellipsis-overflow spacer-top-5">
-                            <os-icon-container icon="local_offer" [attr.aria-label]="'Tags' | translate">
+                            <os-icon-container icon="local_offer" [attr.aria-label]="('Tags' | translate) + ' ' + motion.tags">
                                 <os-comma-separated-listing [list]="motion.tags">
                                     <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
                                 </os-comma-separated-listing>

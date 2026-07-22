@@ -129,7 +129,7 @@
         <div class="groupsCell">
             @if (user.groups()?.length) {
                 <div>
-                    <os-icon-container icon="people" [attr.aria-label]="'Groups' | translate" [noWrap]="true">
+                    <os-icon-container icon="people" [attr.aria-label]="('Groups' | translate) + ' ' + user.groups()" [noWrap]="true">
                         <os-comma-separated-listing [list]="user.groups()">
                             <ng-template let-group>{{ group.getTitle() }}</ng-template>
                         </os-comma-separated-listing>
@@ -138,14 +138,14 @@
             }
             @if (user.structure_levels()?.length) {
                 <div class="spacer-top-5">
-                    <os-icon-container icon="flag" [attr.aria-label]="'Stucture level' | translate">
+                    <os-icon-container icon="flag" [attr.aria-label]="('Stucture level' | translate) + ' ' + user.structure_levels()">
                         {{ user.structure_levels() }}
                     </os-icon-container>
                 </div>
             }
             @if (user.number()) {
                 <div class="spacer-top-5">
-                    <os-icon-container icon="perm_identity" [attr.aria-label]="'Participants number' | translate">
+                    <os-icon-container icon="perm_identity" [attr.aria-label]="('Participants number' | translate) + ' ' + user.number()">
                         {{ user.number() }}
                     </os-icon-container>
                 </div>
@@ -158,7 +158,7 @@
                 >
                     <os-icon-container
                         icon="forward"
-                        [attr.aria-label]="'Voting right delegated to (proxy)' | translate"
+                        [attr.aria-label]="('Voting right delegated to (proxy)' | translate) + ' ' + user.vote_delegated_to()"
                         [noWrap]="true"
                     >
                         {{ user.vote_delegated_to() }}
@@ -173,7 +173,7 @@
                 >
                     <os-icon-container
                         icon="work"
-                        [attr.aria-label]="'Voting right received from (principals)' | translate"
+                        [attr.aria-label]="('Voting right received from (principals)' | translate) + ' ' + user.vote_delegations_from()"
                         [noWrap]="true"
                     >
                         <span>{{ user.vote_delegations_from().length }}:</span>
