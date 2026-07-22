@@ -29,19 +29,13 @@ export class PollFormApprovalComponent extends PollFormBaseComponent {
 
     public readonly data = input<Partial<ViewPoll>>({});
 
-    public constructor() {
-        super();
-
-        effect(() => {
-            this.updateData();
-        });
-    }
-
     public initForm(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
             allow_abstain: [false]
         });
+
+        effect(() => this.updateData());
     }
 
     public getSerialzedForm(): Record<string, unknown> {

@@ -38,13 +38,6 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
     public data = input<Partial<ViewPoll>>();
     public optionAmount = input<number>(null);
 
-    public constructor() {
-        super();
-        effect(() => {
-            this.onOptionAmountUpdate.bind(this);
-        });
-    }
-
     public initForm(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [this.data().config.onehundred_percent_base],
@@ -53,6 +46,8 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]]
         });
+
+        effect(() => this.onOptionAmountUpdate.bind(this));
     }
 
     public getSerialzedForm(): Record<string, unknown> {

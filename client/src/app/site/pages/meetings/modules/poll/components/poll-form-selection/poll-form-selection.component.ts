@@ -29,13 +29,6 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
     public data = input.required<Partial<ViewPoll>>();
     public optionAmount = input<number>(null);
 
-    public constructor() {
-        super();
-
-        effect(this.onDataUpdated.bind(this));
-        effect(this.onOptionAmountUpdate.bind(this));
-    }
-
     public initForm(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
@@ -46,6 +39,9 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             min_options_amount: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator()]],
             display_chart: [`table`]
         });
+
+        effect(this.onDataUpdated.bind(this));
+        effect(this.onOptionAmountUpdate.bind(this));
     }
 
     public getSerialzedForm(): Record<string, unknown> {
