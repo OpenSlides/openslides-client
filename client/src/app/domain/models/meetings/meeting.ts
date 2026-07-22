@@ -489,6 +489,7 @@ export class Meeting extends BaseModel<Meeting> {
         `default_projector_countdown_ids`,
         `default_projector_assignment_poll_ids`,
         `default_projector_motion_poll_ids`,
+        `default_projector_topic_poll_ids`,
         `default_group_id`,
         `admin_group_id`,
         `anonymous_group_id`,
