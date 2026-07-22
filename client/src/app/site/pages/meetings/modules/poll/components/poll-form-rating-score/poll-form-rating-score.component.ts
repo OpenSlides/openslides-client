@@ -37,24 +37,21 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
     public data = input<Partial<ViewPoll>>();
     public optionAmount = input<number>(null);
 
-    public constructor() {
-        super();
-        effect(this.onOptionAmountUpdate.bind(this));
-    }
-
     public initForm(): void {
         this.form = this.fb.group({
-            onehundred_percent_base: [`valid`],
+            onehundred_percent_base: [this.data().config.onehundred_percent_base],
             allow_general_abstain: [false],
-            max_votes_per_option: [1],
-            max_options_amount: [1, [Validators.required, Validators.min(1)]],
+            max_votes_per_option: [null],
+            max_options_amount: [this.optionAmount(), [Validators.required, Validators.min(1)]],
             min_options_amount: [
                 1,
                 [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_options_amount`)]
             ],
-            max_vote_sum: [1, [Validators.required, Validators.min(1)]],
+            max_vote_sum: [this.optionAmount(), [Validators.required, Validators.min(1)]],
             min_vote_sum: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_vote_sum`)]]
         });
+
+        effect(this.onOptionAmountUpdate.bind(this));
     }
 
     public getSerialzedForm(): Record<string, unknown> {

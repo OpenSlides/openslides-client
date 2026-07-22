@@ -107,18 +107,20 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public constructor() {
         super();
 
+        if (this.pollData?.config_id) {
+            const collection = collectionFromFqid(this.pollData?.config_id);
+            this.method = collection.replace(`poll_config_`, ``);
+        } else if (this.pollData?.config?.method) {
+            this.method = this.pollData.config.method;
+        }
+        this.selectedTab.set(this.tabMethodMap().indexOf(this.method));
+
         this.meetingSettingsService
             .get(`poll_enable_max_votes_per_option`)
             .pipe(takeUntilDestroyed())
             .subscribe(v => {
                 this.allowCumulative.set(v);
             });
-
-        if (this.pollData?.config_id) {
-            const collection = collectionFromFqid(this.pollData?.config_id);
-            this.method = collection.replace(`poll_config_`, ``);
-            this.selectedTab.set(this.tabMethodMap().indexOf(this.method));
-        }
     }
 
     public override methodPayload(): PollMethodPayload {

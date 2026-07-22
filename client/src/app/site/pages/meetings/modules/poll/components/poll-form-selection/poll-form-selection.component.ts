@@ -29,13 +29,6 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
     public data = input.required<Partial<ViewPoll>>();
     public optionAmount = input<number>(null);
 
-    public constructor() {
-        super();
-
-        effect(this.onDataUpdated.bind(this));
-        effect(this.onOptionAmountUpdate.bind(this));
-    }
-
     public initForm(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
@@ -44,8 +37,11 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             allow_general_abstain: [false],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator()]],
-            display_chart: [``]
+            display_chart: [`table`]
         });
+
+        effect(this.onDataUpdated.bind(this));
+        effect(this.onOptionAmountUpdate.bind(this));
     }
 
     public getSerialzedForm(): Record<string, unknown> {
@@ -74,8 +70,22 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
         }
 
         const patch: Record<string, any> = {};
-        for (const field of [`onehundred_percent_base`, `allow_nota`, `max_options_amount`, `min_options_amount`]) {
-            if (this.data().config && this.data().config[field] !== undefined) patch[field] = this.data().config[field];
+        for (const field of [
+            `onehundred_percent_base`,
+            `allow_nota`,
+            `max_options_amount`,
+            `min_options_amount`,
+            `strike_out`,
+            `display_chart`,
+            `live_vote_enabled`,
+            `display_chart`
+        ]) {
+            if (this.data() && this.data()[field] !== undefined) patch[field] = this.data()[field];
+            if (this.data() && this.data().config[field] !== undefined) patch[field] = this.data().config[field];
+        }
+
+        if (patch[`onehundred_percent_base`] === `yes_no`) {
+            patch[`onehundred_percent_base`] = `valid`;
         }
 
         this.form.patchValue(patch);

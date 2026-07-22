@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, inject, Input, input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, effect, inject, input, OnInit, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -52,29 +52,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
-    private _data: Partial<ViewPoll>;
-
-    @Input()
-    public set data(data: Partial<ViewPoll>) {
-        this._data = data;
-        if (data && this.pollForm) {
-            const patch: Record<string, any> = {};
-            if (data.title !== undefined) patch[`title`] = data.title;
-            if (data.visibility !== undefined) patch[`visibility`] = data.visibility;
-            if (data.entitled_group_ids !== undefined) patch[`entitled_group_ids`] = data.entitled_group_ids;
-            if (data.live_voting_enabled !== undefined) patch[`live_voting_enabled`] = !!data.live_voting_enabled;
-            if (data.options !== undefined && !data.options.some(option => option.meeting_user_id))
-                patch[`options`] = data.options.map(option => option.text);
-            this.pollForm.patchValue(patch);
-        }
-    }
-
-    public get data(): Partial<ViewPoll> {
-        return this._data;
-    }
+    public readonly data = input<Partial<ViewPoll>>({});
 
     public get isCreated(): boolean {
-        return !this.data?.state || this.data.isCreated;
+        return !this.data()?.state || this.data().isCreated;
     }
 
     public get isOpenVotingSelected(): boolean {
@@ -108,6 +89,10 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     public constructor() {
         super();
         this.initContentForm();
+
+        effect(() => {
+            this.updateData();
+        });
     }
 
     public ngOnInit(): void {
@@ -159,5 +144,27 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             option_type: ['text'],
             options: [[]]
         });
+    }
+
+    private updateData(): void {
+        const data = this.data();
+        if (data && this.pollForm) {
+            const patch: Record<string, any> = {};
+
+            if (data.entitled_group_ids !== undefined) patch['entitled_group_ids'] = data.entitled_group_ids;
+            if (data.live_voting_enabled !== undefined) patch['live_voting_enabled'] = !!data.live_voting_enabled;
+            if (data.title !== undefined) patch['title'] = data.title;
+            if (data.visibility !== undefined) patch['visibility'] = data.visibility;
+            if (data.options !== undefined && !data.options.some(option => option.meeting_user_id))
+                patch['options'] = data.options.map(option => option.text);
+            if (data.config?.allow_abstain !== undefined) patch['allow_abstain'] = data.config.allow_abstain;
+            if (data.config?.allow_nota !== undefined) patch['allow_nota'] = data.config.allow_nota;
+            if (data.config?.strike_out !== undefined) patch['strike_out'] = data.config.strike_out;
+            if (data.config?.display_chart !== undefined) patch['display_chart'] = data.config.display_chart;
+            if (data.config?.onehundred_percent_base !== undefined)
+                patch['onehundred_percent_base'] = data.config.onehundred_percent_base;
+
+            this.pollForm.patchValue(patch);
+        }
     }
 }

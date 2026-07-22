@@ -409,11 +409,16 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         this.pollDialog.open(this.getDialogData(pollId));
     }
 
-    private getDialogData(pollId?: Id): Partial<PollDialogData> | ViewPoll {
+    private getDialogData(pollId?: Id): Partial<ViewPoll> | ViewPoll {
         if (pollId) {
             return this.pollController.getViewModel(pollId)!;
         } else {
-            return this.topicPollService.getDefaultPollData(this.topic);
+            return {
+                collection: ViewPoll.COLLECTION,
+                content_object_id: this.topic.fqid,
+                content_object: this.topic,
+                ...this.topicPollService.getDefaultPollData(this.topic)
+            } as unknown as PollDialogData;
         }
     }
 }

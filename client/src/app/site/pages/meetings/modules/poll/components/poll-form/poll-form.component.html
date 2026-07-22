@@ -9,7 +9,7 @@
         </mat-form-field>
 
         <div class="poll-preview-meta-info-form">
-            @if (!data || !data.state || data.isCreated) {
+            @if (!data() || !data().state || data().isCreated) {
                 <div class="info-grid">
                     <!-- Poll Visibility -->
                     @if (isEVotingEnabled()) {

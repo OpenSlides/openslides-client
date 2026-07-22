@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { djb2hash } from '@app/infrastructure/utils';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import {
     BasePollDialogComponent,
     PollMethodPayload,
@@ -52,7 +53,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
 
         return this.getSelectedMethod() === `approval`
             ? this.approvalForm().form.valid
-            : this.selectionPollForm().form.valid;
+            : this.selectionPollForm().form.valid && this.options.value().length > 0;
     }
 
     public selectedTab = signal(0);
@@ -64,6 +65,17 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
     });
 
     private pollService = inject(PollService);
+
+    public constructor() {
+        super();
+
+        if (this.pollData?.config_id) {
+            const collection = collectionFromFqid(this.pollData?.config_id);
+            this.selectedTab.set(TAB_METHOD_MAP.indexOf(collection.replace(`poll_config_`, ``)));
+        } else if (this.pollData?.config?.method) {
+            this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.pollData.config.method));
+        }
+    }
 
     public override methodPayload(): PollMethodPayload {
         return {
