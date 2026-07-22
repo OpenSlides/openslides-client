@@ -1,5 +1,6 @@
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { PollState } from '@app/domain/models/poll';
 
 import { ViewPoll } from '../../../pages/polls';
 
@@ -8,6 +9,10 @@ export abstract class PollFormBaseComponent {
     public form: UntypedFormGroup;
 
     public data = input.required<Partial<ViewPoll>>();
+
+    public pollStarted = computed<boolean>(() => {
+        return this.data().state !== PollState.Created;
+    });
 
     protected fb = inject(UntypedFormBuilder);
 

@@ -1,13 +1,15 @@
 <form [formGroup]="form">
-    <div class="margin-bottom-15 info-grid">
-        <mat-form-field>
-            <mat-label>{{ 'Election method' | translate }}</mat-label>
-            <mat-select formControlName="allow_abstain">
-                <mat-option [value]="false">{{ 'Yes/No' | translate }}</mat-option>
-                <mat-option [value]="true">{{ 'Yes/No/Abstain' | translate }}</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
+    @if (!pollStarted()) {
+        <div class="margin-bottom-15 info-grid">
+            <mat-form-field>
+                <mat-label>{{ 'Election method' | translate }}</mat-label>
+                <mat-select formControlName="allow_abstain">
+                    <mat-option [value]="false">{{ 'Yes/No' | translate }}</mat-option>
+                    <mat-option [value]="true">{{ 'Yes/No/Abstain' | translate }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    }
 
     <mat-form-field>
         <mat-label>{{ '100% base' | translate }}</mat-label>
