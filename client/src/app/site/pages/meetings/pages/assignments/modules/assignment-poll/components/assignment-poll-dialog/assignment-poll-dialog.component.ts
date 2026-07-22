@@ -44,8 +44,6 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     private ratingApprovalForm = viewChild(PollFormRatingApprovalComponent);
     private ratingScoreForm = viewChild(PollFormRatingScoreComponent);
 
-    public method = `rating_approval`;
-
     public get isEVotingEnabled(): boolean {
         return this.pollService.isElectronicVotingEnabled;
     }
@@ -91,13 +89,9 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
         if (this.pollData?.config_id) {
             const collection = collectionFromFqid(this.pollData?.config_id);
-            this.method = collection.replace(`poll_config_`, ``);
-            this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.method));
-        }
-
-        if (!this.pollData?.config_id && this.pollData?.config?.method) {
-            this.method = this.pollData.config.method;
-            this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.method));
+            this.selectedTab.set(TAB_METHOD_MAP.indexOf(collection.replace(`poll_config_`, ``)));
+        } else if (this.pollData?.config?.method) {
+            this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.pollData.config.method));
         }
 
         this.meetingSettingsService

@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { djb2hash } from '@app/infrastructure/utils';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import {
     BasePollDialogComponent,
     PollMethodPayload,
@@ -38,8 +39,6 @@ const TAB_METHOD_MAP = [`selection`, `approval`];
 export class TopicPollDialogComponent extends BasePollDialogComponent {
     public majority: string;
 
-    public method = `selection`;
-
     private approvalForm = viewChild(PollFormApprovalComponent);
     private selectionPollForm = viewChild.required(PollFormSelectionComponent);
 
@@ -70,9 +69,12 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
 
     public constructor() {
         super();
-        if (this.pollData?.config?.method) {
-            this.method = this.pollData.config.method;
-            this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.method));
+
+        if (this.pollData?.config_id) {
+            const collection = collectionFromFqid(this.pollData?.config_id);
+            this.selectedTab.set(TAB_METHOD_MAP.indexOf(collection.replace(`poll_config_`, ``)));
+        } else if (this.pollData?.config?.method) {
+            this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.pollData.config.method));
         }
     }
 
