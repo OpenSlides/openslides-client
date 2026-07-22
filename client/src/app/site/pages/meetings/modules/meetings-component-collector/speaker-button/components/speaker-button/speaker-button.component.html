@@ -11,16 +11,26 @@
                     type="button"
                     [disabled]="disabled"
                 >
-                    <mat-icon
-                        matBadgeColor="accent"
-                        [matBadge]="
-                            canSee && listOfSpeakers.waitingSpeakerAmount > 0
-                                ? listOfSpeakers.waitingSpeakerAmount
-                                : null
-                        "
-                    >
-                        {{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}
-                    </mat-icon>
+                    @if (canSee) {
+                        <mat-icon
+                            matBadgeColor="accent"
+                            [attr.aria-hidden]="false"
+                            [attr.aria-label]="
+                                ('Speakers waiting on list of speakers' | translate) +
+                                ': ' +
+                                listOfSpeakers.waitingSpeakerAmount
+                            "
+                            [matBadge]="
+                                listOfSpeakers.waitingSpeakerAmount > 0 ? listOfSpeakers.waitingSpeakerAmount : null
+                            "
+                        >
+                            {{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}
+                        </mat-icon>
+                    } @else {
+                        <mat-icon>
+                            {{ listOfSpeakers.closed ? 'voice_over_off' : 'record_voice_over' }}
+                        </mat-icon>
+                    }
                 </button>
             } @else {
                 <button mat-menu-item type="button">

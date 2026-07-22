@@ -48,6 +48,10 @@
                                             class="tab-label-notification-wrapper"
                                             matBadgeColor="accent"
                                             matBadgeOverlap="false"
+                                            [attr.aria-hidden]="false"
+                                            [attr.aria-label]="
+                                                ('New messages' | translate) + ': ' + notifications.amount
+                                            "
                                             [matBadge]="notifications.amount"
                                             [matBadgeHidden]="!notifications.amount"
                                         ></div>

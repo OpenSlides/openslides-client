@@ -19,6 +19,8 @@
             <mat-icon
                 matBadgeColor="warn"
                 matBadgeSize="small"
+                [attr.aria-hidden]="false"
+                [attr.aria-label]="('Amount of disabled elements' | translate) + ': ' + numDisabledElements"
                 [matBadge]="numDisabledElements"
                 [matBadgeHidden]="numDisabledElements < 1"
             >

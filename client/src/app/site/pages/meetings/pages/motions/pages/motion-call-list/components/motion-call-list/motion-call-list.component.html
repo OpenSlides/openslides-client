@@ -35,6 +35,8 @@
                     <span
                         class="upper badge-space"
                         matBadgeColor="accent"
+                        [attr.aria-hidden]="false"
+                        [attr.aria-label]="('Amount of filtered categories' | translate) + ': ' + activeCatFilterCount"
                         [matBadge]="activeCatFilterCount > 0 ? activeCatFilterCount : null"
                         [matBadgeOverlap]="false"
                     >
@@ -49,6 +51,8 @@
                     <span
                         class="upper badge-space"
                         matBadgeColor="accent"
+                        [attr.aria-hidden]="false"
+                        [attr.aria-label]="('Amount of filtered Tags' | translate) + ': ' + activeTagFilterCount"
                         [matBadge]="activeTagFilterCount > 0 ? activeTagFilterCount : null"
                         [matBadgeOverlap]="false"
                     >
