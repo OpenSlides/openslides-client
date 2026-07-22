@@ -35,7 +35,7 @@ export class PollFormApprovalComponent extends PollFormBaseComponent {
             allow_abstain: [false]
         });
 
-        effect(() => this.updateData());
+        effect(this.updateData.bind(this));
     }
 
     public getSerialzedForm(): Record<string, unknown> {

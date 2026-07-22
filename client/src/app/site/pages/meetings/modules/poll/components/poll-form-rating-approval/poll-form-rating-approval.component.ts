@@ -47,7 +47,7 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
             min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]]
         });
 
-        effect(() => this.onOptionAmountUpdate.bind(this));
+        effect(this.onOptionAmountUpdate.bind(this));
     }
 
     public getSerialzedForm(): Record<string, unknown> {
