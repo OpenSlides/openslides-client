@@ -33,6 +33,7 @@ export class ParticipantImportService extends BaseBackendImportService {
         total: _(`Total participants`),
         created: _(`Participants created`),
         updated: _(`Participants updated`),
+        referenced: _(`Participants referenced`),
         omitted: _(`Participants skipped`),
         warning: _(`Participants with warnings: affected cells will be skipped`),
         error: _(`Participants with errors`),

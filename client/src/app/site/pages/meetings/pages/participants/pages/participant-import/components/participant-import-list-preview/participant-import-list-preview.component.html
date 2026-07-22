@@ -1,0 +1,222 @@
+<os-head-bar [goBack]="false" [nav]="false">
+    <div class="title-slot">
+        <h1 class="mock-h2" translate>Import participants</h1>
+    </div>
+    <ng-container class="menu-slot">
+        <button mat-button [disabled]="uploadButton" (click)="importData(ImportDialog, ImportDialogSummary)">
+            <span class="upper">Import</span>
+        </button>
+    </ng-container>
+</os-head-bar>
+<div class="static-sort-filter-bar">
+    <os-view-list
+        [csvConfiguration]="csvConfiguration"
+        [csvReload]="importer"
+        [csvReloadButton]="csvReloadButton"
+        [filterProps]="filterProps"
+        [filterService]="filterService"
+        [horizontalScroll]="horizontalScroll"
+        [listObservable]="dataSource"
+        [searchFieldInput]="searchFieldInput"
+        [searchService]="searchService"
+        [shortenedSummary]="shortenSummary(summary)"
+        [showFilterBar]="showFilterBar"
+        [showHeader]="showHeader"
+        [totalCount]="_totalCountObservable | async"
+        [vScrollFixed]="50"
+        (searchFilterUpdated)="searchFilterUpdated.emit($event)"
+        (selectNewFile)="getCsvReload($event)"
+        (selectedColSepOutput)="onColSepChanged($event)"
+        (selectedEncodingOutput)="onEncodingChanged($event)"
+        (selectedTextSeparatorOutput)="onTextSeparatorChanged($event)"
+    >
+        @if (dataSource | async) {
+            @for (column of previewColumns; track column) {
+                <div
+                    *osScrollingTableCell="
+                        column.property;
+                        row as row;
+                        definition as def;
+                        isDefault: true;
+                        config: getColumnConfig(column.property)
+                    "
+                    [class.error-icon]="containsError(row.data, def)"
+                >
+                    @let entry = row.data;
+                    @let type = column.type;
+                    <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) }}</div>
+                    @if (entry && (entry[def] || type === 'boolean')) {
+                        <div class="flex-vertical-center">
+                            @if (getHeader(def).is_list && entry[def]) {
+                                @for (item of entry[def]; track item) {
+                                    @if (getHeader(def).is_object) {
+                                        <div>
+                                            @if (getHeader(def).type === 'string') {
+                                                {{ item.value }}
+                                            }
+                                            @if (getHeader(def).type === 'number') {
+                                                {{ item.value }}
+                                            }
+                                            @if (getHeader(def).type === 'date') {
+                                                {{ item.value }}
+                                            }
+                                            @if (getHeader(def).type === 'boolean') {
+                                                <mat-checkbox disabled [checked]="item.value" />
+                                            }
+                                            &nbsp;
+
+                                            @if (getActionIconRow(item)) {
+                                                <mat-icon class="lower-margin-top" color="accent" inline>
+                                                    {{ getEntryIcon(item) }}
+                                                </mat-icon>
+                                            }
+                                        </div>
+                                    } @else {
+                                        @if (getHeader(def).type === 'string') {
+                                            {{ item.value }}
+                                        }
+                                        @if (getHeader(def).type === 'number') {
+                                            {{ item.value }}
+                                        }
+                                        @if (getHeader(def).type === 'decimal') {
+                                            {{ this.getShortenedDecimal(entry[def].value) }}
+                                        }
+                                        @if (getHeader(def).type === 'date') {
+                                            {{ item.value }}
+                                        }
+                                        @if (getHeader(def).type === 'boolean') {
+                                            <mat-checkbox disabled [checked]="item.value" />
+                                        }
+                                        &nbsp;
+                                    }
+                                }
+                            }
+                            @if (!getHeader(def).is_list && entry[def] !== undefined) {
+                                @if (getHeader(def).is_object) {
+                                    @let icon = getActionIconEntry(entry[def]);
+                                    <div class="cell-wrapper">
+                                        <div [class.email-cell]="getHeader(def).property === 'email'">
+                                            @if (getHeader(def).type === 'string') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'number') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'decimal') {
+                                                {{ this.getShortenedDecimal(entry[def].value) }}
+                                            }
+                                            @if (getHeader(def).type === 'date') {
+                                                {{ entry[def].value }}
+                                            }
+                                            @if (getHeader(def).type === 'boolean') {
+                                                <mat-checkbox disabled [checked]="entry[def].value" />
+                                            }
+                                        </div>
+                                        <div>
+                                            @if (getEntryIcon(entry[def]) || checkChanges(row, column.property)) {
+                                                <mat-icon
+                                                    class="lower-margin-top"
+                                                    inline
+                                                    [class.error-icon]="icon === 'error_outline'"
+                                                    [color]="icon !== 'error_outline' ? 'accent' : null"
+                                                >
+                                                    {{ icon }}
+                                                </mat-icon>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            <div
+                *osScrollingTableCell="'errors'; row as row; config: { width: 55, position: START_POSITION }"
+                class="flex-vertical-center icon-container"
+            >
+                <div *osScrollingTableCellLabel style="text-align: center; width: 100%">Action</div>
+                @if (row.state === 'error') {
+                    <mat-icon class="red-warning-text" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
+                        {{ getActionIconRow(row) }}
+                    </mat-icon>
+                }
+                @if (row.state !== 'error' && row.messages.length) {
+                    <mat-icon class="warn" matTooltip="{{ getWarningRowTooltip(row) }}" matTooltipPosition="right">
+                        warning
+                    </mat-icon>
+                }
+                @let icon = getActionIconRow(row);
+                @if (row.state !== 'error' && icon !== '') {
+                    <mat-icon
+                        matTooltip="{{ getRowTooltip(row) }}"
+                        matTooltipPosition="right"
+                        [ngClass]="getColorIcon(row)"
+                    >
+                        {{ icon }}
+                    </mat-icon>
+                }
+            </div>
+        }
+    </os-view-list>
+    <!-- <footer class="footer">
+        @let cols = shortenSummary(summary);
+        @for (col of cols; track col; let i = $index) {
+            @let colInfo = getSummaryInformation(col.name);
+            <mat-icon inline style="margin-top: 5px; font-size: x-large" [ngClass]="colInfo[1]">
+                {{ colInfo[0] }}
+            </mat-icon>
+            <div style="margin-bottom: 8px">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
+        }
+    </footer> -->
+</div>
+
+<ng-template #ImportDialog>
+    <div class="import-dialog">
+        <h2 class="import-dialog-title" mat-dialog-title style="margin-bottom: 1em" translate>
+            Importing participants
+        </h2>
+
+        <mat-dialog-content class="import-dialog-content">
+            <mat-spinner color="accent" diameter="100" strokeWidth="8"></mat-spinner>
+            <div class="import-status">
+                <div class="import-status-title" translate>Import in progress!</div>
+                <div class="import-status-subtitle" translate>
+                    Do not close the tab if you want to see the import status!
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+</ng-template>
+
+<ng-template #ImportDialogSummary>
+    <div class="summary-dialog">
+        <div cdk-focus-start class="summary-dialog-header">
+            <h2 class="summary-dialog-title" mat-dialog-title translate>Import successful</h2>
+            <button class="close-button" mat-dialog-close mat-icon-button translate>
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <h4 class="summary-dialog-subtitle">{{ summary[0]?.value }}&nbsp;participants have been processed</h4>
+        <div style="justify-content: center; margin-bottom: 22px">
+            <mat-dialog-content class="summary-dialog-content">
+                <div>
+                    @let shortenedSummary = shortenSummary(summary);
+                    @for (row of shortenedSummary; track row) {
+                        @let colInfo = getSummaryInformation(row.name);
+                        <div class="summary-row">
+                            <mat-icon inline [ngClass]="colInfo[1]">
+                                {{ colInfo[0] }}
+                            </mat-icon>
+                            <div class="summary-text">{{ row.value }}&nbsp;{{ row.name }}</div>
+                        </div>
+                    }
+                </div>
+            </mat-dialog-content>
+            @let extraInformation = summaryRest(summary);
+            @for (row of extraInformation; track row) {
+                <div class="summary-dialog-extraInfo">{{ row.value }}&nbsp;{{ row.name }}</div>
+            }
+        </div>
+    </div>
+</ng-template>

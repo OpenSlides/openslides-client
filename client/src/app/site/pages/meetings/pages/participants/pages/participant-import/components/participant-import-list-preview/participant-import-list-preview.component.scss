@@ -1,0 +1,145 @@
+$os-green: rgb(15, 228, 15);
+$os-yellow: rgb(255, 193, 7);
+
+.os-green {
+    color: $os-green;
+}
+
+.os-yellow {
+    color: $os-yellow;
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.error-icon {
+    color: red;
+    font-weight: 500;
+}
+
+.lower-margin-top {
+    margin-top: -4px;
+    padding-left: 2px;
+}
+
+.list-field-entry {
+    display: inline-flex;
+    margin-right: 10px;
+}
+
+.cell-wrapper {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 300px;
+    overflow: hidden;
+
+    .email-cell {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.static-sort-filter-bar {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.import-dialog {
+    padding: 8px;
+    color: var(--theme-accent-400);
+
+    .import-dialog-title {
+        color: var(--theme-accent-400);
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 0;
+    }
+
+    .import-dialog-content {
+        min-height: fit-content;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: var(--theme-accent-400);
+        text-align: center;
+    }
+
+    .import-status {
+        margin-top: 32px;
+        color: var(--theme-accent-400);
+    }
+
+    .import-status-title {
+        font-size: 23px;
+        font-weight: 400;
+        margin-bottom: 12px;
+    }
+
+    .import-status-subtitle {
+        font-size: 18px;
+    }
+}
+
+.summary-dialog {
+    .summary-dialog-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .close-button {
+        margin-right: 0.5em;
+        margin-top: 0.5em;
+    }
+
+    .summary-dialog-title {
+        font-size: 20px;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .summary-dialog-content {
+        display: flex;
+        font-size: 17px;
+        color: var(--theme-contrast-400);
+        text-align: center;
+        justify-content: center;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: start;
+        gap: 10px;
+        margin: 6px 0;
+    }
+
+    .summary-row mat-icon {
+        font-size: x-large;
+    }
+
+    .summary-dialog-subtitle {
+        font-size: 18px;
+        margin-left: 1.4em;
+        margin-top: 0;
+    }
+
+    .summary-dialog-extraInfo {
+        font-size: 17px;
+        margin-left: 1.4em;
+    }
+
+    .summary-dialog-extraInfo:last-child {
+        margin-bottom: 16px;
+    }
+}

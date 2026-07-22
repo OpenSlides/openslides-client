@@ -77,12 +77,50 @@
             }
         }
 
+        <!-- CSV-Reload Button -->
+        @if (csvReload) {
+            <!-- not working, fix this -->
+            <button
+                mat-button
+                style="width: max-content"
+                [class.not-selected-option]="(filterMenu.opened || csvConfigMenu.opened) === true"
+                (click)="fileInput.click()"
+            >
+                <input #fileInput class="fileInput" type="file" (change)="sendCsvReload($event)" />
+                <mat-icon>autorenew</mat-icon>
+                @if ((vp.isMobileSubject | async) === false) {
+                    <span class="upper">
+                        {{ 'CSV-Reload' | translate }}
+                    </span>
+                }
+            </button>
+        }
+
+        <!-- CSV-Encoding Button -->
+        @if (csvConfiguration) {
+            <button
+                mat-button
+                style="width: max-content"
+                [class.not-selected-option]="filterMenu.opened === true"
+                [class.selected-option]="csvConfigMenu.opened"
+                (click)="csvConfigMenu.opened ? csvConfigMenu.close() : csvConfigMenu.open(); filterMenu.close()"
+            >
+                <mat-icon>settings</mat-icon>
+                @if ((vp.isMobileSubject | async) === false) {
+                    <span class="upper">
+                        {{ 'CSV-Configuration' | translate }}
+                    </span>
+                }
+            </button>
+        }
         <!-- Filter button -->
         @if (hasFilters) {
             <button
                 mat-button
                 style="width: max-content"
-                (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()"
+                [class.not-selected-option]="csvConfigMenu.opened === true"
+                [class.selected-option]="filterMenu.opened"
+                (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open(); csvConfigMenu.close()"
             >
                 <mat-icon
                     matBadgeColor="accent"
@@ -129,8 +167,12 @@
 
 <!-- Header for the filter side bar -->
 <mat-drawer #filterMenu autoFocus="false" mode="push" position="end">
-    <div class="custom-table-header filter-menu-head" role="none" (click)="this.filterMenu.toggle()">
-        <span tabindex="0" (keyup.enter)="this.filterMenu.toggle()">
+    <div
+        class="custom-table-header filter-menu-head"
+        role="none"
+        (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()"
+    >
+        <span tabindex="0" (keyup.enter)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
             <mat-icon>keyboard_arrow_right</mat-icon>
         </span>
 
@@ -166,3 +208,113 @@
         }
     }
 </mat-menu>
+
+<mat-drawer #csvConfigMenu autoFocus="false" mode="push" position="end">
+    <div
+        class="custom-table-header filter-menu-head"
+        role="none"
+        (click)="csvConfigMenu.opened ? csvConfigMenu.close() : csvConfigMenu.open()"
+    >
+        <span tabindex="0" (keyup.enter)="csvConfigMenu.opened ? csvConfigMenu.close() : csvConfigMenu.open()">
+            <mat-icon>keyboard_arrow_right</mat-icon>
+        </span>
+    </div>
+    <div class="section">
+        <!-- ENCODING -->
+        <h2>{{ 'File encoding' | translate }}</h2>
+        <mat-radio-group
+            class="radio-group"
+            style="display: flex; flex-direction: column"
+            [(ngModel)]="selectedEncodingOption"
+            (change)="sendSelectedEncoding($event)"
+        >
+            <mat-radio-button
+                value="utf-8"
+                [class.not-selected-button]="selectedEncodingOption !== 'utf-8'"
+                [class.selected-button]="selectedEncodingOption === 'utf-8'"
+            >
+                {{ 'UTF 8 - UNICODE' | translate }}
+            </mat-radio-button>
+            <mat-radio-button
+                value="iso-8859-1"
+                [class.not-selected-button]="selectedEncodingOption !== 'iso-8859-1'"
+                [class.selected-button]="selectedEncodingOption === 'iso-8859-1'"
+            >
+                {{ 'ISO 8859-1 - West European' | translate }}
+            </mat-radio-button>
+            <mat-radio-button
+                value="iso-8859-15"
+                [class.not-selected-button]="selectedEncodingOption !== 'iso-8859-15'"
+                [class.selected-button]="selectedEncodingOption === 'iso-8859-15'"
+            >
+                {{ 'ISO 8859-15 West European (with €)' | translate }}
+            </mat-radio-button>
+        </mat-radio-group>
+
+        <mat-divider class="divider"></mat-divider>
+
+        <!-- COLUMN SEPARATOR -->
+        <h2>{{ 'Column separator' | translate }}</h2>
+        <mat-radio-group
+            class="radio-group"
+            [(ngModel)]="selectedColumnSeparatorOption"
+            (change)="sendSelectedColumnSeparator($event)"
+        >
+            <mat-radio-button
+                value="Automatic"
+                [class.not-selected-button]="selectedColumnSeparatorOption !== 'Automatic'"
+                [class.selected-button]="selectedColumnSeparatorOption === 'Automatic'"
+            >
+                {{ 'Automatic' | translate }}
+            </mat-radio-button>
+            <mat-radio-button
+                value="Comma"
+                [class.not-selected-button]="selectedColumnSeparatorOption !== 'Comma'"
+                [class.selected-button]="selectedColumnSeparatorOption === 'Comma'"
+            >
+                {{ 'Comma' | translate }}
+            </mat-radio-button>
+            <mat-radio-button
+                value="Semicolon"
+                [class.not-selected-button]="selectedColumnSeparatorOption !== 'Semicolon'"
+                [class.selected-button]="selectedColumnSeparatorOption === 'Semicolon'"
+            >
+                {{ 'Semicolon' | translate }}
+            </mat-radio-button>
+        </mat-radio-group>
+
+        <mat-divider class="divider"></mat-divider>
+
+        <!-- TEXT SEPARATOR -->
+        <h2>{{ 'Text separator' | translate }}</h2>
+        <mat-radio-group
+            class="radio-group"
+            [(ngModel)]="selectedTextSeparatorOption"
+            (change)="sendSelectedTextSeparator($event)"
+        >
+            <mat-radio-button
+                value="''"
+                [class.not-selected-button]="selectedTextSeparatorOption !== `''`"
+                [class.selected-button]="selectedTextSeparatorOption === `''`"
+            >
+                {{ "Double quotes ('')" | translate }}
+            </mat-radio-button>
+            <mat-radio-button
+                value="'"
+                [class.not-selected-button]="selectedTextSeparatorOption !== `'`"
+                [class.selected-button]="selectedTextSeparatorOption === `'`"
+            >
+                {{ "Single quotes (')" | translate }}
+            </mat-radio-button>
+            <mat-radio-button
+                value="`"
+                [class.not-selected-button]="selectedTextSeparatorOption !== '`'"
+                [class.selected-button]="selectedTextSeparatorOption === '`'"
+            >
+                {{ 'Gravis (`)' | translate }}
+            </mat-radio-button>
+        </mat-radio-group>
+
+        <mat-divider class="divider"></mat-divider>
+    </div>
+</mat-drawer>

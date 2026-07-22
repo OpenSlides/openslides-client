@@ -1,8 +1,11 @@
+$os-green: rgb(15, 228, 15);
+$os-yellow: rgb(255, 193, 7);
+
 @mixin scrolling-table-style() {
     box-sizing: border-box;
 
     &:hover {
-        background-color: rgba(0, 0, 0, 0.025);
+        background-color: var(--mat-app-background-color);
     }
 
     .scrolling-table-cell {
@@ -14,7 +17,6 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        overflow-y: auto;
 
         &:not(:first-child) {
             border-left: 1px solid rgba(0, 0, 0, 0);
@@ -34,6 +36,12 @@
     }
 }
 
+@mixin render-all-table() {
+    display: flex;
+    width: max-content;
+    min-width: 100%;
+}
+
 :host,
 .scrolling-table-container {
     display: block;
@@ -43,6 +51,11 @@
 
 .scrolling-table-header {
     @include scrolling-table-style();
+    @include render-all-table();
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--mat-app-background-color);
 
     .scrolling-table-cell {
         font-weight: 500;
@@ -58,9 +71,58 @@
     height: 100%;
 
     .scrolling-table-row {
-        overflow: hidden;
         @include scrolling-table-style();
+        @include render-all-table();
     }
+}
+
+.virtual-scroll-viewport-participant-import {
+    min-height: calc(100% - 51px);
+    overflow: auto;
+    width: 100%;
+
+    ::ng-deep .cdk-virtual-scroll-content-wrapper {
+        width: max-content;
+        min-width: 100%;
+    }
+
+    .scrolling-table-row {
+        @include scrolling-table-style();
+        @include render-all-table();
+    }
+}
+
+.scroll-container {
+    overflow-x: auto;
+    position: relative;
+    width: 100%;
+}
+
+.footer {
+    padding-left: 35px;
+    position: sticky;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: var(--mat-app-background-color);
+    z-index: 2;
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+}
+
+.os-green {
+    color: $os-green;
+}
+
+.os-yellow {
+    color: $os-yellow;
+}
+
+.table-body {
+    width: max-content;
+    min-width: 100%;
 }
 
 .scrolling-table-cell ::ng-deep {

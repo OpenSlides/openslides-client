@@ -12,6 +12,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatRadioButton, MatRadioModule } from '@angular/material/radio';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
@@ -40,13 +41,22 @@ const MODULES = [
     MatTooltipModule,
     FormsModule,
     ScrollingModule,
-    ScrollingTableModule
+    ScrollingTableModule,
+    MatRadioModule
 ];
 const DECLARATIONS = [ListComponent, ViewListComponent];
 
 @NgModule({
     exports: [...DECLARATIONS, ScrollingTableModule],
     declarations: [...DECLARATIONS, SortFilterBarComponent, SortBottomSheetComponent, FilterMenuComponent],
-    imports: [CommonModule, OpenSlidesTranslationModule.forChild(), IconContainerComponent, InputModule, ...MODULES]
+    imports: [
+        CommonModule,
+        OpenSlidesTranslationModule.forChild(),
+        IconContainerComponent,
+        InputModule,
+        ...MODULES,
+        MatRadioButton,
+        MatRadioModule
+    ]
 })
 export class ListModule {}

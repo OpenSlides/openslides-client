@@ -1,7 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
-    ChangeDetectionStrategy,
     Component,
     EventEmitter,
     inject,
@@ -73,7 +72,7 @@ export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
     templateUrl: `./head-bar.component.html`,
     styleUrls: [`./head-bar.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
+    // changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class HeadBarComponent implements OnInit, AfterViewInit {

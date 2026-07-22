@@ -1,84 +1,125 @@
 @if (cellDefinitionsObservable | async; as definitions) {
     @if (hasDataObservable | async) {
-        <div #cdkContainer [style.height]="calculateContainerHeight()">
-            <cdk-virtual-scroll-viewport
-                class="virtual-scroll-viewport background-card"
-                [itemSize]="rowHeight"
-                [maxBufferPx]="rowHeight * 8"
-                [minBufferPx]="rowHeight * 6"
-            >
-                @if (showHeader) {
-                    <div
-                        class="flex-vertical-center placeholder divider-bottom scrolling-table-header"
-                        [ngStyle]="getNgStyle()"
-                    >
-                        @for (definition of definitions; track definition; let first = $first) {
+        <div class="scroll-container">
+            <div #cdkContainer [style.height]="calculateContainerHeight()">
+                <cdk-virtual-scroll-viewport
+                    class="background-card"
+                    [itemSize]="rowHeight"
+                    [maxBufferPx]="rowHeight * 8"
+                    [minBufferPx]="rowHeight * 6"
+                    [ngClass]="
+                        horizontalScroll ? `virtual-scroll-viewport-participant-import` : `virtual-scroll-viewport`
+                    "
+                >
+                    @if (showHeader && horizontalScroll) {
+                        <div class="scrolling-table-header">
+                            <ng-container [ngTemplateOutlet]="tableHeader"></ng-container>
+                        </div>
+                    }
+                    <div class="table-body">
+                        <ng-container *cdkVirtualFor="let item of dataSource; last as isLast">
                             <div
-                                class="scrolling-table-cell flex-vertical-center subtitle"
-                                [ngClass]="{ 'divider-left': !first }"
-                                [ngStyle]="{
-                                    flexBasis: definition.width || defaultColumnWidth,
-                                    width: definition.width || defaultColumnWidth,
-                                    minWidth: definition.minWidth || defaultColumnWidth,
-                                    maxWidth: definition.maxWidth || defaultColumnWidth
-                                }"
+                                class="scrolling-table-row divider-bottom flex-vertical-center"
+                                role="none"
+                                tabindex="-1"
+                                [ngClass]="rowClass"
+                                [ngStyle]="getNgStyle(isLast)"
+                                (click)="onRowClick($event, item)"
                             >
-                                @if (definition.labelTemplate) {
-                                    <ng-template [cdkPortalOutlet]="definition.labelTemplate"></ng-template>
-                                } @else {
-                                    <ng-template>{{ definition.labelString }}</ng-template>
+                                @if (isSelectionMode) {
+                                    <div class="selection-cell scrolling-table-cell flex-vertical-center">
+                                        <mat-checkbox
+                                            disabled
+                                            [checked]="isSelected(item)"
+                                            [class.mat-checkbox-disabled]="false"
+                                        ></mat-checkbox>
+                                    </div>
+                                }
+                                @for (definition of definitions; track definition) {
+                                    <div
+                                        class="scrolling-table-cell flex-vertical-center"
+                                        [ngStyle]="{
+                                            flexBasis: definition.width || defaultColumnWidth,
+                                            width: definition.width || defaultColumnWidth,
+                                            minWidth:
+                                                definition.property === 'email' && horizontalScroll
+                                                    ? '300px'
+                                                    : definition.minWidth || defaultColumnWidth,
+                                            maxWidth: definition.maxWidth || defaultColumnWidth
+                                        }"
+                                    >
+                                        <ng-container
+                                            *ngTemplateOutlet="
+                                                definition.template;
+                                                context: {
+                                                    row: item,
+                                                    value: item[definition.property],
+                                                    definition: definition.property
+                                                }
+                                            "
+                                        ></ng-container>
+                                    </div>
                                 }
                             </div>
-                        }
+                        </ng-container>
                     </div>
+                </cdk-virtual-scroll-viewport>
+                @if (horizontalScroll) {
+                    <ng-container *ngTemplateOutlet="footer"></ng-container>
                 }
-                <ng-container *cdkVirtualFor="let item of dataSource; last as isLast">
-                    <div
-                        class="scrolling-table-row divider-bottom flex-vertical-center"
-                        role="none"
-                        tabindex="-1"
-                        [ngClass]="rowClass"
-                        [ngStyle]="getNgStyle(isLast)"
-                        (click)="onRowClick($event, item)"
-                    >
-                        @if (isSelectionMode) {
-                            <div class="selection-cell scrolling-table-cell flex-vertical-center">
-                                <mat-checkbox
-                                    disabled
-                                    [checked]="isSelected(item)"
-                                    [class.mat-checkbox-disabled]="false"
-                                ></mat-checkbox>
-                            </div>
-                        }
-                        @for (definition of definitions; track definition) {
-                            <div
-                                class="scrolling-table-cell flex-vertical-center"
-                                [ngStyle]="{
-                                    flexBasis: definition.width || defaultColumnWidth,
-                                    width: definition.width || defaultColumnWidth,
-                                    minWidth: definition.minWidth || defaultColumnWidth,
-                                    maxWidth: definition.maxWidth || defaultColumnWidth
-                                }"
-                            >
-                                <ng-container
-                                    *ngTemplateOutlet="
-                                        definition.template;
-                                        context: {
-                                            row: item,
-                                            value: item[definition.property],
-                                            definition: definition.property
-                                        }
-                                    "
-                                ></ng-container>
-                            </div>
-                        }
-                    </div>
-                </ng-container>
-            </cdk-virtual-scroll-viewport>
+            </div>
         </div>
     } @else {
         <div #cdkContainer class="scrolling-table--no-data-wrapper" [style.height]="calculateContainerHeight()">
             <ng-template [cdkPortalOutlet]="noDataTemplateObservable | async"></ng-template>
         </div>
     }
+
+    <ng-template #tableHeader>
+        <div
+            class="flex-vertical-center placeholder divider-bottom scrolling-table-header"
+            [ngStyle]="
+                horizontalScroll
+                    ? {
+                          ...getNgStyle()
+                      }
+                    : getNgStyle()
+            "
+        >
+            @for (definition of definitions; track definition; let first = $first) {
+                <div
+                    class="scrolling-table-cell flex-vertical-center subtitle"
+                    [ngClass]="{ 'divider-left': !first }"
+                    [ngStyle]="{
+                        flexBasis: definition.width || defaultColumnWidth,
+                        width: definition.width || defaultColumnWidth,
+                        minWidth:
+                            definition.property === 'email' && horizontalScroll
+                                ? '300px'
+                                : definition.minWidth || defaultColumnWidth,
+                        maxWidth: definition.maxWidth || defaultColumnWidth
+                    }"
+                >
+                    @if (definition.labelTemplate) {
+                        <ng-template [cdkPortalOutlet]="definition.labelTemplate"></ng-template>
+                    } @else {
+                        {{ definition.labelString }}
+                    }
+                </div>
+            }
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <footer class="footer">
+            @let cols = shortenedSummary;
+            @for (col of cols; track col; let i = $index) {
+                @let colInfo = getSummaryInformation(col.name);
+                <mat-icon inline style="margin-top: 5px; font-size: x-large" [ngClass]="colInfo[1]">
+                    {{ colInfo[0] }}
+                </mat-icon>
+                <div style="margin-bottom: 8px">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
+            }
+        </footer>
+    </ng-template>
 }
