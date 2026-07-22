@@ -41,7 +41,10 @@
                 {{ assignment.getListTitle() }}
             </div>
             @if (vp.isMobile) {
-                <mat-basic-chip class="bg-primary ellipsis-overflow" [matTooltip]="('Phase' | translate) + ' ' + assignment.phaseString">
+                <mat-basic-chip
+                    class="bg-primary ellipsis-overflow"
+                    [matTooltip]="('Phase' | translate) + ' ' + assignment.phaseString"
+                >
                     {{ assignment.phaseString | translate }}
                 </mat-basic-chip>
             }
@@ -60,7 +63,10 @@
 
     <!-- Candidates -->
     <div *osScrollingTableCell="'candidates'; row as assignment; config: { width: 40 }" class="cell-slot fill">
-        <mat-basic-chip class="bg-accent" [matTooltip]="('Number of candidates' | translate) + ' ' + getCandidateAmount(assignment)">
+        <mat-basic-chip
+            class="bg-accent"
+            [matTooltip]="('Number of candidates' | translate) + ' ' + getCandidateAmount(assignment)"
+        >
             {{ getCandidateAmount(assignment) }}
         </mat-basic-chip>
     </div>

@@ -95,7 +95,10 @@
 
             <!-- Visibility (Internal, Public, Hidden) -->
             <div *osPerms="permission.agendaItemCanManage; and: item.verboseType" class="spacer-top-5">
-                <os-icon-container icon="visibility" [attr.aria-label]="('Visibility' | translate) + ' ' + item.verboseType">
+                <os-icon-container
+                    icon="visibility"
+                    [attr.aria-label]="('Visibility' | translate) + ' ' + item.verboseType"
+                >
                     {{ item.verboseType | translate }}
                 </os-icon-container>
             </div>
@@ -103,7 +106,12 @@
             <!-- Duration -->
             @if (item.duration) {
                 <div class="spacer-top-5">
-                    <os-icon-container icon="access_time" [attr.aria-label]="('Duration' | translate) + ' ' + durationService.durationToString(item.duration, 'h')">
+                    <os-icon-container
+                        icon="access_time"
+                        [attr.aria-label]="
+                            ('Duration' | translate) + ' ' + durationService.durationToString(item.duration, 'h')
+                        "
+                    >
                         {{ durationService.durationToString(item.duration, 'h') }}
                     </os-icon-container>
                 </div>
