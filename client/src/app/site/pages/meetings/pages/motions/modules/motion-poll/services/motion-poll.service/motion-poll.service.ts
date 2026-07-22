@@ -1,32 +1,27 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Motion } from '@app/domain/models/motions/motion';
 import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import { PollVisibility } from '@app/domain/models/poll/poll-constants';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
-import { TranslateService } from '@ngx-translate/core';
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
 
 /**
  * Service class for motion polls.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionPollService extends PollService {
     public defaultPercentBase!: BaseOnehundredPercentBase;
     public defaultPollVisibility!: PollVisibility;
     public defaultGroupIds!: number[];
     public defaultAllowAbstain = false;
 
+    private repo = inject(MotionPollControllerService);
     private meetingPollSettingsService = inject(MeetingPollSettingsService);
 
-    public constructor(
-        protected override translate: TranslateService,
-        private repo: MotionPollControllerService
-    ) {
+    public constructor() {
         super();
         this.meetingPollSettingsService
             .get(`motion`, `onehundred_percent_base`)

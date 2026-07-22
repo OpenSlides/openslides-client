@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Projector } from '@app/domain/models/projector/projector';
 import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
@@ -8,15 +8,13 @@ import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { ProjectorEditDialogComponent } from '../components/projector-edit-dialog/projector-edit-dialog.component';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProjectorEditDialogService extends BaseDialogService<
     ProjectorEditDialogComponent,
     ViewProjector,
     Partial<Projector>
 > {
-    public constructor(private controller: ProjectorControllerService) {
-        super();
-    }
+    private controller = inject(ProjectorControllerService);
 
     public async open(
         projector: ViewProjector

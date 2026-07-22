@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
     ChangeRecoMode,
     LineNumberingMode,
@@ -70,24 +70,20 @@ const PDF_A5_POINTS_WIDTH = 419.544;
  * const pdfMakeCompatibleDocDef = this.MotionPdfService.motionToDocDef(myMotion);
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionPdfService {
-    public constructor(
-        private translate: TranslateService,
-        private motionService: MotionControllerService,
-        private motionLineNumbering: MotionLineNumberingService,
-        private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private meetingSettingsService: MeetingSettingsService,
-        private pdfDocumentService: MeetingPdfExportService,
-        private htmlToPdfService: MotionHtmlToPdfService,
-        private commentRepo: MotionCommentSectionControllerService,
-        private organizationSettingsService: OrganizationSettingsService,
-        private motionPollService: MotionPollService,
-        private motionFormatService: MotionFormatService,
-        private pdfImagesService: PdfImagesService
-    ) {}
+    private translate = inject(TranslateService);
+    private motionService = inject(MotionControllerService);
+    private motionLineNumbering = inject(MotionLineNumberingService);
+    private changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private pdfDocumentService = inject(MeetingPdfExportService);
+    private htmlToPdfService = inject(MotionHtmlToPdfService);
+    private commentRepo = inject(MotionCommentSectionControllerService);
+    private organizationSettingsService = inject(OrganizationSettingsService);
+    private motionPollService = inject(MotionPollService);
+    private motionFormatService = inject(MotionFormatService);
+    private pdfImagesService = inject(PdfImagesService);
 
     /**
      * Converts a motion to PdfMake doc definition

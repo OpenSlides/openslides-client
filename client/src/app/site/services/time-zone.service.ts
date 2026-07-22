@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Selectable } from '@app/domain/interfaces';
 import { GetValidTimezonesPresenterService } from '@app/gateways/presenter/get-valid-timezones';
@@ -26,9 +26,7 @@ class SearchSelectorHelper implements Selectable {
     }
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class TimeZoneService {
     private activeMeetingRepo = inject(ActiveMeetingService);
     private organizationRepo = inject(OrganizationControllerService);

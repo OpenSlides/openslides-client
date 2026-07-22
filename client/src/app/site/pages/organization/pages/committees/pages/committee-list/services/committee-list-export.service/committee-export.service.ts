@@ -1,18 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { CsvColumnsDefinition } from '@app/gateways/export/csv-export.service';
 import { CsvExportForBackendService } from '@app/gateways/export/csv-export.service/csv-export-for-backend.service';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ViewCommittee } from '../../../../view-models/view-committee';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class CommitteeExportService {
-    public constructor(
-        private translate: TranslateService,
-        private csvExport: CsvExportForBackendService
-    ) {}
+    private translate = inject(TranslateService);
+    private csvExport = inject(CsvExportForBackendService);
 
     public export(committees: ViewCommittee[]): void {
         const properties: CsvColumnsDefinition<ViewCommittee> = [

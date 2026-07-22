@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
@@ -16,15 +16,13 @@ import { CommitteeAction } from './committees/committee.action';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 import { UserRepositoryService } from './users/user-repository.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Committee> {
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollectorService,
-        private operator: OperatorService,
-        private userRepo: UserRepositoryService
-    ) {
+    private operator = inject(OperatorService);
+    private userRepo = inject(UserRepositoryService);
+
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
         super(repositoryServiceCollector, Committee);
     }
 

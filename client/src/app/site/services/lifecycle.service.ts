@@ -1,10 +1,8 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, inject, Service } from '@angular/core';
 import { StorageService } from '@app/gateways/storage.service';
 import { Deferred } from '@app/infrastructure/utils/promises';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class LifecycleService {
     /**
      * This event is emitted, if the app becomes stable. It is ensured to happen after DomContentLoaded.
@@ -40,7 +38,7 @@ export class LifecycleService {
 
     private _booted = new Deferred();
 
-    public constructor(private storageService: StorageService) {}
+    private storageService = inject(StorageService);
 
     public bootup(): void {
         this._isBooted = true;

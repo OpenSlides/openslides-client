@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
@@ -38,17 +38,13 @@ export interface ParagraphToChoose {
     lineTo: number;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionLineNumberingService {
     private amendmentChangeRecoMap: Record<string, ViewMotionChangeRecommendation[]> = {};
     private amendmentChangeRecoSubscriptionMap: Record<string, Subscription> = {};
 
-    public constructor(
-        private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private translate: TranslateService
-    ) {}
+    private changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    private translate = inject(TranslateService);
 
     /**
      * Merges amendments and change recommendations and sorts them by the line numbers.

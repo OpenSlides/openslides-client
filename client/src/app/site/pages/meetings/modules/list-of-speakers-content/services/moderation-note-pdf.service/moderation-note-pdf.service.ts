@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
 import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
 import { TranslateService } from '@ngx-translate/core';
@@ -7,13 +7,11 @@ import { Content, ContentText } from 'pdfmake/interfaces';
 /**
  * Creates a PDF document from a single tpoic
  */
-@Injectable()
+@Service()
 export class ModerationNotePdfService {
-    public constructor(
-        private translate: TranslateService,
-        private htmlToPdfService: HtmlToPdfService,
-        private pdfDocumentService: MeetingPdfExportService
-    ) {}
+    private translate = inject(TranslateService);
+    private htmlToPdfService = inject(HtmlToPdfService);
+    private pdfDocumentService = inject(MeetingPdfExportService);
 
     /**
      * Generates an pdf out of a given topic and saves it as file

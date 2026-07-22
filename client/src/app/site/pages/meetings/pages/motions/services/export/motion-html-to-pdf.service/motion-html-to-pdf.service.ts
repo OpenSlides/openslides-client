@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { LineNumberingMode } from '@app/domain/models/motions/motions.constants';
 import {
     ChildNodeParagraphPayload,
@@ -27,9 +27,7 @@ interface HtmlToPdfConfig {
     lineHeight?: number;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionHtmlToPdfService extends HtmlToPdfService {
     /**
      * holds the desired line number mode

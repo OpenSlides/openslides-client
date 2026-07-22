@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { OML } from '@app/domain/definitions/organization-permission';
 import { Identifiable } from '@app/domain/interfaces';
@@ -16,19 +16,18 @@ import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AccountControllerService extends BaseController<ViewUser, User> {
     private _committee_users_set = new Set<Id>();
 
-    public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: UserRepositoryService,
-        private userDeleteDialog: UserDeleteDialogService,
-        private prompt: PromptService,
-        private operator: OperatorService
-    ) {
+    protected override repo: UserRepositoryService;
+    private userDeleteDialog = inject(UserDeleteDialogService);
+    private prompt = inject(PromptService);
+    private operator = inject(OperatorService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(ControllerServiceCollectorService);
+        const repo = inject(UserRepositoryService);
         super(controllerServiceCollector, User, repo);
         this.operator.user.committee_managements$.subscribe(committees => {
             const userIdsSet = new Set(committees.flatMap(committee => committee.user_ids ?? []));

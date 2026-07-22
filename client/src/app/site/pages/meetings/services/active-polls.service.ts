@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { viewModelListEqual } from '@app/infrastructure/utils';
 import { ModelRequestService } from '@app/site/services/model-request.service';
@@ -9,9 +9,7 @@ import { ViewPoll } from '../pages/polls';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ACTIVE_POLLS_SUBSCRIPTION, getActivePollsSubscriptionConfig } from './active-polls.subscription';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ActivePollsService {
     public pollIds!: Id[];
 
@@ -27,11 +25,11 @@ export class ActivePollsService {
         return this._pollSubject.getValue();
     }
 
-    public constructor(
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private repo: PollControllerService,
-        private modelRequestService: ModelRequestService
-    ) {
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private repo = inject(PollControllerService);
+    private modelRequestService = inject(ModelRequestService);
+
+    public constructor() {
         this.refreshRepoSubscription();
     }
 

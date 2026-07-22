@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionCommentSection } from '@app/domain/models/motions/motion-comment-section';
 import { ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
@@ -7,14 +7,13 @@ import { BaseMeetingRelatedRepository } from '../../base-meeting-related-reposit
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionCommentSectionAction } from './motion-comment-section.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRepository<
     ViewMotionCommentSection,
     MotionCommentSection
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, MotionCommentSection);
 
         this.viewModelSortFn = (a: ViewMotionCommentSection, b: ViewMotionCommentSection): number => {

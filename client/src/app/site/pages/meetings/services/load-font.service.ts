@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { MediaManageService } from './media-manage.service';
 
@@ -21,11 +21,11 @@ interface FontDocument extends Document {
  * using FontFace.
  * Browser support might not be perfect yet.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class LoadFontService {
-    public constructor(private mediaManageService: MediaManageService) {
+    private mediaManageService = inject(MediaManageService);
+
+    public constructor() {
         this.loadCustomFont();
     }
 

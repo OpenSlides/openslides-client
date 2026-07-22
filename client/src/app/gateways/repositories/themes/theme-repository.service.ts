@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Theme } from '@app/domain/models/theme/theme';
@@ -9,11 +9,10 @@ import { Fieldsets } from '@app/site/services/model-request-builder';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { ThemeAction } from './theme.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ThemeRepositoryService extends BaseRepository<ViewTheme, Theme> {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
         super(repositoryServiceCollector, Theme);
     }
 

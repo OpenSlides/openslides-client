@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { ApplauseType } from '@app/domain/models/meetings/applause';
 import { BaseICCGatewayService } from '@app/gateways/base-icc-gateway.service';
@@ -11,9 +11,7 @@ export interface Applause {
     present_users: number;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ApplauseService extends BaseICCGatewayService<Applause> {
     public get showParticles(): Observable<boolean> {
         return this.applauseTypeObservable.pipe(map(type => type === ApplauseType.particles));
@@ -62,13 +60,13 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
         return this.activeMeetingService.meetingId!;
     }
 
-    public constructor(
-        settingService: MeetingSettingsService,
-        private activeMeetingService: ActiveMeetingService
-    ) {
+    private activeMeetingService = inject(ActiveMeetingService);
+
+    public constructor() {
         super();
         this.setupConnections();
 
+        const settingService = inject(MeetingSettingsService);
         this.showApplauseObservable = settingService.get(`applause_enable`);
         this.applauseTypeObservable = settingService.get(`applause_type`);
         this.showApplauseLevelConfigObservable = settingService.get(`applause_show_level`);

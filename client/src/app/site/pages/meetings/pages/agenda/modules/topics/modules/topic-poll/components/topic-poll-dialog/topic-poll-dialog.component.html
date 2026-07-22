@@ -19,7 +19,7 @@
     @if (analogPollFormOpen()) {
         <div class="poll-result">
             <os-poll-edit-result
-                configType="approval"
+                [configType]="getSelectedMethod()"
                 [options]="analogPollOptions()"
                 [pollConfigData]="getMethodConfig()"
                 [pollData]="pollData"

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Gender } from '@app/domain/models/gender/gender';
@@ -10,11 +10,10 @@ import { Action } from '../../actions';
 import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { GenderAction } from './gender.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GenderRepositoryService extends BaseRepository<ViewGender, Gender> {
-    public constructor(repositoryServiceCollector: RepositoryServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
         super(repositoryServiceCollector, Gender);
     }
 

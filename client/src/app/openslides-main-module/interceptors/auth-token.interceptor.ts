@@ -6,12 +6,12 @@ import {
     HttpRequest,
     HttpResponse
 } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 
 import { AuthTokenService } from '../../site/services/auth-token.service';
 
-@Injectable()
+@Service()
 export class AuthTokenInterceptor implements HttpInterceptor {
     private authTokenService = inject(AuthTokenService);
 

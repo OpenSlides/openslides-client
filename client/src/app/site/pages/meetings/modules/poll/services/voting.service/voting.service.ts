@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { PollState } from '@app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
@@ -36,22 +36,19 @@ const VotingProhibitionVerbose = {
     [VotingProhibition.USER_HAS_VOTED]: _(`You have already voted.`)
 };
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class VotingService {
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
     private _forbidDelegationToVote = false;
 
+    private activeMeetingService = inject(ActiveMeetingService);
+    private operator = inject(OperatorService);
+    private meetingSettingsService = inject(MeetingSettingsService);
     private userRepo = inject(UserControllerService);
     private pollRepo = inject(PollRepositoryService);
 
-    public constructor(
-        private activeMeetingService: ActiveMeetingService,
-        private operator: OperatorService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    public constructor() {
         this.operator.userObservable.subscribe(user => (this._currentUser = user));
         this.meetingSettingsService
             .get(`users_enable_vote_delegations`)

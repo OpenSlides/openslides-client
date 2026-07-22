@@ -26,11 +26,11 @@
                 }
             </td>
             <td class="result-col" [class]="voteOption">
-                {{ amount || 0 }}
+                {{ amount || 0 | pollParseNumber }}
             </td>
 
             <td class="result-col-small" colspan="2" [class]="voteOption">
-                <span class="amount">{{ amount || 0 }}</span>
+                <span class="amount">{{ amount || 0 | pollParseNumber }}</span>
 
                 <div class="result-percent-small">
                     @if (percent !== null) {

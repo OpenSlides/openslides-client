@@ -16,7 +16,7 @@ import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/compone
 import { PollFormApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { PollFormSelectionComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 const TAB_METHOD_MAP = [`selection`, `approval`];
 
@@ -65,7 +65,6 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
     });
 
     private pollService = inject(PollService);
-    private translate = inject(TranslateService);
 
     public constructor() {
         super();
@@ -100,14 +99,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
     public analogPollOptions(): { key: string; title: string }[] {
         const options = [];
         if (this.getSelectedMethod() === `approval`) {
-            options.push(
-                { key: `yes`, title: this.translate.instant(`Yes`) },
-                { key: `no`, title: this.translate.instant(`No`) }
-            );
-
-            if (this.approvalForm().form.value.allow_abstain) {
-                options.push({ key: `abstain`, title: this.translate.instant(`Abstain`) });
-            }
+            options.push([{ key: `approval`, title: null }]);
         } else {
             for (const option of this.options.value()) {
                 options.push({ key: `text-${djb2hash(option)}`, title: option });
@@ -127,7 +119,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
         return {};
     }
 
-    private getSelectedMethod(): string {
+    public getSelectedMethod(): string {
         return TAB_METHOD_MAP[this.selectedTab()];
     }
 }

@@ -1,5 +1,5 @@
 import { ComponentType } from '@angular/cdk/portal';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PollContentObject } from '@app/domain/models/poll';
 import { PollCreatePayload } from '@app/gateways/vote-api.service';
@@ -9,7 +9,7 @@ import { PollControllerService } from '@app/site/pages/meetings/modules/poll/ser
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { firstValueFrom } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export abstract class BasePollDialogService<V extends PollContentObject, C = any> {
     private controller = inject(PollControllerService);
     private dialogService = inject(MatDialog);

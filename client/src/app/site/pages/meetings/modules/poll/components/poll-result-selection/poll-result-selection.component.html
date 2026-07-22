@@ -1,13 +1,13 @@
 <div class="result-container">
-    <div
-        [class.result-table-wrapper]="config().display_chart !== 'pie'"
-        [class.result-wrapper]="config().display_chart === 'pie'"
-    >
-        <table class="result-table">
-            <tbody>
+    <div class="result-wrapper">
+        <div class="result-table-wrapper">
+            <table class="result-table">
+                <col />
+                <col width="1" />
+                <col width="1" />
                 <tr>
-                    <th class="left-header"></th>
-                    <th class="right-header" colspan="2">{{ 'Votes' | translate }}</th>
+                    <th></th>
+                    <th class="result-col-header" colspan="2">{{ 'Votes' | translate }}</th>
                 </tr>
 
                 <ng-template
@@ -19,9 +19,9 @@
                     let-percent="percent"
                     let-votingOption="votingOption"
                 >
-                    <tr class="result-row" [class.votesvalid]="firstSummary" [style.color]="color">
+                    <tr [class.votesvalid]="firstSummary" [style.color]="color">
                         <!-- YNA/Valid etc -->
-                        <td class="label-column">
+                        <td>
                             @if (color) {
                                 <os-icon-container icon="circle" size="large">
                                     @if (option) {
@@ -41,34 +41,53 @@
                             }
                         </td>
 
-                        <!-- Percent numbers -->
-                        <td class="result-cell-definition percent-column">
+                        <td class="result-col-percent">
                             @if (percent !== null) {
-                                <span>{{ percent | pollParseNumber }}%</span>
+                                {{ percent | pollParseNumber }}%
                             }
                         </td>
-
-                        <!-- Votes -->
-                        <td class="result-cell-definition amount-column">
-                            {{ amount | pollParseNumber }}
+                        <td class="result-col">
+                            {{ amount || 0 | pollParseNumber }}
                         </td>
 
-                        <td class="result-cell-definition amount-column-small" colspan="2">
-                            {{ amount | pollParseNumber }}
-                        </td>
-                    </tr>
+                        <td class="result-col-small" colspan="2">
+                            <span class="amount">{{ amount || 0 | pollParseNumber }}</span>
 
-                    <tr class="result-percent-small" [style.color]="color">
-                        <td class="result-cell-definition percent-column" colspan="3">
-                            @if (percent !== null) {
-                                <span>{{ percent | pollParseNumber }}%</span>
-                            }
+                            <div class="result-percent-small">
+                                @if (percent !== null) {
+                                    {{ percent | pollParseNumber }}%
+                                }
+                            </div>
                         </td>
                     </tr>
                 </ng-template>
 
                 @for (row of resultOptions(); track row.key) {
                     <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="row" />
+                }
+
+                @if (nota() !== null) {
+                    @let notaOption =
+                        config().strike_out ? ('General approval' | translate) : ('General rejection' | translate);
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: nota(),
+                            percent: notaPercent(),
+                            votingOption: notaOption
+                        }"
+                    />
+                }
+
+                @if (generalAbstain() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: generalAbstain(),
+                            percent: generalAbstainPercent(),
+                            votingOption: 'General abstain' | translate
+                        }"
+                    />
                 }
 
                 @if (validBallots() !== null) {
@@ -127,34 +146,10 @@
                         }"
                     />
                 }
+            </table>
+        </div>
 
-                @if (nota() !== null) {
-                    @let notaOption =
-                        config().strike_out ? ('General approval' | translate) : ('General rejection' | translate);
-                    <ng-container
-                        [ngTemplateOutlet]="resultRow"
-                        [ngTemplateOutletContext]="{
-                            amount: nota(),
-                            percent: notaPercent(),
-                            votingOption: notaOption
-                        }"
-                    />
-                }
-
-                @if (generalAbstain() !== null) {
-                    <ng-container
-                        [ngTemplateOutlet]="resultRow"
-                        [ngTemplateOutletContext]="{
-                            amount: generalAbstain(),
-                            percent: generalAbstainPercent(),
-                            votingOption: 'General abstain' | translate
-                        }"
-                    />
-                }
-            </tbody>
-        </table>
-
-        @if (config().display_chart === `pie`) {
+        @if (displayChart()) {
             <div class="doughnut-chart-normal">
                 <os-chart type="doughnut" [data]="chartData()"></os-chart>
             </div>

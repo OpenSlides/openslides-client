@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/motions.constants';
 import { PdfError } from '@app/gateways/export/pdf-document.service';
 
@@ -23,15 +23,11 @@ export interface MotionExportInfo {
     includePdfAttachments?: boolean;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionExportService {
-    public constructor(
-        private pdfExport: MotionPdfExportService,
-        private csvExport: MotionCsvExportService,
-        private xlsxExport: MotionXlsxExportService
-    ) {}
+    private pdfExport = inject(MotionPdfExportService);
+    private csvExport = inject(MotionCsvExportService);
+    private xlsxExport = inject(MotionXlsxExportService);
 
     public evaluateExportRequest(exportInfo: MotionExportInfo, data: ViewMotion[]): void {
         if (!exportInfo) {

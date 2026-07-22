@@ -1,4 +1,4 @@
-import { inject, Injectable, NgZone } from '@angular/core';
+import { inject, NgZone, Service } from '@angular/core';
 import { SW_BROADCAST_CHANNEL_NAME, WorkerMessage, WorkerMessageContent, WorkerResponse } from '@app/worker/interfaces';
 import {
     defer,
@@ -29,9 +29,7 @@ const SHARED_WORKER_HEALTHCHECK_INTERVAL = 5000;
 const SHARED_WORKER_HEALTH_RESPONSE_TIMEOUT = 8000;
 const SHARED_WORKER_HEALTH_RETRIES = 2;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class SharedWorkerService {
     public messages = new Subject<WorkerResponse>();
 

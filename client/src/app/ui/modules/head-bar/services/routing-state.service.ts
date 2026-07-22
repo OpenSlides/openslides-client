@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { filter, pairwise, startWith } from 'rxjs';
 
@@ -7,9 +7,7 @@ import { filter, pairwise, startWith } from 'rxjs';
  * Watches URL changes.
  * Can be enhanced using locale storage to support back-navigation even after reload
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class RoutingStateService {
     private skipUnsafeRouteCheck = false;
     /**

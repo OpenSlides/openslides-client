@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { ChatMessage } from '@app/domain/models/chat/chat-message';
@@ -13,9 +13,10 @@ import { ChatMessageAction } from './chat-message.action';
  */
 export const CHAT_MESSAGE_MAX_LENGTH = 512;
 
-@Injectable({ providedIn: `root` })
+@Service()
 export class ChatMessageRepositoryService extends BaseMeetingRelatedRepository<ViewChatMessage, ChatMessage> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, ChatMessage);
     }
 

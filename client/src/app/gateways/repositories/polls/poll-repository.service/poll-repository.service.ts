@@ -19,7 +19,8 @@ import { PollAction } from './poll.action';
 export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll, Poll> {
     private voteApi = inject(VoteApiService);
 
-    public constructor(repoServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repoServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repoServiceCollector, Poll);
     }
 

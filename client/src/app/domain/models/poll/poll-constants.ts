@@ -40,12 +40,13 @@ export const pollChartGreys = new Map<string, string>([
     [`grey5`, `#f5f5f5`]
 ]);
 
+export const YES_KEY: SingleVoteOptionKey = `yes`;
+export const NO_KEY: SingleVoteOptionKey = `no`;
+export const ABSTAIN_KEY: SingleVoteOptionKey = `abstain`;
+
+export type SingleVoteOptionKey = `yes` | `no` | `abstain`;
+
 // TODO: Check if anything below can be removed
-
-export const YES_KEY = `yes`;
-export const NO_KEY = `no`;
-export const ABSTAIN_KEY = `abstain`;
-
 export interface EntitledUsersEntry {
     user_id: number;
     present: boolean;

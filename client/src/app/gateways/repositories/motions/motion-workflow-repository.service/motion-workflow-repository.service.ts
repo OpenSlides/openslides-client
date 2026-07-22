@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
 import { Action } from '@app/gateways/actions';
@@ -9,11 +9,10 @@ import { BaseMeetingRelatedRepository } from '../../base-meeting-related-reposit
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionWorkflowAction } from './motion-workflow.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepository<ViewMotionWorkflow, MotionWorkflow> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, MotionWorkflow);
     }
 

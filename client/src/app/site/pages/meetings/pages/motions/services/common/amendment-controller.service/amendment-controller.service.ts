@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Motion } from '@app/domain/models/motions/motion';
@@ -10,14 +10,10 @@ import { distinctUntilChanged, map, Observable } from 'rxjs';
 import { ViewMotion } from '../../../view-models';
 import { MotionControllerService } from '../motion-controller.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AmendmentControllerService {
-    public constructor(
-        private controller: MotionControllerService,
-        private repo: MotionRepositoryService
-    ) {}
+    private controller = inject(MotionControllerService);
+    private repo = inject(MotionRepositoryService);
 
     public getViewModelObservable(amendmentId: Id): Observable<ViewMotion | null> {
         return this.controller.getViewModelObservable(amendmentId);

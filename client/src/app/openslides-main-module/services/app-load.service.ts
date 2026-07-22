@@ -1,4 +1,4 @@
-import { inject, Injectable, Injector, Type } from '@angular/core';
+import { inject, Injector, Service, Type } from '@angular/core';
 import { ActionWorkerAppConfig } from '@app/gateways/repositories/action-worker/action-worker.config';
 import { BaseRepository } from '@app/gateways/repositories/base-repository';
 import { MeetingUserAppConfig } from '@app/gateways/repositories/meeting_user/meeting-user-config';
@@ -60,9 +60,7 @@ const appConfigs: AppConfig[] = [
     GendersAppConfig
 ];
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AppLoadService {
     private injector = inject(Injector);
     private modelMapper = inject(CollectionMapperService);

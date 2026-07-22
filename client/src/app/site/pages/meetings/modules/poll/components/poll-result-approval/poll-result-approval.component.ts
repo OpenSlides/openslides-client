@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { VOTE_MAJORITY } from '@app/domain/models/poll';
 import { ApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-approval';
 import { ThemeService } from '@app/site/services/theme.service';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
@@ -51,7 +52,12 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             return [];
         }
 
-        const showPercent = this.config().onehundredPercentBaseNum && this.onehundredPercentBase() !== `disabled`;
+        const showPercent =
+            this.config().onehundredPercentBaseNum &&
+            this.onehundredPercentBase() !== `disabled` &&
+            +results.yes !== VOTE_MAJORITY &&
+            +results.no !== VOTE_MAJORITY &&
+            +results.abstain !== VOTE_MAJORITY;
         const rows = [
             {
                 key: `Y`,
@@ -116,6 +122,19 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                     maxBarThickness: PollChartBarThickness
                 };
             });
+    });
+
+    public displayChart = computed<boolean>(() => {
+        const chartData = this.chartData();
+        if (chartData.some(e => e.data[0] < 0)) {
+            return false;
+        }
+
+        if (!chartData.some(e => e.data[0] > 0)) {
+            return false;
+        }
+
+        return true;
     });
 
     public totalVoteSum = computed<number>(() => {

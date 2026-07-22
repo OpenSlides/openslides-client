@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { PollVisibility } from '@app/domain/models/poll';
 import { SelectionOnehundredPercentBase } from '@app/domain/models/poll/poll-config-selection';
 import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
@@ -11,9 +11,7 @@ import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/me
 
 import { ViewTopic } from '../../../view-models';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class TopicPollService extends PollService {
     private defaultPercentBase: BaseOnehundredPercentBase | SelectionOnehundredPercentBase;
     private defaultGroupIds: number[];
@@ -28,8 +26,9 @@ export class TopicPollService extends PollService {
     private pollRepo = inject(PollControllerService);
     private meetingPollSettingsService = inject(MeetingPollSettingsService);
 
-    public constructor(pollServiceMapper: PollServiceMapperService) {
+    public constructor() {
         super();
+        const pollServiceMapper = inject(PollServiceMapperService);
         pollServiceMapper.registerService(ViewTopic.COLLECTION, this);
         this.meetingPollSettingsService
             .get(`topic`, `onehundred_percent_base`)

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Group } from '@app/domain/models/users/group';
@@ -27,14 +27,13 @@ export class MeetingGroupsObject {
     }
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GroupControllerService extends BaseMeetingControllerService<ViewGroup, Group> {
-    public constructor(
-        repositoryServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: GroupRepositoryService
-    ) {
+    protected override repo: GroupRepositoryService;
+
+    public constructor() {
+        const repositoryServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(GroupRepositoryService);
         super(repositoryServiceCollector, ViewGroup, repo);
     }
 

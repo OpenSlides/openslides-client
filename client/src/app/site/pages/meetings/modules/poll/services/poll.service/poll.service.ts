@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { OptionData } from '@app/domain/models/poll/generic-poll';
 import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import {
@@ -25,7 +25,7 @@ import { MeetingSettingsService } from '../../../../services/meeting-settings.se
 const PollChartBarThickness = 20;
 const PERCENT_DECIMAL_PLACES = 3;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export abstract class PollService {
     protected sortByVote = false;
     protected enableMaxVotesPerOption = false;

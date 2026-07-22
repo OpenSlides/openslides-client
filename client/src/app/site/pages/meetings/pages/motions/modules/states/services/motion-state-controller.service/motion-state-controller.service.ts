@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionState } from '@app/domain/models/motions/motion-state';
@@ -9,14 +9,13 @@ import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetin
 
 import { ViewMotionState } from '../../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionStateControllerService extends BaseMeetingControllerService<ViewMotionState, MotionState> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionStateRepositoryService
-    ) {
+    protected override repo: MotionStateRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(MotionStateRepositoryService);
         super(controllerServiceCollector, MotionState, repo);
     }
 

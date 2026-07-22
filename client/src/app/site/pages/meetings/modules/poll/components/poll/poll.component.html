@@ -90,12 +90,8 @@
             <div class="text-center">
                 {{ 'You are not part of the meeting' | translate }}
             </div>
-        } @else if (user().isPresentInMeeting()) {
-            <os-poll-vote [poll]="poll()" [user]="user()"></os-poll-vote>
         } @else {
-            <div class="text-center">
-                {{ 'You have to be present to vote.' | translate }}
-            </div>
+            <os-poll-vote [poll]="poll()" [user]="user()"></os-poll-vote>
         }
 
         <!-- Delegations -->

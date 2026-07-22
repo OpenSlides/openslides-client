@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 
 import { AuthCheckService } from '../services/auth-check.service';
@@ -12,9 +12,7 @@ enum CannotAccessReason {
     NO_SETTING
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AuthGuard {
     private _cannotAccessReason: CannotAccessReason | null = null;
 
