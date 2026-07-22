@@ -107,6 +107,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
     public constructor() {
         super();
 
+        this.allowCumulative.set(this.meetingSettingsService.instant(`poll_enable_max_votes_per_option`));
         if (this.pollData?.config_id) {
             const collection = collectionFromFqid(this.pollData?.config_id);
             this.method = collection.replace(`poll_config_`, ``);
