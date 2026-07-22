@@ -34,25 +34,7 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
         [`disabled`, _('Disabled (no percents)')]
     ];
 
-    public data = input<Partial<ViewPoll>>();
     public optionAmount = input<number>(null);
-
-    public initForm(): void {
-        this.form = this.fb.group({
-            onehundred_percent_base: [this.data().config.onehundred_percent_base],
-            allow_general_abstain: [false],
-            max_votes_per_option: [null],
-            max_options_amount: [this.optionAmount(), [Validators.required, Validators.min(1)]],
-            min_options_amount: [
-                1,
-                [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_options_amount`)]
-            ],
-            max_vote_sum: [this.optionAmount(), [Validators.required, Validators.min(1)]],
-            min_vote_sum: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_vote_sum`)]]
-        });
-
-        effect(this.onOptionAmountUpdate.bind(this));
-    }
 
     public getSerialzedForm(): Record<string, unknown> {
         return {
@@ -60,6 +42,41 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
             min_options_amount: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_options_amount`],
             min_vote_sum: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_vote_sum`]
         };
+    }
+
+    protected initForm(): void {
+        this.form = this.fb.group({
+            onehundred_percent_base: [`valid`],
+            allow_general_abstain: [false],
+            max_votes_per_option: [null],
+            max_options_amount: [1, [Validators.required, Validators.min(1)]],
+            min_options_amount: [
+                1,
+                [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_options_amount`)]
+            ],
+            max_vote_sum: [1, [Validators.required, Validators.min(1)]],
+            min_vote_sum: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_vote_sum`)]]
+        });
+
+        effect(this.onOptionAmountUpdate.bind(this));
+    }
+
+    protected getPatchedFormData(data: Partial<ViewPoll>): Record<string, unknown> {
+        const patch: Record<string, unknown> = {};
+        for (const field of [
+            `onehundred_percent_base`,
+            `allow_general_abstain`,
+            `max_votes_per_option`,
+            `max_options_amount`,
+            `min_options_amount`,
+            `max_vote_sum`,
+            `min_vote_sum`
+        ]) {
+            if (data && data[field] !== undefined) patch[field] = data[field];
+            else if (data && data.config[field] !== undefined) patch[field] = data.config[field];
+        }
+
+        return patch;
     }
 
     private minOptionsAmountValidator(dependant: string): ValidatorFn {
@@ -79,6 +96,9 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
         const maxCtrl = this.form.get('max_options_amount');
         if (this.optionAmount()) {
             maxCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(this.optionAmount())]);
+            if (maxCtrl?.pristine) {
+                maxCtrl?.setValue(this.optionAmount(), { emitEvent: false });
+            }
         } else {
             maxCtrl?.setValidators([Validators.required, Validators.min(1)]);
         }

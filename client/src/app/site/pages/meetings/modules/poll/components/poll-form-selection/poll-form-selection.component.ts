@@ -26,10 +26,16 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
         [`disabled`, _('Disabled (no percents)')]
     ];
 
-    public data = input.required<Partial<ViewPoll>>();
     public optionAmount = input<number>(null);
 
-    public initForm(): void {
+    public getSerialzedForm(): Record<string, unknown> {
+        return {
+            ...this.form.value,
+            min_options_amount: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_options_amount`]
+        };
+    }
+
+    protected initForm(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
             strike_out: [false],
@@ -40,15 +46,29 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             display_chart: [`table`]
         });
 
-        effect(this.onDataUpdated.bind(this));
         effect(this.onOptionAmountUpdate.bind(this));
     }
 
-    public getSerialzedForm(): Record<string, unknown> {
-        return {
-            ...this.form.value,
-            min_options_amount: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_options_amount`]
-        };
+    protected getPatchedFormData(data: Partial<ViewPoll>): Record<string, unknown> {
+        const patch: Record<string, unknown> = {};
+        for (const field of [
+            `onehundred_percent_base`,
+            `strike_out`,
+            `allow_nota`,
+            `allow_general_abstain`,
+            `max_options_amount`,
+            `min_options_amount`,
+            `display_chart`
+        ]) {
+            if (data && data[field] !== undefined) patch[field] = data[field];
+            else if (data && data.config[field] !== undefined) patch[field] = data.config[field];
+        }
+
+        if (patch[`onehundred_percent_base`] === `yes_no`) {
+            patch[`onehundred_percent_base`] = `valid`;
+        }
+
+        return patch;
     }
 
     private minOptionsAmountValidator(): ValidatorFn {
@@ -62,33 +82,6 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
 
             return min <= max ? null : { minGreaterThanMax: true };
         };
-    }
-
-    private onDataUpdated(): void {
-        if (!this.data() || !this.form) {
-            return;
-        }
-
-        const patch: Record<string, any> = {};
-        for (const field of [
-            `onehundred_percent_base`,
-            `allow_nota`,
-            `max_options_amount`,
-            `min_options_amount`,
-            `strike_out`,
-            `display_chart`,
-            `live_vote_enabled`,
-            `display_chart`
-        ]) {
-            if (this.data() && this.data()[field] !== undefined) patch[field] = this.data()[field];
-            if (this.data() && this.data().config[field] !== undefined) patch[field] = this.data().config[field];
-        }
-
-        if (patch[`onehundred_percent_base`] === `yes_no`) {
-            patch[`onehundred_percent_base`] = `valid`;
-        }
-
-        this.form.patchValue(patch);
     }
 
     private onOptionAmountUpdate(): void {

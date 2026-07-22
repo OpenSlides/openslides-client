@@ -35,19 +35,34 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         [`disabled`, _('Disabled (no percents)')]
     ];
 
-    public data = input<Partial<ViewPoll>>();
     public optionAmount = input<number>(null);
 
-    public initForm(): void {
+    protected initForm(): void {
         this.form = this.fb.group({
-            onehundred_percent_base: [this.data().config.onehundred_percent_base],
-            allow_abstain: [this.data().config.allow_abstain],
+            onehundred_percent_base: [`valid`],
+            allow_abstain: [false],
             max_yes_amount: [1, [Validators.required, Validators.min(1)]],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]]
         });
 
         effect(this.onOptionAmountUpdate.bind(this));
+    }
+
+    protected getPatchedFormData(data: Partial<ViewPoll>): Record<string, unknown> {
+        const patch: Record<string, unknown> = {};
+        for (const field of [
+            `onehundred_percent_base`,
+            `allow_abstain`,
+            `max_yes_amount`,
+            `max_options_amount`,
+            `min_options_amount`
+        ]) {
+            if (data && data[field] !== undefined) patch[field] = data[field];
+            else if (data && data.config[field] !== undefined) patch[field] = data.config[field];
+        }
+
+        return patch;
     }
 
     public getSerialzedForm(): Record<string, unknown> {
@@ -74,8 +89,13 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         if (optionAmount) {
             maxCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(optionAmount)]);
             maxYesCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(optionAmount)]);
-            maxCtrl?.setValue(optionAmount, { emitEvent: false });
-            maxYesCtrl.setValue(optionAmount, { emitEvent: false });
+            if (maxCtrl?.pristine) {
+                maxCtrl?.setValue(optionAmount, { emitEvent: false });
+            }
+
+            if (maxYesCtrl?.pristine) {
+                maxYesCtrl.setValue(optionAmount, { emitEvent: false });
+            }
         } else {
             maxCtrl?.setValidators([Validators.required, Validators.min(1)]);
             maxYesCtrl?.setValidators([Validators.required, Validators.min(1)]);
