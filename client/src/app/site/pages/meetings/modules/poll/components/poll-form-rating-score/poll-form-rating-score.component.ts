@@ -65,7 +65,6 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
         const patch: Record<string, unknown> = {};
         for (const field of [
             `onehundred_percent_base`,
-            `allow_general_abstain`,
             `max_votes_per_option`,
             `max_options_amount`,
             `min_options_amount`,
@@ -74,6 +73,10 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
         ]) {
             if (data && data[field] !== undefined) patch[field] = data[field];
             else if (data && data.config[field] !== undefined) patch[field] = data.config[field];
+        }
+
+        if (patch[`min_options_amount`] !== undefined && patch[`min_vote_sum`] !== undefined) {
+            patch[`allow_general_abstain`] = +patch[`min_options_amount`] === 0 && +patch[`min_vote_sum`] === 0;
         }
 
         return patch;

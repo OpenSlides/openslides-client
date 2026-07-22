@@ -55,7 +55,6 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             `onehundred_percent_base`,
             `strike_out`,
             `allow_nota`,
-            `allow_general_abstain`,
             `max_options_amount`,
             `min_options_amount`,
             `display_chart`
@@ -66,6 +65,10 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
 
         if (patch[`onehundred_percent_base`] === `yes_no`) {
             patch[`onehundred_percent_base`] = `valid`;
+        }
+
+        if (patch[`min_options_amount`] !== undefined) {
+            patch[`allow_general_abstain`] = +patch[`min_options_amount`] === 0;
         }
 
         return patch;
