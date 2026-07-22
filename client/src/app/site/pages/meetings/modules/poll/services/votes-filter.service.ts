@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.service';
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 
@@ -6,9 +6,7 @@ import { GroupControllerService } from '../../../pages/participants';
 import { StructureLevelControllerService } from '../../../pages/participants/pages/structure-levels/services/structure-level-controller.service';
 import { ViewPollBallot } from '../../../pages/polls';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class VotesFilterService extends BaseFilterListService<any> {
     protected storageKey = `VotesEntry`;
 
@@ -24,11 +22,10 @@ export class VotesFilterService extends BaseFilterListService<any> {
         options: []
     };
 
-    public constructor(
-        store: ActiveFiltersService,
-        groupRepo: GroupControllerService,
-        structureRepo: StructureLevelControllerService
-    ) {
+    public constructor() {
+        const store = inject(ActiveFiltersService);
+        const groupRepo = inject(GroupControllerService);
+        const structureRepo = inject(StructureLevelControllerService);
         super(store);
 
         this.updateFilterForRepo({

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { MeetingUser } from '@app/domain/models/meeting-users/meeting-user';
 import { toDecimal } from '@app/infrastructure/utils';
@@ -11,15 +11,14 @@ import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-
 export type MeetingUserPatchFn =
     { [key in keyof MeetingUser]?: any } | ((user: ViewMeetingUser) => { [key in keyof MeetingUser]?: any });
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<ViewMeetingUser, MeetingUser> {
     public override readonly resetOnMeetingChange = false;
 
     private meetingUserIdMap = new Map<Id, Map<Id, Id>>();
 
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, MeetingUser);
     }
 

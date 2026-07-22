@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { DateFnsAdapter } from '@angular/material-date-fns-adapter';
 import { langToTimeLocale } from '@app/infrastructure/utils';
 import { TranslateService } from '@ngx-translate/core';
@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
  * A custom DateAdapter for the datetimepicker in the config. Uses MomentDateAdapter for localisation.
  * Is needed to subscribe to language changes
  */
-@Injectable()
+@Service()
 export class OpenSlidesDateAdapter extends DateFnsAdapter {
     private translate = inject(TranslateService);
 

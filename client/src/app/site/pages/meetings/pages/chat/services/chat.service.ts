@@ -1,15 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Permission } from '@app/domain/definitions/permission';
-import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ChatGroupControllerService } from './chat-group-controller.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ChatService {
     public get canSeeChatObservable(): Observable<boolean> {
         return this._canSeeChatSubject;
@@ -20,12 +17,10 @@ export class ChatService {
     private _canManage = false;
     private _isChatEnabled = false;
 
-    public constructor(
-        _chatGroupRepo: ChatGroupControllerService,
-        _operator: OperatorService,
-        _meetingSettingService: MeetingSettingsService,
-        _orgaSettingService: OrganizationSettingsService
-    ) {
+    public constructor() {
+        const _chatGroupRepo = inject(ChatGroupControllerService);
+        const _operator = inject(OperatorService);
+        const _orgaSettingService = inject(OrganizationSettingsService);
         this._canSeeSomeChatGroup = _chatGroupRepo.getViewModelList()?.length > 0;
         this._canManage = _operator.hasPerms(Permission.chatCanManage);
         this._isChatEnabled = _orgaSettingService.instant(`enable_chat`);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Ids } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { PROJECTIONDEFAULTS } from '@app/domain/models/projector/projection-default';
@@ -19,15 +19,14 @@ import {
 } from '../../../view-models';
 import { ViewProjection, ViewProjector } from '../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ProjectorControllerService extends BaseMeetingControllerService<ViewProjector, Projector> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: ProjectorRepositoryService,
-        private meetingRepo: MeetingRepositoryService
-    ) {
+    private meetingRepo = inject(MeetingRepositoryService);
+    protected override repo: ProjectorRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(ProjectorRepositoryService);
         super(controllerServiceCollector, Projector, repo);
     }
 

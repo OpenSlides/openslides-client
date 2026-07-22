@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { FontPlace } from '@app/domain/models/mediafiles/mediafile.constants';
 import {
     PdfDocumentService,
@@ -24,10 +24,13 @@ interface MeetingDownloadConfig extends MeetingDownloadLandscapeConfig {
     disableProgress?: boolean;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingPdfExportService {
+    private pdfExportService = inject(PdfDocumentService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private httpService = inject(HttpService);
+    private mediaManageService = inject(MediaManageService);
+
     private get fontSize(): number | null {
         return this.meetingSettingsService.instant(`export_pdf_fontsize`);
     }
@@ -51,13 +54,6 @@ export class MeetingPdfExportService {
     public get pageMarginPointsBottom(): number {
         return mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`)!);
     }
-
-    public constructor(
-        private pdfExportService: PdfDocumentService,
-        private meetingSettingsService: MeetingSettingsService,
-        private httpService: HttpService,
-        private mediaManageService: MediaManageService
-    ) {}
 
     public blob(config: MeetingDownloadConfig): Promise<Blob | null> {
         const pageMargins: [number, number, number, number] = [

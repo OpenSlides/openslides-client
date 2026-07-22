@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MotionEditor } from '@app/domain/models/motions/motion-editor';
 
 import { ViewMotionEditor } from '../../../../site/pages/meetings/pages/motions/modules/editors/view-models/view-motion-editor';
@@ -6,16 +6,15 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
 import { BaseMotionMeetingUserRepositoryService } from '../util';
 import { MotionEditorAction } from './motion-editor.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionEditorRepositoryService extends BaseMotionMeetingUserRepositoryService<
     ViewMotionEditor,
     MotionEditor
 > {
     protected sortPayloadField = `motion_editor_ids`;
 
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, MotionEditor, MotionEditorAction);
     }
 

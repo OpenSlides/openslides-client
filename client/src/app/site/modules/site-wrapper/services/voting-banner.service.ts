@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
 import { viewModelListEqual } from '@app/infrastructure/utils';
@@ -20,9 +20,7 @@ interface BannerCreationData {
     link: string;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class VotingBannerService {
     private currentBanner: BannerDefinition;
 
@@ -31,16 +29,16 @@ export class VotingBannerService {
     private pollsToVote: ViewPoll[] = [];
     private pollsToVoteSubscription: Subscription;
 
-    public constructor(
-        private banner: BannerService,
-        private translate: TranslateService,
-        private votingService: VotingService,
-        private activeMeeting: ActiveMeetingService,
-        private sendVotesService: PollBallotControllerService,
-        private operator: OperatorService,
-        private activePolls: ActivePollsService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    private banner = inject(BannerService);
+    private translate = inject(TranslateService);
+    private votingService = inject(VotingService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private sendVotesService = inject(PollBallotControllerService);
+    private operator = inject(OperatorService);
+    private activePolls = inject(ActivePollsService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
         combineLatest([
             this.activeMeeting.meetingIdObservable.pipe(distinctUntilChanged()),
             this.activePolls.activePollsObservable.pipe(

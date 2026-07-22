@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { UserExport } from '@app/domain/models/users/user.export';
 import {
     CsvColumnDefinitionMap,
@@ -19,9 +19,7 @@ export interface ParticipantExport extends UserExport {
     locked_out?: boolean;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ParticipantCsvExportService {
     // private _csvColumnDefinitionMapsMap: Map<string, CsvColumnDefinitionMap<ViewUser>> = new Map([
     //     [
@@ -44,10 +42,8 @@ export class ParticipantCsvExportService {
     //     ]
     // ]);
 
-    public constructor(
-        private csvExport: MeetingCsvExportForBackendService,
-        private translate: TranslateService
-    ) {}
+    private csvExport = inject(MeetingCsvExportForBackendService);
+    private translate = inject(TranslateService);
 
     public export(participants: ViewUser[]): void {
         this.csvExport.export(

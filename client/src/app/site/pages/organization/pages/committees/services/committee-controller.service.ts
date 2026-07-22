@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Action } from '@app/gateways/actions';
 import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 
@@ -10,14 +10,13 @@ import { BaseController } from '../../../../../base/base-controller';
 import { ControllerServiceCollectorService } from '../../../../../services/controller-service-collector.service';
 import { ViewCommittee } from '../view-models';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class CommitteeControllerService extends BaseController<ViewCommittee, Committee> {
-    public constructor(
-        repositoryServiceCollector: ControllerServiceCollectorService,
-        protected override repo: CommitteeRepositoryService
-    ) {
+    protected override repo: CommitteeRepositoryService;
+
+    public constructor() {
+        const repositoryServiceCollector = inject(ControllerServiceCollectorService);
+        const repo = inject(CommitteeRepositoryService);
         super(repositoryServiceCollector, Committee, repo);
     }
 

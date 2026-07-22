@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { isProjectable, Projectable, ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
 
-@Injectable()
+@Service()
 export class ProjectableListService {
-    public constructor(
-        private activeMeetingService: ActiveMeetingService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {}
+    private activeMeetingService = inject(ActiveMeetingService);
+    private meetingSettingsService = inject(MeetingSettingsService);
 
     public isProjected(model: ProjectionBuildDescriptor | Projectable | null): boolean {
         if (!model) {

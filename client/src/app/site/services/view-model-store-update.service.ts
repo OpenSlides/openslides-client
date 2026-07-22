@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Collection, Id, Ids } from '@app/domain/definitions/key-types';
 import { BaseModel, BaseModelTemplate } from '@app/domain/models/base/base-model';
 import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
@@ -29,15 +29,11 @@ interface UpdatePatch {
 
 type ModelPatch = Record<string, Record<number, BaseModelTemplate>>;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ViewModelStoreUpdateService {
-    public constructor(
-        private DS: DataStoreService,
-        private DSUpdateService: DataStoreUpdateManagerService,
-        private collectionMapper: CollectionMapperService
-    ) {}
+    private DS = inject(DataStoreService);
+    private DSUpdateService = inject(DataStoreUpdateManagerService);
+    private collectionMapper = inject(CollectionMapperService);
 
     public async triggerUpdate({
         changedModels,

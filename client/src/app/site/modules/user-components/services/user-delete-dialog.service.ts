@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import {
     GetUserRelatedModelsPresenterResult,
@@ -17,15 +17,14 @@ interface UserDeleteDialogOpenConfig {
     relatedModelsResult?: GetUserRelatedModelsPresenterResult;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class UserDeleteDialogService extends BaseDialogService<
     UserDeleteDialogComponent,
     UserDeleteDialogOpenConfig,
     boolean
 > {
-    public constructor(private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService) {
+    private userRelatedModelsPresenter = inject(GetUserRelatedModelsPresenterService);
+    public constructor() {
         super();
     }
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
     FieldDescriptor,
     Fields,
@@ -74,18 +74,14 @@ export const DEFAULT_FIELDSET = `detail`;
  */
 export const ROUTING_FIELDSET = `routing`;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ModelRequestBuilderService {
     private fieldsets: Record<string, Fieldsets<any>> = {};
 
     private loaded = new Deferred();
 
-    public constructor(
-        private relationManager: RelationManagerService,
-        private collectionMapper: CollectionMapperService
-    ) {}
+    private relationManager = inject(RelationManagerService);
+    private collectionMapper = inject(CollectionMapperService);
 
     public onAfterAppsLoaded(): void {
         for (const repo of this.collectionMapper.getAllRepositories()) {

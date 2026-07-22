@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Ids } from '@app/domain/definitions/key-types';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
@@ -18,9 +18,7 @@ interface ChatGroupDialogResult {
     write_group_ids: Ids;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ChatGroupDialogService extends BaseDialogService<
     ChatGroupDialogComponent,
     ChatGroupDialogData,

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MOTION_PDF_OPTIONS } from '@app/domain/models/motions/motions.constants';
 import { BorderType, PdfError, StyleType } from '@app/gateways/export/pdf-document.service';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
@@ -20,18 +20,14 @@ import { MotionPdfService } from '../motion-pdf.service';
  * const docDef = this.motionPdfCatalogService.motionListToDocDef(myListOfViewMotions);
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionPdfCatalogService {
-    public constructor(
-        private translate: TranslateService,
-        private motionPdfService: MotionPdfService,
-        private pdfService: MeetingPdfExportService,
-        private motionService: MotionControllerService,
-        private categoryRepo: MotionCategoryControllerService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {}
+    private translate = inject(TranslateService);
+    private motionPdfService = inject(MotionPdfService);
+    private pdfService = inject(MeetingPdfExportService);
+    private motionService = inject(MotionControllerService);
+    private categoryRepo = inject(MotionCategoryControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
 
     /**
      * Converts the list of motions to pdfmake doc definition.

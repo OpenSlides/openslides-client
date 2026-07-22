@@ -1,4 +1,4 @@
-import { Injectable, ProviderToken } from '@angular/core';
+import { ProviderToken, Service } from '@angular/core';
 import { BaseRepository } from '@app/gateways/repositories/base-repository';
 import { CommitteeRepositoryService } from '@app/gateways/repositories/committee-repository.service';
 import { BaseSortListService, OsSortingOption } from '@app/site/base/base-sort.service';
@@ -6,9 +6,7 @@ import { _ } from '@ngx-translate/core';
 
 import { ViewCommittee } from '../../../../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class CommitteeSortService extends BaseSortListService<ViewCommittee> {
     protected storageKey = `CommitteeList`;
 

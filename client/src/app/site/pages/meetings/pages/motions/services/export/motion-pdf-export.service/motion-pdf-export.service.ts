@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ProgressSnackBarService } from '@app/gateways/export/progress-snack-bar/services/progress-snack-bar.service';
 import { ProgressSnackBarControlService } from '@app/gateways/export/progress-snack-bar/services/progress-snack-bar-control.service';
 import { ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
@@ -16,19 +16,15 @@ import { MotionPdfCatalogService } from '../motion-pdf-catalog.service';
 /**
  * Export service to handle various kind of exporting necessities.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionPdfExportService {
-    public constructor(
-        private translate: TranslateService,
-        private motionPdfService: MotionPdfService,
-        private amendmentListPdfService: AmendmentListPdfService,
-        private pdfCatalogService: MotionPdfCatalogService,
-        private pdfDocumentService: MeetingPdfExportService,
-        private progressSnackBarService: ProgressSnackBarService,
-        private progressService: ProgressSnackBarControlService
-    ) {}
+    private translate = inject(TranslateService);
+    private motionPdfService = inject(MotionPdfService);
+    private amendmentListPdfService = inject(AmendmentListPdfService);
+    private pdfCatalogService = inject(MotionPdfCatalogService);
+    private pdfDocumentService = inject(MeetingPdfExportService);
+    private progressSnackBarService = inject(ProgressSnackBarService);
+    private progressService = inject(ProgressSnackBarControlService);
 
     /**
      * Exports a single motions to PDFnumberOrTitle

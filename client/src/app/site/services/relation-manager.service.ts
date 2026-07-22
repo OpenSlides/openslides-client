@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { filter, map, merge, Observable } from 'rxjs';
 
 import { Fqid } from '../../domain/definitions/key-types';
@@ -25,16 +25,14 @@ export function ensureIdField(relation: Partial<Relation>): string {
     }
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class RelationManagerService {
     private relationsByCollection: Record<string, Relation[]> = {};
 
-    public constructor(
-        private viewModelStoreService: ViewModelStoreService,
-        private collectionMapper: CollectionMapperService
-    ) {
+    private viewModelStoreService = inject(ViewModelStoreService);
+    private collectionMapper = inject(CollectionMapperService);
+
+    public constructor() {
         this.loadRelations();
     }
 

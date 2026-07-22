@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Permission } from '@app/domain/definitions/permission';
 
 import { OperatorService } from './operator.service';
@@ -12,18 +12,14 @@ interface AuthGuardFallbackEntry {
 /**
  * Classical Auth-Guard. Checks if the user has to correct permissions to enter a page, and forwards to login if not.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class FallbackRoutesService {
     private fallbackEntries: AuthGuardFallbackEntry[] = [];
 
     /**
-     * Constructor
-     *
-     * @param operator Asking for the required permission
+     * operator Asking for the required permission
      */
-    public constructor(private operator: OperatorService) {}
+    private operator = inject(OperatorService);
 
     /**
      * Adds fallback navigation entries for the start page.

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { ListOfSpeakers } from '@app/domain/models/list-of-speakers/list-of-speakers';
 import { ListOfSpeakersRepositoryService } from '@app/gateways/repositories/list-of-speakers/list-of-speakers-repository.service';
@@ -21,15 +21,14 @@ export interface SpeakingTimeStructureLevelObject {
     name: string;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ListOfSpeakersControllerService extends BaseController<ViewListOfSpeakers, ListOfSpeakers> {
-    public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: ListOfSpeakersRepositoryService,
-        private meetingSettings: MeetingSettingsService
-    ) {
+    protected override repo: ListOfSpeakersRepositoryService;
+    private meetingSettings = inject(MeetingSettingsService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(ControllerServiceCollectorService);
+        const repo = inject(ListOfSpeakersRepositoryService);
         super(controllerServiceCollector, ListOfSpeakers, repo);
     }
 

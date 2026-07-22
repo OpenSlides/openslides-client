@@ -1,13 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Fqid } from '@app/domain/definitions/key-types';
 import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionPollControllerService {
-    public constructor(private repo: PollRepositoryService) {}
+    private repo = inject(PollRepositoryService);
 
     public getViewModelList(): ViewPoll[] {
         return this.repo.getViewModelList().filter(poll => poll.isMotionPoll);

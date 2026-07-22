@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 
 import { Presenter } from './presenter';
@@ -14,11 +14,9 @@ interface JsonBlob {
 
 type JsonBlobValueType = JsonBlob | string | number | boolean;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ExportMeetingPresenterService {
-    public constructor(private presenter: PresenterService) {}
+    private presenter = inject(PresenterService);
 
     public async call(payload: ExportMeetingPresenterPayload): Promise<JsonBlob> {
         return await this.presenter.call(Presenter.EXPORT_MEETING, payload);

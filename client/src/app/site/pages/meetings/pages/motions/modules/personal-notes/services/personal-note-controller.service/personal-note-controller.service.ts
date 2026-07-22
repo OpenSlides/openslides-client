@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Fqid } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { PersonalNote } from '@app/domain/models/motions/personal-note';
@@ -11,14 +11,13 @@ import { map, Observable } from 'rxjs';
 
 import { HasPersonalNote, ViewPersonalNote } from '../../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PersonalNoteControllerService extends BaseMeetingControllerService<ViewPersonalNote, PersonalNote> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: PersonalNoteRepositoryService
-    ) {
+    protected override repo: PersonalNoteRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(PersonalNoteRepositoryService);
         super(controllerServiceCollector, PersonalNote, repo);
     }
 

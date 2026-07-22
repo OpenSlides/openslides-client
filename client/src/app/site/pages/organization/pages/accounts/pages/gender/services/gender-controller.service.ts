@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Gender } from '@app/domain/models/gender/gender';
 import { GenderRepositoryService } from '@app/gateways/repositories/gender/gender-repository.service';
@@ -7,14 +7,13 @@ import { ControllerServiceCollectorService } from '@app/site/services/controller
 
 import { ViewGender } from '../view-models/view-gender';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GenderControllerService extends BaseController<ViewGender, Gender> {
-    public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: GenderRepositoryService
-    ) {
+    protected override repo: GenderRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(ControllerServiceCollectorService);
+        const repo = inject(GenderRepositoryService);
         super(controllerServiceCollector, Gender, repo);
     }
 
