@@ -61,11 +61,13 @@
     </div>
 }
 
-<div class="motion-content">
+<div>
     <!-- Reason -->
     @if (showReason) {
         <div>
-            <h3 [attr.aria-label]="'Reason text' | translate">{{ 'Reason' | translate }}</h3>
+            <h3 class="motion-h3" [attr.aria-label]="'Reason text' | translate">
+                {{ 'Reason' | translate }}
+            </h3>
             <div class="motion-text underlined-links" [innerHtml]="motion.reason | trust: 'html'"></div>
         </div>
     }
@@ -75,7 +77,7 @@
         @if (hasAttachments) {
             <div class="content-field">
                 <div>
-                    <h3>
+                    <h3 class="motion-h3">
                         {{ 'Attachments' | translate }}
                         <mat-icon>attach_file</mat-icon>
                     </h3>
