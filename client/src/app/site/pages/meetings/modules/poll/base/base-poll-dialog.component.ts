@@ -1,4 +1,4 @@
-import { Directive, inject, signal, viewChild } from '@angular/core';
+import { computed, Directive, inject, signal, viewChild } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -47,16 +47,12 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
             return false;
         }
 
-        return this.pollForm().pollForm.valid;
+        return this.pollForm().form().valid();
     }
 
     public analogPollFormOpen = signal(false);
-    public isAnalogPoll = rxResource({
-        params: () => this.pollForm(),
-        defaultValue: false,
-        stream({ params }) {
-            return params.pollForm.get(`visibility`).valueChanges.pipe(map(v => v === PollVisibility.Manually));
-        }
+    public isAnalogPoll = computed(() => {
+        return this.pollForm().form.visibility().value() === PollVisibility.Manually;
     });
 
     protected formBuilder = inject(UntypedFormBuilder);

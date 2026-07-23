@@ -1,6 +1,6 @@
 <div class="os-form-card-mobile">
     <!-- Poll Title -->
-    <form [formGroup]="pollForm">
+    <form>
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
             <h2 class="poll-preview-title">
@@ -30,7 +30,7 @@
                     }
 
                     <!-- Groups entitled to Vote -->
-                    @if (isEVotingSelected) {
+                    @if (isEVotingSelected()) {
                         <mat-form-field>
                             <mat-label>{{ 'Entitled to vote' | translate }}</mat-label>
                             <os-repo-search-selector
@@ -47,7 +47,7 @@
 
                 <div class="margin-bottom-15">
                     <!-- Live voting -->
-                    @if (isLiveVotingAvailable) {
+                    @if (isLiveVotingAvailable()) {
                         <mat-checkbox formControlName="live_voting_enabled">
                             {{ 'Live voting' | translate }}
                         </mat-checkbox>
@@ -67,7 +67,7 @@
             <h4 class="option-section-title">{{ 'Options' | translate }}</h4>
             <os-editable-list
                 placeholder="New option"
-                [items]="pollForm.get('options').value"
+                [items]="form.options().value()"
                 (itemsChange)="onOptionsChange($event)"
             />
         </div>

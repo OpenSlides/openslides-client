@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -53,15 +53,13 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
 
         return this.getSelectedMethod() === `approval`
             ? this.approvalForm().form.valid
-            : this.selectionPollForm().form.valid && this.options.value().length > 0;
+            : this.selectionPollForm().form.valid && this.options().length > 0;
     }
 
     public selectedTab = signal(0);
 
-    public options = rxResource<string[], { form: UntypedFormGroup }>({
-        params: () => ({ form: this.pollForm().pollForm }),
-        defaultValue: [],
-        stream: ({ params }) => params.form.get('options').valueChanges
+    public options = computed(() => {
+        return this.pollForm().form.options().value();
     });
 
     private pollService = inject(PollService);
@@ -101,7 +99,7 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
         if (this.getSelectedMethod() === `approval`) {
             options.push([{ key: `approval`, title: null }]);
         } else {
-            for (const option of this.options.value()) {
+            for (const option of this.options()) {
                 options.push({ key: `text-${djb2hash(option)}`, title: option });
             }
         }
