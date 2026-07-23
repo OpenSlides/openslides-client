@@ -8,7 +8,7 @@ import {
     Input,
     OnDestroy,
     Output,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
@@ -42,8 +42,7 @@ enum Player {
     standalone: false
 })
 export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
-    @ViewChild(`vjs`, { static: false })
-    private vjsPlayerElementRef!: ElementRef;
+    private vjsPlayerElementRef = viewChild<ElementRef>(`vjs`);
 
     private _videoUrl!: string;
 
@@ -267,7 +266,11 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         await this.isUrlReachable();
         if (!this.vjsPlayer && this.usingVjs && this.vjsPlayerElementRef) {
             const videojs = (await import(`video.js`)).default;
-            this.vjsPlayer = videojs(this.vjsPlayerElementRef.nativeElement, {
+            const vjsEl = this.vjsPlayerElementRef().nativeElement;
+            if (!vjsEl?.isConnected) {
+                return;
+            }
+            this.vjsPlayer = videojs(vjsEl, {
                 textTrackSettings: { persistTextTrackSettings: false },
                 fluid: true,
                 autoplay: `any`,
