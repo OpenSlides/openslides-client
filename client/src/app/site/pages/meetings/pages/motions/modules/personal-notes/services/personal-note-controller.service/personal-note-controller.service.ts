@@ -1,24 +1,23 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Fqid } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { PersonalNote } from '@app/domain/models/motions/personal-note';
+import { Action } from '@app/gateways/actions';
+import { PersonalNoteRepositoryService } from '@app/gateways/repositories/motions/personal-note-repository.service';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { map, Observable } from 'rxjs';
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
-import { Action } from 'src/app/gateways/actions';
-import { PersonalNoteRepositoryService } from 'src/app/gateways/repositories/motions/personal-note-repository.service';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { HasPersonalNote, ViewPersonalNote } from '../../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PersonalNoteControllerService extends BaseMeetingControllerService<ViewPersonalNote, PersonalNote> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: PersonalNoteRepositoryService
-    ) {
+    protected override repo: PersonalNoteRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(PersonalNoteRepositoryService);
         super(controllerServiceCollector, PersonalNote, repo);
     }
 

@@ -1,6 +1,4 @@
-import { Injectable } from '@angular/core';
-import { merge, Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { inject, Service } from '@angular/core';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
@@ -15,14 +13,16 @@ import {
     PollType,
     VotingResult,
     YES_KEY
-} from 'src/app/domain/models/poll';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { compareNumber } from 'src/app/infrastructure/utils';
-import { ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { PollServiceMapperService } from 'src/app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+} from '@app/domain/models/poll';
+import { Topic } from '@app/domain/models/topics/topic';
+import { compareNumber } from '@app/infrastructure/utils';
+import { ChartDate } from '@app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { PollServiceMapperService } from '@app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { merge, Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { ViewTopic } from '../../../view-models';
 
@@ -31,20 +31,18 @@ interface TopicPollTableEntry {
     data: number | undefined;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class TopicPollService extends PollService {
     public defaultPollMethod: PollMethod;
     public defaultPercentBase: PollPercentBase;
     public defaultGroupIds: number[];
 
-    public constructor(
-        pollServiceMapper: PollServiceMapperService,
-        private pollRepo: PollControllerService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    private pollRepo = inject(PollControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
         super();
+        const pollServiceMapper = inject(PollServiceMapperService);
         pollServiceMapper.registerService(ViewTopic.COLLECTION, this);
         this.meetingSettingsService
             .get(`poll_default_onehundred_percent_base`)

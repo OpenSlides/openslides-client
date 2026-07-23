@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from './auth.service';
@@ -6,17 +6,15 @@ import { ConnectionStatusService } from './connection-status.service';
 import { LifecycleService } from './lifecycle.service';
 import { OpenSlidesRouterService } from './openslides-router.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class OpenSlidesService {
-    public constructor(
-        private offlineService: ConnectionStatusService,
-        private lifecycleService: LifecycleService,
-        private authService: AuthService,
-        private osRouter: OpenSlidesRouterService,
-        private translate: TranslateService
-    ) {
+    private offlineService = inject(ConnectionStatusService);
+    private lifecycleService = inject(LifecycleService);
+    private authService = inject(AuthService);
+    private osRouter = inject(OpenSlidesRouterService);
+    private translate = inject(TranslateService);
+
+    public constructor() {
         this.lifecycleService.appLoaded.subscribe(() => this.bootup());
     }
 

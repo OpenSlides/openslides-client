@@ -1,15 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { BaseBackendImportService } from '@app/site/base/base-import.service/base-backend-import.service';
+import { ImportServiceCollectorService } from '@app/site/services/import-service-collector.service';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
-import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { AccountExportService } from '../../../../services/account-export.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AccountImportService extends BaseBackendImportService {
     /**
      * The minimimal number of header entries needed to successfully create an entry
@@ -33,11 +31,11 @@ export class AccountImportService extends BaseBackendImportService {
         warning: _(`Accounts with warnings: affected cells will be skipped`)
     };
 
-    public constructor(
-        importServiceCollector: ImportServiceCollectorService,
-        private repo: AccountControllerService,
-        private exporter: AccountExportService
-    ) {
+    private repo = inject(AccountControllerService);
+    private exporter = inject(AccountExportService);
+
+    public constructor() {
+        const importServiceCollector = inject(ImportServiceCollectorService);
         super(importServiceCollector);
     }
 

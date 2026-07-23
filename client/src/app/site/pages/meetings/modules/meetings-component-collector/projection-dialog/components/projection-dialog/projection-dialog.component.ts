@@ -1,19 +1,18 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { Id } from '@app/domain/definitions/key-types';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
 import {
     getProjectorListMinimalSubscriptionConfig,
     PROJECTOR_LIST_MINIMAL_SUBSCRIPTION
-} from 'src/app/site/pages/meetings/pages/projectors/projectors.subscription';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+} from '@app/site/pages/meetings/pages/projectors/projectors.subscription';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import {
     isProjectionBuildDescriptor,
     MultiProjectionBuildDescriptor,
     ProjectionBuildDescriptor
-} from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+} from '@app/site/pages/meetings/view-models/projection-build-descriptor';
 import {
     isSlideChoiceOption,
     isSlideDecisionOption,
@@ -21,8 +20,9 @@ import {
     SlideDecisionOption,
     SlideOption,
     SlideOptions
-} from 'src/app/site/pages/meetings/view-models/slide-options';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
+} from '@app/site/pages/meetings/view-models/slide-options';
+import { ModelRequestService } from '@app/site/services/model-request.service';
+import { Subscription } from 'rxjs';
 
 import { ProjectionDialogReturnType } from '../../definitions';
 
@@ -37,6 +37,7 @@ export interface ProjectionDialogConfig {
     selector: `os-projection-dialog`,
     templateUrl: `./projection-dialog.component.html`,
     styleUrls: [`./projection-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectionDialogComponent implements OnInit, OnDestroy {

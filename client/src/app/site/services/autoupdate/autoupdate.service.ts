@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { ModelRequest } from '@app/domain/interfaces/model-request';
 import { _ } from '@ngx-translate/core';
-import { ModelRequest } from 'src/app/domain/interfaces/model-request';
 
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
 import { HttpStreamEndpointService } from '../../../gateways/http-stream';
@@ -64,22 +64,20 @@ export const OUT_OF_SYNC_BANNER: BannerDefinition = {
 
 export const AU_PAUSE_ON_INACTIVITY_TIMEOUT = 5 * 60 * 1000; // 5 Minutes
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AutoupdateService {
     private _activeRequestObjects: AutoupdateSubscriptionMap = {};
     private _mutex = new Mutex();
     private _currentQueryParams: QueryParams | null = null;
     private _resolveDataReceived: Record<number, ((value: ModelData) => void)[]> = [];
 
-    public constructor(
-        private httpEndpointService: HttpStreamEndpointService,
-        private viewmodelStoreUpdate: ViewModelStoreUpdateService,
-        private communication: AutoupdateCommunicationService,
-        private bannerService: BannerService,
-        private visibilityService: WindowVisibilityService
-    ) {
+    private httpEndpointService = inject(HttpStreamEndpointService);
+    private viewmodelStoreUpdate = inject(ViewModelStoreUpdateService);
+    private communication = inject(AutoupdateCommunicationService);
+    private bannerService = inject(BannerService);
+    private visibilityService = inject(WindowVisibilityService);
+
+    public constructor() {
         this.setAutoupdateConfig(null);
         this.httpEndpointService.registerEndpoint(
             AUTOUPDATE_DEFAULT_ENDPOINT,

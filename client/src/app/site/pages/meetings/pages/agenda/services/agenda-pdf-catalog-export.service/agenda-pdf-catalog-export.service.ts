@@ -1,12 +1,12 @@
 import { Location } from '@angular/common';
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { BorderType, PdfError, StyleType } from '@app/gateways/export/pdf-document.service';
+import { PdfImagesService } from '@app/gateways/export/pdf-document.service/pdf-images.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { DurationService } from '@app/site/services/duration.service';
+import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, TableCell } from 'pdfmake/interfaces';
-import { BorderType, PdfError, StyleType } from 'src/app/gateways/export/pdf-document.service';
-import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { MeetingPdfExportService } from '../../../../services/export';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
@@ -27,24 +27,20 @@ const AGENDA_PDF_OPTIONS = {
     Footer: `footer`
 };
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AgendaPdfCatalogExportService {
     // parent agenda items which are not in the export are handled different
     // then exported agenda items, collect the ids of the special parent items here
     private addedAgendaItemIds = [];
 
-    public constructor(
-        private translate: TranslateService,
-        private pdfService: MeetingPdfExportService,
-        private htmlToPdfService: MotionHtmlToPdfService,
-        private organizationSettingsService: OrganizationSettingsService,
-        private meetingSettingsService: MeetingSettingsService,
-        private pdfImagesService: PdfImagesService,
-        private durationService: DurationService,
-        private treeService: TreeService
-    ) {}
+    private translate = inject(TranslateService);
+    private pdfService = inject(MeetingPdfExportService);
+    private htmlToPdfService = inject(MotionHtmlToPdfService);
+    private organizationSettingsService = inject(OrganizationSettingsService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private pdfImagesService = inject(PdfImagesService);
+    private durationService = inject(DurationService);
+    private treeService = inject(TreeService);
 
     /**
      * Converts the list of agenda items to pdfmake doc definition.
@@ -605,11 +601,7 @@ export class AgendaPdfCatalogExportService {
             case `main-margin`:
                 return [0, 0, 0, 7];
             default:
-                console.warn(
-                    this.translate
-                        .instant(`An undefined class was called. Please add the class: {}`)
-                        .replace(`{}`, name)
-                );
+                console.warn(`An undefined class was called. Please add the class: ${name}`);
                 return {};
         }
     }

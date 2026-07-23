@@ -1,24 +1,22 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { PollState } from '@app/domain/models/poll/poll-constants';
+import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.service';
+import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { TranslateService } from '@ngx-translate/core';
-import { PollState } from 'src/app/domain/models/poll/poll-constants';
-import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { ViewPoll } from '../../../../view-models';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class PollListFilterService extends BaseFilterListService<ViewPoll> {
     /**
      * set the storage key name
      */
     protected storageKey = `PollList`;
 
-    public constructor(
-        store: ActiveFiltersService,
-        private translate: TranslateService
-    ) {
+    private translate = inject(TranslateService);
+
+    public constructor() {
+        const store = inject(ActiveFiltersService);
         super(store);
     }
 

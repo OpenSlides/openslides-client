@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Motion } from '@app/domain/models/motions/motion';
+import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
+import { Action, createEmptyAction } from '@app/gateways/actions';
+import { CreateResponse } from '@app/gateways/repositories/base-repository';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { TreeIdNode } from '@app/infrastructure/definitions/tree';
+import { NullablePartial } from '@app/infrastructure/utils';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { map, Observable } from 'rxjs';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { Action, createEmptyAction } from 'src/app/gateways/actions';
-import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { NullablePartial } from 'src/app/infrastructure/utils';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { DiffLinesInParagraph } from '../../../definitions';
 import { LineNumberingService, MotionDiffService } from '../../../modules/change-recommendations/services';
@@ -21,17 +20,16 @@ import { MotionLineNumberingService } from '../motion-line-numbering.service/mot
 
 export const REFERENCED_MOTION_REGEX = /\[motion[:/](\d+)\]/g;
 
-@Injectable({ providedIn: `root` })
+@Service()
 export class MotionControllerService extends BaseMeetingControllerService<ViewMotion, Motion> {
     private _lineLength = 80;
+    protected override repo: MotionRepositoryService;
+    private motionLineNumbering = inject(MotionLineNumberingService);
+    private diffFactroy = inject(DiffServiceFactory);
 
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionRepositoryService,
-        private motionLineNumbering: MotionLineNumberingService,
-        private diffFactroy: DiffServiceFactory,
-        private userRepo: UserRepositoryService
-    ) {
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(MotionRepositoryService);
         super(controllerServiceCollector, Motion, repo);
 
         this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this._lineLength = lineLength));

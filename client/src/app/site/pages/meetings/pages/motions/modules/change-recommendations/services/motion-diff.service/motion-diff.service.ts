@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { djb2hash } from '@app/infrastructure/utils';
+import { replaceHtmlEntities } from '@app/infrastructure/utils/dom-helpers';
 import { TranslateService } from '@ngx-translate/core';
 import { DiffCompat, HtmlDiff, VERSION } from '@openslides/motion-diff';
-import { djb2hash } from 'src/app/infrastructure/utils';
-import { replaceHtmlEntities } from 'src/app/infrastructure/utils/dom-helpers';
 
 import { DiffCache, DiffLinesInParagraph, ExtractedContent, LineRange } from '../../../../definitions';
 import { ViewUnifiedChange } from '../../view-models';
@@ -73,17 +73,15 @@ import { LineNumberedString } from '../line-numbering.service';
  * const merged = this.diffService.replaceLines(lineNumberedText, '<p>Replaced paragraph</p>', 1, 1);
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionDiffService {
     private diffCache = new DiffCache();
     private htmlDiff: typeof HtmlDiff;
 
-    public constructor(
-        @Inject(DIFF_VERSION) diffVersion: string,
-        private translate: TranslateService
-    ) {
+    private translate = inject(TranslateService);
+
+    public constructor() {
+        const diffVersion = inject(DIFF_VERSION);
         if (diffVersion === VERSION) {
             this.htmlDiff = HtmlDiff;
         } else {

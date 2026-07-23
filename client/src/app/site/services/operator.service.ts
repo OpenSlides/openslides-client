@@ -1,4 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { DelegationSetting, delegationSettings } from '@app/domain/definitions/delegation-setting';
+import { UserFieldsets } from '@app/domain/fieldsets/user';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { User } from '@app/domain/models/users/user';
+import { MeetingUserRepositoryService } from '@app/gateways/repositories/meeting_user';
+import { UserRepositoryService } from '@app/gateways/repositories/users';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
 import {
     BehaviorSubject,
     combineLatest,
@@ -8,14 +16,6 @@ import {
     startWith,
     Subject
 } from 'rxjs';
-import { DelegationSetting, delegationSettings } from 'src/app/domain/definitions/delegation-setting';
-import { UserFieldsets } from 'src/app/domain/fieldsets/user';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { User } from 'src/app/domain/models/users/user';
-import { MeetingUserRepositoryService } from 'src/app/gateways/repositories/meeting_user';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
 
 import { Id } from '../../domain/definitions/key-types';
 import { CML, cmlNameMapping, OML, omlNameMapping } from '../../domain/definitions/organization-permission';
@@ -39,9 +39,7 @@ import { SimplifiedModelRequest } from './model-request-builder/model-request-bu
 
 const UNKOWN_USER_ID = -1; // this is an invalid id **and** not equal to 0, null, undefined.
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class OperatorService {
     public get operatorId(): number | null {
         return this.isAnonymous || !this.authService.userId ? null : this.authService.userId;
@@ -266,20 +264,20 @@ export class OperatorService {
     private _OML: string | null | undefined = undefined; //  null is valid, so use undefined here
     private _CML: Record<number, string> | undefined = undefined;
 
-    public constructor(
-        private activeMeetingService: ActiveMeetingService,
-        private DS: DataStoreService,
-        private authService: AuthService,
-        private lifecycle: LifecycleService,
-        private userRepo: UserRepositoryService,
-        private meetingUserRepo: MeetingUserRepositoryService,
-        private groupRepo: GroupControllerService,
-        private autoupdateService: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService,
-        private meetingRepo: MeetingControllerService,
-        private meetingSettings: MeetingSettingsService,
-        private organizationService: OrganizationService
-    ) {
+    private activeMeetingService = inject(ActiveMeetingService);
+    private DS = inject(DataStoreService);
+    private authService = inject(AuthService);
+    private lifecycle = inject(LifecycleService);
+    private userRepo = inject(UserRepositoryService);
+    private meetingUserRepo = inject(MeetingUserRepositoryService);
+    private groupRepo = inject(GroupControllerService);
+    private autoupdateService = inject(AutoupdateService);
+    private modelRequestBuilder = inject(ModelRequestBuilderService);
+    private meetingRepo = inject(MeetingControllerService);
+    private meetingSettings = inject(MeetingSettingsService);
+    private organizationService = inject(OrganizationService);
+
+    public constructor() {
         this.setNotReady();
         // General environment in which the operator moves
         this.authService.userIdObservable.subscribe(id => {

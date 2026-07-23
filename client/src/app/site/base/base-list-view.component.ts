@@ -1,12 +1,9 @@
 import { AfterViewInit, Directive, ViewChild } from '@angular/core';
 import { NavigationStart } from '@angular/router';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ListComponent } from '@app/ui/modules/list/components';
+import { END_POSITION, START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 import { filter } from 'rxjs';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ListComponent } from 'src/app/ui/modules/list/components';
-import {
-    END_POSITION,
-    START_POSITION
-} from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 
 import { BaseViewModel } from './base-view-model';
 

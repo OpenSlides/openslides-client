@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Router, RoutesRecognized } from '@angular/router';
 import { filter, pairwise, startWith } from 'rxjs';
 
@@ -7,9 +7,7 @@ import { filter, pairwise, startWith } from 'rxjs';
  * Watches URL changes.
  * Can be enhanced using locale storage to support back-navigation even after reload
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class RoutingStateService {
     private skipUnsafeRouteCheck = false;
     /**
@@ -48,6 +46,9 @@ export class RoutingStateService {
         return this._customOrigin;
     }
 
+    private router = inject(Router);
+    private location = inject(Location);
+
     private _currentUrl: string = this.location.path();
 
     /**
@@ -55,10 +56,7 @@ export class RoutingStateService {
      *
      * @param router Angular Router
      */
-    public constructor(
-        private router: Router,
-        private location: Location
-    ) {
+    public constructor() {
         this.router.events
             .pipe(
                 filter(e => e instanceof RoutesRecognized),
@@ -67,9 +65,10 @@ export class RoutingStateService {
             )
             .subscribe((event: any[]) => {
                 this.skipUnsafeRouteCheck =
-                    router.currentNavigation()?.extras?.state && router.currentNavigation()?.extras?.state[`canGoBack`];
+                    this.router.currentNavigation()?.extras?.state &&
+                    this.router.currentNavigation()?.extras?.state[`canGoBack`];
                 this._previousUrl = event[0]?.urlAfterRedirects ?? this._currentUrl;
-                const currentNavigationExtras = router.currentNavigation()?.extras;
+                const currentNavigationExtras = this.router.currentNavigation()?.extras;
                 if (currentNavigationExtras && currentNavigationExtras.state && currentNavigationExtras.state[`back`]) {
                     this._customOrigin = this._previousUrl;
                 } else if (

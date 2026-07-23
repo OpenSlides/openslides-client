@@ -1,10 +1,19 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    effect,
+    inject,
+    input,
+    output,
+    TemplateRef,
+    viewChild
+} from '@angular/core';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OperatorService } from '@app/site/services/operator.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 
 @Component({
     selector: `os-user-multiselect-actions`,
@@ -14,53 +23,32 @@ import { PromptService } from 'src/app/ui/modules/prompt-dialog';
     standalone: false
 })
 export class UserMultiselectActionsComponent extends BaseComponent {
-    @ViewChild(TemplateRef, { static: true })
-    public implicitContent: TemplateRef<any>;
+    public repo = inject(UserControllerService);
+    private operator = inject(OperatorService);
+    private promptService = inject(PromptService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
 
-    @Input()
-    public canManage = true;
+    public implicitContent = viewChild.required(TemplateRef<any>);
 
-    @Input()
-    public canUpdate = true;
+    public canManage = input<boolean>(true);
+    public canUpdate = input<boolean>(true);
+    public selectedUsers = input<ViewUser[]>([]);
 
-    @Input()
-    public canDelete = true;
-
-    @Input()
-    public set selectedUsers(users: ViewUser[]) {
-        if (users.length !== this._selectedUsers.length) {
-            this.calculateMetaData(users);
-        }
-        this._selectedUsers = users;
-    }
-
-    public get selectedUsers(): ViewUser[] {
-        return this._selectedUsers;
-    }
-
-    @Output()
-    public deleting = new EventEmitter<void>();
-
-    @Output()
-    public deselectAll = new EventEmitter<void>();
-
-    @Output()
-    public selectAll = new EventEmitter<void>();
-
-    @Output()
-    public selectedUsersChange = new EventEmitter<ViewUser[]>();
+    public deleting = output<void>();
+    public deselectAll = output<void>();
+    public selectAll = output<void>();
+    public selectedUsersChange = output<ViewUser[]>();
 
     public hasSelectedNonSamlUsers = false;
 
     private _selectedUsers: ViewUser[] = [];
 
-    public constructor(
-        private operator: OperatorService,
-        private promptService: PromptService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        public repo: UserControllerService
-    ) {
+    public constructor() {
         super();
+
+        effect(() => {
+            this.updateSelectedUsers();
+        });
     }
 
     /**
@@ -72,7 +60,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
             return;
         }
 
-        if (this.selectedUsers.find(row => row.user.id === this.operator.operatorId)) {
+        if (this.selectedUsers().find(row => row.user.id === this.operator.operatorId)) {
             this.raiseError(
                 this.translate.instant(
                     `Note: Your own password was not changed. Please use the password change dialog instead.`
@@ -80,7 +68,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
             );
         }
         this.repo
-            .resetPasswordToDefault(...this.selectedUsers.filter(row => row.user.id !== this.operator.operatorId))
+            .resetPasswordToDefault(...this.selectedUsers().filter(row => row.user.id !== this.operator.operatorId))
             .catch(this.raiseError);
     }
 
@@ -98,25 +86,38 @@ export class UserMultiselectActionsComponent extends BaseComponent {
             return;
         }
 
-        if (this.selectedUsers.find(row => row.user.id === this.operator.operatorId)) {
+        if (this.selectedUsers().find(row => row.user.id === this.operator.operatorId)) {
             this.raiseError(
                 this.translate.instant(
                     `Note: Your own password was not changed. Please use the password change dialog instead.`
                 )
             );
         }
-        const rows = this.selectedUsers.filter(row => row.user.id !== this.operator.operatorId);
+        const rows = this.selectedUsers().filter(row => row.user.id !== this.operator.operatorId);
         this.repo.generateNewPasswords(rows);
     }
 
     public async sendInvitationEmailSelected(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to send emails to all selected participants?`);
-        const content = this.selectedUsers.length + ` ` + this.translate.instant(`emails`);
+        const content = this.selectedUsers().length + ` ` + this.translate.instant(`emails`);
         if (await this.promptService.open(title, content)) {
             this.repo
-                .sendInvitationEmails(this.selectedUsers, this.activeMeetingIdService.meetingId)
+                .sendInvitationEmails(this.selectedUsers(), this.activeMeetingIdService.meetingId)
                 .then(this.raiseError, this.raiseError);
         }
+    }
+
+    private updateSelectedUsers(): void {
+        const users = this.selectedUsers();
+
+        if (users.length !== this._selectedUsers.length) {
+            this.calculateMetaData(users);
+        }
+        this._selectedUsers = users;
+    }
+
+    private calculateMetaData(users: ViewUser[]): void {
+        this.hasSelectedNonSamlUsers = users.some(user => !user.saml_id);
     }
 
     /**
@@ -124,9 +125,5 @@ export class UserMultiselectActionsComponent extends BaseComponent {
      */
     public deleteSelected(): void {
         this.deleting.emit();
-    }
-
-    private calculateMetaData(users: ViewUser[]): void {
-        this.hasSelectedNonSamlUsers = users.some(user => !user.saml_id);
     }
 }

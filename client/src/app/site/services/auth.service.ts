@@ -1,8 +1,8 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { EventEmitter, inject, Service } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { SharedWorkerService } from '@app/openslides-main-module/services/shared-worker.service';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
@@ -11,9 +11,7 @@ import { AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AuthService {
     public get authTokenObservable(): Observable<AuthToken | null> {
         return this._authTokenSubject;
@@ -54,15 +52,16 @@ export class AuthService {
 
     private readonly _userIdSubject = new BehaviorSubject<number | null>(null);
 
-    public constructor(
-        private lifecycleService: LifecycleService,
-        private router: Router,
-        private authAdapter: AuthAdapterService,
-        private authTokenService: AuthTokenService,
-        private sharedWorker: SharedWorkerService,
-        private cookie: CookieService,
-        private DS: DataStoreService
-    ) {
+    private lifecycleService = inject(LifecycleService);
+    private router = inject(Router);
+    private activatedRoute = inject(ActivatedRoute);
+    private authAdapter = inject(AuthAdapterService);
+    private authTokenService = inject(AuthTokenService);
+    private sharedWorker = inject(SharedWorkerService);
+    private cookie = inject(CookieService);
+    private DS = inject(DataStoreService);
+
+    public constructor() {
         this.authTokenService.userIdObservable.subscribe(userId => {
             this._userIdSubject.next(userId);
         });
@@ -113,6 +112,11 @@ export class AuthService {
         if (userId) {
             this._loginEvent.emit();
             this.lifecycleService.reboot();
+            const paramMap = this.activatedRoute.snapshot.queryParamMap;
+            if (paramMap.has(`prevUrl`) && (await this.router.navigate([paramMap.get(`prevUrl`)]))) {
+                return;
+            }
+
             this.router.navigate([`/`]);
         } else {
             this.lifecycleService.shutdown();

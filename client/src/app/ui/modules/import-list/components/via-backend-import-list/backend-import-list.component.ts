@@ -1,9 +1,11 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     ContentChildren,
     ElementRef,
     EventEmitter,
+    inject,
     Input,
     OnDestroy,
     OnInit,
@@ -16,12 +18,12 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
+import { BackendImportService } from '@app/ui/base/import-service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
-import { BackendImportService } from 'src/app/ui/base/import-service';
 
 import { ScrollingTableCellDefConfig } from '../../../scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
@@ -52,6 +54,7 @@ export enum BackendImportPhase {
     templateUrl: `./backend-import-list.component.html`,
     styleUrls: [`./backend-import-list.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class BackendImportListComponent implements OnInit, OnDestroy {
@@ -242,10 +245,8 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
 
-    public constructor(
-        private dialog: MatDialog,
-        private translate: TranslateService
-    ) {}
+    private dialog = inject(MatDialog);
+    private translate = inject(TranslateService);
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)

@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { BasePollComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service/assignment-poll-pdf.service';
@@ -14,6 +14,7 @@ import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.ser
     selector: `os-assignment-poll`,
     templateUrl: `./assignment-poll.component.html`,
     styleUrls: [`./assignment-poll.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentPollComponent extends BasePollComponent implements OnInit {

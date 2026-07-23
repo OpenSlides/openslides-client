@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
@@ -9,8 +10,8 @@ import {
 } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { OsFilterOption, OsFilterOptions } from 'src/app/site/base/base-filter.service';
+import { Identifiable } from '@app/domain/interfaces';
+import { OsFilterOption, OsFilterOptions } from '@app/site/base/base-filter.service';
 
 import { FilterListService } from '../../definitions/filter-service';
 
@@ -58,7 +59,7 @@ export class FilterMenuComponent<V extends Identifiable> implements OnInit {
     @Input()
     public showSpacer = false;
 
-    public constructor(private cd: ChangeDetectorRef) {}
+    private cd = inject(ChangeDetectorRef);
 
     /**
      * Directly closes again if no sorting is available

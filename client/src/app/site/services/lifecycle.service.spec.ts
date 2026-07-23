@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { StorageService } from 'src/app/gateways/storage.service';
+import { StorageService } from '@app/gateways/storage.service';
 
 import { LifecycleService } from './lifecycle.service';
 

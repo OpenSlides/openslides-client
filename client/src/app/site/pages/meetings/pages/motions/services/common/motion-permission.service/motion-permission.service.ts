@@ -1,13 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { inject, Service } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { OperatorService } from '@app/site/services/operator.service';
 
 import { ViewMotion } from '../../../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionPermissionService {
     public configMinSupporters = 0;
 
@@ -18,10 +16,10 @@ export class MotionPermissionService {
     private _forbidDelegatorCreateMotions = false;
     private _forbidDelegatorSupportMotions = false;
 
-    public constructor(
-        private operator: OperatorService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    private operator = inject(OperatorService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
         // load config variables
         this.meetingSettingsService
             .get(`motions_supporters_min_amount`)

@@ -1,15 +1,15 @@
 import { Directive, inject, ProviderToken } from '@angular/core';
-import { _ } from '@ngx-translate/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions';
 import {
     BaseSortListService,
     OsSortingDefinition,
     OsSortingOption,
     OsSortProperty
-} from 'src/app/site/base/base-sort.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+} from '@app/site/base/base-sort.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { _ } from '@ngx-translate/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ViewMotion } from '../../../view-models';
 

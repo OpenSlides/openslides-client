@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -10,9 +10,7 @@ import { ActiveMeetingService } from './active-meeting.service';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { MeetingSettingsService } from './meeting-settings.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingComponentServiceCollectorService {
     public get titleService(): Title {
         return this.componentServiceCollector.titleService;
@@ -34,10 +32,8 @@ export class MeetingComponentServiceCollectorService {
         return this.componentServiceCollector.router;
     }
 
-    public constructor(
-        private componentServiceCollector: ComponentServiceCollectorService,
-        public activeMeetingIdService: ActiveMeetingIdService,
-        public activeMeetingService: ActiveMeetingService,
-        public meetingSettingsService: MeetingSettingsService
-    ) {}
+    public activeMeetingIdService = inject(ActiveMeetingIdService);
+    public activeMeetingService = inject(ActiveMeetingService);
+    public meetingSettingsService = inject(MeetingSettingsService);
+    private componentServiceCollector = inject(ComponentServiceCollectorService);
 }

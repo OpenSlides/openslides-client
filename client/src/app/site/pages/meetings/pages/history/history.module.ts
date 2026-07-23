@@ -8,10 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
-import { PipesModule } from 'src/app/ui/pipes';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { SearchSelectorModule } from '@app/ui/modules/search-selector';
+import { PipesModule } from '@app/ui/pipes';
 
 import { ParticipantCommonServiceModule } from '../participants/services/common/participant-common-service.module';
 import { HistoryListComponent } from './components/history-list/history-list.component';

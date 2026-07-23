@@ -1,15 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { PasswordForm, PasswordFormComponent } from 'src/app/site/modules/user-components';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserService } from 'src/app/site/services/user.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Permission } from '@app/domain/definitions/permission';
+import { PasswordForm, PasswordFormComponent } from '@app/site/modules/user-components';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { PERSONAL_FORM_CONTROLS, ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { AuthService } from '@app/site/services/auth.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { UserService } from '@app/site/services/user.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { TranslateService } from '@ngx-translate/core';
 
 interface MenuItem {
     name: string;
@@ -25,6 +28,7 @@ enum MenuItems {
     selector: `os-account-dialog`,
     templateUrl: `./account-dialog.component.html`,
     styleUrls: [`./account-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountDialogComponent extends BaseUiComponent implements OnInit {
@@ -104,15 +108,14 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     private _isUserInScope = false;
     private _isEditing = false;
 
-    public constructor(
-        public dialogRef: MatDialogRef<AccountDialogComponent>,
-        private operator: OperatorService,
-        private repo: UserControllerService,
-        private meetingRepo: MeetingControllerService,
-        private userService: UserService
-    ) {
-        super();
-    }
+    public dialogRef = inject(MatDialogRef<AccountDialogComponent>);
+    private authService = inject(AuthService);
+    private meetingRepo = inject(MeetingControllerService);
+    private operator = inject(OperatorService);
+    private repo = inject(UserControllerService);
+    private snackbar = inject(MatSnackBar);
+    private translate = inject(TranslateService);
+    private userService = inject(UserService);
 
     public ngOnInit(): void {
         this.subscriptions.push(

@@ -1,23 +1,31 @@
-import { ApplicationRef, Component, DOCUMENT, Inject, OnInit, ViewContainerRef } from '@angular/core';
+import {
+    ApplicationRef,
+    ChangeDetectionStrategy,
+    Component,
+    DOCUMENT,
+    inject,
+    OnInit,
+    ViewContainerRef
+} from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { allAvailableTranslations } from '@app/domain/definitions/languages';
+import { HasSequentialNumber } from '@app/domain/interfaces';
+import { StorageService } from '@app/gateways/storage.service';
+import { langToTimeLocale } from '@app/infrastructure/utils';
+import { overloadJsFunctions } from '@app/infrastructure/utils/overload-js-functions';
+import { Deferred } from '@app/infrastructure/utils/promises';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { UpdateService } from '@app/site/modules/site-wrapper/services/update.service';
+import { CustomTranslationService } from '@app/site/modules/translations/custom-translation.service';
+import { LifecycleService } from '@app/site/services/lifecycle.service';
+import { OpenSlidesService } from '@app/site/services/openslides.service';
+import { OpenSlidesStatusService } from '@app/site/services/openslides-status.service';
+import { ViewModelStoreService } from '@app/site/services/view-model-store.service';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
 import { first, firstValueFrom, tap } from 'rxjs';
-import { allAvailableTranslations } from 'src/app/domain/definitions/languages';
-import { HasSequentialNumber } from 'src/app/domain/interfaces';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { langToTimeLocale } from 'src/app/infrastructure/utils';
-import { overloadJsFunctions } from 'src/app/infrastructure/utils/overload-js-functions';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { UpdateService } from 'src/app/site/modules/site-wrapper/services/update.service';
-import { CustomTranslationService } from 'src/app/site/modules/translations/custom-translation.service';
-import { LifecycleService } from 'src/app/site/services/lifecycle.service';
-import { OpenSlidesService } from 'src/app/site/services/openslides.service';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
-import { ViewModelStoreService } from 'src/app/site/services/view-model-store.service';
 
 const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 
@@ -25,6 +33,7 @@ const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
     selector: `os-root`,
     templateUrl: `./openslides-main.component.html`,
     styleUrls: [`./openslides-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OpenSlidesMainComponent implements OnInit {
@@ -32,23 +41,21 @@ export class OpenSlidesMainComponent implements OnInit {
 
     public title = `OpenSlides`;
 
-    public constructor(
-        @Inject(DOCUMENT) private document: Document,
-        _viewContainer: ViewContainerRef,
-        _openslidesService: OpenSlidesService,
-        private appRef: ApplicationRef,
-        private lifecycleService: LifecycleService,
-        private domSanitizer: DomSanitizer,
-        private openslidesStatus: OpenSlidesStatusService,
-        private matIconRegistry: MatIconRegistry,
-        private translate: TranslateService,
-        private storageService: StorageService,
-        private config: DateFnsConfigurationService,
-        private updateService: UpdateService,
-        private router: Router,
-        private modelStore: ViewModelStoreService,
-        private ctService: CustomTranslationService
-    ) {
+    private document = inject(DOCUMENT);
+    private appRef = inject(ApplicationRef);
+    private lifecycleService = inject(LifecycleService);
+    private domSanitizer = inject(DomSanitizer);
+    private openslidesStatus = inject(OpenSlidesStatusService);
+    private matIconRegistry = inject(MatIconRegistry);
+    private translate = inject(TranslateService);
+    private storageService = inject(StorageService);
+    private config = inject(DateFnsConfigurationService);
+    private updateService = inject(UpdateService);
+    private router = inject(Router);
+    private modelStore = inject(ViewModelStoreService);
+    private ctService = inject(CustomTranslationService);
+
+    public constructor(_viewContainer: ViewContainerRef, _openslidesService: OpenSlidesService) {
         overloadJsFunctions();
         this.addDebugFunctions();
         this.waitForAppLoaded();

@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { NavigationEnd, RouterModule } from '@angular/router';
+import { NotifyService } from '@app/gateways/notify.service';
+import { navItemAnim } from '@app/infrastructure/animations';
+import { getCustomStyleForEntry } from '@app/site/base/base-menu-entry';
+import { GlobalHeadbarModule } from '@app/site/modules/global-headbar';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { MainMenuEntry, MainMenuService } from '@app/site/pages/meetings/services/main-menu.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { DirectivesModule } from '@app/ui/directives';
+import { SidenavModule } from '@app/ui/modules/sidenav';
+import { SidenavComponent } from '@app/ui/modules/sidenav/components/sidenav/sidenav.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { NotifyService } from 'src/app/gateways/notify.service';
-import { navItemAnim } from 'src/app/infrastructure/animations';
-import { getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
-import { GlobalHeadbarModule } from 'src/app/site/modules/global-headbar';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MainMenuEntry, MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { SidenavModule } from 'src/app/ui/modules/sidenav';
-import { SidenavComponent } from 'src/app/ui/modules/sidenav/components/sidenav/sidenav.component';
 
 import { ChatNotificationService, ChatService } from '../../pages/chat';
 import { InteractionModule } from '../../pages/interaction/interaction.module';
@@ -29,6 +29,7 @@ import { LoadFontService } from '../../services/load-font.service';
     templateUrl: `./meetings-navigation-wrapper.component.html`,
     styleUrls: [`./meetings-navigation-wrapper.component.scss`],
     animations: [navItemAnim],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CommonModule,
         SidenavModule,

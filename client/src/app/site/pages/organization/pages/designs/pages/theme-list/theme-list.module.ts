@@ -5,10 +5,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { ListModule } from 'src/app/ui/modules/list';
-import { PromptCheckboxComponent } from 'src/app/ui/modules/prompt-checkbox';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { ListModule } from '@app/ui/modules/list';
+import { PromptCheckboxComponent } from '@app/ui/modules/prompt-checkbox';
 
 import { ThemeBuilderDialogModule } from '../../modules/theme-builder-dialog/theme-builder-dialog.module';
 import { ThemeCommonServiceModule } from '../../services/theme-common-service.module';

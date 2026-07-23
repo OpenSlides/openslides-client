@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { lastValueFrom, Observable } from 'rxjs';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class StorageService {
     private noClearKeys: string[] = [];
 
-    public constructor(private storage: StorageMap) {}
+    private storage = inject(StorageMap);
 
     public addNoClearKey(key: string): void {
         this.noClearKeys.push(key);

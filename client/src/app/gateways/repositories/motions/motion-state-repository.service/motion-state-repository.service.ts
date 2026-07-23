@@ -1,19 +1,18 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionState } from '@app/domain/models/motions/motion-state';
+import { Action } from '@app/gateways/actions';
+import { ViewMotionState } from '@app/site/pages/meetings/pages/motions';
 import { map, Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionState } from 'src/app/domain/models/motions/motion-state';
-import { Action } from 'src/app/gateways/actions';
-import { ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionStateAction } from './motion-state.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<ViewMotionState, MotionState> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, MotionState);
     }
 

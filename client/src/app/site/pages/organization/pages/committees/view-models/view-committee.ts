@@ -1,10 +1,10 @@
+import { Id } from '@app/domain/definitions/key-types';
+import { Committee } from '@app/domain/models/comittees/committee';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
 import { Observable, of } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Committee } from 'src/app/domain/models/comittees/committee';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
 
 import { HasOrganizationTags } from '../../organization-tags/view-models/has-organization-tags';
 

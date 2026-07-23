@@ -29,7 +29,11 @@
                                 {{ section.name }}
                             </div>
                             <div class="read">
-                                <os-icon-container icon="visibility">
+                                <os-icon-container
+                                    icon="visibility"
+                                    matTooltipPosition="left"
+                                    [matTooltip]="'Can read' | translate"
+                                >
                                     @if (section.read_groups?.length) {
                                         <ng-container
                                             *ngTemplateOutlet="groupList; context: { groups: section.read_groups }"
@@ -41,7 +45,11 @@
                                 </os-icon-container>
                             </div>
                             <div class="write">
-                                <os-icon-container icon="edit">
+                                <os-icon-container
+                                    icon="edit"
+                                    matTooltipPosition="left"
+                                    [matTooltip]="'Can write' | translate"
+                                >
                                     @if (section.write_groups?.length) {
                                         <ng-container
                                             *ngTemplateOutlet="groupList; context: { groups: section.write_groups }"
@@ -86,10 +94,10 @@
                 }
                 <mat-action-row>
                     <button mat-icon-button (click)="openDialog(section)">
-                        <mat-icon>edit</mat-icon>
+                        <mat-icon [matTooltip]="'Edit' | translate">edit</mat-icon>
                     </button>
                     <button mat-icon-button (click)="onDeleteButton(section)">
-                        <mat-icon>delete</mat-icon>
+                        <mat-icon [matTooltip]="'Delete' | translate">delete</mat-icon>
                     </button>
                 </mat-action-row>
             </mat-expansion-panel>

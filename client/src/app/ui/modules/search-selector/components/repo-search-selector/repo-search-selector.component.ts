@@ -1,8 +1,18 @@
-import { Component, Input, OnDestroy, OnInit, Optional, Self, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Optional,
+    Self,
+    ViewEncapsulation
+} from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
+import { ModelRequestService, SubscribeToConfig } from '@app/site/services/model-request.service';
 import { map, OperatorFunction } from 'rxjs';
-import { ModelRequestService, SubscribeToConfig } from 'src/app/site/services/model-request.service';
 
 import { Settings } from '../../../../../domain/models/meetings/meeting';
 import { MeetingSettingsService } from '../../../../../site/pages/meetings/services/meeting-settings.service';
@@ -16,6 +26,7 @@ import { BaseSearchSelectorComponent } from '../base-search-selector/base-search
     styleUrls: [`../base-search-selector/base-search-selector.component.scss`, `./repo-search-selector.component.scss`],
     providers: [{ provide: MatFormFieldControl, useExisting: RepoSearchSelectorComponent }],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent implements OnInit, OnDestroy {
@@ -45,11 +56,10 @@ export class RepoSearchSelectorComponent extends BaseSearchSelectorComponent imp
 
     private subscriptionName: string;
 
-    public constructor(
-        @Optional() @Self() ngControl: NgControl,
-        private meetingSettingsService: MeetingSettingsService,
-        private modelRequestService: ModelRequestService
-    ) {
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private modelRequestService = inject(ModelRequestService);
+
+    public constructor(@Optional() @Self() ngControl: NgControl) {
         super(ngControl);
         this.shouldPropagateOnRegistering = false;
     }

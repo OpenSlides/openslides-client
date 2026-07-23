@@ -13,8 +13,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
+import { SearchSelectorModule } from '@app/ui/modules/search-selector';
 
 import { OpenSlidesTranslationModule } from '../../../site/modules/translations/openslides-translation.module';
 import { PasswordFormComponent } from './components/password-form/password-form.component';

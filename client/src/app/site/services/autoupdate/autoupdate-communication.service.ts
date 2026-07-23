@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscriber } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ModelRequest } from 'src/app/domain/interfaces/model-request';
-import { HttpStreamEndpointService } from 'src/app/gateways/http-stream';
-import { formatQueryParams } from 'src/app/infrastructure/definitions/http';
-import { djb2hash } from 'src/app/infrastructure/utils';
-import { fqidFromCollectionAndId } from 'src/app/infrastructure/utils/transform-functions';
-import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
+import { Id } from '@app/domain/definitions/key-types';
+import { ModelRequest } from '@app/domain/interfaces/model-request';
+import { HttpStreamEndpointService } from '@app/gateways/http-stream';
+import { formatQueryParams } from '@app/infrastructure/definitions/http';
+import { djb2hash } from '@app/infrastructure/utils';
+import { fqidFromCollectionAndId } from '@app/infrastructure/utils/transform-functions';
+import { SharedWorkerService } from '@app/openslides-main-module/services/shared-worker.service';
 import {
     AutoupdateCleanupCache,
     AutoupdateCloseStream,
@@ -21,7 +19,9 @@ import {
     AutoupdateSetEndpoint,
     AutoupdateSetStreamId,
     AutoupdateStatus
-} from 'src/app/worker/autoupdate/interfaces-autoupdate';
+} from '@app/worker/autoupdate/interfaces-autoupdate';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable, Subscriber } from 'rxjs';
 
 import { GlobalHeadbarService } from '../../modules/global-headbar/global-headbar.service';
 import { SpinnerService } from '../../modules/global-spinner';
@@ -31,9 +31,7 @@ import { AuthTokenService } from '../auth-token.service';
 import { ConnectionStatusService } from '../connection-status.service';
 import { SUBSCRIPTION_SUFFIX } from '../model-request.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AutoupdateCommunicationService {
     private autoupdateDataObservable: Observable<AutoupdateReceiveDataContent>;
     private openResolvers = new Map<string, ((value: number | PromiseLike<number>) => void)[]>();
@@ -43,17 +41,17 @@ export class AutoupdateCommunicationService {
     private tryReconnectOpen = false;
     private subscriptionsWithData = new Set<string>();
 
-    public constructor(
-        private authTokenService: AuthTokenService,
-        private authService: AuthService,
-        private sharedWorker: SharedWorkerService,
-        private endpointService: HttpStreamEndpointService,
-        private matSnackBar: MatSnackBar,
-        private translate: TranslateService,
-        private connectionStatusService: ConnectionStatusService,
-        private updateService: UpdateService,
-        private headbarService: GlobalHeadbarService
-    ) {
+    private authTokenService = inject(AuthTokenService);
+    private authService = inject(AuthService);
+    private sharedWorker = inject(SharedWorkerService);
+    private endpointService = inject(HttpStreamEndpointService);
+    private matSnackBar = inject(MatSnackBar);
+    private translate = inject(TranslateService);
+    private connectionStatusService = inject(ConnectionStatusService);
+    private updateService = inject(UpdateService);
+    private headbarService = inject(GlobalHeadbarService);
+
+    public constructor() {
         this.autoupdateDataObservable = new Observable(dataSubscription => {
             this.sharedWorker.listenTo(`autoupdate`).subscribe(msg => {
                 switch (msg?.action) {

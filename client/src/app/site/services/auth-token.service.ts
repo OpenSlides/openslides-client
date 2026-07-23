@@ -1,11 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AuthTokenService {
     /* @deprecated */
     public get rawAccessToken(): string | null {
