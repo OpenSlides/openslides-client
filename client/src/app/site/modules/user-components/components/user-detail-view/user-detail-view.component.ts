@@ -168,9 +168,9 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private selfUpdateEnabled = false;
 
+    public genderRepo = inject(GenderControllerService);
     private fb = inject(UntypedFormBuilder);
     private operator = inject(OperatorService);
-    public genderRepo = inject(GenderControllerService);
     private cd = inject(ChangeDetectorRef);
     private translate = inject(TranslateService);
 
