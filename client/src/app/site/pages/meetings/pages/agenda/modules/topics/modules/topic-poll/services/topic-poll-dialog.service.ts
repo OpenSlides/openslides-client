@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { BasePollDialogService } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.service';
+import { Service } from '@angular/core';
+import { BasePollDialogService } from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.service';
 
 import { ViewTopic } from '../../../view-models';
 import { TopicPollDialogComponent } from '../components/topic-poll-dialog/topic-poll-dialog.component';
@@ -7,9 +7,7 @@ import { TopicPollDialogComponent } from '../components/topic-poll-dialog/topic-
 /**
  * Subclassed to provide the right `PollService` and `DialogComponent`
  */
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class TopicPollDialogService extends BasePollDialogService<ViewTopic> {
     protected getComponent(): typeof TopicPollDialogComponent {
         return TopicPollDialogComponent;

@@ -1,5 +1,5 @@
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { BaseHasMeetingUsersViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
+import { BaseHasMeetingUsersViewModel } from '@app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { Permission } from '../../../../../../../../domain/definitions/permission';
 import { permissionChildren } from '../../../../../../../../domain/definitions/permission-relations';

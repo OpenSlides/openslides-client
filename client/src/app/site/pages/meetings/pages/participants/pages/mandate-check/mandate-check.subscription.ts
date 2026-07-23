@@ -1,7 +1,7 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { UserFieldsets } from 'src/app/domain/fieldsets/user';
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { Id } from '@app/domain/definitions/key-types';
+import { UserFieldsets } from '@app/domain/fieldsets/user';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 
 export const MANDATE_CHECK_SUBSCRIPTION = `mandate-check`;
 

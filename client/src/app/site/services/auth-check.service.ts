@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Data } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
+import { Permission } from '@app/domain/definitions/permission';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { MeetingRepositoryService } from '@app/gateways/repositories/meeting-repository.service';
 import { CookieService } from 'ngx-cookie-service';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
 
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
@@ -15,9 +15,7 @@ import { ModelRequestBuilderService } from './model-request-builder';
 import { OpenSlidesRouterService } from './openslides-router.service';
 import { OperatorService } from './operator.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AuthCheckService {
     /**
      * The last url to be approved by the permission guard, will be automatically emptied after the first read.
@@ -34,16 +32,14 @@ export class AuthCheckService {
 
     private _lastSuccessfulUrl: string | null = null;
 
-    public constructor(
-        private operator: OperatorService,
-        private activeMeeting: ActiveMeetingService,
-        private meetingRepo: MeetingRepositoryService,
-        private meetingSettingsService: MeetingSettingsService,
-        private autoupdate: AutoupdateService,
-        private cookie: CookieService,
-        private modelRequestBuilder: ModelRequestBuilderService,
-        private osRouter: OpenSlidesRouterService
-    ) {}
+    private operator = inject(OperatorService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private meetingRepo = inject(MeetingRepositoryService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private autoupdate = inject(AutoupdateService);
+    private cookie = inject(CookieService);
+    private modelRequestBuilder = inject(ModelRequestBuilderService);
+    private osRouter = inject(OpenSlidesRouterService);
 
     public async isAuthorized(routeData: Data): Promise<boolean> {
         const basePerm: Permission[] = routeData[`meetingPermissions`];

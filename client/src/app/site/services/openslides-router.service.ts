@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injector, Service } from '@angular/core';
 import {
     ActivatedRoute,
     ActivatedRouteSnapshot,
@@ -8,6 +8,12 @@ import {
     RoutesRecognized,
     UrlTree
 } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import {
+    ActiveMeetingIdService,
+    MeetingIdChangedEvent
+} from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { AuthService } from '@app/site/services/auth.service';
 import {
     BehaviorSubject,
     distinctUntilChanged,
@@ -19,12 +25,6 @@ import {
     Subject,
     tap
 } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import {
-    ActiveMeetingIdService,
-    MeetingIdChangedEvent
-} from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { AuthService } from 'src/app/site/services/auth.service';
 
 import { UpdateService } from '../modules/site-wrapper/services/update.service';
 import { OperatorService } from './operator.service';
@@ -34,9 +34,7 @@ enum UrlTarget {
     ORGANIZATION_LAYER = `organization_layer`
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class OpenSlidesRouterService {
     private preLoginRedirectUrl: UrlTree;
 
@@ -62,19 +60,19 @@ export class OpenSlidesRouterService {
     private _currentUrl: string | null = null;
     private _currentMeetingId: Id | null = null;
 
-    public constructor(
-        _auth: AuthService,
-        private router: Router,
-        private route: ActivatedRoute,
-        private injector: Injector,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private updateService: UpdateService,
-        private operator: OperatorService
-    ) {
-        _auth.logoutObservable.subscribe(() => {
+    private _auth = inject(AuthService);
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
+    private injector = inject(Injector);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private updateService = inject(UpdateService);
+    private operator = inject(OperatorService);
+
+    public constructor() {
+        this._auth.logoutObservable.subscribe(() => {
             this.navigateToLogin(true);
         });
-        router.events
+        this.router.events
             .pipe(
                 filter(event => event instanceof RoutesRecognized),
                 tap(event => this.checkNextTarget(event as any)),
@@ -82,7 +80,7 @@ export class OpenSlidesRouterService {
                 distinctUntilChanged()
             )
             .subscribe(event => this._currentParamMap.next(event));
-        activeMeetingIdService.meetingIdChanged.subscribe(event => console.log(`has meeting changed?`, event));
+        this.activeMeetingIdService.meetingIdChanged.subscribe(event => console.log(`has meeting changed?`, event));
 
         this.operator.operatorUpdated.subscribe(() => {
             if (!this.operator.knowsMultipleMeetings && !this.activeMeetingIdService.meetingId) {

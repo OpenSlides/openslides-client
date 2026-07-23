@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Collection, Id } from '@app/domain/definitions/key-types';
+import { HasMeetingId, HasSequentialNumber, isSequentialNumberHaving } from '@app/domain/interfaces';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { ListOfSpeakers } from '@app/domain/models/list-of-speakers/list-of-speakers';
+import { Topic } from '@app/domain/models/topics/topic';
+import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
+import { Mutex } from '@app/infrastructure/utils/promises';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { AutoupdateService } from '@app/site/services/autoupdate';
+import { ModelRequestBuilderService, SimplifiedModelRequest } from '@app/site/services/model-request-builder';
 import { Subscription } from 'rxjs';
-import { Collection, Id } from 'src/app/domain/definitions/key-types';
-import { HasMeetingId, HasSequentialNumber, isSequentialNumberHaving } from 'src/app/domain/interfaces';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
-import { Mutex } from 'src/app/infrastructure/utils/promises';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { AutoupdateService } from 'src/app/site/services/autoupdate';
-import { ModelRequestBuilderService, SimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
 
 import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewMotionWorkflow } from '../pages/motions';
 import { ViewPoll } from '../pages/polls';
@@ -40,7 +40,7 @@ interface SequentialNumberMappingConfig {
     meetingId: number;
 }
 
-@Injectable({ providedIn: `root` })
+@Service()
 export class SequentialNumberMappingService {
     private _mutex = new Mutex();
     private get activeMeetingId(): Id {
@@ -52,12 +52,12 @@ export class SequentialNumberMappingService {
     private _subscriptions: Subscription[] = [];
     private _repositories: BaseMeetingRelatedRepository<any, any>[] = [];
 
-    public constructor(
-        collectionMapperService: MeetingCollectionMapperService,
-        private activeMeeting: ActiveMeetingService,
-        private autoupdateService: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService
-    ) {
+    private activeMeeting = inject(ActiveMeetingService);
+    private autoupdateService = inject(AutoupdateService);
+    private modelRequestBuilder = inject(ModelRequestBuilderService);
+
+    public constructor() {
+        const collectionMapperService = inject(MeetingCollectionMapperService);
         collectionMapperService.getAllRepositoriesObservable().subscribe(repositories => {
             this._repositories = repositories;
             this.updateRepositoriesSubscriptions();

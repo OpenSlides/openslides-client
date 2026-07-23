@@ -1,13 +1,13 @@
-import { Collection } from 'src/app/domain/definitions/key-types';
-import { AgendaItem, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { Projection } from 'src/app/domain/models/projector/projection';
-import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { HasAgendaItem, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { BaseProjectableViewModel, isProjectable } from 'src/app/site/pages/meetings/view-models';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { Collection } from '@app/domain/definitions/key-types';
+import { AgendaItem, ItemTypeChoices } from '@app/domain/models/agenda/agenda-item';
+import { Projection } from '@app/domain/models/projector/projection';
+import { ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
+import { HasAgendaItem, ViewListOfSpeakers } from '@app/site/pages/meetings/pages/agenda';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { BaseProjectableViewModel, isProjectable } from '@app/site/pages/meetings/view-models';
+import { ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models/projection-build-descriptor';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 
 import { HasTags } from '../../motions';
 

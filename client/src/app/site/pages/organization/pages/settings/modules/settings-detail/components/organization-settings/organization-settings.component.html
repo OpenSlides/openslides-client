@@ -1,6 +1,6 @@
 <os-head-bar
     [editMode]="hasEdits"
-    [isSaveButtonEnabled]="orgaSettingsForm?.valid"
+    [isSaveButtonEnabled]="$safeNavigationMigration(orgaSettingsForm?.valid)"
     (cancelEditEvent)="revertChanges()"
     (saveEvent)="onSubmit()"
 >
@@ -43,7 +43,7 @@
                         <os-list-search-selector
                             formControlName="time_zone"
                             [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
-                            [inputListValues]="time_zones"
+                            [inputListValues]="timeZones()"
                         ></os-list-search-selector>
                     </mat-form-field>
                 </div>
@@ -209,8 +209,8 @@
                             <textarea formControlName="saml_attr_mapping" matInput [rows]="ssoConfigRows"></textarea>
                             <mat-hint>
                                 {{
-                                    'Use JSON key:value structure (key = OpenSlides attribute name, value = IdP attribute name).'
-                                        | translate
+                                    'Use JSON key:value structure (key = OpenSlides attribute name, value = IdP attribute
+                            name).' | translate
                                 }}
                             </mat-hint>
                         </mat-form-field>

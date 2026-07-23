@@ -1,21 +1,20 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionCategory } from '@app/domain/models/motions/motion-category';
+import { Action } from '@app/gateways/actions';
+import { TreeIdNode } from '@app/infrastructure/definitions/tree';
+import { ViewMotionCategory } from '@app/site/pages/meetings/pages/motions';
+import { Fieldsets } from '@app/site/services/model-request-builder';
 import { map, Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
-import { Action } from 'src/app/gateways/actions';
-import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionCategoryAction } from './motion-category.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepository<ViewMotionCategory, MotionCategory> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, MotionCategory);
     }
 

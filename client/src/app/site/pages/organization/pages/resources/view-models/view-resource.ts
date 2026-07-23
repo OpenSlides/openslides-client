@@ -1,5 +1,5 @@
-import { Resource } from 'src/app/domain/models/resources/resource';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { Resource } from '@app/domain/models/resources/resource';
+import { BaseViewModel } from '@app/site/base/base-view-model';
 
 import { ViewOrganization } from '../../../view-models/view-organization';
 

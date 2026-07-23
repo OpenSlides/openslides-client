@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { _ } from '@ngx-translate/core';
-import { PollPropertyVerboseKey } from 'src/app/domain/models/poll';
+import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { PollPropertyVerboseKey } from '@app/domain/models/poll';
 import {
     BasePollFormComponent,
     PollFormHideSelectsData
-} from 'src/app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
+} from '@app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
+import { _ } from '@ngx-translate/core';
 
 import { ViewAssignment } from '../../../../view-models';
 
@@ -14,6 +14,7 @@ import { ViewAssignment } from '../../../../view-models';
     styleUrls: [`../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.scss`],
     providers: [{ provide: BasePollFormComponent, useExisting: AssignmentPollFormComponent }],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentPollFormComponent extends BasePollFormComponent implements OnInit {

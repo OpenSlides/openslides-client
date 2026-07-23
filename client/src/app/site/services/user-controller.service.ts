@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { GetActiveUsersAmountPresenterService } from 'src/app/gateways/presenter';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { GetActiveUsersAmountPresenterService } from '@app/gateways/presenter';
 import {
     AssignMeetingsPayload,
     AssignMeetingsResult,
@@ -11,8 +10,9 @@ import {
     ShortNameInformation,
     UserPatchFn,
     UserRepositoryService
-} from 'src/app/gateways/repositories/users';
-import { OperatorService } from 'src/app/site/services/operator.service';
+} from '@app/gateways/repositories/users';
+import { OperatorService } from '@app/site/services/operator.service';
+import { Observable } from 'rxjs';
 
 import { Identifiable } from '../../domain/interfaces';
 import { User } from '../../domain/models/users/user';
@@ -35,16 +35,15 @@ export interface CreateUserNameInformation {
     title?: string;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class UserControllerService extends BaseController<ViewUser, User> {
-    public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: UserRepositoryService,
-        private presenter: GetActiveUsersAmountPresenterService,
-        private operator: OperatorService
-    ) {
+    protected override repo: UserRepositoryService;
+    private presenter = inject(GetActiveUsersAmountPresenterService);
+    private operator = inject(OperatorService);
+
+    public constructor() {
+        const controllerServiceCollector = inject(ControllerServiceCollectorService);
+        const repo = inject(UserRepositoryService);
         super(controllerServiceCollector, User, repo);
     }
 

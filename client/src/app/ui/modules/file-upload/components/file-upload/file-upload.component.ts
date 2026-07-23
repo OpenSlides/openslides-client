@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     ElementRef,
@@ -8,10 +9,10 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
 
 export interface FileData extends Identifiable {
     mediafile: File;
@@ -27,6 +28,7 @@ let uniqueCounter = 0;
     selector: `os-file-upload`,
     templateUrl: `./file-upload.component.html`,
     styleUrls: [`./file-upload.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class FileUploadComponent {

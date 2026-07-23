@@ -1,6 +1,6 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, inject, Service } from '@angular/core';
+import { Collection, Ids } from '@app/domain/definitions/key-types';
 import { Observable, Subject } from 'rxjs';
-import { Collection, Ids } from 'src/app/domain/definitions/key-types';
 
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
 import { CollectionMapperService } from './collection-mapper.service';
@@ -30,9 +30,7 @@ type ModelCollection<T extends BaseModel<T> = any> = Record<number, T>;
  */
 type ModelStorage = Record<string, ModelCollection>;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class DataStoreService {
     protected modelStore: ModelStorage = {};
 
@@ -70,10 +68,8 @@ export class DataStoreService {
         return this.clearEvent;
     }
 
-    public constructor(
-        protected modelMapper: CollectionMapperService,
-        private DSUpdateManager: DataStoreUpdateManagerService
-    ) {}
+    protected modelMapper = inject(CollectionMapperService);
+    private DSUpdateManager = inject(DataStoreUpdateManagerService);
 
     /**
      * Get an model observable for models from a given collection. These observable will be notified,

@@ -4,6 +4,7 @@ import {
     ChangeDetectorRef,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnDestroy,
     OnInit,
@@ -19,20 +20,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
+import { getIntlCollatorForLang } from '@app/infrastructure/utils';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { ViewMediafile, ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
+import { MediafileControllerService } from '@app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { ListComponent } from '@app/ui/modules/list/components';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { ViewMediafile, ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { ListComponent } from 'src/app/ui/modules/list/components';
 
 import { PipesModule } from '../../pipes';
 import { CommaSeparatedListingComponent } from '../comma-separated-listing';
@@ -238,17 +239,17 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
 
     private readonly _directoryBehaviorSubject = new BehaviorSubject<ViewMediafile[]>([]);
 
-    public constructor(
-        private dialog: MatDialog,
-        private cd: ChangeDetectorRef,
-        private fb: UntypedFormBuilder,
-        private translate: TranslateService,
-        private repo: MediafileControllerService,
-        private activeMeeting: ActiveMeetingService,
-        private promptService: PromptService
-    ) {
+    private activeMeeting = inject(ActiveMeetingService);
+    private cd = inject(ChangeDetectorRef);
+    private dialog = inject(MatDialog);
+    private fb = inject(UntypedFormBuilder);
+    private promptService = inject(PromptService);
+    private repo = inject(MediafileControllerService);
+    private translate = inject(TranslateService);
+
+    public constructor() {
         super();
-        this.moveForm = fb.group({ directory_id: [] });
+        this.moveForm = this.fb.group({ directory_id: [] });
         this.subscriptions.push(
             this.moveForm.get(`directory_id`).valueChanges.subscribe(id => {
                 this.movingToPublicFolder = id && this.repo.getViewModel(id).isPublishedOrganizationWide;

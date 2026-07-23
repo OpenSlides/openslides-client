@@ -292,7 +292,7 @@
             <span>{{ 'Locked out' | translate }}</span>
         </button>
 
-        @if (!isMeetingAdminAndSelf(user)) {
+        @if (!isSelf(user)) {
             <button
                 *osPerms="permission.userCanManage"
                 class="red-warning-text"
@@ -378,7 +378,6 @@
     @if (isMultiSelect) {
         <div>
             <os-user-multiselect-actions
-                [canDelete]="!isMeetingAdminAndSelfSelected"
                 [canManage]="canManage"
                 [canUpdate]="canUpdate"
                 [selectedUsers]="selectedRows"

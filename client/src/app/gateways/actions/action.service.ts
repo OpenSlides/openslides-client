@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { HttpService } from '../http.service';
 import { Action } from './action';
@@ -10,13 +10,11 @@ const ACTION_SEPARATELY_URL = `/system/action/handle_separately`;
 
 let uniqueFnId = 0;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ActionService {
     private readonly _beforeActionFnMap: Record<number, ActionFn> = {};
 
-    public constructor(private http: HttpService) {}
+    private http = inject(HttpService);
 
     /**
      * Registers a boolean function that will be used to check if actions should currently be allowed to be sent.

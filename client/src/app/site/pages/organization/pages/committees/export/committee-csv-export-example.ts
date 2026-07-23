@@ -1,4 +1,4 @@
-import { CommitteeCsvPort } from 'src/app/domain/models/comittees/committee.constants';
+import { CommitteeCsvPort } from '@app/domain/models/comittees/committee.constants';
 
 export const COMMITTEE_CSV_EXPORT_EXAMPLE: Partial<CommitteeCsvPort>[] = [
     {

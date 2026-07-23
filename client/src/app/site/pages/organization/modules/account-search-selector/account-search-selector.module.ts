@@ -6,8 +6,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { SearchSelectorModule } from '@app/ui/modules/search-selector';
 
 import { AccountSearchSelectorComponent } from './components/account-search-selector/account-search-selector.component';
 

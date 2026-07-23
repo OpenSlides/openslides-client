@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services';
 
@@ -9,6 +9,7 @@ import { MotionCommentSectionControllerService } from '../../../../modules/comme
     selector: `os-comment-section-sort`,
     templateUrl: `./comment-section-sort.component.html`,
     styleUrls: [`./comment-section-sort.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommentSectionSortComponent extends BaseComponent implements OnInit {

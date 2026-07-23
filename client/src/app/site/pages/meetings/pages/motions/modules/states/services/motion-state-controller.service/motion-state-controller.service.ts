@@ -1,22 +1,21 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionState } from 'src/app/domain/models/motions/motion-state';
-import { Action } from 'src/app/gateways/actions';
-import { MotionStateRepositoryService } from 'src/app/gateways/repositories/motions';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionState } from '@app/domain/models/motions/motion-state';
+import { Action } from '@app/gateways/actions';
+import { MotionStateRepositoryService } from '@app/gateways/repositories/motions';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewMotionState } from '../../view-models';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionStateControllerService extends BaseMeetingControllerService<ViewMotionState, MotionState> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionStateRepositoryService
-    ) {
+    protected override repo: MotionStateRepositoryService;
+
+    public constructor() {
+        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
+        const repo = inject(MotionStateRepositoryService);
         super(controllerServiceCollector, MotionState, repo);
     }
 

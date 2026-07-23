@@ -1,7 +1,7 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
+import { Id } from '@app/domain/definitions/key-types';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
 
 import { ViewMeeting } from '../../../meetings/view-models/view-meeting';
 import { ViewCommittee } from './view-models';

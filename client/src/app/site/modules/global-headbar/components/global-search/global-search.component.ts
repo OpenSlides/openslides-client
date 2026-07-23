@@ -1,14 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnDestroy } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { splitStringKeepSeperator } from '@app/infrastructure/utils';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchService } from '@app/site/services/global-search';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
 import { _ } from '@ngx-translate/core';
 import { pairwise, startWith, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { splitStringKeepSeperator } from 'src/app/infrastructure/utils';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchService } from 'src/app/site/services/global-search';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
 
 @Component({
     selector: `os-global-search`,
@@ -48,13 +48,6 @@ export class GlobalSearchComponent implements OnDestroy {
 
     public currentlyAvailableFilters = [];
 
-    public currentFilters = this.formBuilder.group({
-        ...Object.fromEntries(Object.keys(this.availableFilters).map(field => [field, false])),
-        meetingFilter: this.activeMeeting.meetingId ? `current` : `all`
-    });
-
-    public inMeeting = !!this.activeMeeting.meetingId;
-
     public get resultCount(): number {
         return this.results.length;
     }
@@ -76,14 +69,23 @@ export class GlobalSearchComponent implements OnDestroy {
     private filterChangeSubscription: Subscription;
     private viewportSubscription: Subscription;
 
-    public constructor(
-        private activeMeeting: ActiveMeetingService,
-        public operator: OperatorService,
-        private globalSearchService: GlobalSearchService,
-        private formBuilder: FormBuilder,
-        private viewport: ViewPortService,
-        private cd: ChangeDetectorRef
-    ) {
+    public operator = inject(OperatorService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private cd = inject(ChangeDetectorRef);
+    private formBuilder = inject(FormBuilder);
+    private globalSearchService = inject(GlobalSearchService);
+    private viewport = inject(ViewPortService);
+
+    public get inMeeting(): boolean {
+        return !!this.activeMeeting.meetingId;
+    }
+
+    public currentFilters = this.formBuilder.group({
+        ...Object.fromEntries(Object.keys(this.availableFilters).map(field => [field, false])),
+        meetingFilter: this.activeMeeting.meetingId ? `current` : `all`
+    });
+
+    public constructor() {
         this.updateCurrentlyAvailableFilters();
         this.filterChangeSubscription = this.currentFilters.valueChanges
             .pipe(startWith(this.currentFilters.value), pairwise())

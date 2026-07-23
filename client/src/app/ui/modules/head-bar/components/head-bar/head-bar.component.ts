@@ -1,8 +1,10 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
     EventEmitter,
+    inject,
     Input,
     OnInit,
     Output,
@@ -12,8 +14,8 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { GlobalHeadbarService } from '@app/site/modules/global-headbar/global-headbar.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global-headbar.service';
 
 import { MainMenuService } from '../../../../../site/pages/meetings/services/main-menu.service';
 import { ViewPortService } from '../../../../../site/services/view-port.service';
@@ -71,6 +73,7 @@ export const HEAD_BAR_HEIGHT = 50; // height of the head-bar in px.
     templateUrl: `./head-bar.component.html`,
     styleUrls: [`./head-bar.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class HeadBarComponent implements OnInit, AfterViewInit {
@@ -206,18 +209,13 @@ export class HeadBarComponent implements OnInit, AfterViewInit {
     private _isSavingSubject = new BehaviorSubject(false);
     private _isSaveButtonEnabled = true;
 
-    /**
-     * Empty constructor
-     */
-    public constructor(
-        public vp: ViewPortService,
-        private menu: MainMenuService,
-        private router: Router,
-        private route: ActivatedRoute,
-        private routingState: RoutingStateService,
-        private headbarService: GlobalHeadbarService,
-        private _viewContainerRef: ViewContainerRef
-    ) {}
+    public vp = inject(ViewPortService);
+    private headbarService = inject(GlobalHeadbarService);
+    private menu = inject(MainMenuService);
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
+    private routingState = inject(RoutingStateService);
+    private _viewContainerRef = inject(ViewContainerRef);
 
     /**
      * Detect if the cancel edit event was used

@@ -1,18 +1,18 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Permission } from '@app/domain/definitions/permission';
+import { PasswordForm, PasswordFormComponent } from '@app/site/modules/user-components';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { PERSONAL_FORM_CONTROLS, ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { AuthService } from '@app/site/services/auth.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { UserService } from '@app/site/services/user.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { TranslateService } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { PasswordForm, PasswordFormComponent } from 'src/app/site/modules/user-components';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { AuthService } from 'src/app/site/services/auth.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserService } from 'src/app/site/services/user.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 interface MenuItem {
     name: string;
@@ -28,6 +28,7 @@ enum MenuItems {
     selector: `os-account-dialog`,
     templateUrl: `./account-dialog.component.html`,
     styleUrls: [`./account-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountDialogComponent extends BaseUiComponent implements OnInit {
@@ -40,9 +41,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         },
         {
             name: MenuItems.SHOW_MEETINGS
-        },
-        {
-            name: MenuItems.CHANGE_PASSWORD
         }
     ];
 
@@ -86,6 +84,21 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         return this._isEditing;
     }
 
+    public get keycloakPasswordResetLink(): string {
+        const instance_url = 'http://localhost:8080';
+        const openslides_realm = 'openslides';
+        const redirect_uri = 'https://localhost:8000/';
+
+        return (
+            instance_url +
+            '/realms/' +
+            openslides_realm +
+            '/protocol/openid-connect/auth?client_id=proxy-client&redirect_uri=' +
+            redirect_uri +
+            '&response_type=code&scope=openid&kc_action=UPDATE_PASSWORD'
+        );
+    }
+
     public isUserFormValid = false;
     public isUserPasswordValid = false;
     public userPersonalForm: any;
@@ -95,18 +108,14 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
     private _isUserInScope = false;
     private _isEditing = false;
 
-    public constructor(
-        public dialogRef: MatDialogRef<AccountDialogComponent>,
-        private operator: OperatorService,
-        private repo: UserControllerService,
-        private meetingRepo: MeetingControllerService,
-        private userService: UserService,
-        private snackbar: MatSnackBar,
-        private authService: AuthService,
-        private translate: TranslateService
-    ) {
-        super();
-    }
+    public dialogRef = inject(MatDialogRef<AccountDialogComponent>);
+    private authService = inject(AuthService);
+    private meetingRepo = inject(MeetingControllerService);
+    private operator = inject(OperatorService);
+    private repo = inject(UserControllerService);
+    private snackbar = inject(MatSnackBar);
+    private translate = inject(TranslateService);
+    private userService = inject(UserService);
 
     public ngOnInit(): void {
         this.subscriptions.push(
@@ -124,8 +133,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         if (event.key === `Enter` && event.shiftKey) {
             if (this.activeMenuItem === MenuItems.SHOW_PROFILE && this.isEditing && this.isUserFormValid) {
                 this.saveUserChanges();
-            } else if (this.activeMenuItem === MenuItems.CHANGE_PASSWORD && this.isUserPasswordValid) {
-                this.changePassword();
             }
         }
     }
@@ -149,27 +156,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
 
     public getGroupsForMeeting(meeting: ViewMeeting): ViewGroup[] {
         return this.self!.groups(meeting.id);
-    }
-
-    public async changePassword(): Promise<void> {
-        const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
-
-        this.authService
-            .invalidateSessionAfter(() => this.repo.setPasswordSelf(this.self!, oldPassword, newPassword))
-            .then(() => {
-                this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
-                this.changePasswordComponent.reset();
-                this.dialogRef.close();
-            })
-            .catch(e => {
-                if (e?.message) {
-                    this.snackbar.open(this.translate.instant(e.message), this.translate.instant(`OK`), {
-                        duration: 0
-                    });
-                }
-
-                console.log(e);
-            });
     }
 
     public async saveUserChanges(): Promise<void> {

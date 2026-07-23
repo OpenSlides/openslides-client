@@ -1,13 +1,13 @@
-import { Option } from 'src/app/domain/models/poll/option';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { Vote } from 'src/app/domain/models/poll/vote';
-import { PollCandidate } from 'src/app/domain/models/poll-candidate-lists/poll-candidate';
-import { PollCandidateList } from 'src/app/domain/models/poll-candidate-lists/poll-candidate-list';
-import { PollCandidateRepositoryService } from 'src/app/gateways/repositories/poll-candidate-lists/poll-candidate';
-import { PollCandidateListRepositoryService } from 'src/app/gateways/repositories/poll-candidate-lists/poll-candidate-list';
-import { OptionRepositoryService } from 'src/app/gateways/repositories/polls/option-repository.service';
-import { PollRepositoryService } from 'src/app/gateways/repositories/polls/poll-repository.service';
-import { VoteRepositoryService } from 'src/app/gateways/repositories/polls/vote-repository.service';
+import { Option } from '@app/domain/models/poll/option';
+import { Poll } from '@app/domain/models/poll/poll';
+import { Vote } from '@app/domain/models/poll/vote';
+import { PollCandidate } from '@app/domain/models/poll-candidate-lists/poll-candidate';
+import { PollCandidateList } from '@app/domain/models/poll-candidate-lists/poll-candidate-list';
+import { PollCandidateRepositoryService } from '@app/gateways/repositories/poll-candidate-lists/poll-candidate';
+import { PollCandidateListRepositoryService } from '@app/gateways/repositories/poll-candidate-lists/poll-candidate-list';
+import { OptionRepositoryService } from '@app/gateways/repositories/polls/option-repository.service';
+import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
+import { VoteRepositoryService } from '@app/gateways/repositories/polls/vote-repository.service';
 
 import { AppConfig } from '../../../../../infrastructure/definitions/app-config';
 import { ViewOption, ViewPoll, ViewVote } from './view-models';

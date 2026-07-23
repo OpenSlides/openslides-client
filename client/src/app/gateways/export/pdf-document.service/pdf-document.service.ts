@@ -1,4 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { MOTION_PDF_OPTIONS } from '@app/domain/models/motions/motions.constants';
+import { Functionable } from '@app/infrastructure/utils';
+import { Deferred } from '@app/infrastructure/utils/promises';
+import { MediaManageService } from '@app/site/pages/meetings/services/media-manage.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 import {
@@ -16,12 +22,6 @@ import {
     TableCell,
     TDocumentDefinitions
 } from 'pdfmake/interfaces';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
-import { Functionable } from 'src/app/infrastructure/utils';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { HttpService } from '../../http.service';
 import { ProgressSnackBarService } from '../progress-snack-bar/services/progress-snack-bar.service';
@@ -308,9 +308,7 @@ export interface HeaderLogos {
  * this.pdfDocumentService.download(motionContent, 'test.pdf');
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PdfDocumentService {
     /**
      * A list of all images to add to the virtual file system.
@@ -324,16 +322,16 @@ export class PdfDocumentService {
 
     private settings: Partial<Settings> = {};
 
-    public constructor(
-        private translate: TranslateService,
-        private httpService: HttpService,
-        // private matSnackBar: MatSnackBar,
-        private progressSnackBarService: ProgressSnackBarService,
-        private progressService: ProgressSnackBarControlService,
-        private pdfImagesService: PdfImagesService,
-        private mediaManageService: MediaManageService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    private translate = inject(TranslateService);
+    private httpService = inject(HttpService);
+    // private matSnackBar = inject(MatSnackBar);
+    private progressSnackBarService = inject(ProgressSnackBarService);
+    private progressService = inject(ProgressSnackBarControlService);
+    private pdfImagesService = inject(PdfImagesService);
+    private mediaManageService = inject(MediaManageService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
         this.makeSettingsSubscriptions();
     }
 
@@ -570,7 +568,7 @@ export class PdfDocumentService {
                 landscape: false,
                 imageUrls: imageUrls
             }),
-            filename: `${filetitle}.pdf`,
+            filename: `${this.sanitizeFilename(filetitle)}.pdf`,
             settings: this.settings,
             loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
             progressService: null,
@@ -590,7 +588,7 @@ export class PdfDocumentService {
             progressService: this.progressService
         });
         if (file) {
-            saveAs(file, config.filename, { autoBom: true });
+            saveAs(file, this.sanitizeFilename(config.filename), { autoBom: true });
         }
     }
 
@@ -607,7 +605,7 @@ export class PdfDocumentService {
                 pageMargins: [50, 80, 50, 75],
                 landscape: true
             }),
-            filename: `${filetitle}.pdf`,
+            filename: `${this.sanitizeFilename(filetitle)}.pdf`,
             settings: this.settings,
             loadImages: (): Promise<PdfImageDescription> => this.loadImages(),
             progressService: this.progressService,
@@ -1077,5 +1075,9 @@ export class PdfDocumentService {
                 .filter((_, index) => downloads[index].type === `image/svg+xml`)
                 .mapToObject((url, index) => ({ [url]: atob(svgs[index].data) }))
         };
+    }
+
+    private sanitizeFilename(value: string): string {
+        return value.replace(/[^a-zA-Z0-9_-üöäÜÖÄ§\s]/g, '_');
     }
 }

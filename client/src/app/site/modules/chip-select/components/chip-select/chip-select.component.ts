@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, ContentChildren, Input, QueryList } from '@angular/core';
+import { AfterContentInit, ChangeDetectionStrategy, Component, ContentChildren, input, QueryList } from '@angular/core';
 
 import { ChipSelectChipComponent } from '../chip-select-chip/chip-select-chip.component';
 
@@ -6,16 +6,13 @@ import { ChipSelectChipComponent } from '../chip-select-chip/chip-select-chip.co
     selector: `os-chip-select`,
     templateUrl: `./chip-select.component.html`,
     styleUrls: [`./chip-select.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ChipSelectComponent implements AfterContentInit {
-    public constructor() {}
+    public readonly chipClass = input<string | null>(null);
 
-    @Input()
-    public chipClass: string | null;
-
-    @Input()
-    public canOpen: boolean;
+    public readonly canOpen = input<boolean>(false);
 
     @ContentChildren(ChipSelectChipComponent) public inputChips: QueryList<ChipSelectChipComponent>;
 

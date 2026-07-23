@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, Input } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatRippleModule } from '@angular/material/core';
-import { HtmlColor } from 'src/app/domain/definitions/key-types';
-import { Color, ColorService } from 'src/app/site/services/color.service';
+import { HtmlColor } from '@app/domain/definitions/key-types';
+import { Color, ColorService } from '@app/site/services/color.service';
 
 @Component({
     selector: `os-chip`,
     templateUrl: `./chip.component.html`,
     styleUrls: [`./chip.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CommonModule, MatChipsModule, MatRippleModule]
 })
 export class ChipComponent {
@@ -31,12 +32,10 @@ export class ChipComponent {
     private _color: Color | null = null;
     private _threshold = `0.5`;
 
-    private root = this.hostElement.nativeElement;
+    private hostElement = inject(ElementRef<HTMLElement>);
+    private colorService = inject(ColorService);
 
-    public constructor(
-        private hostElement: ElementRef<HTMLElement>,
-        private colorService: ColorService
-    ) {}
+    private root = this.hostElement.nativeElement;
 
     private recalcForegroundColor(): void {
         this.root.style.setProperty(`--os-chip-red`, this._color!.red);

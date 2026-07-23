@@ -1,12 +1,10 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { GetUserEditablePresenterService, GetUserScopePresenterService } from 'src/app/gateways/presenter';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-
-import { MeetingControllerService } from '../pages/meetings/services/meeting-controller.service';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
+import { Permission } from '@app/domain/definitions/permission';
+import { GetUserEditablePresenterService, GetUserScopePresenterService } from '@app/gateways/presenter';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { OperatorService } from '@app/site/services/operator.service';
 
 export enum UserScope {
     MEETING = `meeting`,
@@ -14,17 +12,12 @@ export enum UserScope {
     ORGANIZATION = `organization`
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class UserService {
-    public constructor(
-        private activeMeetingService: ActiveMeetingService,
-        private presenter: GetUserScopePresenterService,
-        private operator: OperatorService,
-        private meetingRepo: MeetingControllerService,
-        private getUserEditablePresenter: GetUserEditablePresenterService
-    ) {}
+    private activeMeetingService = inject(ActiveMeetingService);
+    private presenter = inject(GetUserScopePresenterService);
+    private operator = inject(OperatorService);
+    private getUserEditablePresenter = inject(GetUserEditablePresenterService);
 
     /**
      * Should determine if the user (Operator) has the

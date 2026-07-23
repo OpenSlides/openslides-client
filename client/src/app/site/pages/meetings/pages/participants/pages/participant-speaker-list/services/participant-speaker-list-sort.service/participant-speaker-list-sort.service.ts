@@ -1,14 +1,12 @@
-import { Injectable, ProviderToken } from '@angular/core';
+import { ProviderToken, Service } from '@angular/core';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { SpeakerRepositoryService } from '@app/gateways/repositories/speakers/speaker-repository.service';
+import { BaseSortListService, OsSortingOption } from '@app/site/base/base-sort.service';
 import { _ } from '@ngx-translate/core';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { SpeakerRepositoryService } from 'src/app/gateways/repositories/speakers/speaker-repository.service';
-import { BaseSortListService, OsSortingOption } from 'src/app/site/base/base-sort.service';
 
 import { ViewSpeaker } from '../../../../../agenda';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ParticipantSpeakerListSortService extends BaseSortListService<ViewSpeaker> {
     /**
      * set the storage key name

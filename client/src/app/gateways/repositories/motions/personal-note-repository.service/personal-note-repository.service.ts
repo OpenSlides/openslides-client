@@ -1,21 +1,18 @@
-import { Injectable } from '@angular/core';
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { PersonalNote } from 'src/app/domain/models/motions/personal-note';
-import { Action } from 'src/app/gateways/actions';
-import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
-import { ViewPersonalNote } from 'src/app/site/pages/meetings/pages/motions';
+import { inject, Service } from '@angular/core';
+import { Fqid } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { PersonalNote } from '@app/domain/models/motions/personal-note';
+import { Action } from '@app/gateways/actions';
+import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
+import { ViewPersonalNote } from '@app/site/pages/meetings/pages/motions';
 
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { PersonalNoteAction } from './personal-note.action';
 
-/**
- */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PersonalNoteRepositoryService extends BaseMeetingRelatedRepository<ViewPersonalNote, PersonalNote> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, PersonalNote);
     }
 

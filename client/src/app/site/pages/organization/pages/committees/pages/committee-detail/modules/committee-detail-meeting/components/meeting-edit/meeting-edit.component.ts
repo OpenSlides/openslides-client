@@ -1,28 +1,28 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { availableTranslations } from 'src/app/domain/definitions/languages';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { Identifiable, Selectable } from 'src/app/domain/interfaces';
-import { BaseComponent } from 'src/app/site/base/base.component';
+import { Id } from '@app/domain/definitions/key-types';
+import { availableTranslations } from '@app/domain/definitions/languages';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { Identifiable, Selectable } from '@app/domain/interfaces';
+import { BaseComponent } from '@app/site/base/base.component';
 import {
     MeetingControllerService,
     MeetingUserModifiedFields
-} from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { TimeZoneService } from 'src/app/site/services/time-zone.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { RoutingStateService } from 'src/app/ui/modules/head-bar/services/routing-state.service';
+} from '@app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OrganizationTagControllerService } from '@app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
+import { OrganizationService } from '@app/site/pages/organization/services/organization.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { OpenSlidesRouterService } from '@app/site/services/openslides-router.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { TimeZoneService } from '@app/site/services/time-zone.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { RoutingStateService } from '@app/ui/modules/head-bar/services/routing-state.service';
+import { _ } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
 import { ViewCommittee } from '../../../../../../view-models';
@@ -170,7 +170,18 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private async initTimezones(): Promise<void> {
-        this.timeZone.getTZForSearchSelector().then(values => this.time_zones.next(values));
+        this.timeZone.getTZForSearchSelector().then(values => {
+            this.time_zones.next(values);
+            this.patchTimezoneInForm();
+        });
+    }
+
+    private patchTimezoneInForm(): void {
+        if (!this.meetingForm?.get('time_zone').value) {
+            this.meetingForm
+                .get('time_zone')
+                .setValue(this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone()));
+        }
     }
 
     public getAdditionallySearchedValuesFn(item: Selectable): string[] {

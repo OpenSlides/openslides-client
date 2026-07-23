@@ -1,19 +1,18 @@
-import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import { Action } from 'src/app/gateways/actions';
-import { ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
-import { Fieldsets, ROUTING_FIELDSET } from 'src/app/site/services/model-request-builder';
+import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
+import { Action } from '@app/gateways/actions';
+import { ViewMotionWorkflow } from '@app/site/pages/meetings/pages/motions';
+import { Fieldsets, ROUTING_FIELDSET } from '@app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionWorkflowAction } from './motion-workflow.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepository<ViewMotionWorkflow, MotionWorkflow> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, MotionWorkflow);
     }
 

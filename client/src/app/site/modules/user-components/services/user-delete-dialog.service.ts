@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { _ } from '@ngx-translate/core';
 import {
     GetUserRelatedModelsPresenterResult,
     GetUserRelatedModelsPresenterService
-} from 'src/app/gateways/presenter/get-user-related-models-presenter.service';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+} from '@app/gateways/presenter/get-user-related-models-presenter.service';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
+import { _ } from '@ngx-translate/core';
 
 import { UserDeleteDialogComponent } from '../components';
 
@@ -17,15 +17,14 @@ interface UserDeleteDialogOpenConfig {
     relatedModelsResult?: GetUserRelatedModelsPresenterResult;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class UserDeleteDialogService extends BaseDialogService<
     UserDeleteDialogComponent,
     UserDeleteDialogOpenConfig,
     boolean
 > {
-    public constructor(private userRelatedModelsPresenter: GetUserRelatedModelsPresenterService) {
+    private userRelatedModelsPresenter = inject(GetUserRelatedModelsPresenterService);
+    public constructor() {
         super();
     }
 

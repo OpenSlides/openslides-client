@@ -1,7 +1,7 @@
-import { User } from 'src/app/domain/models/users/user';
-import { HasHistoryEntries } from 'src/app/gateways/repositories/history-entry/has-history-entries';
-import { ViewHistoryPosition } from 'src/app/gateways/repositories/history-position/view-history-position';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { User } from '@app/domain/models/users/user';
+import { HasHistoryEntries } from '@app/gateways/repositories/history-entry/has-history-entries';
+import { ViewHistoryPosition } from '@app/gateways/repositories/history-position/view-history-position';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { Id } from '../../../../domain/definitions/key-types';
 import { ViewGender } from '../../organization/pages/accounts/pages/gender/view-models/view-gender';
@@ -326,12 +326,10 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     public canVoteForGroups(): Id[] {
         const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
         const present = this.isPresentInMeeting();
-        if (
-            !(
-                present &&
-                (this.isSelfVotingAllowedDespiteDelegation() || !(this.getDelegationSettingEnabled() && delegate))
-            )
-        ) {
+        if (!(
+            present &&
+            (this.isSelfVotingAllowedDespiteDelegation() || !(this.getDelegationSettingEnabled() && delegate))
+        )) {
             return [];
         }
         return Array.from(

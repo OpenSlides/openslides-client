@@ -1,6 +1,6 @@
-import { Tag } from 'src/app/domain/models/tag/tag';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
+import { Tag } from '@app/domain/models/tag/tag';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
 
 import { HasTags } from './has-tags';
 

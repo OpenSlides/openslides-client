@@ -1,17 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { EventType, Router, RoutesRecognized } from '@angular/router';
+import { ConnectionStatusService } from '@app/site/services/connection-status.service';
+import { OpenSlidesStatusService } from '@app/site/services/openslides-status.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { OverlayInstance, OverlayService } from '@app/ui/modules/openslides-overlay';
 import { combineLatest, filter, startWith, Subscription } from 'rxjs';
-import { ConnectionStatusService } from 'src/app/site/services/connection-status.service';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { OverlayInstance, OverlayService } from 'src/app/ui/modules/openslides-overlay';
 
 import { GlobalSpinnerComponent } from '../components/global-spinner/global-spinner.component';
 import { SpinnerConfig } from '../definitions';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class SpinnerService {
     private overlayInstance: OverlayInstance<GlobalSpinnerComponent> | null = null;
 
@@ -31,13 +29,11 @@ export class SpinnerService {
 
     private isStableSubscription: Subscription | null = null;
 
-    public constructor(
-        private overlay: OverlayService,
-        private offlineService: ConnectionStatusService,
-        private openslidesStatus: OpenSlidesStatusService,
-        private operator: OperatorService,
-        private router: Router
-    ) {}
+    private overlay = inject(OverlayService);
+    private offlineService = inject(ConnectionStatusService);
+    private openslidesStatus = inject(OpenSlidesStatusService);
+    private operator = inject(OperatorService);
+    private router = inject(Router);
 
     public show(text?: string, config: SpinnerConfig = {}): OverlayInstance<GlobalSpinnerComponent> {
         if (this.overlayInstance) {
