@@ -97,7 +97,7 @@
             <div *osPerms="permission.agendaItemCanManage; and: item.verboseType" class="spacer-top-5">
                 <os-icon-container
                     icon="visibility"
-                    [attr.aria-label]="('Visibility' | translate) + ' ' + item.verboseType"
+                    [attr.aria-label]="('Visibility' | translate) + ' ' + (item.verboseType | translate)"
                 >
                     {{ item.verboseType | translate }}
                 </os-icon-container>

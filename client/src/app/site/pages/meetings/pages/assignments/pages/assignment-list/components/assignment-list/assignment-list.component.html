@@ -56,7 +56,10 @@
         *osScrollingTableCell="'phase'; row as assignment; config: { width: 180 }"
         class="cell-slot fill mat-chip-wrapper"
     >
-        <mat-basic-chip class="bg-primary" [matTooltip]="('Phase' | translate) + ' ' + assignment.phaseString">
+        <mat-basic-chip
+            class="bg-primary"
+            [matTooltip]="('Phase' | translate) + ' ' + (assignment.phaseString | translate)"
+        >
             {{ assignment.phaseString | translate }}
         </mat-basic-chip>
     </div>
