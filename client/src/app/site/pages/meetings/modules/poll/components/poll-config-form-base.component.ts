@@ -11,7 +11,7 @@ export abstract class PollFormBaseComponent {
     public data = input.required<Partial<ViewPoll>>();
 
     public pollStarted = computed<boolean>(() => {
-        return this.data().state !== PollState.Created;
+        return this.data().state && this.data().state !== PollState.Created;
     });
 
     protected fb = inject(UntypedFormBuilder);
