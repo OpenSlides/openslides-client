@@ -1,0 +1,28 @@
+@use 'src/assets/styles/poll-styles-common.scss';
+@use 'src/assets/styles/poll/result-chart.scss';
+@use 'src/assets/styles/poll/result-table.scss';
+
+:host {
+    outline: none;
+}
+
+.result-wrapper-additional {
+    .result-table {
+        tr {
+            height: 40px;
+        }
+    }
+}
+
+.result-wrapper {
+    .result-table-wrapper {
+        .result-table {
+            tr {
+                border-bottom: 0;
+            }
+            tr.votesvalid {
+                border-top: 1px solid rgba(255, 255, 255, 0.12);
+            }
+        }
+    }
+}

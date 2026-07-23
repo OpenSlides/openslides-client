@@ -1,0 +1,42 @@
+<form [formGroup]="form">
+    <div class="poll-preview-meta-info-form">
+        @if (!pollStarted()) {
+            <mat-form-field>
+                <mat-label>{{ 'Election method' | translate }}</mat-label>
+                <mat-select formControlName="allow_abstain">
+                    <mat-option [value]="false">{{ 'Yes/No' | translate }}</mat-option>
+                    <mat-option [value]="true">{{ 'Yes/No/Abstain' | translate }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div class="margin-bottom-15 info-grid">
+                <mat-form-field>
+                    <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
+                    <input formControlName="min_options_amount" matInput required type="number" />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>{{ 'Max amount of votes' | translate }}</mat-label>
+                    <input formControlName="max_options_amount" matInput required type="number" />
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>{{ 'Max amount of yes votes' | translate }}</mat-label>
+                    <input formControlName="max_yes_amount" matInput required type="number" />
+                </mat-form-field>
+            </div>
+        }
+
+        <mat-form-field>
+            <mat-label>{{ '100% base' | translate }}</mat-label>
+            <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
+                @for (option of validPercentBases; track option) {
+                    @if (option[0] !== 'yes_no_abstain' || form.get('allow_abstain').getRawValue()) {
+                        <mat-option [value]="option[0]">
+                            {{ option[1] | translate }}
+                        </mat-option>
+                    }
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
+</form>

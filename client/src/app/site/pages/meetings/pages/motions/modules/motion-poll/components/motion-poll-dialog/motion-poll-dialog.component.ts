@@ -1,67 +1,67 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BaseModel } from '@app/domain/models/base/base-model';
-import { PollPercentBaseVerbose, VoteValue } from '@app/domain/models/poll';
-import { BasePollDialogComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
-import { _ } from '@ngx-translate/core';
-
-import { MotionPollService } from '../../services';
-
-export const MotionPollMethodsVerbose = {
-    YN: _(`Yes/No`),
-    YNA: _(`Yes/No/Abstain`)
-};
+import { Component, inject, viewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
+import {
+    BasePollDialogComponent,
+    PollMethodPayload,
+    PollOptionsPayload
+} from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
+import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
+import { PollFormApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: `os-motion-poll-dialog`,
     templateUrl: `./motion-poll-dialog.component.html`,
-    styleUrls: [`./motion-poll-dialog.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [
+        PollEditResultComponent,
+        PollFormComponent,
+        PollFormApprovalComponent,
+        MatDialogModule,
+        MatButtonModule,
+        TranslatePipe
+    ],
+    styleUrls: [`./motion-poll-dialog.component.scss`]
 })
-export class MotionPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
-    public PercentBaseVerbose = PollPercentBaseVerbose;
-    public majority: string;
+export class MotionPollDialogComponent extends BasePollDialogComponent {
+    private approvalForm = viewChild.required(PollFormApprovalComponent);
 
-    public MotionPollMethodsVerbose = MotionPollMethodsVerbose;
-
-    public constructor(
-        public motionPollService: MotionPollService,
-        @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewMotion>
-    ) {
-        super(pollData);
+    public get isEVotingEnabled(): boolean {
+        return this.pollService.isElectronicVotingEnabled;
     }
 
-    public ngAfterViewInit(): void {
-        this.dialogVoteForm.get(`options.${this.pollData.content_object?.fqid}`)?.valueChanges.subscribe(data => {
-            let newMajority = data[this.majority] === -1 ? this.majority : ``;
-            for (const option of Object.keys(data)) {
-                if (data[option] === -1 && this.majority !== option) {
-                    newMajority = option;
-                }
-            }
+    public override get formsValid(): boolean {
+        if (!super.formsValid) {
+            return false;
+        }
 
-            if (this.majority !== newMajority) {
-                for (const option of Object.keys(data)) {
-                    if (data[option] === -1 && newMajority !== option) {
-                        this.dialogVoteForm
-                            .get(`options.${this.pollData.content_object?.fqid}.${option}`)
-                            ?.setValue(``);
-                    }
-                }
-            }
-
-            this.majority = newMajority;
-        });
+        return this.approvalForm().form.valid;
     }
 
-    protected getAnalogVoteFields(): VoteValue[] {
-        return [`Y`, `N`, `A`];
+    public get approvalFormValue(): Partial<PollConfigApproval> {
+        return this.approvalForm().form.value;
     }
 
-    protected getContentObjectsForOptions(): BaseModel[] {
-        return [this.pollData.content_object];
+    private pollService = inject(PollService);
+
+    public override methodPayload(): PollMethodPayload {
+        const config = { ...this.approvalFormValue };
+        return {
+            method: `approval`,
+            method_config: config
+        };
+    }
+
+    public override optionsPayload(): PollOptionsPayload {
+        return {};
+    }
+
+    public analogPollOptions(): { key: string; title: string }[] {
+        const options = [{ key: `approval`, title: null }];
+
+        return options;
     }
 }

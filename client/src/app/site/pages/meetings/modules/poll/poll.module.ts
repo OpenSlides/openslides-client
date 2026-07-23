@@ -23,29 +23,18 @@ import { EntitledUsersTableComponent } from './components/entitled-users-table/e
 import { PollCannotVoteMessageComponent } from './components/poll-cannot-vote-message/poll-cannot-vote-message.component';
 import { PollFilteredVotesChartComponent } from './components/poll-filtered-votes-chart/poll-filtered-votes-chart.component';
 import { PollProgressComponent } from './components/poll-progress/poll-progress.component';
-import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
-import { VotesTableComponent } from './components/votes-table/votes-table.component';
-import { VotingPrivacyDialogModule } from './modules/voting-privacy-dialog';
-import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBaseAltPipe, PollPercentBasePipe } from './pipes';
-import { PollServiceModule } from './services/poll-service.module';
+import { PollKeyVerbosePipe, PollParseNumberPipe } from './pipes';
 
-const MODULES = [PollServiceModule, VotingPrivacyDialogModule];
-const PIPES = [PollKeyVerbosePipe, PollPercentBasePipe, PollPercentBaseAltPipe, PollParseNumberPipe];
-const COMPONENTS = [
-    PollProgressComponent,
-    PollFilteredVotesChartComponent,
-    CheckInputComponent,
-    EntitledUsersTableComponent,
-    SingleOptionChartTableComponent,
-    VotesTableComponent,
-    PollCannotVoteMessageComponent
-];
+const PIPES = [PollKeyVerbosePipe, PollParseNumberPipe];
+const COMPONENTS = [PollFilteredVotesChartComponent, CheckInputComponent, EntitledUsersTableComponent];
 
 @NgModule({
     declarations: [...COMPONENTS],
     imports: [
         CommonModule,
         ChartComponent,
+        PollCannotVoteMessageComponent,
+        PollProgressComponent,
         MatProgressBarModule,
         MatFormFieldModule,
         MatSelectModule,
@@ -58,7 +47,6 @@ const COMPONENTS = [
         MatTooltipModule,
         IconContainerComponent,
         FormsModule,
-        VotingPrivacyDialogModule,
         ListModule,
         DirectivesModule,
         SearchSelectorModule,
@@ -66,7 +54,7 @@ const COMPONENTS = [
         ...PIPES,
         OpenSlidesTranslationModule.forChild()
     ],
-    exports: [...PIPES, ...MODULES, ...COMPONENTS, ChartComponent],
+    exports: [...PIPES, ...COMPONENTS, ChartComponent, PollCannotVoteMessageComponent, PollProgressComponent],
     providers: [...PIPES]
 })
 export class PollModule {}

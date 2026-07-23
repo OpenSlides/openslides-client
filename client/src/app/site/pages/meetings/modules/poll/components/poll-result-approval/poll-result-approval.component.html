@@ -1,0 +1,127 @@
+<div class="result-container">
+    <div class="result-wrapper">
+        <div class="result-table-wrapper">
+            <table class="result-table">
+                <col />
+                <col width="1" />
+                <col width="1" />
+                <tr>
+                    <th></th>
+                    <th class="result-col-header" colspan="2">{{ 'Votes' | translate }}</th>
+                </tr>
+
+                <ng-template
+                    #resultRow
+                    let-amount="amount"
+                    let-icon="icon"
+                    let-percent="percent"
+                    let-votingLabel="votingLabel"
+                    let-votingOption="votingOption"
+                >
+                    <tr class="result-row" [class]="votingOption">
+                        <!-- YNA/Valid etc -->
+                        <td>
+                            @let label = votingLabel ? votingLabel : (votingOption | pollKeyVerbose | translate);
+
+                            @if (icon) {
+                                <os-icon-container size="large" [icon]="icon">
+                                    {{ label }}
+                                </os-icon-container>
+                            } @else {
+                                <span>
+                                    {{ label }}
+                                </span>
+                            }
+                        </td>
+
+                        <td class="result-col-percent">
+                            @if (percent !== null) {
+                                {{ percent | pollParseNumber }}%
+                            }
+                        </td>
+                        <td class="result-col">
+                            {{ amount || 0 | pollParseNumber }}
+                        </td>
+
+                        <td class="result-col-small" colspan="2">
+                            <span class="amount">{{ amount || 0 | pollParseNumber }}</span>
+
+                            <div class="result-percent-small">
+                                @if (percent !== null) {
+                                    {{ percent | pollParseNumber }}%
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+
+                @for (row of resultOptions(); track row.key) {
+                    <ng-container [ngTemplateOutlet]="resultRow" [ngTemplateOutletContext]="row" />
+                }
+
+                @if (validBallots() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: validBallots(),
+                            percent: validBallotsPercent(),
+                            votingLabel: 'Valid votes' | translate,
+                            votingOption: 'votesvalid'
+                        }"
+                    />
+                }
+
+                @if (castedBallots() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: castedBallots(),
+                            percent: '100',
+                            votingLabel: 'Casted ballots' | translate,
+                            votingOption: 'votesvalid'
+                        }"
+                    />
+                }
+
+                @if (entitledUsers() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: entitledUsers(),
+                            percent: '100',
+                            votingLabel: 'Entitled users' | translate
+                        }"
+                    />
+                }
+
+                @if (presentEntitledUsers() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: presentEntitledUsers(),
+                            percent: '100',
+                            votingLabel: 'Present entitled users' | translate
+                        }"
+                    />
+                }
+
+                @if (invalidBallots() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: invalidBallots(),
+                            percent: invalidBallotsPercent(),
+                            votingLabel: 'Invalid votes' | translate
+                        }"
+                    />
+                }
+            </table>
+        </div>
+
+        @if (displayChart()) {
+            <div class="doughnut-chart-normal">
+                <os-chart type="doughnut" [data]="chartData()"></os-chart>
+            </div>
+        }
+    </div>
+</div>

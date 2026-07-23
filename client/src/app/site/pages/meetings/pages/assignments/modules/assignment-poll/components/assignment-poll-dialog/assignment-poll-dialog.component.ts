@@ -1,104 +1,176 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BaseModel } from '@app/domain/models/base/base-model';
-import {
-    GeneralValueVerbose,
-    GlobalOptionKey,
-    PollMethod,
-    PollPercentBaseVerbose,
-    PollPropertyVerbose,
-    VoteValue
-} from '@app/domain/models/poll';
+import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import {
     BasePollDialogComponent,
-    OptionsObject
+    PollMethodPayload,
+    PollOptionsPayload
 } from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
+import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
+import { PollFormApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
+import { PollFormRatingApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-rating-approval/poll-form-rating-approval.component';
+import { PollFormRatingScoreComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-rating-score/poll-form-rating-score.component';
+import { PollFormSelectionComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
 import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
-
-import { AssignmentPollMethodVerbose, AssignmentPollPercentBaseVerbose } from '../../definitions';
-import { AssignmentPollService, UnknownUserLabel } from '../../services/assignment-poll.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: `os-assignment-poll-dialog`,
     templateUrl: `./assignment-poll-dialog.component.html`,
     styleUrls: [`./assignment-poll-dialog.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [
+        PollEditResultComponent,
+        PollFormComponent,
+        PollFormApprovalComponent,
+        PollFormSelectionComponent,
+        PollFormRatingApprovalComponent,
+        PollFormRatingScoreComponent,
+        MatDialogModule,
+        MatButtonModule,
+        MatTabsModule,
+        TranslatePipe
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {
-    public unknownUserLabel = UnknownUserLabel;
+    private approvalForm = viewChild(PollFormApprovalComponent);
+    private selectionForm = viewChild(PollFormSelectionComponent);
+    private ratingApprovalForm = viewChild(PollFormRatingApprovalComponent);
+    private ratingScoreForm = viewChild(PollFormRatingScoreComponent);
 
-    /**
-     * List of accepted special non-numerical values.
-     * See {@link PollService.specialPollVotes}
-     */
-    public specialValues: [number, string][] = [];
-
-    public generalValueVerbose = GeneralValueVerbose;
-    public PollPropertyVerbose = PollPropertyVerbose;
-
-    public AssignmentPollMethodVerbose = AssignmentPollMethodVerbose;
-    public get AssignmentPollPercentBaseVerbose(): Record<string, string> {
-        return this.pollData.isListPoll ? PollPercentBaseVerbose : AssignmentPollPercentBaseVerbose;
-    }
-
-    public readonly globalValues: GlobalOptionKey[] = [`global_yes`, `global_no`, `global_abstain`];
-
-    /**
-     * Constructor. Retrieves necessary metadata from the pollService,
-     * injects the poll itself
-     */
-    public constructor(
-        public readonly assignmentPollService: AssignmentPollService,
-        @Inject(MAT_DIALOG_DATA) pollData: ViewPoll
-    ) {
-        super(pollData);
-    }
-
-    public override onBeforeInit(): void {
-        this.subscriptions.push(
-            this.pollForm!.contentForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
-                this.triggerUpdate();
-            })
-        );
-    }
-
-    public getOptionAmount(): number {
-        return this._options?.length;
-    }
-
-    public optionIsList(option: OptionsObject): boolean {
-        return !!option.poll_candidate_user_ids?.length;
-    }
-
-    protected getContentObjectsForOptions(): BaseModel[] {
-        if (!this.pollData) {
-            return [];
-        }
-        const contentObject = this.pollData.content_object as ViewAssignment;
-        return contentObject.candidatesAsUsers;
-    }
-
-    protected getAnalogVoteFields(): VoteValue[] {
-        const pollmethod = this.pollForm!.contentForm.get(`pollmethod`)!.value;
-
-        const analogPollValues: VoteValue[] = [];
-
-        if (pollmethod === PollMethod.N) {
-            analogPollValues.push(`N`);
+    private tabMethodMap = computed(() => {
+        const methods = [];
+        if (!this.hasMultipleOptions) {
+            methods.push(`approval`);
+            if (this.allowCumulative()) {
+                methods.push(`rating_score`);
+            }
         } else {
-            analogPollValues.push(`Y`);
-
-            if (pollmethod !== PollMethod.Y) {
-                analogPollValues.push(`N`);
+            methods.push(`selection`, `rating_approval`);
+            if (this.allowCumulative()) {
+                methods.push(`rating_score`);
             }
-            if ((pollmethod as string).toUpperCase() === PollMethod.YNA) {
-                analogPollValues.push(`A`);
+            methods.push(`approval`);
+        }
+
+        return methods;
+    });
+
+    public get isEVotingEnabled(): boolean {
+        return this.pollService.isElectronicVotingEnabled;
+    }
+
+    public override get formsValid(): boolean {
+        if (!super.formsValid) {
+            return false;
+        }
+
+        switch (this.getSelectedMethod()) {
+            case `approval`:
+                return this.approvalForm()?.form.valid;
+            case `selection`:
+                return this.selectionForm()?.form.valid;
+            case `rating_approval`:
+                return this.ratingApprovalForm()?.form.valid;
+            case `rating_score`:
+                return this.ratingScoreForm()?.form.valid;
+        }
+
+        return false;
+    }
+
+    public get hasMultipleOptions(): boolean {
+        const assignment = this.pollData?.content_object as ViewAssignment;
+        return assignment.candidates.length > 1;
+    }
+
+    public get optionAmount(): number {
+        const assignment = this.pollData?.content_object as ViewAssignment;
+
+        return assignment.candidates.length;
+    }
+
+    public selectedTab = signal(0);
+    public allowCumulative = signal(false);
+
+    private pollService = inject(PollService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
+        super();
+
+        this.allowCumulative.set(this.meetingSettingsService.instant(`poll_enable_max_votes_per_option`));
+        let method = this.pollData?.config?.method;
+        if (this.pollData?.config_id) {
+            const collection = collectionFromFqid(this.pollData?.config_id);
+            method = collection.replace(`poll_config_`, ``);
+        }
+        if (method === `rating_score`) {
+            this.allowCumulative.set(true);
+        }
+
+        this.selectedTab.set(this.tabMethodMap().indexOf(method));
+
+        this.meetingSettingsService
+            .get(`poll_enable_max_votes_per_option`)
+            .pipe(takeUntilDestroyed())
+            .subscribe(v => {
+                this.allowCumulative.set(v);
+            });
+    }
+
+    public override methodPayload(): PollMethodPayload {
+        return {
+            method: this.getSelectedMethod(),
+            method_config: this.getMethodConfig()
+        };
+    }
+
+    public override optionsPayload(): PollOptionsPayload {
+        const assignment = this.pollData?.content_object as ViewAssignment;
+        const options = assignment.candidates.map(c => c.meeting_user_id);
+        return {
+            option_type: `meeting_user`,
+            options
+        };
+    }
+
+    public analogPollOptions(): { key: string; title: string }[] {
+        const assignment = this.pollData?.content_object as ViewAssignment;
+
+        const options = [];
+        if (this.getSelectedMethod() === `approval`) {
+            options.push([{ key: `approval`, title: null }]);
+        } else {
+            for (const option of assignment.candidates) {
+                options.push({ key: `meeting_user-${option.meeting_user_id}`, title: option.getTitle() });
             }
         }
 
-        return analogPollValues;
+        return options;
+    }
+
+    public getMethodConfig(): unknown {
+        switch (this.getSelectedMethod()) {
+            case `approval`:
+                return { ...this.approvalForm()?.getSerialzedForm() };
+            case `selection`:
+                return { ...this.selectionForm()?.getSerialzedForm() };
+            case `rating_approval`:
+                return { ...this.ratingApprovalForm()?.getSerialzedForm() };
+            case `rating_score`:
+                return { ...this.ratingScoreForm()?.getSerialzedForm() };
+        }
+        return {};
+    }
+
+    public getSelectedMethod(): string {
+        return this.tabMethodMap()[this.selectedTab()];
     }
 }

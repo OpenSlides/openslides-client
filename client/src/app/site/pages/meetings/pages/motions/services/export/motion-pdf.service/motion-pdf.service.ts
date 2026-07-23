@@ -6,13 +6,13 @@ import {
     MOTION_PDF_OPTIONS,
     PERSONAL_NOTE_ID
 } from '@app/domain/models/motions/motions.constants';
-import { VOTE_UNDOCUMENTED } from '@app/domain/models/poll';
 import { PdfImagesService } from '@app/gateways/export/pdf-document.service/pdf-images.service';
 import { ViewMotion, ViewMotionChangeRecommendation } from '@app/site/pages/meetings/pages/motions';
 import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { TranslateService } from '@ngx-translate/core';
+import Big from 'big.js';
 import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
 
 import { getRecommendationTypeName } from '../../../definitions';
@@ -429,65 +429,9 @@ export class MotionPdfService {
             ]);
         }
 
-        // voting results
-        if (motion.polls.length && (!infoToExport || infoToExport.includes(`polls`))) {
-            motion.polls.forEach(poll => {
-                if (poll.hasVotes) {
-                    const tableData = this.motionPollService.generateTableData(poll);
-                    const column1: any[] = [];
-                    const column2: any[] = [];
-                    const column3: any[] = [];
-                    tableData.forEach(votingResult => {
-                        const votingOption = this.translate.instant(
-                            this.motionPollService.pollKeyVerbose(votingResult.votingOption)
-                        );
-                        const value = votingResult.value[0];
-                        if (value.amount !== VOTE_UNDOCUMENTED) {
-                            const resultValue = this.motionPollService.parseNumber(value.amount!);
-                            column1.push(`${votingOption}:`);
-                            if (value.showPercent) {
-                                const resultInPercent = this.motionPollService.getVoteValueInPercent(value.amount!, {
-                                    poll
-                                });
-                                // hard check for "null" since 0 is a valid number in this case
-                                if (resultInPercent !== null) {
-                                    column2.push(`(${resultInPercent})`);
-                                } else {
-                                    column2.push(``);
-                                }
-                            } else {
-                                column2.push(``);
-                            }
-                            column3.push(resultValue);
-                        }
-                    });
-                    metaTableBody.push([
-                        {
-                            text: poll.title,
-                            style: `boldText`
-                        },
-                        {
-                            columns: [
-                                {
-                                    text: column1.join(`\n`),
-                                    width: `auto`
-                                },
-                                {
-                                    text: column2.join(`\n`),
-                                    width: `auto`,
-                                    alignment: `right`
-                                },
-                                {
-                                    text: column3.join(`\n`),
-                                    width: `auto`,
-                                    alignment: `right`
-                                }
-                            ],
-                            columnGap: 7
-                        }
-                    ]);
-                }
-            });
+        const votes = this.createMetaInfoTableVotes(motion, infoToExport);
+        if (votes !== null) {
+            metaTableBody.push(...votes);
         }
 
         // summary of change recommendations (for motion diff version only)
@@ -610,6 +554,76 @@ export class MotionPdfService {
         }
 
         return [];
+    }
+
+    /**
+     * Creates the MetaInfoTable
+     *
+     * @param motion the target motion
+     * @returns doc def for the meta infos
+     */
+    private createMetaInfoTableVotes(motion: ViewMotion, infoToExport: InfoToExport[] | null | undefined): Content[] {
+        const metaTableBody: Content[] = [];
+        // voting results
+        if (!motion.polls.length || (infoToExport && !infoToExport.includes(`polls`))) {
+            return null;
+        }
+
+        for (const poll of motion.polls) {
+            if (poll.hasVotes) {
+                const result = poll.config.parsedResult();
+                if (result === null) {
+                    continue;
+                }
+
+                const labels: any[] = [this.translate.instant(`Yes`), this.translate.instant(`No`)];
+                const relativeAmounts: number[] = [];
+                const amounts: number[] = [+result.yes || 0, +result.no || 0];
+                if (poll.config.onehundred_percent_base.startsWith(`yes_no`)) {
+                    relativeAmounts.push(Big(result.yes).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber());
+                    relativeAmounts.push(Big(result.no).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber());
+                }
+
+                if (poll.config.allow_abstain) {
+                    labels.push(this.translate.instant(`Abstain`));
+                    amounts.push(+result.abstain || 0);
+                    if (poll.config.onehundred_percent_base === `yes_no_abstain`) {
+                        relativeAmounts.push(
+                            Big(result.abstain).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber()
+                        );
+                    }
+                }
+                metaTableBody.push([
+                    {
+                        text: poll.title,
+                        style: `boldText`
+                    },
+                    {
+                        columns: [
+                            {
+                                text: labels.join(`\n`),
+                                width: `auto`
+                            },
+                            {
+                                text: relativeAmounts
+                                    .map(a => `(${this.motionPollService.parseNumber(a)}%)`)
+                                    .join(`\n`),
+                                width: `auto`,
+                                alignment: `right`
+                            },
+                            {
+                                text: amounts.map(n => this.motionPollService.parseNumber(n)).join(`\n`),
+                                width: `auto`,
+                                alignment: `right`
+                            }
+                        ],
+                        columnGap: 7
+                    }
+                ]);
+            }
+        }
+
+        return metaTableBody;
     }
 
     /**

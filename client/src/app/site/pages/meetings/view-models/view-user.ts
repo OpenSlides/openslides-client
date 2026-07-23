@@ -9,8 +9,7 @@ import { ViewCommittee } from '../../organization/pages/committees';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
-import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
-import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
+import { ViewPollBallot, ViewPollOption } from '../pages/polls';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
 import { ViewMeetingUser } from './view-meeting-user';
@@ -371,16 +370,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.vote_delegations_from_meeting_users(meetingId)?.map(meeting_user => meeting_user.user) || [];
     }
 
-    /**
-     * Returns all votes given by the user in a given meeting.
-     */
-    public getAllVotes(meetingId?: number): ViewVote[] {
-        const meetingID = meetingId ?? this.getEnsuredActiveMeetingId();
-        return this.votes
-            .filter(vote => vote.meeting_id === meetingID)
-            .concat(this.getMeetingUser(meetingId)?.vote_delegated_votes ?? []);
-    }
-
     public getDuplicateStatusInMap(data: { name: Map<string, Id[]>; email: Map<string, Id[]> }): DuplicateStatus {
         const sameNameIds = this.getName() ? data.name.get(this.getName()) : [];
         const sameEmailIds = this.email ? data.email.get(this.email) : [];
@@ -401,11 +390,9 @@ interface IUserRelations {
     meetings: ViewMeeting[];
     organization: ViewOrganization;
     meeting_users: ViewMeetingUser[];
-    poll_voted: ViewPoll[];
     committee_managements: ViewCommittee[];
-    options: ViewOption[];
-    votes: ViewVote[];
-    poll_candidates: ViewPollCandidate[];
+    options: ViewPollOption[];
+    votes: ViewPollBallot[];
     gender?: ViewGender;
     history_positions: ViewHistoryPosition[];
 }

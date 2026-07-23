@@ -1,49 +1,29 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
 import { BasePollComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { VotingPrivacyWarningDialogService } from '@app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
+import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/poll/poll.component';
 import { OperatorService } from '@app/site/services/operator.service';
 
 import { ViewTopic } from '../../../../view-models';
-import { TopicPollPdfService } from '../../services/topic-poll-pdf.service/topic-poll-pdf.service';
 
 @Component({
     selector: `os-topic-poll`,
     templateUrl: `./topic-poll.component.html`,
     styleUrls: [`./topic-poll.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [PollComponent, MatCardModule],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
-export class TopicPollComponent extends BasePollComponent<ViewTopic> implements OnInit {
-    @Input()
-    public set pollId(id: Id) {
-        this.initializePoll(id);
-    }
+export class TopicPollComponent extends BasePollComponent<ViewTopic> {
+    public pollId = input.required<Id>();
 
-    @Output()
-    public readonly dialogOpened = new EventEmitter<void>();
-
-    public candidatesLabels: string[] = [];
-
-    /**
-     * Form for updating the poll's description
-     */
-    public descriptionForm: UntypedFormGroup;
-
-    /**
-     * @returns true if the description on the form differs from the poll's description
-     */
-    public get isDescriptionDirty(): boolean {
-        return this.descriptionForm.get(`description`).value !== this.poll.description;
-    }
+    public dialogOpened = output();
 
     public get shouldShowPoll(): boolean {
         if (this.poll) {
             if (
-                this.operator.hasPerms(Permission.pollCanManage) ||
+                this.operator.hasPerms(Permission.agendaItemCanSeePolls) ||
                 this.poll.isPublished ||
                 (this.poll.isEVoting && !this.poll.isCreated)
             ) {
@@ -53,52 +33,14 @@ export class TopicPollComponent extends BasePollComponent<ViewTopic> implements 
         return false;
     }
 
-    public get showMetaInfo(): boolean {
-        return !this.poll.stateHasVotes && this.operator.hasPerms(Permission.pollCanManage);
-    }
+    private operator = inject(OperatorService);
 
-    public get showCandidatesInMetaInfo(): boolean {
-        return !this.poll.stateHasVotes && !this.votingService.canVote(this.poll);
-    }
-
-    public get canManagePoll(): boolean {
-        return this.operator.hasPerms(Permission.pollCanManage);
-    }
-
-    public constructor(
-        private formBuilder: UntypedFormBuilder,
-        private operator: OperatorService,
-        private votingService: VotingService,
-        private votingPrivacyDialog: VotingPrivacyWarningDialogService,
-        private pdfService: TopicPollPdfService
-    ) {
+    public constructor() {
         super();
-    }
 
-    public ngOnInit(): void {
-        this.descriptionForm = this.formBuilder.group({
-            description: this.poll ? this.poll.description : ``
+        effect(() => {
+            this.initializePoll(this.pollId());
         });
-    }
-
-    /**
-     * Print the PDF of this poll with the corresponding options and numbers
-     */
-    public printBallot(): void {
-        try {
-            console.log(`Can't print ballots (yet)`);
-        } catch (e) {
-            console.error(e);
-            this.raiseError(e);
-        }
-    }
-
-    public downloadPdf(): void {
-        this.pdfService.printBallots(this.poll);
-    }
-
-    public openVotingWarning(): void {
-        this.votingPrivacyDialog.open();
     }
 
     public getDetailLink(): string {
