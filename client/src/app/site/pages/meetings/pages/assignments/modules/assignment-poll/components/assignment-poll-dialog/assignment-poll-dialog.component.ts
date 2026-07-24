@@ -27,10 +27,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         PollEditResultComponent,
         PollFormComponent,
-        PollFormApprovalComponent,
-        PollFormSelectionComponent,
-        PollFormRatingApprovalComponent,
-        PollFormRatingScoreComponent,
         MatDialogModule,
         MatButtonModule,
         MatTabsModule,
@@ -64,25 +60,6 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     public get isEVotingEnabled(): boolean {
         return this.pollService.isElectronicVotingEnabled;
-    }
-
-    public override get formsValid(): boolean {
-        if (!super.formsValid) {
-            return false;
-        }
-
-        switch (this.getSelectedMethod()) {
-            case `approval`:
-                return this.approvalForm()?.form.valid;
-            case `selection`:
-                return this.selectionForm()?.form.valid;
-            case `rating_approval`:
-                return this.ratingApprovalForm()?.form.valid;
-            case `rating_score`:
-                return this.ratingScoreForm()?.form.valid;
-        }
-
-        return false;
     }
 
     public get hasMultipleOptions(): boolean {

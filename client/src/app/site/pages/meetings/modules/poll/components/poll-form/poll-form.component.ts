@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, computed, effect, inject, input, signal, ViewEncapsulation } from '@angular/core';
+import { Component, computed, effect, inject, input, signal, viewChild, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -33,6 +33,7 @@ interface PollForm {
     live_voting_enabled: boolean;
     option_type: 'meeting_user' | 'text';
     options: any[];
+    method: 'approval' | 'selection' | 'rating_approval' | 'rating_score';
     method_preselection: string | null;
 }
 
@@ -63,12 +64,16 @@ interface PollForm {
     encapsulation: ViewEncapsulation.None
 })
 export class PollFormComponent extends BaseComponent {
+    private approvalForm = viewChild(PollFormApprovalComponent);
+    private selectionForm = viewChild(PollFormSelectionComponent);
+    private ratingApprovalForm = viewChild(PollFormRatingApprovalComponent);
+    private ratingScoreForm = viewChild(PollFormRatingScoreComponent);
+
     public readonly visibilityOptions = PollVisibility;
 
     public showNonNominalWarning = false;
 
-    public methods = input<string[]>([`selection`, `rating_approval`, `rating_score`, `approval`, `list`]);
-
+    public customConfigForm = input<boolean>(false);
     public optionAmount = input<number>(0);
     public optionType = input<'meeting_user' | 'text'>('text');
     public optionEdit = input<boolean>(false);
@@ -78,9 +83,9 @@ export class PollFormComponent extends BaseComponent {
 
     public readonly data = input<Partial<ViewPoll>>({});
 
-    public get isCreated(): boolean {
+    public isCreated = computed<boolean>(() => {
         return !this.data()?.state || this.data().isCreated;
-    }
+    });
 
     public selectedMethod = computed<string | null>(() => {
         const preselection = this.form.method_preselection().value();
@@ -89,6 +94,29 @@ export class PollFormComponent extends BaseComponent {
         }
 
         return this.form.method_preselection().value().split(`.`)[0];
+    });
+
+    public methodForm = computed(() => {
+        switch (this.selectedMethod()) {
+            case `approval`:
+                return this.approvalForm();
+            case `selection`:
+                return this.selectionForm();
+            case `rating_approval`:
+                return this.ratingApprovalForm();
+            case `rating_score`:
+                return this.ratingScoreForm();
+        }
+
+        return null;
+    });
+
+    public methodConfig = computed<unknown>(() => {
+        if (this.methodForm()) {
+            return this.methodForm().getSerialzedForm();
+        }
+
+        return null;
     });
 
     public isOpenVotingSelected = computed(() => {
@@ -119,6 +147,7 @@ export class PollFormComponent extends BaseComponent {
         });
 
         effect(this.updateData.bind(this));
+        effect(this.changeMethod.bind(this));
     }
 
     public getValues(): Partial<{ [place in keyof ViewPoll]: any }> {
@@ -156,12 +185,20 @@ export class PollFormComponent extends BaseComponent {
         live_voting_enabled: false,
         option_type: 'text',
         options: [],
-        method_preselection: null
+        method: null,
+        method_preselection: `selection.yes`
     });
 
     public form = form(this.pollModel, schemaPath => {
         required(schemaPath.title);
         required(schemaPath.visibility);
+        if (!this.customConfigForm()) {
+            required(schemaPath.method_preselection);
+        }
+    });
+
+    public isValid = computed<boolean>(() => {
+        return this.form().valid() && this.methodForm()?.form.valid;
     });
 
     private updateData(): void {
@@ -183,9 +220,26 @@ export class PollFormComponent extends BaseComponent {
             if (data.config?.display_chart !== undefined) patch['display_chart'] = data.config.display_chart;
             if (data.config?.onehundred_percent_base !== undefined)
                 patch['onehundred_percent_base'] = data.config.onehundred_percent_base;
+        }
+    }
 
-            // TODO: Patch form
-            // this.pollForm.patchValue(patch);
+    private changeMethod(): void {
+        const configForm = this.methodForm();
+        if (!configForm) {
+            return;
+        }
+
+        const mode = this.form.method_preselection().value().split(`.`)[1];
+        if (this.selectedMethod() === `approval` || this.selectedMethod() === `rating_approval`) {
+            this.methodForm()
+                .form.get(`allow_abstain`)
+                .patchValue(mode === `yes_no_abstain`);
+        }
+
+        if (this.selectedMethod() === `selection`) {
+            this.methodForm()
+                .form.get(`strike_out`)
+                .patchValue(mode === `no`);
         }
     }
 }

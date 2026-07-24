@@ -9,6 +9,11 @@ import { _, TranslatePipe } from '@ngx-translate/core';
 import { ViewPoll } from '../../../../pages/polls';
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
+export interface PollFormApproval {
+    allow_abstain: boolean;
+    onehundred_percent_base: ApprovalOnehundredPercentBase;
+}
+
 @Component({
     selector: 'os-poll-form-approval',
     imports: [ReactiveFormsModule, MatFormFieldModule, MatSelectModule, MatCheckboxModule, TranslatePipe],

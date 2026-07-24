@@ -9,7 +9,7 @@
         </mat-form-field>
 
         <div class="poll-preview-meta-info-form">
-            @if (!data() || !data().state || data().isCreated) {
+            @if (!data() || isCreated()) {
                 @if (isEVotingEnabled()) {
                     <div class="info-grid">
                         <!-- Poll Visibility -->
@@ -56,75 +56,87 @@
                 </div>
             }
 
-            <div class="margin-bottom-15">
-                <div class="info-grid">
-                    <mat-form-field>
-                        <mat-label>{{ 'Election method' | translate }}</mat-label>
-                        <mat-select [formField]="form.method_preselection">
-                            @if (optionAmount() === 1 || form.options().value().length === 1) {
-                                <mat-option value="approval.yes_no">{{ 'Yes/No' | translate }}</mat-option>
-                                <mat-option value="approval.yes_no_abstain">
-                                    {{ 'Yes/No/Abstain' | translate }}
-                                </mat-option>
-                            }
-
-                            @if (optionAmount() > 1 || form.options().value().length > 1) {
-                                @if (optionType() === 'text') {
-                                    <mat-option value="selection.yes">{{ 'Yes per option' | translate }}</mat-option>
-                                    <mat-option value="selection.no">{{ 'No per option' | translate }}</mat-option>
-                                    <mat-option value="rating_approval.yes_no">
-                                        {{ 'Yes/No per option' | translate }}
-                                    </mat-option>
-                                    <mat-option value="rating_approval.yes_no_abstain">
-                                        {{ 'Yes/No/Abstain per option' | translate }}
-                                    </mat-option>
-                                    <mat-option value="rating_score">{{ 'Amount per option' | translate }}</mat-option>
-                                } @else {
-                                    <mat-option value="selection.yes">{{ 'Yes per candidate' | translate }}</mat-option>
-                                    <mat-option value="selection.no">{{ 'No per candidate' | translate }}</mat-option>
-                                    <mat-option value="rating_approval.yes_no">
-                                        {{ 'Yes/No per candidate' | translate }}
-                                    </mat-option>
-                                    <mat-option value="rating_approval.yes_no_abstain">
-                                        {{ 'Yes/No/Abstain per candidate' | translate }}
-                                    </mat-option>
-                                    <mat-option value="rating_score">
-                                        {{ 'Amount per candidate' | translate }}
+            @if (!customConfigForm()) {
+                <div class="margin-bottom-15">
+                    <div class="info-grid">
+                        <mat-form-field>
+                            <mat-label>{{ 'Election method' | translate }}</mat-label>
+                            <mat-select [formField]="form.method_preselection">
+                                @if (optionAmount() <= 1 && form.options().value().length <= 1) {
+                                    <mat-option value="approval.yes_no">{{ 'Yes/No' | translate }}</mat-option>
+                                    <mat-option value="approval.yes_no_abstain">
+                                        {{ 'Yes/No/Abstain' | translate }}
                                     </mat-option>
                                 }
-                            }
 
-                            @if (optionAmount() > 0 || form.options().value().length > 0) {
-                                <mat-option value="approval.yes_no">{{ 'Yes/No per list' | translate }}</mat-option>
-                                <mat-option value="approval.yes_no_abstain">
-                                    {{ 'Yes/No/Abstain per list' | translate }}
-                                </mat-option>
-                            }
-                        </mat-select>
-                        <mat-error>{{ 'This field is required.' | translate }}</mat-error>
-                    </mat-form-field>
-                    <div></div>
+                                @if (optionAmount() > 1 || form.options().value().length > 1) {
+                                    @if (optionType() === 'text') {
+                                        <mat-option value="selection.yes">
+                                            {{ 'Yes per option' | translate }}
+                                        </mat-option>
+                                        <mat-option value="selection.no">{{ 'No per option' | translate }}</mat-option>
+                                        <mat-option value="rating_approval.yes_no">
+                                            {{ 'Yes/No per option' | translate }}
+                                        </mat-option>
+                                        <mat-option value="rating_approval.yes_no_abstain">
+                                            {{ 'Yes/No/Abstain per option' | translate }}
+                                        </mat-option>
+                                        <mat-option value="rating_score">
+                                            {{ 'Amount per option' | translate }}
+                                        </mat-option>
+                                    } @else {
+                                        <mat-option value="selection.yes">
+                                            {{ 'Yes per candidate' | translate }}
+                                        </mat-option>
+                                        <mat-option value="selection.no">
+                                            {{ 'No per candidate' | translate }}
+                                        </mat-option>
+                                        <mat-option value="rating_approval.yes_no">
+                                            {{ 'Yes/No per candidate' | translate }}
+                                        </mat-option>
+                                        <mat-option value="rating_approval.yes_no_abstain">
+                                            {{ 'Yes/No/Abstain per candidate' | translate }}
+                                        </mat-option>
+                                        <mat-option value="rating_score">
+                                            {{ 'Amount per candidate' | translate }}
+                                        </mat-option>
+                                    }
+                                }
+
+                                @if (optionAmount() > 1 || form.options().value().length > 1) {
+                                    <mat-option value="approval.yes_no">{{ 'Yes/No per list' | translate }}</mat-option>
+                                    <mat-option value="approval.yes_no_abstain">
+                                        {{ 'Yes/No/Abstain per list' | translate }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                            <mat-error>{{ 'This field is required.' | translate }}</mat-error>
+                        </mat-form-field>
+                        <div></div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </form>
 
-    <div class="method">
-        @switch (this.selectedMethod()) {
-            @case ('approval') {
-                <os-poll-form-approval [data]="data()" [hideMethod]="true" />
+    <ng-content>
+        <div class="method">
+            @switch (this.selectedMethod()) {
+                @case ('approval') {
+                    <os-poll-form-approval [data]="data()" [hideMethod]="true" />
+                }
+                @case ('selection') {
+                    <os-poll-form-selection [data]="data()" [hideMethod]="true" [optionAmount]="optionAmount()" />
+                }
+                @case ('rating_approval') {
+                    <os-poll-form-rating-approval [data]="data()" [hideMethod]="true" [optionAmount]="optionAmount()" />
+                }
+                @case ('rating_score') {
+                    <os-poll-form-rating-score [data]="data()" [optionAmount]="optionAmount()" />
+                }
             }
-            @case ('selection') {
-                <os-poll-form-selection [data]="data()" [hideMethod]="true" [optionAmount]="optionAmount()" />
-            }
-            @case ('rating_approval') {
-                <os-poll-form-rating-approval [data]="data()" [hideMethod]="true" [optionAmount]="optionAmount()" />
-            }
-            @case ('rating_score') {
-                <os-poll-form-rating-score [data]="data()" [optionAmount]="optionAmount()" />
-            }
-        }
-    </div>
+        </div>
+    </ng-content>
 
     @if (optionEdit()) {
         <div class="option-section">

@@ -10,6 +10,15 @@ import { _, TranslatePipe } from '@ngx-translate/core';
 import { ViewPoll } from '../../../../pages/polls';
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
+export interface PollFormRatingScore {
+    max_options_amount: number;
+    min_options_amount: number;
+    max_votes_per_option: number;
+    max_vote_sum: number;
+    min_vote_sum: number;
+    onehundred_percent_base: RatingScoreOnehundredPercentBase;
+}
+
 @Component({
     selector: 'os-poll-form-rating-score',
     imports: [

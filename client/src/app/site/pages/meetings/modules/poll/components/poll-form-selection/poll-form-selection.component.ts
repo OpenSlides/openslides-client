@@ -9,6 +9,15 @@ import { _, TranslatePipe } from '@ngx-translate/core';
 import { ViewPoll } from '../../../../pages/polls';
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
+export interface PollFormSelection {
+    max_options_amount: number;
+    min_options_amount: number;
+    allow_nota: boolean;
+    onehundred_percent_base: SelectionOnehundredPercentBase;
+    strike_out: boolean;
+    display_chart: string;
+}
+
 @Component({
     selector: 'os-poll-form-selection',
     imports: [ReactiveFormsModule, MatCheckboxModule, MatInputModule, MatSelectModule, TranslatePipe],

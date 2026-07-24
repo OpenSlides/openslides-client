@@ -40,13 +40,13 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
     protected pollForm = viewChild.required(PollFormComponent);
     protected pollResultForm = viewChild(PollEditResultComponent);
 
-    public get formsValid(): boolean {
+    public formsValid = computed<boolean>(() => {
         if (!this.pollForm) {
             return false;
         }
 
-        return this.pollForm().form().valid();
-    }
+        return this.pollForm().isValid();
+    });
 
     public analogPollFormOpen = signal(false);
     public isAnalogPoll = computed(() => {

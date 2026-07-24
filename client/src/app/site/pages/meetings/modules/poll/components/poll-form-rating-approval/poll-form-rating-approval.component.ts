@@ -5,10 +5,19 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { RatingApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-approval';
+import { RatingScoreOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-score';
 import { _, TranslatePipe } from '@ngx-translate/core';
 
 import { ViewPoll } from '../../../../pages/polls';
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
+
+export interface PollFormRatingApproval {
+    max_options_amount: number;
+    min_options_amount: number;
+    max_yes_amount: number;
+    onehundred_percent_base: RatingScoreOnehundredPercentBase;
+    display_chart: string;
+}
 
 @Component({
     selector: 'os-poll-form-rating-approval',
