@@ -126,6 +126,10 @@ jobs:
         run: npm run generate-models && git diff --exit-code -- src/app/domain/models
         working-directory: client/
 
+      - name: Check generated defaults are up to date
+        run: npm run generate-defaults && git diff --exit-code -- src/app/domain/models
+        working-directory: client/
+
       - uses: browser-actions/setup-chrome@v2
 
       - name: Build motion diff
