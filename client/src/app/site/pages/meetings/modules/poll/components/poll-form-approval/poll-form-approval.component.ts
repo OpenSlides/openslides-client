@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +17,8 @@ import { PollFormBaseComponent } from '../poll-config-form-base.component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollFormApprovalComponent extends PollFormBaseComponent {
+    public hideMethod = input<boolean>(false);
+
     public validPercentBases: [ApprovalOnehundredPercentBase, string][] = [
         [`yes_no`, _('Yes/No')],
         [`yes_no_abstain`, _('Yes/No/Abstain')],

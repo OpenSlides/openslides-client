@@ -35,6 +35,7 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         [`disabled`, _('Disabled (no percents)')]
     ];
 
+    public hideMethod = input<boolean>(false);
     public optionAmount = input<number>(null);
 
     protected initForm(): void {

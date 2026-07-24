@@ -1,5 +1,4 @@
 import { computed, Directive, inject, signal, viewChild } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Fqid, Id } from '@app/domain/definitions/key-types';
@@ -8,7 +7,6 @@ import { PollVisibility } from '@app/domain/models/poll';
 import { PollUpdatePayload } from '@app/gateways/vote-api.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
-import { map } from 'rxjs';
 
 import { PollEditResultComponent } from '../components/poll-edit-result/poll-edit-result.component';
 import { PollFormComponent } from '../components/poll-form/poll-form.component';

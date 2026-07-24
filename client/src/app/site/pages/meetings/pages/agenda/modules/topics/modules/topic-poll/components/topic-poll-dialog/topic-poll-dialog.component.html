@@ -1,6 +1,11 @@
 <mat-dialog-content>
     <div class="poll-config" [class.hidden]="analogPollFormOpen()">
-        <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled" [optionEdit]="selectedTab() === 0">
+        <os-poll-form
+            [data]="pollData"
+            [isEVotingEnabled]="isEVotingEnabled"
+            [optionAmount]="options().length"
+            [optionEdit]="selectedTab() === 0"
+        >
             @if (pollData.isCreated === false) {
                 @switch (this.getSelectedMethod()) {
                     @case ('approval') {

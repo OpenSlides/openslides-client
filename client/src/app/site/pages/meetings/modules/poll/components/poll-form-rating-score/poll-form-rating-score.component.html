@@ -1,13 +1,7 @@
 <form [formGroup]="form">
     <div class="poll-preview-meta-info-form">
         @if (!pollStarted()) {
-            <div class="margin-bottom-15">
-                <mat-checkbox formControlName="allow_general_abstain">
-                    {{ 'General abstain' | translate }}
-                </mat-checkbox>
-            </div>
-
-            <div class="margin-bottom-15 info-grid">
+            <div class="info-grid">
                 @if (!form.get('allow_general_abstain').value) {
                     <mat-form-field>
                         <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
@@ -23,7 +17,7 @@
                 </mat-form-field>
             </div>
 
-            <div class="margin-bottom-15 info-grid">
+            <div class="info-grid">
                 @if (!form.get('allow_general_abstain').value) {
                     <mat-form-field>
                         <mat-label>{{ 'Min amount of options voted' | translate }}</mat-label>
@@ -40,22 +34,32 @@
             </div>
 
             <div class="margin-bottom-15 info-grid">
+                <div></div>
                 <mat-form-field>
                     <mat-label>{{ 'Max votes per option' | translate }}</mat-label>
                     <input formControlName="max_votes_per_option" matInput type="number" />
                 </mat-form-field>
             </div>
+
+            <div class="margin-bottom-15">
+                <mat-checkbox formControlName="allow_general_abstain">
+                    {{ 'General abstain' | translate }}
+                </mat-checkbox>
+            </div>
         }
 
-        <mat-form-field>
-            <mat-label>{{ '100% base' | translate }}</mat-label>
-            <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
-                @for (option of validPercentBases; track option) {
-                    <mat-option [value]="option[0]">
-                        {{ option[1] | translate }}
-                    </mat-option>
-                }
-            </mat-select>
-        </mat-form-field>
+        <div class="margin-bottom-15 info-grid">
+            <mat-form-field>
+                <mat-label>{{ '100% base' | translate }}</mat-label>
+                <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
+                    @for (option of validPercentBases; track option) {
+                        <mat-option [value]="option[0]">
+                            {{ option[1] | translate }}
+                        </mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+            <div></div>
+        </div>
     </div>
 </form>

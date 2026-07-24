@@ -26,6 +26,7 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
         [`disabled`, _('Disabled (no percents)')]
     ];
 
+    public hideMethod = input<boolean>(false);
     public optionAmount = input<number>(null);
 
     public getSerialzedForm(): Record<string, unknown> {

@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-    @if (!pollStarted()) {
+    @if (!pollStarted() && !hideMethod()) {
         <div class="margin-bottom-15">
             <mat-form-field>
                 <mat-label>{{ 'Election method' | translate }}</mat-label>
@@ -13,20 +13,6 @@
 
     <div class="poll-preview-meta-info-form">
         @if (!pollStarted()) {
-            <div class="margin-bottom-15">
-                <mat-checkbox formControlName="allow_general_abstain">
-                    {{ 'General abstain' | translate }}
-                </mat-checkbox>
-
-                <mat-checkbox formControlName="allow_nota">
-                    @if (form.get('strike_out').value) {
-                        {{ 'General approval' | translate }}
-                    } @else {
-                        {{ 'General rejection' | translate }}
-                    }
-                </mat-checkbox>
-            </div>
-
             <div class="info-grid">
                 @if (!form.get('allow_general_abstain').value) {
                     <mat-form-field>
@@ -41,6 +27,20 @@
                     <mat-label>{{ 'Max amount of votes' | translate }}</mat-label>
                     <input formControlName="max_options_amount" matInput required type="number" />
                 </mat-form-field>
+            </div>
+
+            <div class="margin-bottom-15">
+                <mat-checkbox formControlName="allow_general_abstain">
+                    {{ 'General abstain' | translate }}
+                </mat-checkbox>
+
+                <mat-checkbox formControlName="allow_nota">
+                    @if (form.get('strike_out').value) {
+                        {{ 'General approval' | translate }}
+                    } @else {
+                        {{ 'General rejection' | translate }}
+                    }
+                </mat-checkbox>
             </div>
         }
 

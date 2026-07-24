@@ -1,12 +1,13 @@
 import { KeyValuePipe } from '@angular/common';
 import { Component, computed, effect, inject, input, signal, ViewEncapsulation } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { form, required } from '@angular/forms/signals';
+import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { Ids } from '@app/domain/definitions/key-types';
 import { PollVisibility } from '@app/domain/models/poll';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from '@app/site/base/base.component';
@@ -18,15 +19,35 @@ import { TranslatePipe } from '@ngx-translate/core';
 
 import { GroupControllerService, ViewGroup } from '../../../../pages/participants';
 import { ViewPoll } from '../../../../pages/polls';
+import { PollFormApprovalComponent } from '../poll-form-approval/poll-form-approval.component';
+import { PollFormRatingApprovalComponent } from '../poll-form-rating-approval/poll-form-rating-approval.component';
+import { PollFormRatingScoreComponent } from '../poll-form-rating-score/poll-form-rating-score.component';
+import { PollFormSelectionComponent } from '../poll-form-selection/poll-form-selection.component';
 import { VotingPrivacyWarningDialogComponent } from '../voting-privacy-warning/voting-privacy-warning-dialog.component';
+
+interface PollForm {
+    title: string;
+    visibility: PollVisibility;
+    entitled_group_ids: Ids;
+    live_voting_enabled: boolean;
+    option_type: 'meeting_user' | 'text';
+    options: any[];
+    method_preselection: string | null;
+}
 
 @Component({
     selector: `os-poll-form`,
     templateUrl: `./poll-form.component.html`,
     styleUrls: [`./poll-form.component.scss`],
     imports: [
+        PollFormApprovalComponent,
+        PollFormSelectionComponent,
+        PollFormRatingApprovalComponent,
+        PollFormRatingScoreComponent,
         EditableListComponent,
         TranslatePipe,
+        FormField,
+        FormRoot,
         MatInputModule,
         MatFormFieldModule,
         MatCheckboxModule,
@@ -46,6 +67,7 @@ export class PollFormComponent extends BaseComponent {
 
     public methods = input<string[]>([`selection`, `rating_approval`, `rating_score`, `approval`, `list`]);
 
+    public optionAmount = input<number>(0);
     public optionType = input<'meeting_user' | 'text'>('text');
     public optionEdit = input<boolean>(false);
     public isEVotingEnabled = input.required<boolean>();
@@ -57,6 +79,15 @@ export class PollFormComponent extends BaseComponent {
     public get isCreated(): boolean {
         return !this.data()?.state || this.data().isCreated;
     }
+
+    public selectedMethod = computed<string | null>(() => {
+        const preselection = this.form.method_preselection().value();
+        if (!preselection) {
+            return null;
+        }
+
+        return this.form.method_preselection().value().split(`.`)[0];
+    });
 
     public isOpenVotingSelected = computed(() => {
         return this.form.visibility().value() === PollVisibility.Open || false;
@@ -79,13 +110,13 @@ export class PollFormComponent extends BaseComponent {
 
     public constructor() {
         super();
-        // this.initContentForm();
 
         effect(() => {
-            this.updateData();
             this.updateLiveVotingEnabled();
             this.setWarning();
         });
+
+        effect(this.updateData.bind(this));
     }
 
     public getValues(): Partial<{ [place in keyof ViewPoll]: any }> {
@@ -116,14 +147,14 @@ export class PollFormComponent extends BaseComponent {
         return { ...this.pollModel() };
     }
 
-    private pollModel = signal({
+    private pollModel = signal<PollForm>({
         title: ``,
         visibility: PollVisibility.Open,
         entitled_group_ids: [],
         live_voting_enabled: false,
         option_type: 'text',
         options: [],
-        method: null
+        method_preselection: null
     });
 
     public form = form(this.pollModel, schemaPath => {
