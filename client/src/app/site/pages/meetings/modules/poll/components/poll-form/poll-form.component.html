@@ -81,9 +81,11 @@
                                         <mat-option value="rating_approval.yes_no_abstain">
                                             {{ 'Yes/No/Abstain per option' | translate }}
                                         </mat-option>
-                                        <mat-option value="rating_score">
-                                            {{ 'Amount per option' | translate }}
-                                        </mat-option>
+                                        @if (allowCumulative()) {
+                                            <mat-option value="rating_score">
+                                                {{ 'Amount per option' | translate }}
+                                            </mat-option>
+                                        }
                                     } @else {
                                         <mat-option value="selection.yes">
                                             {{ 'Yes per candidate' | translate }}
@@ -97,9 +99,11 @@
                                         <mat-option value="rating_approval.yes_no_abstain">
                                             {{ 'Yes/No/Abstain per candidate' | translate }}
                                         </mat-option>
-                                        <mat-option value="rating_score">
-                                            {{ 'Amount per candidate' | translate }}
-                                        </mat-option>
+                                        @if (allowCumulative()) {
+                                            <mat-option value="rating_score">
+                                                {{ 'Amount per candidate' | translate }}
+                                            </mat-option>
+                                        }
                                     }
                                 }
 

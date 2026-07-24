@@ -1,5 +1,6 @@
 import { KeyValuePipe } from '@angular/common';
 import { Component, computed, effect, inject, input, signal, viewChild, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule } from '@angular/forms';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -11,7 +12,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { Ids } from '@app/domain/definitions/key-types';
 import { PollVisibility } from '@app/domain/models/poll';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import { BaseComponent } from '@app/site/base/base.component';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { DirectivesModule } from '@app/ui/directives';
 import { EditableListComponent } from '@app/ui/modules/editable-list';
 import { SearchSelectorModule } from '@app/ui/modules/search-selector';
@@ -83,6 +86,30 @@ export class PollFormComponent extends BaseComponent {
 
     public readonly data = input<Partial<ViewPoll>>({});
 
+    public allowCumulative = signal(false);
+    private pollModel = signal<PollForm>({
+        title: ``,
+        visibility: PollVisibility.Open,
+        entitled_group_ids: [],
+        live_voting_enabled: false,
+        option_type: 'text',
+        options: [],
+        method: null,
+        method_preselection: `selection.yes`
+    });
+
+    public form = form(this.pollModel, schemaPath => {
+        required(schemaPath.title);
+        required(schemaPath.visibility);
+        if (!this.customConfigForm()) {
+            required(schemaPath.method_preselection);
+        }
+    });
+
+    public isValid = computed<boolean>(() => {
+        return this.form().valid() && this.methodForm()?.formValid();
+    });
+
     public isCreated = computed<boolean>(() => {
         return !this.data()?.state || this.data().isCreated;
     });
@@ -137,6 +164,7 @@ export class PollFormComponent extends BaseComponent {
 
     public groupRepo = inject(GroupControllerService);
     private dialog = inject(MatDialog);
+    private meetingSettingsService = inject(MeetingSettingsService);
 
     public constructor() {
         super();
@@ -148,6 +176,23 @@ export class PollFormComponent extends BaseComponent {
 
         effect(this.updateData.bind(this));
         effect(this.changeMethod.bind(this));
+
+        this.allowCumulative.set(this.meetingSettingsService.instant(`poll_enable_max_votes_per_option`));
+        let method = this.data()?.config?.method;
+        if (this.data()?.config_id) {
+            const collection = collectionFromFqid(this.data()?.config_id);
+            method = collection.replace(`poll_config_`, ``);
+        }
+        if (method === `rating_score`) {
+            this.allowCumulative.set(true);
+        }
+
+        this.meetingSettingsService
+            .get(`poll_enable_max_votes_per_option`)
+            .pipe(takeUntilDestroyed())
+            .subscribe(v => {
+                this.allowCumulative.set(v);
+            });
     }
 
     public getValues(): Partial<{ [place in keyof ViewPoll]: any }> {
@@ -177,29 +222,6 @@ export class PollFormComponent extends BaseComponent {
         // getRawValue() includes disabled controls
         return { ...this.pollModel() };
     }
-
-    private pollModel = signal<PollForm>({
-        title: ``,
-        visibility: PollVisibility.Open,
-        entitled_group_ids: [],
-        live_voting_enabled: false,
-        option_type: 'text',
-        options: [],
-        method: null,
-        method_preselection: `selection.yes`
-    });
-
-    public form = form(this.pollModel, schemaPath => {
-        required(schemaPath.title);
-        required(schemaPath.visibility);
-        if (!this.customConfigForm()) {
-            required(schemaPath.method_preselection);
-        }
-    });
-
-    public isValid = computed<boolean>(() => {
-        return this.form().valid() && this.methodForm()?.formValid();
-    });
 
     private updateData(): void {
         const data = this.data();
