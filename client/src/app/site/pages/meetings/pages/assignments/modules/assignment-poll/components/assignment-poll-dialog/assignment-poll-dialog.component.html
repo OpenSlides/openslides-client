@@ -1,6 +1,6 @@
 <mat-dialog-content>
     <div class="poll-config" [class.hidden]="analogPollFormOpen()">
-        <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled">
+        <os-poll-form [data]="pollData" [isEVotingEnabled]="isEVotingEnabled" [optionAmount]="optionAmount">
             @if (pollData.isCreated === false) {
                 @switch (this.getSelectedMethod()) {
                     @case ('approval') {
@@ -86,7 +86,7 @@
         </div>
 
         <div>
-            @if (isAnalogPoll.value()) {
+            @if (isAnalogPoll()) {
                 @if (analogPollFormOpen()) {
                     <button mat-button (click)="analogPollFormOpen.set(false)">
                         <span>{{ 'Edit Poll' | translate }}</span>

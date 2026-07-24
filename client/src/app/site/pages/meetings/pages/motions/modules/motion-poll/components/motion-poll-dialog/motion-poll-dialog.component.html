@@ -30,7 +30,7 @@
         </div>
 
         <div>
-            @if (isAnalogPoll.value()) {
+            @if (isAnalogPoll()) {
                 @if (analogPollFormOpen()) {
                     <button mat-button (click)="analogPollFormOpen.set(false)">
                         <span>{{ 'Edit Poll' | translate }}</span>

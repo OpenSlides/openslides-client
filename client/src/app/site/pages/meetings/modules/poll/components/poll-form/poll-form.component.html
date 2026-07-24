@@ -1,21 +1,21 @@
 <div class="os-form-card-mobile">
     <!-- Poll Title -->
-    <form [formGroup]="pollForm">
+    <form [formRoot]="form">
         <mat-form-field>
             <mat-label>{{ 'Title' | translate }}</mat-label>
             <h2 class="poll-preview-title">
-                <input formControlName="title" matInput required />
+                <input matInput [formField]="form.title" />
             </h2>
         </mat-form-field>
 
         <div class="poll-preview-meta-info-form">
             @if (!data() || !data().state || data().isCreated) {
-                <div class="info-grid">
-                    <!-- Poll Visibility -->
-                    @if (isEVotingEnabled()) {
+                @if (isEVotingEnabled()) {
+                    <div class="info-grid">
+                        <!-- Poll Visibility -->
                         <mat-form-field>
                             <mat-label>{{ 'Visibility' | translate }}</mat-label>
-                            <mat-select formControlName="visibility" required>
+                            <mat-select [formField]="form.visibility">
                                 @for (entry of visibilityOptions | keyvalue; track entry.value) {
                                     <mat-option [value]="entry.value">
                                         {{ entry.value | translateKey: 'poll_visibility' }}
@@ -27,14 +27,12 @@
                             }
                             <mat-error>{{ 'This field is required.' | translate }}</mat-error>
                         </mat-form-field>
-                    }
 
-                    <!-- Groups entitled to Vote -->
-                    @if (isEVotingSelected) {
+                        <!-- Groups entitled to Vote -->
                         <mat-form-field>
                             <mat-label>{{ 'Entitled to vote' | translate }}</mat-label>
                             <os-repo-search-selector
-                                formControlName="entitled_group_ids"
+                                [formField]="form.entitled_group_ids"
                                 [multiple]="true"
                                 [pipeFn]="groupRepo.getFilterSystemGroupFn()"
                                 [repo]="groupRepo"
@@ -42,13 +40,13 @@
                                 [sortFn]="sortFn"
                             ></os-repo-search-selector>
                         </mat-form-field>
-                    }
-                </div>
+                    </div>
+                }
 
                 <div class="margin-bottom-15">
                     <!-- Live voting -->
-                    @if (isLiveVotingAvailable) {
-                        <mat-checkbox formControlName="live_voting_enabled">
+                    @if (isLiveVotingAvailable()) {
+                        <mat-checkbox [formField]="form.live_voting_enabled">
                             {{ 'Live voting' | translate }}
                         </mat-checkbox>
                         <mat-hint>
@@ -57,17 +55,83 @@
                     }
                 </div>
             }
+
+            <div class="margin-bottom-15">
+                <div class="info-grid">
+                    <mat-form-field>
+                        <mat-label>{{ 'Election method' | translate }}</mat-label>
+                        <mat-select [formField]="form.method_preselection">
+                            @if (optionAmount() === 1 || form.options().value().length === 1) {
+                                <mat-option value="approval.yes_no">{{ 'Yes/No' | translate }}</mat-option>
+                                <mat-option value="approval.yes_no_abstain">
+                                    {{ 'Yes/No/Abstain' | translate }}
+                                </mat-option>
+                            }
+
+                            @if (optionAmount() > 1 || form.options().value().length > 1) {
+                                @if (optionType() === 'text') {
+                                    <mat-option value="selection.yes">{{ 'Yes per option' | translate }}</mat-option>
+                                    <mat-option value="selection.no">{{ 'No per option' | translate }}</mat-option>
+                                    <mat-option value="rating_approval.yes_no">
+                                        {{ 'Yes/No per option' | translate }}
+                                    </mat-option>
+                                    <mat-option value="rating_approval.yes_no_abstain">
+                                        {{ 'Yes/No/Abstain per option' | translate }}
+                                    </mat-option>
+                                    <mat-option value="rating_score">{{ 'Amount per option' | translate }}</mat-option>
+                                } @else {
+                                    <mat-option value="selection.yes">{{ 'Yes per candidate' | translate }}</mat-option>
+                                    <mat-option value="selection.no">{{ 'No per candidate' | translate }}</mat-option>
+                                    <mat-option value="rating_approval.yes_no">
+                                        {{ 'Yes/No per candidate' | translate }}
+                                    </mat-option>
+                                    <mat-option value="rating_approval.yes_no_abstain">
+                                        {{ 'Yes/No/Abstain per candidate' | translate }}
+                                    </mat-option>
+                                    <mat-option value="rating_score">
+                                        {{ 'Amount per candidate' | translate }}
+                                    </mat-option>
+                                }
+                            }
+
+                            @if (optionAmount() > 0 || form.options().value().length > 0) {
+                                <mat-option value="approval.yes_no">{{ 'Yes/No per list' | translate }}</mat-option>
+                                <mat-option value="approval.yes_no_abstain">
+                                    {{ 'Yes/No/Abstain per list' | translate }}
+                                </mat-option>
+                            }
+                        </mat-select>
+                        <mat-error>{{ 'This field is required.' | translate }}</mat-error>
+                    </mat-form-field>
+                    <div></div>
+                </div>
+            </div>
         </div>
     </form>
 
-    <ng-content></ng-content>
+    <div class="method">
+        @switch (this.selectedMethod()) {
+            @case ('approval') {
+                <os-poll-form-approval [data]="data()" [hideMethod]="true" />
+            }
+            @case ('selection') {
+                <os-poll-form-selection [data]="data()" [hideMethod]="true" [optionAmount]="optionAmount()" />
+            }
+            @case ('rating_approval') {
+                <os-poll-form-rating-approval [data]="data()" [hideMethod]="true" [optionAmount]="optionAmount()" />
+            }
+            @case ('rating_score') {
+                <os-poll-form-rating-score [data]="data()" [optionAmount]="optionAmount()" />
+            }
+        }
+    </div>
 
     @if (optionEdit()) {
         <div class="option-section">
             <h4 class="option-section-title">{{ 'Options' | translate }}</h4>
             <os-editable-list
                 placeholder="New option"
-                [items]="pollForm.get('options').value"
+                [items]="form.options().value()"
                 (itemsChange)="onOptionsChange($event)"
             />
         </div>

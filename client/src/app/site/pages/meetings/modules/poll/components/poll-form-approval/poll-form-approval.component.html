@@ -1,5 +1,5 @@
 <form [formGroup]="form">
-    @if (!pollStarted()) {
+    @if (!pollStarted() && !hideMethod()) {
         <div class="margin-bottom-15 info-grid">
             <mat-form-field>
                 <mat-label>{{ 'Election method' | translate }}</mat-label>
@@ -11,16 +11,19 @@
         </div>
     }
 
-    <mat-form-field>
-        <mat-label>{{ '100% base' | translate }}</mat-label>
-        <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
-            @for (option of validPercentBases; track option[0]) {
-                @if (option[0] !== 'yes_no_abstain' || form.get('allow_abstain').getRawValue()) {
-                    <mat-option [value]="option[0]">
-                        {{ option[1] | translate }}
-                    </mat-option>
+    <div class="info-grid">
+        <mat-form-field>
+            <mat-label>{{ '100% base' | translate }}</mat-label>
+            <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
+                @for (option of validPercentBases; track option[0]) {
+                    @if (option[0] !== 'yes_no_abstain' || form.get('allow_abstain').getRawValue()) {
+                        <mat-option [value]="option[0]">
+                            {{ option[1] | translate }}
+                        </mat-option>
+                    }
                 }
-            }
-        </mat-select>
-    </mat-form-field>
+            </mat-select>
+        </mat-form-field>
+        <div></div>
+    </div>
 </form>

@@ -1,11 +1,14 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, effect, inject, input, OnInit, ViewEncapsulation } from '@angular/core';
-import { AbstractControl, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, computed, effect, inject, input, signal, ViewEncapsulation } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { Ids } from '@app/domain/definitions/key-types';
 import { PollVisibility } from '@app/domain/models/poll';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from '@app/site/base/base.component';
@@ -14,20 +17,40 @@ import { EditableListComponent } from '@app/ui/modules/editable-list';
 import { SearchSelectorModule } from '@app/ui/modules/search-selector';
 import { PipesModule } from '@app/ui/pipes';
 import { TranslatePipe } from '@ngx-translate/core';
-import { combineLatest, startWith } from 'rxjs';
 
 import { GroupControllerService, ViewGroup } from '../../../../pages/participants';
 import { ViewPoll } from '../../../../pages/polls';
+import { PollFormApprovalComponent } from '../poll-form-approval/poll-form-approval.component';
+import { PollFormRatingApprovalComponent } from '../poll-form-rating-approval/poll-form-rating-approval.component';
+import { PollFormRatingScoreComponent } from '../poll-form-rating-score/poll-form-rating-score.component';
+import { PollFormSelectionComponent } from '../poll-form-selection/poll-form-selection.component';
 import { VotingPrivacyWarningDialogComponent } from '../voting-privacy-warning/voting-privacy-warning-dialog.component';
+
+interface PollForm {
+    title: string;
+    visibility: PollVisibility;
+    entitled_group_ids: Ids;
+    live_voting_enabled: boolean;
+    option_type: 'meeting_user' | 'text';
+    options: any[];
+    method_preselection: string | null;
+}
 
 @Component({
     selector: `os-poll-form`,
     templateUrl: `./poll-form.component.html`,
     styleUrls: [`./poll-form.component.scss`],
     imports: [
+        PollFormApprovalComponent,
+        PollFormSelectionComponent,
+        PollFormRatingApprovalComponent,
+        PollFormRatingScoreComponent,
         EditableListComponent,
         TranslatePipe,
+        FormField,
+        FormRoot,
         MatInputModule,
+        MatIconModule,
         MatFormFieldModule,
         MatCheckboxModule,
         MatSelectModule,
@@ -39,13 +62,14 @@ import { VotingPrivacyWarningDialogComponent } from '../voting-privacy-warning/v
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class PollFormComponent extends BaseComponent implements OnInit {
-    public pollForm: UntypedFormGroup;
-
+export class PollFormComponent extends BaseComponent {
     public readonly visibilityOptions = PollVisibility;
 
     public showNonNominalWarning = false;
 
+    public methods = input<string[]>([`selection`, `rating_approval`, `rating_score`, `approval`, `list`]);
+
+    public optionAmount = input<number>(0);
     public optionType = input<'meeting_user' | 'text'>('text');
     public optionEdit = input<boolean>(false);
     public isEVotingEnabled = input.required<boolean>();
@@ -58,57 +82,47 @@ export class PollFormComponent extends BaseComponent implements OnInit {
         return !this.data()?.state || this.data().isCreated;
     }
 
-    public get isOpenVotingSelected(): boolean {
-        return this.pollTypeControl?.value === PollVisibility.Open || false;
-    }
+    public selectedMethod = computed<string | null>(() => {
+        const preselection = this.form.method_preselection().value();
+        if (!preselection) {
+            return null;
+        }
 
-    public get isNamedVotingSelected(): boolean {
-        return this.pollTypeControl?.value === PollVisibility.Named || false;
-    }
+        return this.form.method_preselection().value().split(`.`)[0];
+    });
 
-    public get isEVotingSelected(): boolean {
-        return this.isEVotingEnabled() && this.pollTypeControl?.value !== PollVisibility.Manually;
-    }
+    public isOpenVotingSelected = computed(() => {
+        return this.form.visibility().value() === PollVisibility.Open || false;
+    });
 
-    public get isLiveVotingAvailable(): boolean {
-        return this.isEVotingSelected && (this.isNamedVotingSelected || this.isOpenVotingSelected);
-    }
+    public isNamedVotingSelected = computed(() => {
+        return this.form.visibility().value() === PollVisibility.Named || false;
+    });
 
-    private get pollTypeControl(): AbstractControl {
-        return this.pollForm.get(`visibility`);
-    }
+    public isEVotingSelected = computed(() => {
+        return this.isEVotingEnabled() && this.form.visibility().value() !== PollVisibility.Manually;
+    });
 
-    private get liveVotingControl(): AbstractControl {
-        return this.pollForm.get(`live_voting_enabled`);
-    }
+    public isLiveVotingAvailable = computed(() => {
+        return this.isEVotingSelected() && (this.isNamedVotingSelected() || this.isOpenVotingSelected());
+    });
 
-    private fb = inject(UntypedFormBuilder);
     public groupRepo = inject(GroupControllerService);
     private dialog = inject(MatDialog);
 
     public constructor() {
         super();
-        this.initContentForm();
 
         effect(() => {
-            this.updateData();
+            this.updateLiveVotingEnabled();
+            this.setWarning();
         });
-    }
 
-    public ngOnInit(): void {
-        this.subscriptions.push(
-            combineLatest([
-                this.pollForm.valueChanges.pipe(startWith(``)),
-                this.pollTypeControl.valueChanges.pipe(startWith(``))
-            ]).subscribe(() => {
-                this.updateLiveVotingEnabled();
-                this.setWarning();
-            })
-        );
+        effect(this.updateData.bind(this));
     }
 
     public getValues(): Partial<{ [place in keyof ViewPoll]: any }> {
-        return { ...this.data, ...this.serializeForm(this.pollForm) };
+        return { ...this.data, ...this.serializeForm() };
     }
 
     public openVotingWarning(event: MouseEvent): void {
@@ -117,46 +131,52 @@ export class PollFormComponent extends BaseComponent implements OnInit {
     }
 
     public onOptionsChange(items: string[]): void {
-        this.pollForm.get('options').setValue(items);
+        this.form.options().value.set(items);
     }
 
     private updateLiveVotingEnabled(): void {
-        if (!this.isLiveVotingAvailable) {
-            this.liveVotingControl.setValue(false, { emitEvent: false });
+        if (!this.isLiveVotingAvailable()) {
+            this.form.live_voting_enabled().value.set(false);
         }
     }
 
     private setWarning(): void {
-        this.showNonNominalWarning = this.pollTypeControl.value === PollVisibility.Secret;
+        this.showNonNominalWarning = this.pollModel().visibility === PollVisibility.Secret;
     }
 
-    private serializeForm(formGroup: UntypedFormGroup): Partial<ViewPoll> {
+    private serializeForm(): Partial<ViewPoll> {
         // getRawValue() includes disabled controls
-        return { ...formGroup.getRawValue() };
+        return { ...this.pollModel() };
     }
 
-    private initContentForm(): void {
-        this.pollForm = this.fb.group({
-            title: [``, Validators.required],
-            visibility: [PollVisibility.Open, Validators.required],
-            entitled_group_ids: [],
-            live_voting_enabled: [false],
-            option_type: ['text'],
-            options: [[]]
-        });
-    }
+    private pollModel = signal<PollForm>({
+        title: ``,
+        visibility: PollVisibility.Open,
+        entitled_group_ids: [],
+        live_voting_enabled: false,
+        option_type: 'text',
+        options: [],
+        method_preselection: null
+    });
+
+    public form = form(this.pollModel, schemaPath => {
+        required(schemaPath.title);
+        required(schemaPath.visibility);
+    });
 
     private updateData(): void {
         const data = this.data();
-        if (data && this.pollForm) {
+        if (data && this.form) {
             const patch: Record<string, any> = {};
 
-            if (data.entitled_group_ids !== undefined) patch['entitled_group_ids'] = data.entitled_group_ids;
-            if (data.live_voting_enabled !== undefined) patch['live_voting_enabled'] = !!data.live_voting_enabled;
-            if (data.title !== undefined) patch['title'] = data.title;
-            if (data.visibility !== undefined) patch['visibility'] = data.visibility;
+            if (data.entitled_group_ids !== undefined)
+                this.form['entitled_group_ids']().value.set(data.entitled_group_ids);
+            if (data.live_voting_enabled !== undefined)
+                this.form['live_voting_enabled']().value.set(!!data.live_voting_enabled);
+            if (data.title !== undefined) this.form['title']().value.set(data.title);
+            if (data.visibility !== undefined) this.form['visibility']().value.set(data.visibility);
             if (data.options !== undefined && !data.options.some(option => option.meeting_user_id))
-                patch['options'] = data.options.map(option => option.text);
+                this.form['options']().value.set(data.options.map(option => option.text));
             if (data.config?.allow_abstain !== undefined) patch['allow_abstain'] = data.config.allow_abstain;
             if (data.config?.allow_nota !== undefined) patch['allow_nota'] = data.config.allow_nota;
             if (data.config?.strike_out !== undefined) patch['strike_out'] = data.config.strike_out;
@@ -164,7 +184,8 @@ export class PollFormComponent extends BaseComponent implements OnInit {
             if (data.config?.onehundred_percent_base !== undefined)
                 patch['onehundred_percent_base'] = data.config.onehundred_percent_base;
 
-            this.pollForm.patchValue(patch);
+            // TODO: Patch form
+            // this.pollForm.patchValue(patch);
         }
     }
 }
