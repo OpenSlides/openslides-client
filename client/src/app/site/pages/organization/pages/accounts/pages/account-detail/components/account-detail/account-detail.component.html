@@ -43,26 +43,24 @@
     <ng-template #editView let-form="form">
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
-            @if (canManageHomeCommittee) {
-                <!-- Home committee -->
-                <div class="home-committee-area">
-                    <mat-form-field class="form50 force-min-width">
-                        <mat-label>{{ 'Home committee' | translate }}</mat-label>
-                        <os-repo-search-selector
-                            formControlName="home_committee_id"
-                            [includeNone]="true"
-                            [repo]="committeeController"
-                            [sortService]="committeeSortService"
-                            [subscriptionConfig]="committeeSubscriptionConfig"
-                            [transformPropagateFn]="getTransformPropagateFn()"
-                            [transformSetFn]="getTransformSetHomeCommitteeFn()"
-                        ></os-repo-search-selector>
-                    </mat-form-field>
-                    <mat-checkbox class="form50 external-margin-top force-min-width" formControlName="external">
-                        {{ 'external' | translate }}
-                    </mat-checkbox>
-                </div>
-            }
+            <!-- Home committee -->
+            <div class="home-committee-area">
+                <mat-form-field class="form50 force-min-width">
+                    <mat-label>{{ 'Home committee' | translate }}</mat-label>
+                    <os-repo-search-selector
+                        formControlName="home_committee_id"
+                        [includeNone]="true"
+                        [repo]="committeeController"
+                        [sortService]="committeeSortService"
+                        [subscriptionConfig]="committeeSubscriptionConfig"
+                        [transformPropagateFn]="getTransformPropagateFn()"
+                        [transformSetFn]="getTransformSetHomeCommitteeFn()"
+                    ></os-repo-search-selector>
+                </mat-form-field>
+                <mat-checkbox class="form50 external-margin-top force-min-width" formControlName="external">
+                    {{ 'external' | translate }}
+                </mat-checkbox>
+            </div>
             <!-- Committee admin -->
             <div *osOmlPerms="OML.can_manage_organization">
                 <mat-form-field class="form100 force-min-width">
