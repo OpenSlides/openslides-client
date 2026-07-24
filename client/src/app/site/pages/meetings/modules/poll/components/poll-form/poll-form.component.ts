@@ -5,6 +5,7 @@ import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Ids } from '@app/domain/definitions/key-types';
@@ -49,6 +50,7 @@ interface PollForm {
         FormField,
         FormRoot,
         MatInputModule,
+        MatIconModule,
         MatFormFieldModule,
         MatCheckboxModule,
         MatSelectModule,
