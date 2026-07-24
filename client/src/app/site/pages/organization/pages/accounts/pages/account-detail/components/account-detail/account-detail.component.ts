@@ -1,5 +1,5 @@
 import { KeyValue } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
@@ -12,7 +12,6 @@ import { OpenSlidesRouterService } from '@app/site/services/openslides-router.se
 import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
-import { TranslateService } from '@ngx-translate/core';
 
 import { ViewCommittee } from '../../../../../committees';
 import { getCommitteeListMinimalSubscriptionConfig } from '../../../../../committees/committees.subscription';
@@ -147,20 +146,15 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     private _tableData: ParticipationTableData = {};
     private _numCommittees = 0;
 
-    public constructor(
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        private osRouter: OpenSlidesRouterService,
-        private operator: OperatorService,
-        public readonly committeeController: CommitteeControllerService,
-        public readonly committeeSortService: CommitteeSortService,
-        private accountController: AccountControllerService,
-        private userController: UserControllerService,
-        private promptService: PromptService,
-        private scopePresenter: GetUserScopePresenterService
-    ) {
-        super();
-    }
+    public readonly committeeController = inject(CommitteeControllerService);
+    public readonly committeeSortService = inject(CommitteeSortService);
+    private route = inject(ActivatedRoute);
+    private osRouter = inject(OpenSlidesRouterService);
+    private operator = inject(OperatorService);
+    private accountController = inject(AccountControllerService);
+    private userController = inject(UserControllerService);
+    private promptService = inject(PromptService);
+    private scopePresenter = inject(GetUserScopePresenterService);
 
     public ngOnInit(): void {
         this.getUserByUrl();
