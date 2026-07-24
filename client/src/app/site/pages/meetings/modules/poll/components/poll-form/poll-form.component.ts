@@ -198,7 +198,7 @@ export class PollFormComponent extends BaseComponent {
     });
 
     public isValid = computed<boolean>(() => {
-        return this.form().valid() && this.methodForm()?.form.valid;
+        return this.form().valid() && this.methodForm()?.formValid();
     });
 
     private updateData(): void {

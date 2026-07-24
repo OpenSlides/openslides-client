@@ -1,4 +1,5 @@
-import { Component, computed, effect, inject, input } from '@angular/core';
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { PollState } from '@app/domain/models/poll';
 
@@ -10,16 +11,19 @@ export abstract class PollFormBaseComponent {
 
     public data = input.required<Partial<ViewPoll>>();
 
+    public formValid = signal<boolean>(false);
+
     public pollStarted = computed<boolean>(() => {
         return this.data().state && this.data().state !== PollState.Created;
     });
 
-    protected fb = inject(UntypedFormBuilder);
+    protected readonly fb = inject(UntypedFormBuilder);
 
     public constructor() {
         this.initForm();
 
         effect(this.onDataUpdated.bind(this));
+        this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.formValid.set(this.form.valid));
     }
 
     protected abstract initForm(): void;
