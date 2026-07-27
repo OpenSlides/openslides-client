@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
@@ -21,7 +21,6 @@ import { TimeZoneService } from '@app/site/services/time-zone.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { RoutingStateService } from '@app/ui/modules/head-bar/services/routing-state.service';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
@@ -112,21 +111,20 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         return this.meetingForm?.get(`daterange`);
     }
 
-    public constructor(
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        private formBuilder: UntypedFormBuilder,
-        private meetingRepo: MeetingControllerService,
-        private committeeRepo: CommitteeControllerService,
-        public orgaTagRepo: OrganizationTagControllerService,
-        private orgaSettings: OrganizationSettingsService,
-        private operator: OperatorService,
-        private userRepo: UserControllerService,
-        private openslidesRouter: OpenSlidesRouterService,
-        private orga: OrganizationService,
-        private routingState: RoutingStateService,
-        private timeZone: TimeZoneService
-    ) {
+    public orgaTagRepo = inject(OrganizationTagControllerService);
+    private route = inject(ActivatedRoute);
+    private formBuilder = inject(UntypedFormBuilder);
+    private meetingRepo = inject(MeetingControllerService);
+    private committeeRepo = inject(CommitteeControllerService);
+    private orgaSettings = inject(OrganizationSettingsService);
+    private operator = inject(OperatorService);
+    private userRepo = inject(UserControllerService);
+    private openslidesRouter = inject(OpenSlidesRouterService);
+    private orga = inject(OrganizationService);
+    private routingState = inject(RoutingStateService);
+    private timeZone = inject(TimeZoneService);
+
+    public constructor() {
         super();
         this.checkCreateView();
         this.createForm();
@@ -139,8 +137,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             super.setTitle(EDIT_MEETING_LABEL);
             this.meetingForm.get(`language`)?.disable();
         }
-
-        this.availableUsers = userRepo.getViewModelListObservable();
+        this.availableMeetingsObservable = this.orga?.organizationObservable.pipe(
+            map(organization => {
+                return [...organization.template_meetings.sort(this.sortFn)];
+            })
+        );
+        this.availableUsers = this.userRepo.getViewModelListObservable();
     }
 
     public ngOnInit(): void {
@@ -161,11 +163,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
                 .subscribe((value: boolean) => (this.requireDuplicateFrom = value))
         );
 
-        this.availableMeetingsObservable = this.orga.organizationObservable.pipe(
-            map(organization => {
-                return [...organization.template_meetings.sort(this.sortFn)];
-            })
-        );
         this.availableAdmins = this.filterAccountsForCommitteeAdmins(this.userRepo.getViewModelList());
     }
 
@@ -453,13 +450,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             this.router.navigate([`meetings`]);
         } else {
             this.router.navigate([`committees`, this.committeeId]);
-        }
-    }
-
-    private makeDatesValid(endDateChanged: boolean): void {
-        if (!this.isTimeValid) {
-            const patchValue = endDateChanged ? this.daterangeControl?.value.end : this.daterangeControl?.value.start;
-            this.daterangeControl?.patchValue({ start: patchValue, end: patchValue });
         }
     }
 
