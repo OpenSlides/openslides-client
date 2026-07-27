@@ -61,6 +61,8 @@
                 class="action-bar-shadow background-default"
                 mat-mini-fab
                 matTooltip="{{ 'Give applause' | translate }}"
+                [attr.aria-hidden]="false"
+                [attr.aria-label]="('Amount of applause' | translate) + ': ' + (applauseLevel | async)"
                 [disabled]="sendsApplause | async"
                 [matBadge]="applauseLevel | async"
                 [matBadgeHidden]="(showApplauseLevel | async) === false"
