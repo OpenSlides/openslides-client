@@ -42,12 +42,12 @@
     @if (isOrgaManager) {
         <div *osScrollingTableCell="'edit'; row as orgaTag; config: { width: 40 }" class="cell-slot fill">
             <button mat-icon-button (click)="editOrganizationTag(orgaTag)">
-                <mat-icon>edit</mat-icon>
+                <mat-icon [matTooltip]="'Edit' | translate">edit</mat-icon>
             </button>
         </div>
         <div *osScrollingTableCell="'delete'; row as orgaTag; config: { width: 40 }" class="cell-slot fill">
             <button color="warn" mat-icon-button (click)="deleteOrganizationTags(orgaTag)">
-                <mat-icon>delete</mat-icon>
+                <mat-icon [matTooltip]="'Delete' | translate">delete</mat-icon>
             </button>
         </div>
     }
