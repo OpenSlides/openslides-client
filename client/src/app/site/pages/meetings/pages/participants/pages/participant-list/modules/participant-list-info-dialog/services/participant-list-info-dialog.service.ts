@@ -1,7 +1,6 @@
 import { inject, Service } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { Id } from '@app/domain/definitions/key-types';
-import { Identifiable } from '@app/domain/interfaces';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';

@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
 import { allAvailableTranslations, availableTranslations } from '@app/domain/definitions/languages';
 import { getOmlVerboseName } from '@app/domain/definitions/organization-permission';
+import { Permission } from '@app/domain/definitions/permission';
 import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
@@ -19,7 +20,6 @@ import { ChessDialogComponent } from '@app/ui/modules/sidenav/modules/easter-egg
 import { ChessChallengeService } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { Permission } from '@app/domain/definitions/permission';
 
 import { AccountDialogMainComponent } from '../account-dialog-main/account-dialog-main.component';
 import { ParticipantListInfoDialogService } from '@app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog/services/participant-list-info-dialog.service';
