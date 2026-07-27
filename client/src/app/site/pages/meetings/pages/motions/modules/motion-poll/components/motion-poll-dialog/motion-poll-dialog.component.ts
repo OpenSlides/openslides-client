@@ -34,7 +34,7 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
     }
 
     public approvalFormValid = computed(() => {
-        return this.approvalForm().form.valid;
+        return this.approvalForm().formValid();
     });
 
     public get approvalFormValue(): Partial<PollConfigApproval> {
