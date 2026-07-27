@@ -95,7 +95,7 @@ export class PollFormComponent extends BaseComponent {
         option_type: 'text',
         options: [],
         method: null,
-        method_preselection: `selection.yes`
+        method_preselection: ``
     });
 
     public form = form(this.pollModel, schemaPath => {
@@ -175,6 +175,7 @@ export class PollFormComponent extends BaseComponent {
         });
 
         effect(this.updateData.bind(this));
+        effect(this.updateConfigData.bind(this));
         effect(this.changeMethod.bind(this));
 
         this.allowCumulative.set(this.meetingSettingsService.instant(`poll_enable_max_votes_per_option`));
@@ -226,8 +227,6 @@ export class PollFormComponent extends BaseComponent {
     private updateData(): void {
         const data = this.data();
         if (data && this.form) {
-            const patch: Record<string, any> = {};
-
             if (data.entitled_group_ids !== undefined)
                 this.form['entitled_group_ids']().value.set(data.entitled_group_ids);
             if (data.live_voting_enabled !== undefined)
@@ -236,12 +235,34 @@ export class PollFormComponent extends BaseComponent {
             if (data.visibility !== undefined) this.form['visibility']().value.set(data.visibility);
             if (data.options !== undefined && !data.options.some(option => option.meeting_user_id))
                 this.form['options']().value.set(data.options.map(option => option.text));
-            if (data.config?.allow_abstain !== undefined) patch['allow_abstain'] = data.config.allow_abstain;
-            if (data.config?.allow_nota !== undefined) patch['allow_nota'] = data.config.allow_nota;
-            if (data.config?.strike_out !== undefined) patch['strike_out'] = data.config.strike_out;
-            if (data.config?.display_chart !== undefined) patch['display_chart'] = data.config.display_chart;
-            if (data.config?.onehundred_percent_base !== undefined)
-                patch['onehundred_percent_base'] = data.config.onehundred_percent_base;
+            if (data.config?.method) {
+                let preselection = data.config.method;
+                if (preselection === `approval` || preselection === `rating_approval`) {
+                    preselection += data.config.allow_abstain ? `.yes_no_abstain` : `.yes_no`;
+                } else if (preselection == `selection`) {
+                    preselection += data.config.strike_out ? `.no` : `.yes`;
+                }
+
+                this.form['method_preselection']().value.set(preselection);
+            }
+        }
+    }
+
+    private updateConfigData(): void {
+        const configForm = this.methodForm();
+        if (!configForm) {
+            return;
+        }
+
+        const data = this.data();
+        if (data && this.form) {
+            for (const field of Object.keys(data.config)) {
+                const ctrl = this.methodForm().form.get(field);
+                const val = data.config[field];
+                if (ctrl && val !== undefined) {
+                    ctrl.patchValue(val);
+                }
+            }
         }
     }
 

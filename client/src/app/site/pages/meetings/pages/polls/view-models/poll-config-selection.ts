@@ -11,6 +11,7 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
     }
 
     public static COLLECTION = PollConfigSelection.COLLECTION;
+    public override readonly method: string = `selection`;
 
     public get invalidBallots(): number | null {
         return this.parsedResult()?.invalid ?? null;

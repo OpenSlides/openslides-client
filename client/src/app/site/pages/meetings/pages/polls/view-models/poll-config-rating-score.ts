@@ -11,6 +11,7 @@ export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfi
     }
 
     public static COLLECTION = PollConfigRatingScore.COLLECTION;
+    public override readonly method: string = `rating_score`;
 
     public get invalidBallots(): number | null {
         return this.parsedResult()?.invalid ?? null;
