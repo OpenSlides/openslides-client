@@ -22,5 +22,3 @@ export class HistoryEntry extends BaseModel {
         `meeting_id`
     ];
 }
-
-export interface HistoryEntry {}

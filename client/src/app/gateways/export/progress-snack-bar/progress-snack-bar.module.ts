@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 
 import { ProgressSnackBarComponent } from './components/progress-snack-bar/progress-snack-bar.component';
 import { ProgressSnackBarServiceModule } from './services/progress-snack-bar-service.module';

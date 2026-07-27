@@ -61,11 +61,11 @@
                 [canBeEdited]="false"
                 [chipValue]="recommendationLabel"
                 [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
-                [internal]="motion?.state?.is_internal"
+                [internal]="$safeNavigationMigration(motion?.state?.is_internal)"
                 [listValueTransformFns]="[motionTransformFn]"
-                [searchFieldInput]="motion?.recommendation_extension"
+                [searchFieldInput]="$safeNavigationMigration(motion?.recommendation_extension)"
                 [searchLists]="searchLists"
-                [title]="motion.meeting?.motions_recommendations_by"
+                [title]="$safeNavigationMigration(motion.meeting?.motions_recommendations_by)"
                 (succeeded)="setRecommendationExtension($event)"
             ></os-motion-extension-field>
             <!-- recommendation referenced motions -->

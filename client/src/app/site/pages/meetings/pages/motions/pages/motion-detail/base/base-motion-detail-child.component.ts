@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Directive, inject, Input } from '@angular/core';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, Observable, Subscription } from 'rxjs';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';

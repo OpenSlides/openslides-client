@@ -5,8 +5,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { SearchSelectorModule } from '@app/ui/modules/search-selector';
 
 import { ChatGroupDialogComponent } from './components/chat-group-dialog/chat-group-dialog.component';
 

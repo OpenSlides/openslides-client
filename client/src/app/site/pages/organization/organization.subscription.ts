@@ -1,11 +1,11 @@
-import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
+import { FULL_FIELDSET } from '@app/domain/fieldsets/misc';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
 import {
     MEETING_CREATE_SUBSCRIPTION,
     MEETING_LIST_SUBSCRIPTION
-} from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
+} from '@app/site/pages/meetings/view-models/view-meeting';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
 
 import { DEFAULT_FIELDSET } from '../../services/model-request-builder';
 

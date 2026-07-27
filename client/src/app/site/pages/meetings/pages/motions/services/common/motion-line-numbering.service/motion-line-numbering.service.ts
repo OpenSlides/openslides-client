@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 
 import { DiffLinesInParagraph } from '../../../definitions';
 import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../../modules';
@@ -38,17 +38,13 @@ export interface ParagraphToChoose {
     lineTo: number;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionLineNumberingService {
     private amendmentChangeRecoMap: Record<string, ViewMotionChangeRecommendation[]> = {};
     private amendmentChangeRecoSubscriptionMap: Record<string, Subscription> = {};
 
-    public constructor(
-        private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private translate: TranslateService
-    ) {}
+    private changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    private translate = inject(TranslateService);
 
     /**
      * Merges amendments and change recommendations and sorts them by the line numbers.
@@ -202,30 +198,35 @@ export class MotionLineNumberingService {
                 return `<em style="color: red; font-weight: bold;">` + msg + `</em>`;
             }
 
+            const paragraphLineRange: LineNumberRange = motion.services().ln.getLineNumberRange(paragraph);
+            const hasChangeReco = changes.some(
+                c => c.line_from >= paragraphLineRange.from! && c.line_from <= paragraphLineRange.to!
+            );
             if (typeof amendment.amendment_paragraph_text(paraNo) === `string`) {
                 // Add line numbers to newText, relative to the baseParagraph, by creating a diff
                 // to the line numbered base version any applying it right away
                 const diff = motion.services().diff.diff(paragraph, amendment.amendment_paragraph_text(paraNo)!);
-                paragraph = motion.services().diff.diffHtmlToFinalText(diff);
+                paragraph = motion.services().diff.diffHtmlToFinalText(diff, hasChangeReco);
                 paragraphHasChanges = true;
             }
 
             const affected: LineNumberRange = motion.services().ln.getLineNumberRange(paragraph);
+            if (hasChangeReco) {
+                changes.forEach((change: ViewMotionChangeRecommendation) => {
+                    // Hint: this assumes that change recommendations only affect one specific paragraph, not multiple
+                    if (change.line_from >= affected.from! && change.line_from <= affected.to!) {
+                        paragraph = motion
+                            .services()
+                            .diff.replaceLines(paragraph, change.text, change.line_from, change.line_to);
 
-            changes.forEach((change: ViewMotionChangeRecommendation) => {
-                // Hint: this assumes that change recommendations only affect one specific paragraph, not multiple
-                if (change.line_from >= affected.from! && change.line_from <= affected.to!) {
-                    paragraph = motion
-                        .services()
-                        .diff.replaceLines(paragraph, change.text, change.line_from, change.line_to);
+                        // Reapply relative line numbers
+                        const diff = motion.services().diff.diff(baseParagraphs[paraNo], paragraph);
+                        paragraph = motion.services().diff.diffHtmlToFinalText(diff, true);
 
-                    // Reapply relative line numbers
-                    const diff = motion.services().diff.diff(baseParagraphs[paraNo], paragraph);
-                    paragraph = motion.services().diff.diffHtmlToFinalText(diff);
-
-                    paragraphHasChanges = true;
-                }
-            });
+                        paragraphHasChanges = true;
+                    }
+                });
+            }
 
             if (paragraphHasChanges || includeUnchanged) {
                 return paragraph;
@@ -418,7 +419,7 @@ export class MotionLineNumberingService {
                     .diff.formatDiff(
                         motion.services().diff.extractRangeByLineNumbers(diff, affectedLines.from, affectedLines.to)
                     );
-                const affectedConsolidated = motion.services().diff.diffHtmlToFinalText(affectedDiff);
+                const affectedConsolidated = motion.services().diff.diffHtmlToFinalText(affectedDiff, true);
 
                 return new ViewMotionAmendedParagraph(amendment, paragraphNumber, affectedConsolidated, affectedLines);
             })
@@ -461,7 +462,7 @@ export class MotionLineNumberingService {
             if (withDiff) {
                 return diff;
             } else {
-                return motion.services().diff.diffHtmlToFinalText(diff);
+                return motion.services().diff.diffHtmlToFinalText(diff, true);
             }
         });
     }

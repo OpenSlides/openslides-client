@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { InteractionService } from '../../../../../interaction/services/interaction.service';
 import { ViewTag } from '../../../../modules';
@@ -15,6 +15,7 @@ import { TagControllerService } from '../../../../modules/tags/services';
     selector: `os-tag-list`,
     templateUrl: `./tag-list.component.html`,
     styleUrls: [`./tag-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TagListComponent extends BaseMeetingListViewComponent<ViewTag> implements OnInit {

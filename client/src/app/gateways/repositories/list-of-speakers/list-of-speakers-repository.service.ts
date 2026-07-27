@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { hasListOfSpeakers, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
+import { ListOfSpeakers } from '@app/domain/models/list-of-speakers/list-of-speakers';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { hasListOfSpeakers, ViewListOfSpeakers } from '@app/site/pages/meetings/pages/agenda';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';

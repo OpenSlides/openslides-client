@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { Id } from '../domain/definitions/key-types';
 import { ViewMediafile } from '../site/pages/meetings/pages/mediafiles';
@@ -9,11 +9,9 @@ type MediaAdapterActionParameters = ({ action: `set`; mediafile: ViewMediafile }
     place: string;
 };
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingMediaAdapterService {
-    public constructor(private actionService: ActionService) {}
+    private actionService = inject(ActionService);
 
     public setLogo(place: string, meetingId: Id, mediafile: ViewMediafile): Promise<void> {
         return this.performAction(meetingId, { action: `set`, type: `logo`, place, mediafile });

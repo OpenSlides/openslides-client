@@ -8,7 +8,7 @@
                 field="submitters"
                 secondSelectorLabel="{{ 'Committees' | translate }}"
                 title="{{ 'Submitters' | translate }}"
-                [additionalInputValue]="motion?.additional_submitter"
+                [additionalInputValue]="$safeNavigationMigration(motion?.additional_submitter)"
                 [loadSecondSelectorValues]="loadForwardingCommittees"
                 [motion]="motion"
                 [repo]="motionSubmitterRepo"
@@ -52,7 +52,7 @@
             [chipValue]="stateLabel"
             [classes]="motion.stateCssColor"
             [hasExtension]="!!motionState && motionState.show_state_extension_field"
-            [searchFieldInput]="motion?.state_extension"
+            [searchFieldInput]="$safeNavigationMigration(motion?.state_extension)"
             (succeeded)="setStateExtension($event)"
         >
             <span class="trigger-menu">
@@ -144,9 +144,9 @@
             [canBeEdited]="perms.isAllowed('change_metadata', motion)"
             [chipValue]="recommendationLabel"
             [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
-            [internal]="motion?.state?.is_internal"
+            [internal]="$safeNavigationMigration(motion?.state?.is_internal)"
             [listValueTransformFns]="[motionTransformFn]"
-            [searchFieldInput]="motion?.recommendation_extension"
+            [searchFieldInput]="$safeNavigationMigration(motion?.recommendation_extension)"
             [searchLists]="searchLists"
             (succeeded)="setRecommendationExtension($event)"
         >
@@ -211,7 +211,7 @@
 @if (motion?.identical_motions?.length) {
     <div>
         <h4>{{ 'Identical with' | translate }}</h4>
-        <os-comma-separated-listing [list]="motion?.identical_motions" [useMidpoint]="true">
+        <os-comma-separated-listing [list]="$safeNavigationMigration(motion?.identical_motions)" [useMidpoint]="true">
             <ng-template let-view>
                 <a [routerLink]="['/', activeMeetingId, 'motions', view.sequential_number]" [state]="{ back: 'true' }">
                     <span>{{ view.numberOrTitle }}</span>

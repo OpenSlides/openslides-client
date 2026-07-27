@@ -4,8 +4,8 @@ import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { DirectivesModule } from 'src/app/ui/directives';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { DirectivesModule } from '@app/ui/directives';
 
 import { BannerComponent } from './components/banner/banner.component';
 import { SiteWrapperComponent } from './components/site-wrapper/site-wrapper.component';

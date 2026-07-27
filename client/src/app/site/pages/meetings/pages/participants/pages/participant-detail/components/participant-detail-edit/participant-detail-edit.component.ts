@@ -1,27 +1,27 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { UserDetailViewComponent } from 'src/app/site/modules/user-components';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
+import { Id } from '@app/domain/definitions/key-types';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
+import { Permission } from '@app/domain/definitions/permission';
+import { UserDetailViewComponent } from '@app/site/modules/user-components';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
 import {
     MEETING_RELATED_FORM_CONTROLS,
     ParticipantControllerService
-} from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { PERSONAL_FORM_CONTROLS, ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { getCommitteeListMinimalSubscriptionConfig } from 'src/app/site/pages/organization/pages/committees/committees.subscription';
-import { CommitteeSortService } from 'src/app/site/pages/organization/pages/committees/pages/committee-list/services/committee-list-sort.service/committee-sort.service';
-import { CommitteeControllerService } from 'src/app/site/pages/organization/pages/committees/services/committee-controller.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserService } from 'src/app/site/services/user.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+} from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { PERSONAL_FORM_CONTROLS, ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { getCommitteeListMinimalSubscriptionConfig } from '@app/site/pages/organization/pages/committees/committees.subscription';
+import { CommitteeSortService } from '@app/site/pages/organization/pages/committees/pages/committee-list/services/committee-list-sort.service/committee-sort.service';
+import { CommitteeControllerService } from '@app/site/pages/organization/pages/committees/services/committee-controller.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { UserService } from '@app/site/services/user.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { _ } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { combineLatest, Observable } from 'rxjs';
 
 import { GroupControllerService } from '../../../../modules';
 import {

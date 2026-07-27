@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { ViewMotionBlock } from '@app/site/pages/meetings/pages/motions';
 import { map, Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ViewMotionBlock } from 'src/app/site/pages/meetings/pages/motions';
 
 import { MotionBlock } from '../../../../domain/models/motions/motion-block';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
@@ -9,17 +9,14 @@ import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../ba
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionBlockAction } from './motion-block.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewMotionBlock,
     MotionBlock
 > {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
+        const agendaItemRepo = inject(AgendaItemRepositoryService);
         super(repositoryServiceCollector, MotionBlock, agendaItemRepo);
         this.initSorting();
     }

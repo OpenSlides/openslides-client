@@ -24,5 +24,3 @@ export class HistoryPosition extends BaseModel {
         `entry_ids`
     ];
 }
-
-export interface HistoryPosition {}

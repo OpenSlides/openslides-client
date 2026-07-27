@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ProjectorCountdown } from '@app/domain/models/projector/projector-countdown';
+import { ProjectionDialogService } from '@app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
+import { ViewProjector, ViewProjectorCountdown } from '@app/site/pages/meetings/pages/projectors';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { DurationService } from '@app/site/services/duration.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
-import { ProjectionDialogService } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projection-dialog/services/projection-dialog.service';
-import { ViewProjector, ViewProjectorCountdown } from 'src/app/site/pages/meetings/pages/projectors';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog/services/projector-countdown-dialog.service';
 import { ProjectorCountdownControllerService } from '../../services/projector-countdown-controller.service';
@@ -14,6 +14,7 @@ import { ProjectorCountdownControllerService } from '../../services/projector-co
     selector: `os-countdown-controls`,
     templateUrl: `./countdown-controls.component.html`,
     styleUrls: [`./countdown-controls.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CountdownControlsComponent {

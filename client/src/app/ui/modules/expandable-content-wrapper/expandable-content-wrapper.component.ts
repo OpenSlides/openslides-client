@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from '@angular/core';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 
 import { DirectivesModule } from '../../directives';
 
@@ -72,7 +72,9 @@ export class ExpandableContentWrapperComponent {
 
     public _biggerHeight = false;
 
-    public constructor(private cd: ChangeDetectorRef) {
+    private cd = inject(ChangeDetectorRef);
+
+    public constructor() {
         this.isCollapsed = false;
         this.update();
     }

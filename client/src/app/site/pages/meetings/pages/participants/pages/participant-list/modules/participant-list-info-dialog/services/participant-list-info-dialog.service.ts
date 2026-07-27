@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+import { Service } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { ParticipantControllerService } from '../../../../../services/common/participant-controller.service';
 import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
@@ -45,9 +45,7 @@ export interface InfoDialog {
     vote_delegated_to_id: number;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ParticipantListInfoDialogService extends BaseDialogService<
     ParticipantListInfoDialogComponent,
     Partial<InfoDialog>,

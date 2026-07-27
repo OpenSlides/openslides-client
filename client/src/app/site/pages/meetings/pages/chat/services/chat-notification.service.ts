@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { StorageService } from '@app/gateways/storage.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { StorageService } from 'src/app/gateways/storage.service';
 
 import { ViewChatMessage } from '../view-models';
 import { ChatMessageControllerService } from './chat-message-controller.service';
@@ -22,9 +22,7 @@ type LastSeenTimestampEvent = Record<number, Date>;
 
 const STORAGE_KEY = `os4-chat-notifications`;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ChatNotificationService {
     public get allChatGroupsNotificationsObservable(): Observable<number> {
         return this._allGroupsNotificationsSubject;
@@ -37,11 +35,11 @@ export class ChatNotificationService {
     private _lastMessageAmount = 0;
     private _chatMessages: ViewChatMessage[] = [];
 
-    public constructor(
-        private storage: StorageService,
-        private chatMessageRepo: ChatMessageControllerService
-    ) {
-        storage.addNoClearKey(STORAGE_KEY);
+    private storage = inject(StorageService);
+    private chatMessageRepo = inject(ChatMessageControllerService);
+
+    public constructor() {
+        this.storage.addNoClearKey(STORAGE_KEY);
         this.setup();
     }
 

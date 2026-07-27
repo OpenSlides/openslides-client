@@ -62,7 +62,9 @@
 }
 
 <mat-dialog-actions>
-    <button color="accent" mat-button osAutofocus (click)="onProject()">{{ 'Project' | translate }}</button>
+    @if (!hideMainButton) {
+        <button color="accent" mat-button osAutofocus (click)="onProject()">{{ 'Project' | translate }}</button>
+    }
     @if (projectorSelectable) {
         <button mat-button (click)="onAddToPreview()">{{ 'Add to queue' | translate }}</button>
     }

@@ -1,16 +1,12 @@
-import { Injectable } from '@angular/core';
-import { DataStoreService } from 'src/app/site/services/data-store.service';
+import { inject, Service } from '@angular/core';
+import { DataStoreService } from '@app/site/services/data-store.service';
 
 import { MeetingCollectionMapperService } from './meeting-collection-mapper.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingDataStoreService {
-    public constructor(
-        private modelMapper: MeetingCollectionMapperService,
-        private datastore: DataStoreService
-    ) {}
+    private modelMapper = inject(MeetingCollectionMapperService);
+    private datastore = inject(DataStoreService);
 
     /**
      * Deletes all models that belong to a meeting.

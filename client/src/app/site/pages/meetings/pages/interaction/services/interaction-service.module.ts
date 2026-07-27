@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { OverlayComponent } from 'src/app/ui/modules/openslides-overlay';
+import { OverlayComponent } from '@app/ui/modules/openslides-overlay';
 
 @NgModule({
     imports: [OverlayComponent]

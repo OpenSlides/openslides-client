@@ -17,24 +17,24 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
-import { ChipSelectModule } from 'src/app/site/modules/chip-select/chip-select.module';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { ActionCardComponent } from 'src/app/ui/modules/action-card';
-import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
-import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
-import { DatepickerModule } from 'src/app/ui/modules/datepicker';
-import { EditorModule } from 'src/app/ui/modules/editor';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
-import { OpenSlidesDateAdapterModule } from 'src/app/ui/modules/openslides-date-adapter/openslides-date-adapter.module';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
-import { SortingModule } from 'src/app/ui/modules/sorting';
-import { PipesModule } from 'src/app/ui/pipes/pipes.module';
+import { ChipSelectModule } from '@app/site/modules/chip-select/chip-select.module';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { MeetingsComponentCollectorModule } from '@app/site/pages/meetings/modules/meetings-component-collector';
+import { DirectivesModule } from '@app/ui/directives';
+import { ActionCardComponent } from '@app/ui/modules/action-card';
+import { ChoiceDialogComponent } from '@app/ui/modules/choice-dialog';
+import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-listing';
+import { DatepickerModule } from '@app/ui/modules/datepicker';
+import { EditorModule } from '@app/ui/modules/editor';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
+import { OpenSlidesDateAdapterModule } from '@app/ui/modules/openslides-date-adapter/openslides-date-adapter.module';
+import { SearchSelectorModule } from '@app/ui/modules/search-selector';
+import { SortingModule } from '@app/ui/modules/sorting';
+import { PipesModule } from '@app/ui/pipes/pipes.module';
 
 import { AttachmentControlModule } from '../../../../modules/meetings-component-collector/attachment-control/attachment-control.module';
 import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector';
@@ -128,6 +128,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatFormFieldModule,
         MatTabsModule,
         MatTooltipModule,
+        MatTimepickerModule,
         MatChipsModule,
         MatCheckboxModule,
         MatSelectModule,
@@ -137,7 +138,6 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatProgressBarModule,
         ParticipantSearchSelectorModule,
         OpenSlidesDateAdapterModule,
-        NgxMaterialTimepickerModule,
         DatepickerModule,
         // Detail view
         ScrollingModule,

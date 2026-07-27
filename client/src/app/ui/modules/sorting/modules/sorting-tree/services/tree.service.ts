@@ -1,11 +1,9 @@
-import { Injectable } from '@angular/core';
-import { Displayable, Identifiable } from 'src/app/domain/interfaces';
-import { FlatNode, OSTreeNode, TreeIdNode, TreeNodeWithoutItem } from 'src/app/infrastructure/definitions/tree';
-import { findIndexInSortedArray } from 'src/app/infrastructure/utils';
+import { Service } from '@angular/core';
+import { Displayable, Identifiable } from '@app/domain/interfaces';
+import { FlatNode, OSTreeNode, TreeIdNode, TreeNodeWithoutItem } from '@app/infrastructure/definitions/tree';
+import { findIndexInSortedArray } from '@app/infrastructure/utils';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class TreeService {
     /**
      * Returns the weight casted to a number from a given model.
@@ -110,7 +108,7 @@ export class TreeService {
     public makeTreeFromFlatTree<T extends Identifiable & Displayable>(nodes: FlatNode<T>[]): TreeIdNode[] {
         const basicTree: TreeIdNode[] = [];
 
-        for (let i = 0; i < nodes.length; ) {
+        for (let i = 0; i < nodes.length;) {
             // build the next node inclusive its children
             const nextNode = this.buildBranchFromFlatTree(nodes[i], nodes, 0);
             // append this node to the tree
@@ -309,7 +307,7 @@ export class TreeService {
         tree = tree.sort((a, b) =>
             a.position != null && b.position != null ? a.position - b.position : b != null ? -1 : 0
         );
-        for (let i = 0; i < tree.length; ) {
+        for (let i = 0; i < tree.length;) {
             const node = tree[i];
             if (findIndexInSortedArray(deleteIds, byItemId ? node.item.id : node.id, (a, b) => a - b) !== -1) {
                 tree = [tree.slice(0, i), i + 1 < tree.length ? tree.slice(i + 1) : []].flatMap(

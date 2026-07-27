@@ -7,11 +7,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { ActionCardComponent } from 'src/app/ui/modules/action-card';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { DirectivesModule } from '@app/ui/directives';
+import { ActionCardComponent } from '@app/ui/modules/action-card';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
 
 import { ProjectorComponent } from '../../../../modules/projector/components/projector/projector.component';
 import { ProjectorModule } from '../../../../modules/projector/projector.module';

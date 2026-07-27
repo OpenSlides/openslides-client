@@ -1,4 +1,4 @@
-import { HttpMethod } from 'src/app/infrastructure/definitions/http';
+import { HttpMethod } from '@app/infrastructure/definitions/http';
 
 import { Id } from '../../domain/definitions/key-types';
 import { WorkerMessageContent } from '../interfaces';

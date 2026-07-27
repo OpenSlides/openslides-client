@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { UserScope } from 'src/app/site/services/user.service';
+import { UserScope } from '@app/site/services/user.service';
 
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';

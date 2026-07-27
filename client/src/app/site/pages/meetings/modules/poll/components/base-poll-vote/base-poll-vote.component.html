@@ -2,7 +2,7 @@
     <!-- own voting -->
     @if (!isUserInMeeting) {
         <div class="text-center">
-            {{ 'You are not part of the meeting' | translate }}
+            {{ 'You are not part of this meeting.' | translate }}
         </div>
     } @else if (isUserPresent) {
         <ng-container [ngTemplateOutlet]="votingArea" />
@@ -11,6 +11,7 @@
             {{ 'You have to be present to vote.' | translate }}
         </div>
     }
+
     <!-- Delegations -->
     @if (isUserPresent && (voteDelegationEnabled | async)) {
         @for (delegation of delegations; track delegation.id) {

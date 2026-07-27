@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 import { ViewProjector } from '../../../../projectors';
@@ -10,9 +10,7 @@ import { ListOfSpeakersControllerService } from './list-of-speakers-controller.s
  * Observes the projector config for a given projector and returns a observable of the
  * current view list of speakers displayed on the projector.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class CurrentListOfSpeakersService {
     /**
      * Current clos reference projector
@@ -39,10 +37,10 @@ export class CurrentListOfSpeakersService {
 
     public currentListOfSpeakersObservable = this.currentListOfSpeakerSubject as Observable<ViewListOfSpeakers | null>;
 
-    public constructor(
-        private projectorRepo: ProjectorControllerService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService
-    ) {
+    private projectorRepo = inject(ProjectorControllerService);
+    private listOfSpeakersRepo = inject(ListOfSpeakersControllerService);
+
+    public constructor() {
         // Watch for changes and update the current list of speakers for every projector.
         this.projectorRepo.getGeneralViewModelObservable().subscribe(projector => {
             if (projector) {

@@ -1,8 +1,8 @@
 import { Directive, inject } from '@angular/core';
+import { Displayable, Identifiable } from '@app/domain/interfaces';
+import { getIntlCollatorForLang } from '@app/infrastructure/utils';
+import { SortService } from '@app/ui/modules/list/definitions/sort-service';
 import { TranslateService } from '@ngx-translate/core';
-import { Displayable, Identifiable } from 'src/app/domain/interfaces';
-import { getIntlCollatorForLang } from 'src/app/infrastructure/utils';
-import { SortService } from 'src/app/ui/modules/list/definitions/sort-service';
 
 import { OsSortProperty } from './os-sort';
 /**

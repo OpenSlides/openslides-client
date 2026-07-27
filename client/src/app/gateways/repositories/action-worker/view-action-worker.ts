@@ -1,5 +1,5 @@
-import { ActionWorker } from 'src/app/domain/models/action-worker/action-worker';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { ActionWorker } from '@app/domain/models/action-worker/action-worker';
+import { BaseViewModel } from '@app/site/base/base-view-model';
 
 export class ViewActionWorker extends BaseViewModel<ActionWorker> {
     public static COLLECTION = ActionWorker.COLLECTION;

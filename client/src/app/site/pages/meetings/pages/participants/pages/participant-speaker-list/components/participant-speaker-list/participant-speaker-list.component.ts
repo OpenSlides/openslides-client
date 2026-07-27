@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { modelIcons } from '@app/domain/definitions/model-icons';
+import { SpeechState } from '@app/domain/models/speakers/speech-state';
+import { GENDERS } from '@app/domain/models/users/user';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
-import { modelIcons } from 'src/app/domain/definitions/model-icons';
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
-import { GENDERS } from 'src/app/domain/models/users/user';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ViewSpeaker } from '../../../../../agenda';
 import { SpeakerControllerService } from '../../../../../agenda/modules/list-of-speakers/services';

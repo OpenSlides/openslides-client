@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { PollContentObject } from '@app/domain/models/poll';
 import { map, Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { PollContentObject } from 'src/app/domain/models/poll';
 
 import { BasePollDetailComponent, BaseVoteData } from '../../base/base-poll-detail.component';
 import { PollService } from '../../services/poll.service';

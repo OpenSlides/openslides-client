@@ -1,24 +1,32 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
+import { Permission } from '@app/domain/definitions/permission';
+import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
 import {
     FontDisplayNames,
     FontPlace,
     LogoDisplayNames,
     LogoPlace
-} from 'src/app/domain/models/mediafiles/mediafile.constants';
-import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { FileListComponent } from 'src/app/ui/modules/file-list/file-list.component';
+} from '@app/domain/models/mediafiles/mediafile.constants';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { ViewMediafile } from '@app/site/pages/meetings/pages/mediafiles';
+import { MediafileControllerService } from '@app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { MediaManageService } from '@app/site/pages/meetings/services/media-manage.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { FileListComponent } from '@app/ui/modules/file-list/file-list.component';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 
 import { InteractionService } from '../../../../../interaction/services/interaction.service';
 import { ViewGroup } from '../../../../../participants/modules/groups/view-models/view-group';
@@ -31,6 +39,7 @@ import { MediafileListGroupService } from '../../services/mediafile-list-group.s
     selector: `os-mediafile-list`,
     templateUrl: `./mediafile-list.component.html`,
     styleUrls: [`./mediafile-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MediafileListComponent extends BaseMeetingListViewComponent<ViewMediafile> implements OnInit, OnDestroy {

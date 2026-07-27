@@ -4,10 +4,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { EditorModule } from 'src/app/ui/modules/editor';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { PipesModule } from 'src/app/ui/pipes/pipes.module';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { EditorModule } from '@app/ui/modules/editor';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { PipesModule } from '@app/ui/pipes/pipes.module';
 
 import { StartComponent } from './components/start/start.component';
 import { StartRoutingModule } from './start-routing.module';

@@ -1,7 +1,22 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { allAvailableTranslations, availableTranslations } from '@app/domain/definitions/languages';
+import { getOmlVerboseName } from '@app/domain/definitions/organization-permission';
+import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { AuthService } from '@app/site/services/auth.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ThemeService } from '@app/site/services/theme.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { ChessDialogComponent } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
+import { ChessChallengeService } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { Id } from 'src/app/domain/definitions/key-types';
@@ -28,6 +43,7 @@ import { AccountDialogMainComponent } from '../account-dialog-main/account-dialo
     selector: `os-account-button`,
     templateUrl: `./account-button.component.html`,
     styleUrls: [`./account-button.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountButtonComponent extends BaseUiComponent implements OnInit {
@@ -92,19 +108,17 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private clickCounter = 0;
     private clickTimeout: number | null = null;
 
-    public constructor(
-        private translate: TranslateService,
-        private operator: OperatorService,
-        private userRepo: UserControllerService,
-        private authService: AuthService,
-        private dialog: MatDialog,
-        private participantListDialog: ParticipantListInfoDialogService,
-        private router: Router,
-        private theme: ThemeService,
-        private meetingSettingsService: MeetingSettingsService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        chessChallengeService: ChessChallengeService
-    ) {
+    private translate = inject(TranslateService);
+    private operator = inject(OperatorService);
+    private userRepo = inject(UserControllerService);
+    private authService = inject(AuthService);
+    private theme = inject(ThemeService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private dialog = inject(MatDialog);
+    private router = inject(Router);
+
+    public constructor(chessChallengeService: ChessChallengeService) {
         super();
         chessChallengeService.startListening();
     }
@@ -221,21 +235,50 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     public getAriaLabel(): string {
         let stringForUserPresent: string;
         if (this.operator.isAnonymous) {
-            stringForUserPresent = this.translate.instant(`Account is public`);
+            stringForUserPresent = this.translate.instant(`Account is public.`);
         } else if (!this.hasActiveMeeting) {
-            stringForUserPresent = this.translate.instant(`Account of {} is not in Meeting`);
+            stringForUserPresent = this.translate.instant(`Your account is not in meeting.`);
         } else if (this.user.isPresentInMeeting()) {
             stringForUserPresent = this.translate.instant(
-                `Account of {} is present. If status just changed focus this element again to get accurate present status.`
+                `Your account is present. If status just changed focus this element again to get accurate present status.`
             );
         } else if (this.user.isInActiveMeeting) {
             stringForUserPresent = this.translate.instant(
-                `Account of {} is not present. If status just changed focus this element again to get accurate present status.`
+                `Your account is not present. If status just changed focus this element again to get accurate present status.`
             );
         } else {
-            stringForUserPresent = this.translate.instant(`Account of {} is not in this Meeting`);
+            stringForUserPresent = this.translate.instant(`Your account is not in this meeting.`);
         }
         return stringForUserPresent.replace(`{}`, this.user.short_name);
+    }
+
+    public canEditOwnDelegation(user: ViewUser): boolean {
+        if (
+            this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+            !this.operator.hasPerms(Permission.userCanManage) &&
+            !this.operator.hasPerms(Permission.userCanUpdate)
+        ) {
+            return this.operator.operatorId === user.id;
+        } else if (
+            this.operator.hasPerms(Permission.userCanManage) ||
+            this.operator.hasPerms(Permission.userCanUpdate)
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public async openDialogEditInfo(user: ViewUser): Promise<void> {
+        await this.participantListDialog.open({
+            user,
+            id: user.id,
+            name: user.getName(),
+            number: user.number(),
+            structure_level_ids: this.user.structure_level_ids(),
+            vote_delegations_from_ids: this.user.vote_delegations_from_meeting_user_ids(),
+            vote_delegated_to_id: this.user.vote_delegated_to_meeting_user_id()
+        });
     }
 
     public canEditOwnDelegation(user: ViewUser): boolean {

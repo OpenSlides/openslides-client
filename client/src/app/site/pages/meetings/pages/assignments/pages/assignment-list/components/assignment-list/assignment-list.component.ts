@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Permission } from '@app/domain/definitions/permission';
+import { PROJECTIONDEFAULT } from '@app/domain/models/projector/projection-default';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { MultiProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { getAssignmentDetailSubscriptionConfig } from '../../../../assignments.subscription';
 import { AssignmentPhases } from '../../../../definitions/index';
@@ -113,6 +115,29 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         const title = this.translate.instant(`Are you sure you want to delete all selected elections?`);
         if (await this.promptService.open(title)) {
             await this.repo.delete(...this.selectedRows);
+        }
+    }
+
+    public addToProjectorQueue(): MultiProjectionBuildDescriptor {
+        const toBeProjectedItems = this.isMultiSelect ? this.selectedRows : this.listComponent?.source;
+        const originalOrder = this.listComponent?.source.map(i => `assignment/` + i.assignment.id);
+
+        if (toBeProjectedItems) {
+            const ids = toBeProjectedItems.map(item => `assignment/` + item.assignment.id);
+            if (this.isMultiSelect) {
+                ids.sort((a, b) => originalOrder.indexOf(a) - originalOrder.indexOf(b));
+            }
+            return {
+                content_object_ids: ids,
+                projectionDefault: PROJECTIONDEFAULT.assignment,
+                getDialogTitle: (): string => this.translate.instant(`Elections`)
+            };
+        } else {
+            return {
+                content_object_ids: null,
+                projectionDefault: PROJECTIONDEFAULT.assignment,
+                getDialogTitle: (): string => this.translate.instant(`Elections`)
+            };
         }
     }
 }

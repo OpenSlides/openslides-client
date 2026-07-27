@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Vote } from '@app/domain/models/poll/vote';
+import { HttpService } from '@app/gateways/http.service';
+import { ViewPoll, ViewVote } from '@app/site/pages/meetings/pages/polls';
+import { OperatorService } from '@app/site/services/operator.service';
 import { BehaviorSubject } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Vote } from 'src/app/domain/models/poll/vote';
-import { HttpService } from 'src/app/gateways/http.service';
-import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
@@ -29,9 +29,7 @@ export interface VotePayload {
     value: any;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote, Vote> {
     private _subscribedPolls = new Map<Id, PollSubscription>();
 
@@ -39,11 +37,11 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     private _fetchVotablePollsInterval = null;
     private _fetchVotablePollsTimeout = null;
 
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        private operator: OperatorService,
-        private http: HttpService
-    ) {
+    private operator = inject(OperatorService);
+    private http = inject(HttpService);
+
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, Vote);
     }
 
@@ -132,11 +130,13 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
         }
 
         const results: HasVotedResponse = await this.http.get(`${HAS_VOTED_URL}?ids=${ids.join()}`);
-        for (const pollId of Object.keys(results)) {
-            const subscription = this._subscribedPolls.get(+pollId);
-            const currentVal = subscription.current.value;
-            if (JSON.stringify(currentVal) !== JSON.stringify(results[pollId])) {
-                subscription.current.next(results[pollId]);
+        if (results) {
+            for (const pollId of Object.keys(results)) {
+                const subscription = this._subscribedPolls.get(+pollId);
+                const currentVal = subscription.current.value;
+                if (JSON.stringify(currentVal) !== JSON.stringify(results[pollId])) {
+                    subscription.current.next(results[pollId]);
+                }
             }
         }
     }

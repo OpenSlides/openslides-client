@@ -1,9 +1,7 @@
-import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { map, merge, Observable, of } from 'rxjs';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { OptionData, OptionDataKey, PollData, PollDataKey } from 'src/app/domain/models/poll/generic-poll';
-import { Poll } from 'src/app/domain/models/poll/poll';
+import { inject, Service } from '@angular/core';
+import { Motion } from '@app/domain/models/motions/motion';
+import { OptionData, OptionDataKey, PollData, PollDataKey } from '@app/domain/models/poll/generic-poll';
+import { Poll } from '@app/domain/models/poll/poll';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
@@ -16,9 +14,11 @@ import {
     VOTE_MAJORITY,
     VotingResult,
     YES_KEY
-} from 'src/app/domain/models/poll/poll-constants';
-import { PollService } from 'src/app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+} from '@app/domain/models/poll/poll-constants';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { TranslateService } from '@ngx-translate/core';
+import { map, merge, Observable, of } from 'rxjs';
 
 import { MotionPollControllerService } from '../motion-poll-controller.service';
 
@@ -32,20 +32,18 @@ export interface TableDataEntryCreationInput {
 /**
  * Service class for motion polls.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionPollService extends PollService {
     public defaultPercentBase!: PollPercentBase;
     public defaultPollMethod: PollMethod | undefined;
     public defaultPollType!: PollType;
     public defaultGroupIds!: number[];
 
-    public constructor(
-        protected override translate: TranslateService,
-        private repo: MotionPollControllerService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    protected override translate = inject(TranslateService);
+    private repo = inject(MotionPollControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
         super();
         this.meetingSettingsService
             .get(`motion_poll_default_onehundred_percent_base`)

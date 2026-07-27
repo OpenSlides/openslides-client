@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { MOTION_PDF_OPTIONS } from '@app/domain/models/motions/motions.constants';
+import { BorderType, PdfError, StyleType } from '@app/gateways/export/pdf-document.service';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Content } from 'pdfmake/interfaces';
-import { MOTION_PDF_OPTIONS } from 'src/app/domain/models/motions/motions.constants';
-import { BorderType, PdfError, StyleType } from 'src/app/gateways/export/pdf-document.service';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MotionCategoryControllerService } from '../../../modules/categories/services';
 import { MotionControllerService } from '../../common/motion-controller.service';
@@ -20,18 +20,14 @@ import { MotionPdfService } from '../motion-pdf.service';
  * const docDef = this.motionPdfCatalogService.motionListToDocDef(myListOfViewMotions);
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionPdfCatalogService {
-    public constructor(
-        private translate: TranslateService,
-        private motionPdfService: MotionPdfService,
-        private pdfService: MeetingPdfExportService,
-        private motionService: MotionControllerService,
-        private categoryRepo: MotionCategoryControllerService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {}
+    private translate = inject(TranslateService);
+    private motionPdfService = inject(MotionPdfService);
+    private pdfService = inject(MeetingPdfExportService);
+    private motionService = inject(MotionControllerService);
+    private categoryRepo = inject(MotionCategoryControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
 
     /**
      * Converts the list of motions to pdfmake doc definition.
@@ -44,7 +40,6 @@ export class MotionPdfCatalogService {
         let doc = [];
         const motionDocList = [];
         const printToc = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.Toc);
-        const hasContinuousDirectory = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.ContinousDirectory);
         const hasContinuousText = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.ContinuousText);
         // Do not enforce page breaks when continuous text is selected.
         const enforcePageBreaks = exportInfo.pdfOptions?.includes(MOTION_PDF_OPTIONS.AddBreaks) && !hasContinuousText;
@@ -88,7 +83,7 @@ export class MotionPdfCatalogService {
             doc.push(
                 this.pdfService.createTitle(this.meetingSettingsService.instant(`motions_export_title`)!),
                 this.pdfService.createPreamble(this.meetingSettingsService.instant(`motions_export_preamble`)),
-                this.createToc(motions, hasContinuousDirectory)
+                this.createToc(motions)
             );
         }
 
@@ -104,7 +99,7 @@ export class MotionPdfCatalogService {
      * @param motions The motions to add in the TOC
      * @returns the table of contents as document definition
      */
-    private createToc(motions: ViewMotion[], continuousDirectory: boolean): Content {
+    private createToc(motions: ViewMotion[]): Content {
         const toc = [];
         const categories = this.categoryRepo.getViewModelList();
 
@@ -129,11 +124,6 @@ export class MotionPdfCatalogService {
                 const motionToCurrentCat = motions.filter(motionIn => category.id === motionIn.category_id);
 
                 if (motionToCurrentCat && motionToCurrentCat.length) {
-                    // if this is not the first page, start with a pagebreak
-                    if (catTocBody.length && !continuousDirectory) {
-                        catTocBody.push(this.pdfService.getPageBreak());
-                    }
-
                     catTocBody.push({
                         table: {
                             body: [

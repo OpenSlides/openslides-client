@@ -6,10 +6,10 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTableModule } from '@angular/material/table';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
-import { MeetingTimeComponent } from 'src/app/ui/modules/meeting-time/meeting-time.component';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-listing';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
+import { MeetingTimeComponent } from '@app/ui/modules/meeting-time/meeting-time.component';
 
 import { MotionForwardDialogComponent } from './components/motion-forward-dialog/motion-forward-dialog.component';
 

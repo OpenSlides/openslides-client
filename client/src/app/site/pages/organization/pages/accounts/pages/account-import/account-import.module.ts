@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { ImportListModule } from 'src/app/ui/modules/import-list';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { ImportListModule } from '@app/ui/modules/import-list';
 
 import { AccountCommonServiceModule } from '../../services/common/account-common-service.module';
 import { AccountImportRoutingModule } from './account-import-routing.module';

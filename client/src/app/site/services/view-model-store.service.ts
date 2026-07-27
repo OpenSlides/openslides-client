@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { BaseRepository } from '../../gateways/repositories/base-repository';
 import { BaseViewModel, ViewModelConstructor } from '../base/base-view-model';
 import { CollectionMapperService } from './collection-mapper.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ViewModelStoreService {
-    public constructor(private collectionMapperService: CollectionMapperService) {}
+    private collectionMapperService = inject(CollectionMapperService);
 
     /**
      * gets the repository from a collection string or a view model constructor.

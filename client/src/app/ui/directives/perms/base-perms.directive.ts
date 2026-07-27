@@ -1,6 +1,6 @@
 import { Directive, EmbeddedViewRef, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { OperatorService } from '@app/site/services/operator.service';
 import { Subscription } from 'rxjs';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Directive()
 export abstract class BasePermsDirective<P> implements OnInit, OnDestroy {

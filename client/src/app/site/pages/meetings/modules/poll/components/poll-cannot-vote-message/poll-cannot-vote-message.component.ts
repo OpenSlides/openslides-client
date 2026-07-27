@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { OperatorService } from '@app/site/services/operator.service';
 import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
 import { ViewPoll } from '../../../../pages/polls';

@@ -1,8 +1,8 @@
 import { EventEmitter } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { LifecycleService } from '@app/site/services/lifecycle.service';
 import fetchMock from 'fetch-mock';
 import { firstValueFrom, lastValueFrom, skip, take } from 'rxjs';
-import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
 import { ServerTimeService } from './server-time.service';
 

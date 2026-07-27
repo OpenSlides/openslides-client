@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 import { MeetingSettingDirective } from './meeting-setting.directive';
 
@@ -40,6 +40,7 @@ class MockMeetingSettingsService {
             <div id="else"></div>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class TestComponent {
