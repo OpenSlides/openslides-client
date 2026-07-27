@@ -12,7 +12,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { Ids } from '@app/domain/definitions/key-types';
 import { PollVisibility } from '@app/domain/models/poll';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
-import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import { BaseComponent } from '@app/site/base/base.component';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { DirectivesModule } from '@app/ui/directives';
@@ -179,12 +178,7 @@ export class PollFormComponent extends BaseComponent {
         effect(this.changeMethod.bind(this));
 
         this.allowCumulative.set(this.meetingSettingsService.instant(`poll_enable_max_votes_per_option`));
-        let method = this.data()?.config?.method;
-        if (this.data()?.config_id) {
-            const collection = collectionFromFqid(this.data()?.config_id);
-            method = collection.replace(`poll_config_`, ``);
-        }
-        if (method === `rating_score`) {
+        if (this.data()?.config?.method === `rating_score`) {
             this.allowCumulative.set(true);
         }
 
@@ -237,6 +231,13 @@ export class PollFormComponent extends BaseComponent {
                 this.form['options']().value.set(data.options.map(option => option.text));
             if (data.config?.method) {
                 let preselection = data.config.method;
+                if (
+                    !(data instanceof ViewPoll) &&
+                    (this.optionAmount() <= 1 || data.config.method !== `rating_score`)
+                ) {
+                    preselection = `approval`;
+                }
+
                 if (preselection === `approval` || preselection === `rating_approval`) {
                     preselection += data.config.allow_abstain ? `.yes_no_abstain` : `.yes_no`;
                 } else if (preselection == `selection`) {
