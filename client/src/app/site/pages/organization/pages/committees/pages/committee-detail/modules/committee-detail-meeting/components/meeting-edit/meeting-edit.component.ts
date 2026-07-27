@@ -137,7 +137,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             super.setTitle(EDIT_MEETING_LABEL);
             this.meetingForm.get(`language`)?.disable();
         }
-        this.availableMeetingsObservable = this.orga?.organizationObservable.pipe(
+        this.availableMeetingsObservable = this.orga.organizationObservable.pipe(
             map(organization => {
                 return [...organization.template_meetings.sort(this.sortFn)];
             })
