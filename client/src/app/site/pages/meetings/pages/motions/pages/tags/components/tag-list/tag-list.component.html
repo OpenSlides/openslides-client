@@ -27,13 +27,13 @@
     <!-- edit column -->
     <div *osScrollingTableCell="'edit'; row as tag; config: { width: 45 }" class="cell-slot fill">
         <button mat-icon-button (click)="openTagDialog(tag)">
-            <mat-icon>edit</mat-icon>
+            <mat-icon [matTooltip]="'Edit' | translate">edit</mat-icon>
         </button>
     </div>
     <!-- delete column -->
     <div *osScrollingTableCell="'delete'; row as tag; config: { width: 45 }" class="cell-slot fill">
         <button color="warn" mat-icon-button (click)="onDeleteButton(tag)">
-            <mat-icon>delete</mat-icon>
+            <mat-icon [matTooltip]="'Delete' | translate">delete</mat-icon>
         </button>
     </div>
 </os-list>
