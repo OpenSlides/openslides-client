@@ -110,7 +110,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     private checkSortOrder(): void {
-        if (this._assignmentCandidates.length < 1) this.updateSort(undefined, undefined);
+        if (this._assignmentCandidates.length < 2) this.updateSort(undefined, undefined);
         else {
             if (this._assignmentCandidates.equals(this.sortList(true, true, true))) this.updateSort(true, true);
             else if (this._assignmentCandidates.equals(this.sortList(true, false, true))) this.updateSort(true, false);
