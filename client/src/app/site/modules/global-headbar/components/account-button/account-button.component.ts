@@ -8,6 +8,12 @@ import { getOmlVerboseName } from '@app/domain/definitions/organization-permissi
 import { Permission } from '@app/domain/definitions/permission';
 import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import {
+    afterDialogClosed,
+    ParticipantListInfoDialogService
+} from '@app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
@@ -16,6 +22,7 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { ThemeService } from '@app/site/services/theme.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { PromptService } from '@app/ui/modules/prompt-dialog/services/prompt.service';
 import { ChessDialogComponent } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
 import { ChessChallengeService } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -95,12 +102,17 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private translate = inject(TranslateService);
     private operator = inject(OperatorService);
     private userRepo = inject(UserControllerService);
+    private participantRepo = inject(ParticipantControllerService);
     private authService = inject(AuthService);
     private theme = inject(ThemeService);
+    private activeMeeting = inject(ActiveMeetingService);
     private meetingSettingsService = inject(MeetingSettingsService);
     private activeMeetingIdService = inject(ActiveMeetingIdService);
     private dialog = inject(MatDialog);
     private router = inject(Router);
+    protected participantListDialog = inject(ParticipantListInfoDialogService);
+    private infoDialog = inject(ParticipantListInfoDialogService);
+    private prompt = inject(PromptService);
 
     public constructor(chessChallengeService: ChessChallengeService) {
         super();
@@ -253,15 +265,23 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         }
     }
 
-    public async openDialogEditInfo(user: ViewUser): Promise<void> {
-        await this.participantListDialog.open({
-            user,
+    public async openEditInfo(user: ViewUser): Promise<void> {
+        const dialogRef = await this.infoDialog.open({
             id: user.id,
             name: user.getName(),
             number: user.number(),
-            structure_level_ids: this.user.structure_level_ids(),
-            vote_delegations_from_ids: this.user.vote_delegations_from_meeting_user_ids(),
-            vote_delegated_to_id: this.user.vote_delegated_to_meeting_user_id()
+            group_ids: user.group_ids(),
+            structure_level_ids: user.structure_level_ids(),
+            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
+            vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
         });
+        afterDialogClosed(
+            dialogRef,
+            user,
+            this.operator,
+            this.activeMeeting.meeting,
+            this.participantRepo,
+            this.prompt
+        );
     }
 }
