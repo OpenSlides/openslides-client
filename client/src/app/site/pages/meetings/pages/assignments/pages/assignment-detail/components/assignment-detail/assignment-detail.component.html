@@ -178,7 +178,16 @@
                         </h3>
                         <div class="buttons">
                             @if (assignment && hasPerms('manage')) {
-                                <mat-icon class="vertical-align">
+                                <mat-icon
+                                    class="vertical-align"
+                                    [attr.aria-label]="
+                                        sortAscending
+                                            ? 'sorting ascending'
+                                            : sortAscending === false
+                                              ? 'sorting decending'
+                                              : 'no sort'
+                                    "
+                                >
                                     @if (sortAscending === true) {
                                         arrow_downward
                                     } @else if (sortAscending === false) {
@@ -198,11 +207,11 @@
 
                                 <button
                                     mat-button
-                                    [attr.aria-label]="'Sort by first name' | translate"
+                                    [attr.aria-label]="'Sort by given name' | translate"
                                     [color]="isSortByFirstName ? 'accent' : ''"
                                     (click)="sortCandidates()"
                                 >
-                                    <span>{{ 'First name' | translate }}</span>
+                                    <span>{{ 'Given name' | translate }}</span>
                                 </button>
                             }
                         </div>
