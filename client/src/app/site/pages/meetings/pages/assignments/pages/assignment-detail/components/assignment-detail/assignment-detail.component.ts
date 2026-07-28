@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+/* eslint-disable prettier/prettier */
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Id } from '@app/domain/definitions/key-types';
@@ -20,7 +21,6 @@ import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service';
@@ -93,6 +93,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this._assignment = assignment;
         this._assignmentCandidates = assignment.candidates;
         this.updateCandidatesArray();
+        this.checkSortOrder();
     }
 
     /**
@@ -108,6 +109,45 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     public get assignmentCandidates(): ViewAssignmentCandidate[] {
         return this._assignmentCandidates;
     }
+
+    private checkSortOrder(): void {
+        if (this._assignmentCandidates.length < 2) {
+            this.sortAscending = true
+            this.isSortByFirstName = undefined;
+        } else {
+            let sorted = [...this.assignmentCandidates].sort((a, b) => {
+                const nameA = (a.user?.first_name ?? '');
+                const nameB = (b.user?.first_name ?? '');
+                const comparison = nameA.localeCompare(nameB);
+                return comparison;
+            });
+            if(this._assignmentCandidates.equals(sorted)){
+                this.sortAscending = true;
+                this.isSortByFirstName = true
+            }
+            sorted.reverse()
+            if(this._assignmentCandidates.equals(sorted)){
+                this.sortAscending = false;
+                this.isSortByFirstName = true
+            }
+            sorted = [...this.assignmentCandidates].sort((a, b) => {
+                const nameA = (a.user?.last_name ?? '');
+                const nameB = (b.user?.last_name ?? '');
+                const comparison = nameA.localeCompare(nameB);
+                return comparison;
+            });
+            if(this._assignmentCandidates.equals(sorted)){
+                this.sortAscending = true;
+                this.isSortByFirstName = false
+            }
+            sorted.reverse()
+            if(this._assignmentCandidates.equals(sorted)){
+                this.sortAscending = false;
+                this.isSortByFirstName = false;
+            }
+        }
+    }
+
 
     /**
      * Check if the operator is a candidate
@@ -149,23 +189,26 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     private _navigationSubscription: Subscription | null = null;
 
+    public sortAscending = true;
+    public isSortByFirstName: boolean | undefined = undefined
+
+    private operator= inject( OperatorService)
+    public assignmentRepo= inject( AssignmentControllerService)
+    private assignmentCandidateRepo= inject( AssignmentCandidateControllerService)
+    private itemRepo=inject(  AgendaItemControllerService)
+    private promptService=inject(  PromptService)
+    private pdfService=inject(  AssignmentExportService)
+    private pollDialog=inject(  AssignmentPollDialogService)
+    private assignmentPollService=inject(  AssignmentPollService)
+    private pollController=inject(  PollControllerService)
+    private userRepo=inject(  UserControllerService)
+    private snackBar=inject(  MatSnackBar)
+
     /**
      * Constructor. Build forms and subscribe to needed configs and updates
      */
     public constructor(
-        protected override translate: TranslateService,
-        private operator: OperatorService,
         formBuilder: UntypedFormBuilder,
-        public assignmentRepo: AssignmentControllerService,
-        private assignmentCandidateRepo: AssignmentCandidateControllerService,
-        private itemRepo: AgendaItemControllerService,
-        private promptService: PromptService,
-        private pdfService: AssignmentExportService,
-        private pollDialog: AssignmentPollDialogService,
-        private assignmentPollService: AssignmentPollService,
-        private pollController: PollControllerService,
-        private userRepo: UserControllerService,
-        private snackBar: MatSnackBar
     ) {
         super();
         this.assignmentForm = formBuilder.group({
@@ -377,9 +420,33 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     /**
+     * Sort Candidates
+     */
+    public async sortCandidates(byFirstName = true): Promise<void> {
+        if (typeof this.isSortByFirstName === `undefined`) this.isSortByFirstName = byFirstName;
+        else if (this.isSortByFirstName === byFirstName) this.sortAscending = !this.sortAscending;
+        else {
+            this.isSortByFirstName = byFirstName;
+            this.sortAscending = true;
+        }
+        const sorted = [...this.assignmentCandidates].sort((a, b) => {
+            const nameA = byFirstName ? (a.user?.first_name ?? '') : (a.user?.last_name ?? '');
+            const nameB = byFirstName ? (b.user?.first_name ?? '') : (b.user?.last_name ?? '');
+            const comparison = nameA.localeCompare(nameB);
+            return this.sortAscending ? comparison : -comparison;
+        });
+        this._assignmentCandidates = sorted;
+        await this.onSortingChange(sorted, false);
+    }
+
+    /**
      * Triggers an update of the sorting.
      */
-    public async onSortingChange(candidates: Selectable[]): Promise<void> {
+    public async onSortingChange(candidates: Selectable[], manual = true): Promise<void> {
+        if (manual) {
+            this.isSortByFirstName = undefined;
+            this.sortAscending = false;
+        }
         await this.assignmentCandidateRepo.sort(this.assignment, candidates);
     }
 

@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
@@ -49,6 +50,7 @@ import { AssignmentDetailServiceModule } from './services/assignment-detail-serv
         MatChipsModule,
         MatMenuModule,
         MatInputModule,
+        MatBadgeModule,
         MatCheckboxModule,
         MeetingsComponentCollectorModule,
         AttachmentControlModule,
