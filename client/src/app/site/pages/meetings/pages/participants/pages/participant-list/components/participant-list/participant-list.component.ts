@@ -11,7 +11,6 @@ import { OsFilterOption } from '@app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
-import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from '@app/site/services/operator.service';
@@ -30,20 +29,16 @@ import { GroupControllerService } from '../../../../modules/groups/services/grou
 import { ViewGroup } from '../../../../modules/groups/view-models/view-group';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../structure-levels/view-models/view-structure-level';
-import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog/services/participant-list-info-dialog.service';
+import {
+    afterDialogClosed,
+    areGroupsDiminished,
+    ParticipantListInfoDialogService
+} from '../../modules/participant-list-info-dialog/services/participant-list-info-dialog.service';
 import { ParticipantListFilterService } from '../../services/participant-list-filter/participant-list-filter.service';
 import { ParticipantListSortService } from '../../services/participant-list-sort/participant-list-sort.service';
 import { ParticipantSwitchDialogComponent } from '../participant-switch-dialog/participant-switch-dialog.component';
 
 const PARTICIPANTS_LIST_STORAGE_INDEX = `participants`;
-
-export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[], activeMeeting: ViewMeeting): boolean {
-    return (
-        oldGroupIds
-            .filter(group => group !== activeMeeting.default_group_id)
-            .some(id => !(newGroupIds ?? []).includes(id)) && !newGroupIds.includes(activeMeeting.admin_group_id)
-    );
-}
 
 @Component({
     selector: `os-participant-list`,
@@ -351,7 +346,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     /**
      * This function opens the dialog,
-     * where the user can quick change the delegations.
+     * where the user can quick change the groups,
+     * the participant number and the delegations.
      *
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
@@ -364,34 +360,15 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         }
         ev?.stopPropagation();
         const dialogRef = await this.infoDialog.open({
-            user
+            id: user.id,
+            name: user.short_name,
+            group_ids: user.group_ids(),
+            number: user.number(),
+            structure_level_ids: user.structure_level_ids(),
+            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
+            vote_delegated_to_ids: user.vote_delegated_to_meeting_user_ids()
         });
-
-        dialogRef.afterClosed().subscribe(async result => {
-            if (result) {
-                if (!result.group_ids?.length) {
-                    result.group_ids = [this.activeMeeting!.default_group_id];
-                }
-                if (
-                    !(
-                        user.id === this.operator.operatorId &&
-                        areGroupsDiminished(this.operator.user.group_ids(), result.group_ids, this.activeMeeting)
-                    ) ||
-                    (await this.prompt.open(this.selfGroupRemovalDialogTitle, this.selfGroupRemovalDialogContent))
-                ) {
-                    if (
-                        this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
-                        !this.operator.hasPerms(Permission.userCanManage) &&
-                        !this.operator.hasPerms(Permission.userCanUpdate) &&
-                        user.id === this.operator.operatorId
-                    ) {
-                        this.repo.updateSelfDelegation(result, user);
-                    } else {
-                        this.repo.update(result, user).resolve();
-                    }
-                }
-            }
-        });
+        afterDialogClosed(dialogRef, user, this.operator, this.activeMeeting, this.repo, this.prompt);
     }
 
     public getOtherUsersObservable(user: ViewUser): Observable<ViewUser[]> {
@@ -725,3 +702,4 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
         this.router.navigate([userId, `edit`], { relativeTo: this.route });
     }
 }
+export { areGroupsDiminished };

@@ -4,13 +4,14 @@ import { filter, map } from 'rxjs';
 import { SettingsInput } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 
 import { getParticipantListSubscriptionConfig } from '../../../../../../participants.subscription';
-import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../../../structure-levels/view-models/view-structure-level';
 import { ParticipantListSortService } from '../../../../services/participant-list-sort/participant-list-sort.service';
 import { InfoDialog } from '../../services/participant-list-info-dialog.service';
 import { Permission } from '@app/domain/definitions/permission';
 import { Selectable } from '@app/domain/interfaces';
+import { SubscriptionConfig } from '@app/domain/interfaces/subscription-config';
 import { GENDERS } from '@app/domain/models/users/user';
+import { StructureLevelRepositoryService } from '@app/gateways/repositories/structure-levels';
 import { UserRepositoryService } from '@app/gateways/repositories/users';
 import { ViewGroup, GroupControllerService } from '@app/site/pages/meetings/pages/participants/modules';
 import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
@@ -20,8 +21,9 @@ import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeti
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from '@app/site/services/operator.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { SubscriptionConfig } from '@app/domain/interfaces/subscription-config';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+import { getStructureLevelListSubscriptionConfig } from '../../../../../../participants.subscription';
 
 @Component({
     selector: `os-participant-list-info-dialog`,
@@ -58,20 +60,21 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
-    public userList = this.participantRepo.getViewModelListObservable();
-    protected participantSubscriptionConfig: SubscriptionConfig<any>;
+    protected participantSubscriptionConfig: SubscriptionConfig<ViewUser>;
+    protected structureLevelConfig: SubscriptionConfig<ViewStructureLevel>;
+    protected groupsSubscriptionConfig: SubscriptionConfig<ViewGroup>;
 
     protected setting: SettingsInput = {} as SettingsInput;
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
-        private participantRepo: ParticipantControllerService,
-        private userSortService: ParticipantListSortService,
-        private groupRepo: GroupControllerService,
-        private structureLevelRepo: StructureLevelControllerService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private meetingSettings: MeetingSettingsService,
-        private operator: OperatorService,
+        protected participantRepo: ParticipantControllerService,
+        protected userSortService: ParticipantListSortService,
+        protected groupRepo: GroupControllerService,
+        protected structureLevelRepo: StructureLevelRepositoryService,
+        protected activeMeetingIdService: ActiveMeetingIdService,
+        protected meetingSettings: MeetingSettingsService,
+        protected operator: OperatorService,
         protected userRepo: UserRepositoryService = inject(UserRepositoryService)
     ) {
         super();
@@ -82,6 +85,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         this.participantSubscriptionConfig = getParticipantListSubscriptionConfig(
             this.activeMeetingIdService.meetingId
         );
+        this.structureLevelConfig = getStructureLevelListSubscriptionConfig(this.activeMeetingIdService.meetingId);
         this.setting.helpText = 'You can only delete delegations you have received';
         this._currentUser = this.participantRepo.getViewModel(this.infoDialog.id);
         this.subscriptions.push(
@@ -93,8 +97,6 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
                 .get(`users_enable_vote_delegations`)
                 .subscribe(enabled => (this._voteDelegationEnabled = enabled))
         );
-
-        this.structureLevelObservable = this.structureLevelRepo.getViewModelListObservable();
     }
 
     public override ngOnDestroy(): void {
