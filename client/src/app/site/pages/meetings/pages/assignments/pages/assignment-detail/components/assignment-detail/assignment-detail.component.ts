@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -111,43 +110,16 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     private checkSortOrder(): void {
-        if (this._assignmentCandidates.length < 2) {
-            this.sortAscending = true
-            this.isSortByFirstName = undefined;
-        } else {
-            let sorted = [...this.assignmentCandidates].sort((a, b) => {
-                const nameA = (a.user?.first_name ?? '');
-                const nameB = (b.user?.first_name ?? '');
-                const comparison = nameA.localeCompare(nameB);
-                return comparison;
-            });
-            if(this._assignmentCandidates.equals(sorted)){
-                this.sortAscending = true;
-                this.isSortByFirstName = true
-            }
-            sorted.reverse()
-            if(this._assignmentCandidates.equals(sorted)){
-                this.sortAscending = false;
-                this.isSortByFirstName = true
-            }
-            sorted = [...this.assignmentCandidates].sort((a, b) => {
-                const nameA = (a.user?.last_name ?? '');
-                const nameB = (b.user?.last_name ?? '');
-                const comparison = nameA.localeCompare(nameB);
-                return comparison;
-            });
-            if(this._assignmentCandidates.equals(sorted)){
-                this.sortAscending = true;
-                this.isSortByFirstName = false
-            }
-            sorted.reverse()
-            if(this._assignmentCandidates.equals(sorted)){
-                this.sortAscending = false;
-                this.isSortByFirstName = false;
-            }
+        if (this._assignmentCandidates.length < 1) this.updateSort(undefined, undefined);
+        else {
+            if (this._assignmentCandidates.equals(this.sortList(true, true, true))) this.updateSort(true, true);
+            else if (this._assignmentCandidates.equals(this.sortList(true, false, true))) this.updateSort(true, false);
+            else if (this._assignmentCandidates.equals(this.sortList(false, true, true))) this.updateSort(false, true);
+            else if (this._assignmentCandidates.equals(this.sortList(false, false, true)))
+                this.updateSort(false, false);
+            else this.updateSort(undefined, undefined);
         }
     }
-
 
     /**
      * Check if the operator is a candidate
@@ -189,27 +161,25 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     private _navigationSubscription: Subscription | null = null;
 
-    public sortAscending = true;
-    public isSortByFirstName: boolean | undefined = undefined
+    public sortAscending: boolean | undefined = undefined;
+    public isSortByFirstName: boolean | undefined = undefined;
 
-    private operator= inject( OperatorService)
-    public assignmentRepo= inject( AssignmentControllerService)
-    private assignmentCandidateRepo= inject( AssignmentCandidateControllerService)
-    private itemRepo=inject(  AgendaItemControllerService)
-    private promptService=inject(  PromptService)
-    private pdfService=inject(  AssignmentExportService)
-    private pollDialog=inject(  AssignmentPollDialogService)
-    private assignmentPollService=inject(  AssignmentPollService)
-    private pollController=inject(  PollControllerService)
-    private userRepo=inject(  UserControllerService)
-    private snackBar=inject(  MatSnackBar)
+    private operator = inject(OperatorService);
+    public assignmentRepo = inject(AssignmentControllerService);
+    private assignmentCandidateRepo = inject(AssignmentCandidateControllerService);
+    private itemRepo = inject(AgendaItemControllerService);
+    private promptService = inject(PromptService);
+    private pdfService = inject(AssignmentExportService);
+    private pollDialog = inject(AssignmentPollDialogService);
+    private assignmentPollService = inject(AssignmentPollService);
+    private pollController = inject(PollControllerService);
+    private userRepo = inject(UserControllerService);
+    private snackBar = inject(MatSnackBar);
 
     /**
      * Constructor. Build forms and subscribe to needed configs and updates
      */
-    public constructor(
-        formBuilder: UntypedFormBuilder,
-    ) {
+    public constructor(formBuilder: UntypedFormBuilder) {
         super();
         this.assignmentForm = formBuilder.group({
             phase: null,
@@ -395,6 +365,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
 
     private updateCandidatesArray(): void {
         this.candidateUserIds = this._assignment.candidatesAsUsers.map(user => user.id);
+        this.checkSortOrder();
     }
 
     /**
@@ -406,6 +377,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
             this.snackBar.open(infoMessage, this.translate.instant(`Ok`));
         } else {
             await this.addCandidate({ userId: this.operator.operatorId! });
+            this.checkSortOrder();
         }
     }
 
@@ -423,18 +395,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Sort Candidates
      */
     public async sortCandidates(byFirstName = true): Promise<void> {
-        if (typeof this.isSortByFirstName === `undefined`) this.isSortByFirstName = byFirstName;
+        if (typeof this.isSortByFirstName === `undefined`) this.updateSort(byFirstName, true);
         else if (this.isSortByFirstName === byFirstName) this.sortAscending = !this.sortAscending;
-        else {
-            this.isSortByFirstName = byFirstName;
-            this.sortAscending = true;
-        }
-        const sorted = [...this.assignmentCandidates].sort((a, b) => {
-            const nameA = byFirstName ? (a.user?.first_name ?? '') : (a.user?.last_name ?? '');
-            const nameB = byFirstName ? (b.user?.first_name ?? '') : (b.user?.last_name ?? '');
-            const comparison = nameA.localeCompare(nameB);
-            return this.sortAscending ? comparison : -comparison;
-        });
+        else this.updateSort(byFirstName, true);
+
+        const sorted = this.sortList(byFirstName, this.sortAscending);
         this._assignmentCandidates = sorted;
         await this.onSortingChange(sorted, false);
     }
@@ -443,10 +408,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Triggers an update of the sorting.
      */
     public async onSortingChange(candidates: Selectable[], manual = true): Promise<void> {
-        if (manual) {
-            this.isSortByFirstName = undefined;
-            this.sortAscending = false;
-        }
+        if (manual) this.updateSort(undefined, undefined);
         await this.assignmentCandidateRepo.sort(this.assignment, candidates);
     }
 
@@ -476,6 +438,26 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
 
     public onDownloadPdf(): void {
         this.pdfService.exportSingleAssignment(this.assignment);
+    }
+
+    private updateSort(sortType: boolean | undefined, ascend: boolean | undefined): void {
+        this.isSortByFirstName = sortType;
+        this.sortAscending = ascend;
+    }
+
+    private sortList(firstName: boolean, ascent: boolean, bool = false): ViewAssignmentCandidate[] {
+        let byFirstName = this.isSortByFirstName;
+        let asc = this.sortAscending;
+        if (bool) {
+            byFirstName = firstName;
+            asc = ascent;
+        }
+        return [...this.assignmentCandidates].sort((a, b) => {
+            const nameA = byFirstName ? (a.user?.first_name ?? '') : (a.user?.last_name ?? '');
+            const nameB = byFirstName ? (b.user?.first_name ?? '') : (b.user?.last_name ?? '');
+            const comparison = nameA.localeCompare(nameB);
+            return asc ? comparison : -comparison;
+        });
     }
 
     /**

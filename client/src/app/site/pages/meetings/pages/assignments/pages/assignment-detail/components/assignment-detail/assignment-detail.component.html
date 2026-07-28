@@ -170,87 +170,40 @@
             <mat-card-content>
                 <ng-container>
                     <div class="action-title">
-                        <h3>{{ 'Candidates' | translate }}</h3>
+                        <h3>
+                            {{ 'Candidates' | translate }}
+                            @if (assignment.candidateAmount > 0) {
+                                ({{ assignment.candidateAmount }})
+                            }
+                        </h3>
                         <div class="buttons">
                             @if (assignment && hasPerms('manage')) {
+                                <mat-icon class="vertical-align">
+                                    @if (sortAscending === true) {
+                                        arrow_downward
+                                    } @else if (sortAscending === false) {
+                                        arrow_upward
+                                    } @else {
+                                        sort
+                                    }
+                                </mat-icon>
                                 <button
                                     mat-button
                                     [attr.aria-label]="'Sort by last name' | translate"
                                     [color]="isSortByFirstName === false ? 'accent' : ''"
                                     (click)="sortCandidates(false)"
                                 >
-                                    <mat-icon>sort</mat-icon>
                                     <span>{{ 'Surname' | translate }}</span>
                                 </button>
 
                                 <button
                                     mat-button
-                                    matBadge="&#8288;"
-                                    matBadgeColor="accent"
-                                    matBadgeSize="small"
-                                    [attr.aria-hidden]="false"
                                     [attr.aria-label]="'Sort by first name' | translate"
                                     [color]="isSortByFirstName ? 'accent' : ''"
-                                    [matBadgeHidden]="isSortByFirstName !== true"
-                                    [matBadgeOverlap]="false"
                                     (click)="sortCandidates()"
                                 >
-                                    <mat-icon>sort</mat-icon>
                                     <span>{{ 'First name' | translate }}</span>
                                 </button>
-                            }
-                        </div>
-                    </div>
-                    <div class="action-title">
-                        <h3>{{ 'Candidates' | translate }}</h3>
-                        <div class="buttons">
-                            @if (assignmentCandidates.length > 1) {
-                                <div class="candidate-sorting-button margin-bottom-5">
-                                    <button
-                                        mat-button
-                                        matBadge="&#8288;"
-                                        matBadgeColor="accent"
-                                        matBadgeSize="small"
-                                        [attr.aria-hidden]="false"
-                                        [attr.aria-label]="
-                                            sortAscending
-                                                ? ('active custom sort' | translate)
-                                                : ('default sort' | translate)
-                                        "
-                                        [matBadgeHidden]="isSortByFirstName === undefined"
-                                        [matBadgeOverlap]="false"
-                                        [matMenuTriggerFor]="sortMenu"
-                                    >
-                                        <mat-icon>sort</mat-icon>
-                                        {{ 'Sort' | translate }}
-                                    </button>
-                                    <mat-menu #sortMenu="matMenu">
-                                        <button mat-menu-item (click)="sortCandidates()">
-                                            <mat-icon>
-                                                {{
-                                                    isSortByFirstName === true
-                                                        ? sortAscending
-                                                            ? 'arrow_upward'
-                                                            : 'arrow_downward'
-                                                        : ''
-                                                }}
-                                            </mat-icon>
-                                            <span>{{ 'Given name' | translate }}</span>
-                                        </button>
-                                        <button mat-menu-item (click)="sortCandidates(false)">
-                                            <mat-icon>
-                                                {{
-                                                    isSortByFirstName === false
-                                                        ? sortAscending
-                                                            ? 'arrow_upward'
-                                                            : 'arrow_downward'
-                                                        : ''
-                                                }}
-                                            </mat-icon>
-                                            <span>{{ 'Surname' | translate }}</span>
-                                        </button>
-                                    </mat-menu>
-                                </div>
                             }
                         </div>
                     </div>
@@ -301,50 +254,31 @@
                                     ></os-participant-search-selector>
                                 </div>
                             }
-                            <div>
-                                <!-- Add me and remove me if OP has correct permission -->
-                                @if (assignment && hasPerms('addSelf')) {
-                                    @if (!isSelfCandidate) {
-                                        <button
-                                            color="accent"
-                                            mat-button
-                                            [attr.aria-label]="'Add me' | translate"
-                                            (click)="addSelf()"
-                                        >
-                                            <mat-icon>add</mat-icon>
-                                            <span>{{ 'Add me' | translate }}</span>
-                                        </button>
-                                    }
-                                    @if (isSelfCandidate) {
-                                        <button
-                                            color="accent"
-                                            mat-button
-                                            [attr.aria-label]="'Remove me' | translate"
-                                            (click)="removeSelf()"
-                                        >
-                                            <mat-icon>remove</mat-icon>
-                                            <span>{{ 'Remove me' | translate }}</span>
-                                        </button>
-                                    }
-                                }
-                                @if (assignment && hasPerms('manage')) {
+                            <!-- Add me and remove me if OP has correct permission -->
+                            @if (assignment && hasPerms('addSelf')) {
+                                @if (!isSelfCandidate) {
                                     <button
+                                        color="accent"
                                         mat-button
-                                        (click)="sortCandidates(false)"
+                                        [attr.aria-label]="'Add me' | translate"
+                                        (click)="addSelf()"
                                     >
-                                        <mat-icon>sort</mat-icon>
-                                        <span>{{ 'Surname' | translate }}</span>
-                                    </button>
-
-                                    <button
-                                        mat-button
-                                        (click)="sortCandidates()"
-                                    >
-                                        <mat-icon>sort</mat-icon>
-                                        <span>{{ 'Given name' | translate }}</span>
+                                        <mat-icon>add</mat-icon>
+                                        <span>{{ 'Add me' | translate }}</span>
                                     </button>
                                 }
-                            </div>
+                                @if (isSelfCandidate) {
+                                    <button
+                                        color="accent"
+                                        mat-button
+                                        [attr.aria-label]="'Remove me' | translate"
+                                        (click)="removeSelf()"
+                                    >
+                                        <mat-icon>remove</mat-icon>
+                                        <span>{{ 'Remove me' | translate }}</span>
+                                    </button>
+                                }
+                            }
                         </div>
                     </div>
                 </ng-container>
