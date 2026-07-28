@@ -1,4 +1,4 @@
-<div class="option-list">
+<div class="option-list" [class.is-strikeout]="config().strike_out">
     @let multiVotes = !!(config()?.max_vote_sum > 1);
     <div role="row" [class.option-list-caption]="multiVotes" [class.option-list-information-grid]="!multiVotes">
         <ng-template #optionAmount>
@@ -61,7 +61,12 @@
     </ng-template>
 
     @for (option of options(); track option.id; let i = $index) {
-        <div class="option-row" role="row" [class.accentuated-background]="i % 2 === 1">
+        <div
+            class="option-row"
+            role="row"
+            [class.accentuated-background]="i % 2 === 1"
+            [class.is-selected]="isSelected(option.id)"
+        >
             <div class="vote-option-title grid-name-area" role="rowheader">
                 <os-poll-vote-option [option]="option" />
             </div>
@@ -87,7 +92,7 @@
 
     <div class="option-list">
         @if (config().allow_nota) {
-            <div class="option-row" role="row">
+            <div class="option-row general-option" role="row">
                 @let optionName =
                     config().strike_out ? ('General approval' | translate) : ('General rejection' | translate);
                 <div class="vote-option-title grid-name-area" role="rowheader">
@@ -106,7 +111,7 @@
         }
 
         @if (config().min_vote_sum === 0) {
-            <div class="option-row" role="row">
+            <div class="option-row general-option" role="row">
                 <div class="vote-option-title grid-name-area" role="rowheader">
                     {{ 'General abstain' | translate }}
                 </div>
