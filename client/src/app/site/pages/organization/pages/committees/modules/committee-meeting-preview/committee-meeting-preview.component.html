@@ -28,7 +28,7 @@
                     </div>
                 }
 
-                <button mat-icon-button type="button" [matMenuTriggerFor]="meetingMenu">
+                <button mat-icon-button type="button" [matMenuTriggerFor]="meetingMenu" #trigger="matMenuTrigger">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             </ng-container>
@@ -155,7 +155,7 @@
             </button>
         }
         @if (canEditMeetingSetting) {
-            <button mat-menu-item (click)="onDuplicate()">
+            <button mat-menu-item (click)="trigger.closeMenu(); onDuplicate()">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>
             </button>
