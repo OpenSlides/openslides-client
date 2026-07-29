@@ -1,4 +1,10 @@
-<os-head-bar [hasMainButton]="canEdit" [multiSelectMode]="false" [nav]="false" (mainEvent)="openStructureLevelDialog()">
+<os-head-bar
+    [hasMainButton]="canEdit"
+    [mainActionTooltip]="'New structure level' | translate"
+    [multiSelectMode]="false"
+    [nav]="false"
+    (mainEvent)="openStructureLevelDialog()"
+>
     <!-- Title -->
     <div class="title-slot">
         <h1 class="mock-h2" translate>Structure levels</h1>
