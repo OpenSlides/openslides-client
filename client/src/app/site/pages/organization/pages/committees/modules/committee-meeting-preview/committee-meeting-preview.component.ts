@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { CML, OML } from '@app/domain/definitions/organization-permission';
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 
 import { ViewCommittee } from '../../view-models';
 import { MeetingService } from '../services/meeting.service';
-import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
     selector: `os-committee-meeting-preview`,
@@ -24,8 +23,6 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     @Input() public meeting!: ViewMeeting;
     @Input() public committee!: ViewCommittee;
     @Input() public isCMAndRequireDuplicateFrom!: boolean;
-
-    public menuTrigger = viewChild<MatMenuTrigger>('trigger');
 
     public readonly OML = OML;
     public readonly CML = CML;
@@ -130,7 +127,6 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     }
 
     public async onDuplicate(): Promise<void> {
-        this.menuTrigger().closeMenu();
         const title = this.translate.instant(`Are you sure you want to duplicate this meeting?`);
         const content = this.title;
 
