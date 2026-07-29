@@ -1,6 +1,6 @@
 import { Id } from '@app/domain/definitions/key-types';
-import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from '@app/domain/fieldsets/misc';
-import { MeetingUserFieldsets, UserFieldsets } from '@app/domain/fieldsets/user';
+import { FULL_FIELDSET } from '@app/domain/fieldsets/misc';
+import { MeetingUserFieldsets } from '@app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
 import { BaseSimplifiedModelRequest } from '@app/site/services/model-request-builder';
 
@@ -14,33 +14,42 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
     fieldset: FULL_FIELDSET,
     follow: [
         {
-            idField: `content_object_id`,
-            fieldset: [`title`, ...MEETING_ROUTING_FIELDS],
+            idField: `config_id`,
+            fieldset: FULL_FIELDSET
+        },
+        {
+            idField: `ballot_ids`,
+            fieldset: [`poll_id`, `value`],
             follow: [
                 {
-                    idField: `candidate_ids`,
-                    fieldset: FULL_FIELDSET,
-                    follow: [{ idField: `meeting_user_id`, ...MeetingUserFieldsets.FullNameSubscription }]
+                    idField: `poll_ballot_user_id`,
+                    fieldset: []
                 }
             ]
         },
-        { idField: `global_option_id`, fieldset: FULL_FIELDSET },
+        {
+            idField: `ballot_user_ids`,
+            fieldset: [`acting_meeting_user_id`, `represented_meeting_user_id`]
+        },
         {
             idField: `option_ids`,
             fieldset: FULL_FIELDSET,
             follow: [
                 {
-                    idField: `content_object_id`,
-                    fieldset: [...UserFieldsets.FullNameSubscription.fieldset, `option_ids`],
-                    follow: [
-                        {
-                            idField: `poll_candidate_ids`,
-                            fieldset: FULL_FIELDSET,
-                            follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
-                        }
-                    ]
-                },
-                { idField: `vote_ids`, fieldset: FULL_FIELDSET }
+                    idField: `meeting_user_id`,
+                    fieldset: [...MeetingUserFieldsets.FullNameSubscription.fieldset, `vote_delegated_to_id`],
+                    follow: MeetingUserFieldsets.FullNameSubscription.follow
+                }
+            ]
+        },
+        {
+            idField: `meeting_id`,
+            fieldset: [`name`],
+            follow: [
+                {
+                    idField: `committee_id`,
+                    fieldset: [`name`]
+                }
             ]
         }
     ]
@@ -61,37 +70,46 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
         ids,
         fieldset: FULL_FIELDSET,
         follow: [
-            { idField: `content_object_id`, fieldset: [`title`, ...MEETING_ROUTING_FIELDS] },
+            {
+                idField: `config_id`,
+                fieldset: FULL_FIELDSET
+            },
+            {
+                idField: `ballot_ids`,
+                fieldset: [`poll_id`, `value`],
+                follow: [
+                    {
+                        idField: `poll_ballot_user_id`,
+                        follow: [
+                            {
+                                idField: `acting_meeting_user_id`,
+                                ...MeetingUserFieldsets.FullNameSubscription
+                            },
+                            {
+                                idField: `represented_meeting_user_id`,
+                                ...MeetingUserFieldsets.FullNameSubscription
+                            }
+                        ]
+                    }
+                ]
+            },
             {
                 idField: `option_ids`,
                 fieldset: FULL_FIELDSET,
                 follow: [
                     {
-                        idField: `content_object_id`,
-                        ...UserFieldsets.FullNameSubscription,
-                        follow: [
-                            {
-                                idField: `poll_candidate_ids`,
-                                fieldset: FULL_FIELDSET,
-                                follow: [{ idField: `user_id`, ...UserFieldsets.FullNameSubscription }]
-                            }
-                        ]
-                    },
-                    { idField: `vote_ids`, fieldset: FULL_FIELDSET }
+                        idField: `meeting_user_id`,
+                        ...MeetingUserFieldsets.FullNameSubscription.follow
+                    }
                 ]
             },
             {
-                idField: `global_option_id`,
-                fieldset: FULL_FIELDSET,
-                follow: [{ idField: `vote_ids`, fieldset: [] }]
-            },
-            {
-                idField: `entitled_group_ids`,
-                fieldset: [],
+                idField: `meeting_id`,
+                fieldset: [`name`],
                 follow: [
                     {
-                        idField: `meeting_user_ids`,
-                        fieldset: [`user_id`]
+                        idField: `committee_id`,
+                        fieldset: [`name`]
                     }
                 ]
             }

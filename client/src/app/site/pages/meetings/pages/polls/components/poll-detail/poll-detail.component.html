@@ -1,0 +1,88 @@
+<os-head-bar [goBack]="true" [nav]="false">
+    <div class="title-slot">
+        <h1 class="mock-h2">{{ poll()?.title }}</h1>
+    </div>
+
+    <ng-container *osPerms="permission.motionCanManagePolls" class="menu-slot">
+        <button mat-icon-button type="button" [matMenuTriggerFor]="pollDetailMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </ng-container>
+</os-head-bar>
+
+<!-- More Menu -->
+<mat-menu #pollDetailMenu="matMenu">
+    <os-projector-button *osPerms="permission.projectorCanManage" [menuItem]="true" [object]="poll()" />
+
+    <!-- Export -->
+    <button mat-menu-item (click)="exportPollResults()">
+        <mat-icon>archive</mat-icon>
+        <span>{{ 'Export' | translate }}</span>
+    </button>
+
+    <mat-divider />
+    <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="deletePoll()">
+        <mat-icon color="warn">delete</mat-icon>
+        <span>{{ 'Delete' | translate }}</span>
+    </button>
+</mat-menu>
+
+<mat-card class="os-card">
+    <mat-card-content>
+        <a [aria-label]="'Direct link to module of poll' | translate" [routerLink]="getDetailLink()">
+            <h1>{{ poll()?.title }}</h1>
+        </a>
+
+        <!-- Subtitle -->
+        <div class="italic spacer-bottom-20">
+            <!-- Type and State -->
+            <div class="type-and-state italic spacer-bottom-20 break-word">
+                <span *osPerms="permission.motionCanManagePolls; and: poll().isEVoting">
+                    {{ poll().visibility | translateKey: 'poll_visibility' }}
+                    @if (poll().isAnonymous) {
+                        <span>&nbsp;</span>
+                    }
+                    &middot;&nbsp;
+                </span>
+                <!-- State -->
+                <span class="break-word">
+                    @if (poll().isEVoting && poll().canBeVotedFor()) {
+                        {{ 'Voting in progress' | translate }}
+                    } @else if (poll().isFinished && poll().published) {
+                        {{ 'published' | translate }}
+                    } @else {
+                        {{ poll().state | translateKey: 'poll_state' }}
+                    }
+                </span>
+            </div>
+        </div>
+
+        @if (poll().canBeVotedFor()) {
+            <os-poll-progress [poll]="poll()" />
+
+            <div class="poll-content">
+                <div class="user-subtitle">
+                    {{ 'Present entitled users' | translate }}: {{ presentEntitledUsers.value() }}
+                </div>
+                <div class="user-subtitle">{{ 'All entitled users' | translate }}: {{ entitledUsers.value() }}</div>
+            </div>
+        } @else if (poll().isFinished) {
+            <os-poll-result [poll]="poll()" />
+        }
+
+        <mat-tab-group [(selectedIndex)]="selectedTab">
+            <mat-tab [label]="'Single votes' | translate">
+                <div class="tab-content">
+                    <os-poll-single-votes [poll]="poll()"></os-poll-single-votes>
+                </div>
+            </mat-tab>
+            <mat-tab [label]="'Entitled users' | translate">
+                <div class="tab-content">
+                    <os-poll-entitled-user [poll]="poll()"></os-poll-entitled-user>
+                </div>
+            </mat-tab>
+        </mat-tab-group>
+
+        <os-poll-meta [poll]="poll()" />
+    </mat-card-content>
+</mat-card>

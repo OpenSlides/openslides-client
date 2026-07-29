@@ -1,6 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { AssignmentPhase } from '@app/domain/models/assignments/assignment-phase';
-import { PollMethod, PollTableData, VotingResult } from '@app/domain/models/poll/poll-constants';
+import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
+import { PollTableData, VotingResult } from '@app/domain/models/poll/poll-constants';
 import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { TranslateService } from '@ngx-translate/core';
@@ -248,9 +249,9 @@ export class AssignmentPdfService {
     private getPollResult(votingResult: PollTableData, poll: ViewPoll): string {
         const resultList = votingResult.value
             .filter((singleResult: VotingResult) => {
-                if (poll.pollmethod === PollMethod.Y) {
+                if (poll.config instanceof PollConfigSelection) {
                     return singleResult.vote !== `no` && singleResult.vote !== `abstain`;
-                } else if (poll.pollmethod === PollMethod.YN) {
+                } else if (!poll.config?.allow_abstain) {
                     return singleResult.vote !== `abstain`;
                 } else {
                     return true;

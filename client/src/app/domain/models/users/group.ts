@@ -63,9 +63,6 @@ export class Group extends BaseModel<Group> {
         `write_comment_section_ids`,
         `read_chat_group_ids`,
         `write_chat_group_ids`,
-        `used_as_motion_poll_default_id`,
-        `used_as_assignment_poll_default_id`,
-        `used_as_topic_poll_default_id`,
         `meeting_id`
     ];
 }

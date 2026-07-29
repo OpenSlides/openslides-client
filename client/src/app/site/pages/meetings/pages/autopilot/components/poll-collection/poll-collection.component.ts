@@ -1,8 +1,9 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { Id } from '@app/domain/definitions/key-types';
 import { Assignment } from '@app/domain/models/assignments/assignment';
 import { PollContentObject } from '@app/domain/models/poll';
-import { PollClassType } from '@app/domain/models/poll/poll-constants';
 import { Topic } from '@app/domain/models/topics/topic';
 import { BaseComponent } from '@app/site/base/base.component';
 import { BaseViewModel } from '@app/site/base/base-view-model';
@@ -12,6 +13,7 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 
+import { PollComponent } from '../../../../modules/poll/components/poll/poll.component';
 import { getPollDetailSubscriptionConfig, POLL_DETAIL_SUBSCRIPTION } from '../../../polls/polls.subscription';
 import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-polls';
 
@@ -19,8 +21,8 @@ import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-poll
     selector: `os-poll-collection`,
     templateUrl: `./poll-collection.component.html`,
     styleUrls: [`./poll-collection.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [MatCardModule, NgTemplateOutlet, PollComponent],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit, OnDestroy {
     public polls: ViewPoll[] = [];
@@ -125,16 +127,15 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     }
 
     /**
-     * TODO: Some non abstract base poll service was required
      * @param poll
      */
     public canManagePoll(poll: ViewPoll): boolean {
-        if (poll.pollClassType === PollClassType.Motion) {
+        if (poll.isMotionPoll) {
             return this.operator.hasPerms(this.permission.motionCanManagePolls);
-        } else if (poll.pollClassType === PollClassType.Assignment) {
+        } else if (poll.isAssignmentPoll) {
             return this.operator.hasPerms(this.permission.assignmentCanManagePolls);
-        } else if (poll.pollClassType === PollClassType.Topic) {
-            return this.operator.hasPerms(this.permission.pollCanManage);
+        } else if (poll.isTopicPoll) {
+            return this.operator.hasPerms(this.permission.agendaItemCanManagePolls);
         }
         return false;
     }
@@ -177,7 +178,7 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
     private getLastFinishedOrPublishedPoll(viewModel: Partial<HasPolls<C>>): ViewPoll | null {
         if (isHavingViewPolls(viewModel)) {
             let currPolls: ViewPoll[] = viewModel.polls;
-            currPolls = currPolls.filter((p: ViewPoll) => p.stateHasVotes).reverse();
+            currPolls = currPolls.filter((p: ViewPoll) => p.isFinished).reverse();
             return currPolls.length ? currPolls[0] : null;
         }
         return null;

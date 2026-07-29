@@ -1,0 +1,120 @@
+<h2>{{ pollData().title }}</h2>
+
+<form>
+    @for (option of options(); track option.key; let i = $index) {
+        @if (options().length > 1 && (configType() === 'approval' || configType() === 'rating_approval')) {
+            <h3>{{ option.title }}</h3>
+        }
+
+        @switch (configType()) {
+            @case ('rating_score')
+            @case ('selection') {
+                <div class="option">
+                    <mat-form-field class="option-amount">
+                        <mat-label>{{ option.title }}</mat-label>
+                        <input matInput type="number" [formField]="resultForm.options[i].value.yes" />
+                    </mat-form-field>
+
+                    <mat-checkbox class="option-majority" [formField]="resultForm.options[i].majority">
+                        {{ 'majority' | translate }}
+                    </mat-checkbox>
+                </div>
+            }
+            @case ('approval')
+            @case ('rating_approval') {
+                <mat-radio-group [formField]="resultForm.options[i].majority_value">
+                    <ng-template #option let-key="key" let-label="label">
+                        <div class="option">
+                            <mat-form-field class="option-amount">
+                                <mat-label>{{ label }}</mat-label>
+                                <input matInput type="number" [formField]="resultForm.options[i].value[key]" />
+                            </mat-form-field>
+
+                            <mat-radio-button class="option-majority" [value]="key">
+                                {{ 'majority' | translate }}
+                            </mat-radio-button>
+
+                            @if (resultForm.options[i].majority_value().value() === key) {
+                                <button
+                                    mat-icon-button
+                                    [attr.aria-label]="'Unselect majority' | translate"
+                                    (click)="resultForm.options[i].majority_value().value.set(null)"
+                                >
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            }
+                        </div>
+                    </ng-template>
+
+                    <ng-container
+                        [ngTemplateOutlet]="option"
+                        [ngTemplateOutletContext]="{
+                            label: 'Yes' | translate,
+                            key: 'yes'
+                        }"
+                    />
+
+                    <ng-container
+                        [ngTemplateOutlet]="option"
+                        [ngTemplateOutletContext]="{
+                            label: 'No' | translate,
+                            key: 'no'
+                        }"
+                    />
+
+                    @if (pollConfigDataLax().allow_abstain) {
+                        <ng-container
+                            [ngTemplateOutlet]="option"
+                            [ngTemplateOutletContext]="{
+                                label: 'Abstain' | translate,
+                                key: 'abstain'
+                            }"
+                        />
+                    }
+                </mat-radio-group>
+            }
+        }
+    }
+
+    @if (showAbstain()) {
+        <div class="option">
+            <mat-form-field class="option-amount">
+                <mat-label>Global abstain</mat-label>
+                <input matInput type="number" [formField]="resultForm.abstain" />
+            </mat-form-field>
+        </div>
+    }
+
+    @if (showNota()) {
+        <div class="option">
+            <mat-form-field class="option-amount">
+                <mat-label>General rejection/General approval</mat-label>
+                <input matInput type="number" [formField]="resultForm.nota" />
+            </mat-form-field>
+        </div>
+    }
+
+    <div class="option">
+        <mat-form-field class="option-amount">
+            <mat-label>Invalid votes</mat-label>
+            <input matInput type="number" [formField]="resultForm.invalid" />
+        </mat-form-field>
+    </div>
+
+    <div class="option">
+        <mat-form-field class="option-amount">
+            <mat-label>Total ballots</mat-label>
+            <input matInput type="number" [formField]="resultForm.total_ballots" />
+        </mat-form-field>
+        @if (!usesMajority() && configType() !== 'rating_score') {
+            <button
+                matIconButton
+                type="button"
+                [attr.aria-label]="'Update total ballots' | translate"
+                (click)="updateTotalBallots()"
+            >
+                <mat-icon>calculate</mat-icon>
+            </button>
+        }
+    </div>
+</form>

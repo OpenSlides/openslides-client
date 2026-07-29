@@ -195,7 +195,7 @@ describe(`MeetingSettingsDefinitionService`, () => {
         expect(service.getSettingsGroup(`test setting group`)).toBe(fakeSettings[0]);
         expect(service.getSettingsKeys()).toEqual(
             fakeSettings.flatMap(group =>
-                group.subgroups.flatMap(subgroup => subgroup.settings.flatMap(setting => setting.key))
+                group.subgroups.flatMap(subgroup => subgroup.settings.flatMap(setting => setting.key as keyof Settings))
             )
         );
     });
@@ -220,7 +220,7 @@ describe(`MeetingSettingsDefinitionService`, () => {
                     haveDefaults ? `` : ` if there's no defaults`
                 } ${i + 1}`, () => {
                     mockGetters(haveDefaults ? fakeSettingsDefaults : {});
-                    expect(service.getDefaultValue(keys[i])).toEqual(
+                    expect(service.getDefaultValue(keys[i] as keyof Settings)).toEqual(
                         haveDefaults
                             ? setting.type === `daterange`
                                 ? [2, null]
@@ -243,11 +243,13 @@ describe(`MeetingSettingsDefinitionService`, () => {
         const key = Array.isArray(setting.key) ? setting.key[0] : setting.key;
         it(`test validateDefault for ${type}`, () => {
             mockGetters();
-            expect(() => service.validateDefault(key, fakeSettingsDefaults[key])).not.toThrowError();
+            expect(() => service.validateDefault(key as keyof Settings, fakeSettingsDefaults[key])).not.toThrowError();
         });
         it(`test validateDefault for ${type} with broken default`, () => {
             mockGetters(fakeBrokenSettingsDefaults);
-            expect(() => service.validateDefault(key, fakeBrokenSettingsDefaults[key])).toThrowError();
+            expect(() =>
+                service.validateDefault(key as keyof Settings, fakeBrokenSettingsDefaults[key])
+            ).toThrowError();
         });
     }
 });

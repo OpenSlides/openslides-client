@@ -1,11 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, OnDestroy, signal } from '@angular/core';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Permission } from '@app/domain/definitions/permission';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
-import { AutoupdateService } from '@app/site/services/autoupdate';
+import { AutoupdateService, ModelSubscription } from '@app/site/services/autoupdate';
 import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
 import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { TranslateModule } from '@ngx-translate/core';
 import { map } from 'rxjs';
 
 import { getParticipantVoteInfoSubscriptionConfig } from '../../../../pages/participants/participants.subscription';
@@ -15,88 +18,88 @@ import { ActiveMeetingService } from '../../../../services/active-meeting.servic
     selector: `os-poll-progress`,
     templateUrl: `./poll-progress.component.html`,
     styleUrls: [`./poll-progress.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [MatProgressBarModule, TranslateModule],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PollProgressComponent extends BaseUiComponent implements OnInit {
-    @Input()
-    public poll!: ViewPoll;
+export class PollProgressComponent extends BaseUiComponent implements OnDestroy {
+    public poll = input.required<ViewPoll>();
 
-    @Input()
-    public canManagePoll = false;
+    public votescast = computed(() => {
+        return Object.keys(this.poll().ballot_user_ids ?? {}).length;
+    });
 
-    public max = 1;
+    public canSeeProgressBar = signal(false);
 
-    public get votescast(): number {
-        return Object.keys(this.poll?.live_votes ?? {}).length;
-    }
+    public valueInPercent = computed(() => {
+        return (this.votescast() / this.max()) * 100;
+    });
 
-    public get canSeeProgressBar(): boolean {
-        if (!this.canSeeNames) {
-            return false;
-        }
-        return this.canManageSpeakers || this.canManagePoll;
-    }
+    private autoupdate = inject(AutoupdateService);
+    private userRepo = inject(UserControllerService);
+    private operator = inject(OperatorService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private modelRequestBuilder = inject(ModelRequestBuilderService);
 
-    private get canSeeNames(): boolean {
-        return this.operator.hasPerms(Permission.userCanSee);
-    }
+    public maxResource = rxResource({
+        params: () => ({ entitledGroupIds: this.poll().entitled_group_ids }),
 
-    private get canManageSpeakers(): boolean {
-        return this.operator.hasPerms(Permission.listOfSpeakersCanManage);
-    }
+        stream: ({ params }) =>
+            this.userRepo.getViewModelListObservable().pipe(
+                map(users => {
+                    /**
+                     * Filter the users who would be able to vote:
+                     * They are present and don't have their vote right delegated
+                     * or the have their vote delegated to a user who is present.
+                     * They are in one of the voting groups
+                     */
+                    return users.filter(user => {
+                        const countable = user.isVoteCountable;
+                        const inVoteGroup = params.entitledGroupIds.intersect(user.group_ids()).length;
 
-    public constructor(
-        private autoupdate: AutoupdateService,
-        private userRepo: UserControllerService,
-        private operator: OperatorService,
-        private activeMeeting: ActiveMeetingService,
-        private modelRequestBuilder: ModelRequestBuilderService,
-        private cd: ChangeDetectorRef
-    ) {
-        super();
-    }
-
-    public ngOnInit(): void {
-        if (this.poll) {
-            this.subscriptions.push(
-                this.userRepo
-                    .getViewModelListObservable()
-                    .pipe(
-                        map(users => {
-                            /**
-                             * Filter the users who would be able to vote:
-                             * They are present and don't have their vote right delegated
-                             * or the have their vote delegated to a user who is present.
-                             * They are in one of the voting groups
-                             */
-                            return users.filter(user => {
-                                const countable = user.isVoteCountable;
-                                const inVoteGroup = this.poll.entitled_group_ids.intersect(user.group_ids()).length;
-
-                                return countable && inVoteGroup;
-                            });
-                        })
-                    )
-                    .subscribe(users => {
-                        this.max = users.length;
-                        this.cd.markForCheck();
-                    }),
-                this.operator.userObservable.subscribe(() => {
-                    this.cd.markForCheck();
+                        return countable && inVoteGroup;
+                    }).length;
                 })
-            );
+            )
+    });
 
-            if (this.canSeeProgressBar) {
+    public max = computed(() => {
+        return this.maxResource.hasValue() ? this.maxResource.value() : 0;
+    });
+
+    private voteInfoSubscription: ModelSubscription;
+
+    public constructor() {
+        super();
+
+        effect(() => {
+            if (this.canSeeProgressBar()) {
+                if (this.voteInfoSubscription) {
+                    this.voteInfoSubscription.close();
+                }
+
                 const subscriptionConfig = getParticipantVoteInfoSubscriptionConfig(this.activeMeeting.meetingId);
-                this.modelRequestBuilder.build(subscriptionConfig.modelRequest).then(modelRequest => {
-                    this.autoupdate.subscribe(modelRequest, subscriptionConfig.subscriptionName);
+                this.modelRequestBuilder.build(subscriptionConfig.modelRequest).then(async modelRequest => {
+                    this.voteInfoSubscription = await this.autoupdate.subscribe(
+                        modelRequest,
+                        subscriptionConfig.subscriptionName
+                    );
                 });
             }
-        }
+        });
+
+        this.operator.userObservable.pipe(takeUntilDestroyed()).subscribe(() => {
+            this.canSeeProgressBar.set(this.operator.hasPerms(Permission.pollCanSeeProgress));
+        });
     }
 
-    public get valueInPercent(): number {
-        return (this.votescast / this.max) * 100;
+    /**
+     * automatically clears subscriptions if the component is destroyed.
+     */
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+
+        if (this.voteInfoSubscription) {
+            this.voteInfoSubscription.close();
+        }
     }
 }

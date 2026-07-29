@@ -1,26 +1,15 @@
 import { inject, Service } from '@angular/core';
 import { Assignment } from '@app/domain/models/assignments/assignment';
-import { PollPercentBaseVerboseKey, PollTypeVerboseKey } from '@app/domain/models/poll';
-import { OptionData, PollData } from '@app/domain/models/poll/generic-poll';
-import { Poll } from '@app/domain/models/poll/poll';
-import {
-    ABSTAIN_KEY,
-    CalculablePollKey,
-    NO_KEY,
-    PollMethod,
-    PollPercentBase,
-    PollType,
-    YES_KEY
-} from '@app/domain/models/poll/poll-constants';
+import { PollVisibility } from '@app/domain/models/poll';
+import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import { PollServiceMapperService } from '@app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
-import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
-import { AssignmentPollMethodKey, AssignmentPollMethodVerbose } from '../definitions';
+import { ViewPoll } from '../../../../polls';
 
 export const UnknownUserLabel = _(`Deleted user`);
 
@@ -31,46 +20,73 @@ export const UnknownUserLabel = _(`Deleted user`);
  */
 @Service()
 export class AssignmentPollService extends PollService {
-    public defaultPollMethod: PollMethod | undefined;
-    public defaultPercentBase: PollPercentBase | undefined;
-    public defaultPollType: PollType | undefined;
-    public defaultGroupIds: number[] = [];
+    private defaultPercentBase: BaseOnehundredPercentBase | undefined;
+    private defaultPollType: PollVisibility | undefined;
+    private defaultVotingType: string;
+    private defaultDisplayChart: string;
+    private defaultGroupIds: number[] = [];
+    private defaultAllowAbstain = false;
+    private defaultAllowNota = false;
+    private defaultActiveStrikeOut = false;
+    private defaultEnableLiveVote = false;
 
-    protected override translate = inject(TranslateService);
     private pollRepo = inject(PollControllerService);
-    private meetingSettingsService = inject(MeetingSettingsService);
+    private meetingPollSettingsService = inject(MeetingPollSettingsService);
 
     public constructor() {
         super();
         const pollServiceMapper = inject(PollServiceMapperService);
         pollServiceMapper.registerService(ViewAssignment.COLLECTION, this);
-        this.meetingSettingsService
-            .get(`assignment_poll_default_onehundred_percent_base`)
+        this.meetingPollSettingsService
+            .get(`assignment`, `onehundred_percent_base`)
             .subscribe(base => (this.defaultPercentBase = base));
+        this.meetingPollSettingsService
+            .get(`assignment`, `group_ids`)
+            .subscribe(ids => (this.defaultGroupIds = ids ?? []));
+        this.meetingPollSettingsService
+            .get(`assignment`, `sort_result_by_votes`)
+            .subscribe(sort => (this.sortByVote = sort));
+        this.meetingPollSettingsService
+            .get(`assignment`, `allow_abstain`)
+            .subscribe(bool => (this.defaultAllowAbstain = bool));
+        this.meetingPollSettingsService
+            .get(`assignment`, `visibility`)
+            .subscribe(type => (this.defaultPollType = type));
+        this.meetingPollSettingsService
+            .get(`assignment`, `allow_nota`)
+            .subscribe(bool => (this.defaultAllowNota = bool));
+        this.meetingPollSettingsService
+            .get(`assignment`, `strike_out`)
+            .subscribe(bool => (this.defaultActiveStrikeOut = bool));
+        this.meetingPollSettingsService
+            .get(`assignment`, `display_chart`)
+            .subscribe(chartType => (this.defaultDisplayChart = chartType));
+
         this.meetingSettingsService
-            .get(`assignment_poll_default_group_ids`)
-            .subscribe(ids => (this.defaultGroupIds = ids));
+            .get(`poll_enable_max_votes_per_option`)
+            .subscribe(enable_max_votes_per_option => (this.enableMaxVotesPerOption = enable_max_votes_per_option));
+        this.meetingSettingsService
+            .get(`poll_default_live_voting_enabled`)
+            .subscribe(is => (this.defaultEnableLiveVote = is));
         this.meetingSettingsService
             .get(`assignment_poll_default_method`)
-            .subscribe(method => (this.defaultPollMethod = method));
-        this.meetingSettingsService
-            .get(`assignment_poll_default_type`)
-            .subscribe(type => (this.defaultPollType = type));
-        this.meetingSettingsService
-            .get(`assignment_poll_sort_poll_result_by_votes`)
-            .subscribe(sort => (this.sortByVote = sort));
-        this.meetingSettingsService
-            .get(`assignment_poll_enable_max_votes_per_option`)
-            .subscribe(enable_max_votes_per_option => (this.enableMaxVotesPerOption = enable_max_votes_per_option));
+            .subscribe(type => (this.defaultVotingType = type));
     }
 
-    public getDefaultPollData(contentObject?: Assignment): Partial<Poll> {
-        const poll: Partial<Poll> = {
+    public getDefaultPollData(contentObject?: Assignment): Partial<ViewPoll> {
+        const poll: Partial<ViewPoll> = {
             title: this.translate.instant(`Ballot`),
-            onehundred_percent_base: this.defaultPercentBase,
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
-            pollmethod: this.defaultPollMethod,
-            type: this.isElectronicVotingEnabled ? this.defaultPollType : PollType.Analog
+            visibility: this.isElectronicVotingEnabled ? this.defaultPollType : PollVisibility.Manually,
+            live_voting_enabled: this.defaultEnableLiveVote,
+            config: {
+                allow_abstain: this.defaultAllowAbstain,
+                allow_nota: this.defaultAllowNota,
+                strike_out: this.defaultActiveStrikeOut,
+                onehundred_percent_base: this.defaultPercentBase,
+                display_chart: this.defaultDisplayChart,
+                method: this.defaultVotingType
+            }
         };
 
         if (contentObject) {
@@ -81,58 +97,5 @@ export class AssignmentPollService extends PollService {
         }
 
         return poll;
-    }
-
-    /**
-     * @deprecated Please rewrite this function
-     *
-     * @param key
-     * @param value
-     * @returns
-     */
-    public override getVerboseNameForValue(key: string, value: PollPercentBaseVerboseKey | PollTypeVerboseKey): string {
-        switch (key) {
-            case `pollmethod`:
-                if (value in AssignmentPollMethodVerbose) {
-                    return AssignmentPollMethodVerbose[value as AssignmentPollMethodKey];
-                }
-        }
-        return super.getVerboseNameForValue(key, value);
-    }
-
-    protected override getPollDataFields(poll: PollData): CalculablePollKey[] {
-        switch (poll.pollmethod) {
-            case PollMethod.YNA: {
-                return [YES_KEY, NO_KEY, ABSTAIN_KEY];
-            }
-            case PollMethod.YN: {
-                return [YES_KEY, NO_KEY];
-            }
-            case PollMethod.N: {
-                return [NO_KEY];
-            }
-            default: {
-                return [YES_KEY];
-            }
-        }
-    }
-
-    protected override getPercentBase(poll: PollData, row?: OptionData): number {
-        const base = poll.onehundred_percent_base as PollPercentBase;
-        switch (base) {
-            case PollPercentBase.Y:
-                return this.getSumOptionsY(poll);
-            default:
-                return super.getPercentBase(poll, row);
-        }
-    }
-
-    private getSumOptionsY(poll: PollData): number {
-        if (!poll.options?.length) {
-            return 0;
-        }
-
-        const generalOptions = (poll.global_option.abstain || 0) + (poll.global_option.no || 0);
-        return poll.votesvalid - generalOptions;
     }
 }
