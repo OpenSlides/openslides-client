@@ -155,7 +155,7 @@
             </button>
         }
         @if (canEditMeetingSetting) {
-            <button mat-menu-item (click)="trigger.closeMenu(); onDuplicate()">
+            <button mat-menu-item (click)="onDuplicate()">
                 <mat-icon>file_copy</mat-icon>
                 <span>{{ 'Duplicate' | translate }}</span>
             </button>
