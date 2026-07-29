@@ -42,7 +42,6 @@ export const meetingSettingsDefaults: Record<string, any> = {
     motions_enable_recommendation_on_projector: true,
     motions_enable_sidebox_on_projector: false,
     motions_hide_metadata_background: false,
-    motions_block_slide_columns: 1,
     motions_number_with_blank: false,
     motions_number_min_digits: 2,
     motions_number_type: 'per_category',
