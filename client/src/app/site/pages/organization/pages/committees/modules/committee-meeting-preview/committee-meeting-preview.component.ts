@@ -14,12 +14,13 @@ import { MeetingControllerService } from '@app/site/pages/meetings/services/meet
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 import { OperatorService } from '@app/site/services/operator.service';
-import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { PromptDialogComponent, PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 
 import { ViewCommittee } from '../../view-models';
 import { MeetingService } from '../services/meeting.service';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: `os-committee-meeting-preview`,
@@ -94,6 +95,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     private meetingService = inject(MeetingService);
     private promptService = inject(PromptService);
     private translate = inject(TranslateService);
+    private dialog = inject(MatDialog);
 
     /**
      * Get the subject
@@ -140,12 +142,19 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
         }
     }
 
+    private dialogRef: MatDialogRef<PromptDialogComponent> | null = null;
+
     public async onDuplicate(): Promise<void> {
         this.meetingMenu().closeMenu();
         const title = this.translate.instant(`Are you sure you want to duplicate this meeting?`);
         const content = this.title;
+        this.dialogRef = this.dialog.open(PromptDialogComponent, {
+            width: `290px`,
+            data: { title, content }
+        });
+        const confirmed = firstValueFrom(this.dialogRef.afterClosed());
 
-        const confirmed = await this.promptService.open(title, content);
+        // const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
             await this.meetingRepo.duplicate({ meeting_id: this.meeting.id }).resolve();
         }
