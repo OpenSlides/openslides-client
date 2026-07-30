@@ -39,7 +39,6 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     public get optionAmount(): number {
         const assignment = this.pollData?.content_object as ViewAssignment;
-
         return assignment.candidates.length;
     }
 

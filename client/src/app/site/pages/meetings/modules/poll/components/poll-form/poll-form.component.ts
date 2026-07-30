@@ -168,11 +168,8 @@ export class PollFormComponent extends BaseComponent {
     public constructor() {
         super();
 
-        effect(() => {
-            this.updateLiveVotingEnabled();
-            this.setWarning();
-        });
-
+        effect(this.updateLiveVotingEnabled.bind(this));
+        effect(this.setWarning.bind(this));
         effect(this.updateData.bind(this));
         effect(this.updateConfigData.bind(this));
         effect(this.changeMethod.bind(this));
@@ -231,10 +228,7 @@ export class PollFormComponent extends BaseComponent {
                 this.form['options']().value.set(data.options.map(option => option.text));
             if (data.config?.method) {
                 let preselection = data.config.method;
-                if (
-                    !(data instanceof ViewPoll) &&
-                    (this.optionAmount() <= 1 || data.config.method !== `rating_score`)
-                ) {
+                if (!(data instanceof ViewPoll) && this.optionAmount() <= 1 && data.config.method !== `rating_score`) {
                     preselection = `approval`;
                 }
 

@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -20,7 +21,7 @@ export interface PollFormSelection {
 
 @Component({
     selector: 'os-poll-form-selection',
-    imports: [ReactiveFormsModule, MatCheckboxModule, MatInputModule, MatSelectModule, TranslatePipe],
+    imports: [ReactiveFormsModule, MatCheckboxModule, MatInputModule, MatSelectModule, TranslatePipe, AsyncPipe],
     templateUrl: './poll-form-selection.component.html',
     styleUrls: [`../poll-form/poll-form.component.scss`, './poll-form-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush

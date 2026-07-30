@@ -35,7 +35,7 @@
                 </mat-checkbox>
 
                 <mat-checkbox formControlName="allow_nota">
-                    @if (form.get('strike_out').value) {
+                    @if (form.get('strike_out').valueChanges | async) {
                         {{ 'General approval' | translate }}
                     } @else {
                         {{ 'General rejection' | translate }}
