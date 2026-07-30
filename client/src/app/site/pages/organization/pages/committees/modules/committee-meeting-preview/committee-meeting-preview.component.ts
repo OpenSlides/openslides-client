@@ -110,7 +110,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
         const title = this.translate.instant(`Are you sure you want to archive this meeting?`);
         const content = this.translate.instant(`Attention: This action cannot be undone!`);
 
-        const confirmed = await this.promptService.open(title, content);
+        const confirmed = await this.promptService.open(title, content, undefined, undefined, undefined, true);
         if (confirmed) {
             await this.meetingRepo.archive(this.meeting);
         }
@@ -120,7 +120,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
         const title = this.translate.instant(`Are you sure you want to activate this meeting?`);
         const content = this.title;
 
-        const confirmed = await this.promptService.open(title, content);
+        const confirmed = await this.promptService.open(title, content, undefined, undefined, undefined, true);
         if (confirmed) {
             await this.meetingRepo.unarchive(this.meeting);
         }
@@ -130,7 +130,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
         const title = this.translate.instant(`Are you sure you want to duplicate this meeting?`);
         const content = this.title;
 
-        const confirmed = await this.promptService.open(title, content);
+        const confirmed = await this.promptService.open(title, content, undefined, undefined, undefined, true);
         if (confirmed) {
             await this.meetingRepo.duplicate({ meeting_id: this.meeting.id }).resolve();
         }
@@ -143,7 +143,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
         const decline = ``;
         const deletion = true;
 
-        const confirmed = await this.promptService.open(title, content, confirm, decline, deletion);
+        const confirmed = await this.promptService.open(title, content, confirm, decline, deletion, true);
         if (confirmed) {
             await this.meetingRepo.delete(this.meeting);
         }
@@ -157,7 +157,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
                 `Do you really want to stop sharing this meeting as a public template?`
             );
 
-            const confirmed = await this.promptService.open(title, content);
+            const confirmed = await this.promptService.open(title, content, undefined, undefined, undefined, true);
             if (confirmed) {
                 await this.meetingRepo.update({ set_as_template: false }, { meeting: this.meeting });
             }
@@ -169,7 +169,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
                 `Meeting templates and the data they contain are publicly viewable by all committee administrators.`
             );
 
-            const confirmed = await this.promptService.open(title, content);
+            const confirmed = await this.promptService.open(title, content, undefined, undefined, undefined, true);
             if (confirmed) {
                 await this.meetingRepo.update({ set_as_template: true }, { meeting: this.meeting });
             }

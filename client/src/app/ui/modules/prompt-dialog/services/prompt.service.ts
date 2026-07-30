@@ -23,19 +23,19 @@ export class PromptService {
         confirm?: string,
         decline?: string,
         deletion?: boolean,
-        restore_focus?: boolean
+        fromMatMenu?: boolean
     ): Promise<any> {
-        if (restore_focus !== undefined) {
+        if (fromMatMenu) {
             this.dialogRef = this.dialog.open(PromptDialogComponent, {
                 width: `290px`,
                 data: { title, content, confirm, decline, deletion },
-                restoreFocus: restore_focus
+                restoreFocus: false,
+                autoFocus: false
             });
         } else {
             this.dialogRef = this.dialog.open(PromptDialogComponent, {
                 width: `290px`,
-                data: { title, content, confirm, decline, deletion },
-                restoreFocus: false
+                data: { title, content, confirm, decline, deletion }
             });
         }
         return firstValueFrom(this.dialogRef.afterClosed());
