@@ -22,22 +22,12 @@ export class PromptService {
         content = ``,
         confirm?: string,
         decline?: string,
-        deletion?: boolean,
-        fromMatMenu?: boolean
+        deletion?: boolean
     ): Promise<any> {
-        if (fromMatMenu) {
-            this.dialogRef = this.dialog.open(PromptDialogComponent, {
-                width: `290px`,
-                data: { title, content, confirm, decline, deletion },
-                restoreFocus: false,
-                autoFocus: false
-            });
-        } else {
-            this.dialogRef = this.dialog.open(PromptDialogComponent, {
-                width: `290px`,
-                data: { title, content, confirm, decline, deletion }
-            });
-        }
+        this.dialogRef = this.dialog.open(PromptDialogComponent, {
+            width: `290px`,
+            data: { title, content, confirm, decline, deletion }
+        });
         return firstValueFrom(this.dialogRef.afterClosed());
     }
 
