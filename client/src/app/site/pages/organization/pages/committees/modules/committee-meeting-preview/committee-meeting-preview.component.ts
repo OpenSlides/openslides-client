@@ -38,8 +38,6 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     public readonly OML = OML;
     public readonly CML = CML;
 
-    public meetingMenu = viewChild<MatMenuTrigger>(MatMenuTrigger);
-
     public get title(): string {
         return this.meeting?.name || ``;
     }
@@ -121,7 +119,6 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     }
 
     public async onArchive(): Promise<void> {
-        this.meetingMenu().closeMenu();
         const title = this.translate.instant(`Are you sure you want to archive this meeting?`);
         const content = this.translate.instant(`Attention: This action cannot be undone!`);
 
@@ -132,7 +129,6 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     }
 
     public async onUnarchive(): Promise<void> {
-        this.meetingMenu().closeMenu();
         const title = this.translate.instant(`Are you sure you want to activate this meeting?`);
         const content = this.title;
 
@@ -142,26 +138,21 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
         }
     }
 
-    private dialogRef: MatDialogRef<PromptDialogComponent> | null = null;
-
     public async onDuplicate(): Promise<void> {
-        this.meetingMenu().closeMenu();
         const title = this.translate.instant(`Are you sure you want to duplicate this meeting?`);
         const content = this.title;
-        this.dialogRef = this.dialog.open(PromptDialogComponent, {
+        const dialogRef = this.dialog.open(PromptDialogComponent, {
             width: `290px`,
             data: { title, content }
         });
-        const confirmed = firstValueFrom(this.dialogRef.afterClosed());
 
-        // const confirmed = await this.promptService.open(title, content);
+        const confirmed = await firstValueFrom(dialogRef.afterClosed());
         if (confirmed) {
             await this.meetingRepo.duplicate({ meeting_id: this.meeting.id }).resolve();
         }
     }
 
     public async onDeleteMeeting(): Promise<void> {
-        this.meetingMenu().closeMenu();
         const title = this.translate.instant(`Are you sure you want to delete this meeting?`);
         const content = this.title;
         const confirm = this.translate.instant(`Yes, delete`);
@@ -175,7 +166,6 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     }
 
     public async toggleTemplateMeeting(): Promise<void> {
-        this.meetingMenu().closeMenu();
         let content = this.title;
 
         if (this.isTemplateMeeting) {
