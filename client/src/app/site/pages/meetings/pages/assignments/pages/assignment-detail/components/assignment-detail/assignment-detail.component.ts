@@ -455,9 +455,16 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         return [...this.assignmentCandidates].sort((a, b) => {
             const nameA = byFirstName ? (a.user?.first_name ?? '') : (a.user?.last_name ?? '');
             const nameB = byFirstName ? (b.user?.first_name ?? '') : (b.user?.last_name ?? '');
-            const comparison = nameA.localeCompare(nameB);
+            const comparison = this.compareNames(nameA, nameB);
             return asc ? comparison : -comparison;
         });
+    }
+
+    private compareNames(nameA: string, nameB: string): number {
+        if (nameA === `` && nameB === ``) return 0;
+        else if (nameA === ``) return 1;
+        else if (nameB === ``) return -1;
+        else return nameA.localeCompare(nameB);
     }
 
     /**
