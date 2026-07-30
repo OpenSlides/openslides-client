@@ -37,7 +37,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     public readonly OML = OML;
     public readonly CML = CML;
 
-    public trigger = viewChild<MatMenuTrigger>(MatMenuTrigger);
+    public meetingMenu = viewChild<MatMenuTrigger>(MatMenuTrigger);
 
     public get title(): string {
         return this.meeting?.name || ``;
@@ -139,7 +139,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     }
 
     public async onDuplicate(): Promise<void> {
-        this.trigger().closeMenu();
+        this.meetingMenu().closeMenu();
         const title = this.translate.instant(`Are you sure you want to duplicate this meeting?`);
         const content = this.title;
 
