@@ -173,6 +173,40 @@
                     <div>
                         @if (assignment?.candidates?.length) {
                             <div class="candidates-list">
+                                @if (assignmentCandidates.length > 1) {
+                                    <div class="candidate-sorting-button margin-bottom-5">
+                                        <button mat-button [matMenuTriggerFor]="sortMenu">
+                                            <mat-icon>sort</mat-icon>
+                                            {{ 'Sort' | translate }}
+                                        </button>
+                                        <mat-menu #sortMenu="matMenu">
+                                            <button mat-menu-item (click)="sortCandidates('first_name')">
+                                                <mat-icon>
+                                                    {{
+                                                        currentSort === 'first_name'
+                                                            ? sortAscending
+                                                                ? 'arrow_upward'
+                                                                : 'arrow_downward'
+                                                            : ''
+                                                    }}
+                                                </mat-icon>
+                                                <span>{{ 'Given name' | translate }}</span>
+                                            </button>
+                                            <button mat-menu-item (click)="sortCandidates('last_name')">
+                                                <mat-icon>
+                                                    {{
+                                                        currentSort === 'last_name'
+                                                            ? sortAscending
+                                                                ? 'arrow_upward'
+                                                                : 'arrow_downward'
+                                                            : ''
+                                                    }}
+                                                </mat-icon>
+                                                <span>{{ 'Surname' | translate }}</span>
+                                            </button>
+                                        </mat-menu>
+                                    </div>
+                                }
                                 <os-sorting-list
                                     [count]="assignment.number_poll_candidates"
                                     [enable]="hasPerms('manage')"
