@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, viewChild } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { OML } from '@app/domain/definitions/organization-permission';
 import { BaseListViewComponent } from '@app/site/base/base-list-view.component';
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
@@ -7,7 +8,6 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { ColumnRestriction } from '@app/ui/modules/list';
 import { PromptService } from '@app/ui/modules/prompt-dialog/services/prompt.service';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
 
 import { MeetingCsvExportService } from '../../services/meeting-export.service';
 import { MeetingListFilterService } from '../../services/meeting-list-filter/meeting-list-filter.service';
@@ -30,18 +30,19 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
         }
     ];
 
+    public meetingMenu = viewChild<MatMenuTrigger>(MatMenuTrigger);
+
     public toRestrictFn = (restriction: ColumnRestriction<OML>): boolean =>
         !this.operator.hasOrganizationPermissions(restriction.permission);
 
-    public constructor(
-        protected override translate: TranslateService,
-        public meetingController: MeetingControllerService,
-        public operator: OperatorService,
-        public filterService: MeetingListFilterService,
-        public sortService: MeetingListSortService,
-        private csvExport: MeetingCsvExportService,
-        private promptService: PromptService
-    ) {
+    public meetingController = inject(MeetingControllerService);
+    public operator = inject(OperatorService);
+    public filterService = inject(MeetingListFilterService);
+    public sortService = inject(MeetingListSortService);
+    private csvExport = inject(MeetingCsvExportService);
+    private promptService = inject(PromptService);
+
+    public constructor() {
         super();
         super.setTitle(`Meetings`);
         this.canMultiSelect = true;
@@ -65,6 +66,7 @@ export class MeetingListComponent extends BaseListViewComponent<ViewMeeting> {
     }
 
     public async doDelete(meeting?: ViewMeeting): Promise<void> {
+        this.meetingMenu().closeMenu();
         const toDelete = meeting ? [meeting] : this.selectedRows;
         const toTranslate = meeting
             ? _(`Are you sure you want to delete this meeting?`)

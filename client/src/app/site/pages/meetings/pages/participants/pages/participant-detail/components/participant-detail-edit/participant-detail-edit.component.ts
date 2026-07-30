@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, viewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { ActivatedRoute } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
 import { CML, OML } from '@app/domain/definitions/organization-permission';
@@ -20,7 +21,6 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { UserService } from '@app/site/services/user.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable } from 'rxjs';
 
 import { GroupControllerService } from '../../../../modules';
@@ -40,8 +40,8 @@ import { ViewStructureLevel } from '../../../structure-levels/view-models';
     standalone: false
 })
 export class ParticipantDetailEditComponent extends BaseMeetingComponent implements OnInit {
-    @ViewChild(UserDetailViewComponent)
-    private userDetailView;
+    private userDetailView = viewChild<UserDetailViewComponent>(UserDetailViewComponent);
+    public meetingMenu = viewChild<MatMenuTrigger>(MatMenuTrigger);
 
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
     public committeeSubscriptionConfig = getCommitteeListMinimalSubscriptionConfig();
@@ -185,21 +185,20 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
     private _isDefaultPasswordEditable = false;
     private _isUserEditable = false;
 
-    public constructor(
-        protected override translate: TranslateService,
-        private route: ActivatedRoute,
-        public repo: ParticipantControllerService,
-        public sortService: ParticipantListSortService,
-        public readonly committeeController: CommitteeControllerService,
-        public readonly committeeSortService: CommitteeSortService,
-        private operator: OperatorService,
-        private promptService: PromptService,
-        private groupRepo: GroupControllerService,
-        private structureLevelRepo: StructureLevelControllerService,
-        private userService: UserService,
-        private cd: ChangeDetectorRef,
-        private organizationSettingsService: OrganizationSettingsService
-    ) {
+    private route = inject(ActivatedRoute);
+    public repo = inject(ParticipantControllerService);
+    public sortService = inject(ParticipantListSortService);
+    public readonly committeeController = inject(CommitteeControllerService);
+    public readonly committeeSortService = inject(CommitteeSortService);
+    private operator = inject(OperatorService);
+    private promptService = inject(PromptService);
+    private groupRepo = inject(GroupControllerService);
+    private structureLevelRepo = inject(StructureLevelControllerService);
+    private userService = inject(UserService);
+    private cd = inject(ChangeDetectorRef);
+    private organizationSettingsService = inject(OrganizationSettingsService);
+
+    public constructor() {
         super();
         this.getUserByUrl();
 
@@ -299,11 +298,11 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
 
     public updateByValueChange(event: any): void {
         this.personalInfoFormValue = event;
-        if (this.userDetailView.personalInfoForm.get(`locked_out`).disabled !== this.lockoutCheckboxDisabled) {
+        if (this.userDetailView().personalInfoForm.get(`locked_out`).disabled !== this.lockoutCheckboxDisabled) {
             if (this.lockoutCheckboxDisabled) {
-                this.userDetailView.personalInfoForm.get(`locked_out`).disable();
+                this.userDetailView().personalInfoForm.get(`locked_out`).disable();
             } else {
-                this.userDetailView.personalInfoForm.get(`locked_out`).enable();
+                this.userDetailView().personalInfoForm.get(`locked_out`).enable();
             }
         }
     }
@@ -322,8 +321,8 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
                     : null,
                 vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
                     ? this.personalInfoFormValue.vote_delegations_from_ids
-                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
-                          .filter(id => !!id)
+                          .map((id: number) => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter((id: number) => !!id)
                     : []
             };
             if (payload.member_number === ``) {
@@ -376,7 +375,7 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
     private checkForGroups(user: any): void {
         const defaultGroupId = this.activeMeetingService.meeting!.default_group_id;
         if (user?.group_ids.includes(defaultGroupId) && user?.group_ids.length > 1) {
-            user.group_ids = user.group_ids.filter(id => id !== defaultGroupId);
+            user.group_ids = user.group_ids.filter((id: number) => id !== defaultGroupId);
         }
         if (!user?.group_ids.length) {
             user.group_ids = [defaultGroupId];
