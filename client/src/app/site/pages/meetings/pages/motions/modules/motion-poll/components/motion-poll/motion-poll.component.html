@@ -1,15 +1,15 @@
-@if (showPoll) {
+@if (showPoll()) {
     <mat-card class="motion-poll-wrapper">
         <mat-card-content>
             <os-poll
                 [allowEdit]="true"
                 [navigateToPollDetail]="true"
-                [poll]="poll"
+                [poll]="poll()"
                 (dialogOpened)="dialogOpened.emit($event)"
             ></os-poll>
 
             <!-- Detail link -->
-            @if (poll.isPublished && isSameMeeting) {
+            @if (poll().isPublished && isSameMeeting()) {
                 <div class="poll-detail-button-wrapper">
                     <a mat-icon-button matTooltip="{{ 'More' | translate }}" [routerLink]="getDetailLink()">
                         <mat-icon class="icon-18">visibility</mat-icon>
