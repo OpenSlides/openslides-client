@@ -67,8 +67,8 @@
 <div *osPerms="permission.motionCanManagePolls">
     @if (pollStateAction() && !hideChangeState()) {
         <button
-            mat-stroked-button
             class="poll-state-action"
+            mat-stroked-button
             [class]="pollStateAction().css"
             [disabled]="stateChangePending()"
             (click)="nextPollState()"
@@ -86,8 +86,8 @@
 
     @if (poll().canAnonymize) {
         <button
-            mat-stroked-button
             class="anonymize-poll-button"
+            mat-stroked-button
             [disabled]="anonymizePending()"
             (click)="anonymizePoll()"
         >

@@ -10,7 +10,6 @@ import { PollState, PollVisibility } from '@app/domain/models/poll';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { OperatorService } from '@app/site/services/operator.service';
 import { DirectivesModule } from '@app/ui/directives';
-import { ChoiceService } from '@app/ui/modules/choice-dialog';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
@@ -24,6 +23,7 @@ import { PollControllerService } from '../../services/poll-controller.service';
 import { PollMetaComponent } from '../poll-meta/poll-meta.component';
 import { PollProgressComponent } from '../poll-progress/poll-progress.component';
 import { PollResultComponent } from '../poll-result/poll-result.component';
+import { PollStopDialog } from '../poll-stop-dialog/poll-stop-dialog.component';
 import { PollVoteComponent } from '../poll-vote/poll-vote.component';
 import { VotingPrivacyWarningDialogComponent } from '../voting-privacy-warning/voting-privacy-warning-dialog.component';
 
@@ -98,7 +98,6 @@ export class PollComponent extends BaseMeetingComponent {
 
     private operator = inject(OperatorService);
     private promptService = inject(PromptService);
-    private choiceService = inject(ChoiceService);
     private repo = inject(PollControllerService);
     private dialog = inject(MatDialog);
     private pollPdf = inject(PollBallotPdfService);
@@ -153,23 +152,16 @@ export class PollComponent extends BaseMeetingComponent {
                 this.repo.publish(this.poll());
             }
         } else if (currentState === PollState.Started) {
-            const title = this.translate.instant(`Are you sure you want to stop this voting?`);
-            const STOP_LABEL = this.translate.instant(`Stop`);
-            const STOP_PUBLISH_LABEL = this.translate.instant(`Stop & publish`);
-            const STOP_PUBLISH_ANONYMIZE_LABEL = this.translate.instant(`Stop, publish & anonymize`);
-            const actions = [STOP_LABEL, STOP_PUBLISH_LABEL];
-            if (this.poll().live_voting_enabled) {
-                actions.push(STOP_PUBLISH_ANONYMIZE_LABEL);
-            }
-            const choice = await this.choiceService.open({ title, multiSelect: false, actions });
+            const dialogRef = this.dialog.open(PollStopDialog, {
+                data: { poll: this.poll() }
+            });
 
-            if (choice?.action === STOP_LABEL) {
-                await this.changeState(PollState.Finished);
-            } else if (choice?.action === STOP_PUBLISH_LABEL) {
-                await this.repo.publish(this.poll()).catch(this.raiseError);
-            } else if (choice?.action === STOP_PUBLISH_ANONYMIZE_LABEL) {
-                await this.repo.anonymize(this.poll(), true).catch(this.raiseError);
-            }
+            dialogRef.afterClosed().subscribe(result => {
+                console.log('The dialog was closed');
+                if (result !== undefined) {
+                    this.repo.finalize(this.poll(), result).catch(this.raiseError);
+                }
+            });
         }
     }
 
