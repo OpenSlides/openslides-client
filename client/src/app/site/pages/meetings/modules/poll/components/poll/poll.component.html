@@ -130,7 +130,7 @@
             }
         }
     }
-} @else if (poll().isFinished) {
+} @else if (poll().isFinished && poll().result) {
     <os-poll-result [poll]="poll()" />
 }
 
