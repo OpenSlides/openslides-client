@@ -31,19 +31,23 @@
                 </mat-form-field>
             </div>
 
-            <div class="margin-bottom-15 info-grid">
-                <div></div>
-                <mat-form-field>
-                    <mat-label>{{ 'Max amount of yes votes' | translate }}</mat-label>
-                    <input formControlName="max_yes_amount" matInput required type="number" />
-                    @if (form.get('max_yes_amount').hasError('min')) {
-                        <mat-error>{{ 'Amount needs to be at least 1' | translate }}</mat-error>
-                    }
-                    @if (form.get('max_yes_amount').hasError('max')) {
-                        <mat-error>{{ 'Amount must not exceed amount of available options' | translate }}</mat-error>
-                    }
-                </mat-form-field>
-            </div>
+            @if (maxYesVotesEnabled()) {
+                <div class="margin-bottom-15 info-grid">
+                    <div></div>
+                    <mat-form-field>
+                        <mat-label>{{ 'Max amount of yes votes' | translate }}</mat-label>
+                        <input formControlName="max_yes_amount" matInput required type="number" />
+                        @if (form.get('max_yes_amount').hasError('min')) {
+                            <mat-error>{{ 'Amount needs to be at least 1' | translate }}</mat-error>
+                        }
+                        @if (form.get('max_yes_amount').hasError('max')) {
+                            <mat-error>
+                                {{ 'Amount must not exceed amount of available options' | translate }}
+                            </mat-error>
+                        }
+                    </mat-form-field>
+                </div>
+            }
         }
 
         <div class="info-grid">

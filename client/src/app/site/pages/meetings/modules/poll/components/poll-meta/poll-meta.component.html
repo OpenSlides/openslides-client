@@ -127,7 +127,7 @@
             }
         }
 
-        @if (config().max_yes_amount > 1 && config().max_yes_amount < config().max_vote_sum) {
+        @if (config().max_yes_amount >= 1 && config().max_yes_amount < config().max_vote_sum) {
             <div>
                 {{ 'Maximum amount of yes votes' | translate }}:
                 <span>{{ config().max_yes_amount }}</span>
