@@ -1,2 +1,6 @@
 @use 'src/assets/styles/poll-styles-common.scss';
 @use 'src/assets/styles/poll/card.scss';
+
+.poll-state-action {
+    margin-right: 8px;
+}

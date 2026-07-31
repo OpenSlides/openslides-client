@@ -40,8 +40,15 @@
                         {{ 'Voting in progress' | translate }}
                     } @else if (poll().isFinished && poll().published) {
                         {{ 'published' | translate }}
+                        @if (poll().isOpen && poll().isAnonymized) {
+                            ({{ 'anonymized' | translate }})
+                        }
                     } @else {
                         {{ poll().state | translateKey: 'poll_state' }}
+                    }
+
+                    @if (poll().isFinished && !poll().published) {
+                        ({{ 'unpublished' | translate }})
                     }
                 </span>
             </div>
@@ -57,10 +64,11 @@
 </div>
 
 <!-- Change state button -->
-<div *osPerms="permission.motionCanManagePolls; and: !hideChangeState()">
-    @if (pollStateAction()) {
+<div *osPerms="permission.motionCanManagePolls">
+    @if (pollStateAction() && !hideChangeState()) {
         <button
             mat-stroked-button
+            class="poll-state-action"
             [class]="pollStateAction().css"
             [disabled]="stateChangePending()"
             (click)="nextPollState()"
@@ -71,6 +79,24 @@
                     {{ 'In progress, please wait ...' | translate }}
                 } @else {
                     {{ poll().nextState | translateKey: 'poll_state_change_action' }}
+                }
+            </span>
+        </button>
+    }
+
+    @if (poll().canAnonymize) {
+        <button
+            mat-stroked-button
+            class="anonymize-poll-button"
+            [disabled]="anonymizePending()"
+            (click)="anonymizePoll()"
+        >
+            <mat-icon>warning</mat-icon>
+            <span class="next-state-label">
+                @if (anonymizePending()) {
+                    {{ 'In progress, please wait ...' | translate }}
+                } @else {
+                    {{ 'Anonymize' | translate }}
                 }
             </span>
         </button>
@@ -126,14 +152,6 @@
         [menuItem]="true"
         [object]="poll().getProjectionBuildDescriptor()"
     />
-    <button
-        *osPerms="permission.motionCanManagePolls; and: poll && poll().canAnonymize"
-        mat-menu-item
-        (click)="anonymizePoll()"
-    >
-        <mat-icon>warning</mat-icon>
-        <span>{{ 'Anonymize votes' | translate }}</span>
-    </button>
     <button mat-menu-item (click)="downloadPdf()">
         <mat-icon>picture_as_pdf</mat-icon>
         <span>{{ 'Ballot papers' | translate }}</span>

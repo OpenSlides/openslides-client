@@ -62,6 +62,7 @@ export class PollComponent extends BaseMeetingComponent {
 
     public dialogOpened = output<void>();
 
+    public anonymizePending = signal(false);
     public stateChangePending = signal(false);
 
     public isSameMeeting = computed(() => {
@@ -119,10 +120,12 @@ export class PollComponent extends BaseMeetingComponent {
     }
 
     public async anonymizePoll(): Promise<void> {
+        this.anonymizePending.set(true);
         const title = this.translate.instant(`Are you sure you want to anonymize all votes? This cannot be undone.`);
         if (await this.promptService.open(title)) {
             this.repo.anonymize(this.poll()).catch(this.raiseError);
         }
+        this.anonymizePending.set(false);
     }
 
     public async resetState(): Promise<void> {
