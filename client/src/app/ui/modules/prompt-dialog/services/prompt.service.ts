@@ -24,6 +24,7 @@ export class PromptService {
         decline?: string,
         deletion?: boolean
     ): Promise<any> {
+        (document.activeElement as HTMLElement)?.blur();
         this.dialogRef = this.dialog.open(PromptDialogComponent, {
             width: `290px`,
             data: { title, content, confirm, decline, deletion }
