@@ -226,10 +226,8 @@ export class AssignmentPdfService {
      */
     private createNominationList(poll: ViewPoll): object {
         if (poll.isListPoll) {
-            const userList = poll.options[0]?.contentTitlesAsSortedArray?.map(candidate => ({
-                text:
-                    `${candidate.title}${candidate.subtitle ? ` (` + candidate.subtitle + `)` : ``}` ||
-                    UnknownUserLabel,
+            const userList = poll.options?.map(candidate => ({
+                text: candidate.meeting_user.getListTitle() || UnknownUserLabel,
                 margin: [0, 0, 0, 10]
             }));
             const listType = (poll.content_object as ViewAssignment).number_poll_candidates ? `ol` : `ul`;
