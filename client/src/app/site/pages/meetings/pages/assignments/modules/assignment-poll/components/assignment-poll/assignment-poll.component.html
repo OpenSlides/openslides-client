@@ -1,10 +1,10 @@
-@if (showPoll) {
+@if (showPoll()) {
     <mat-card class="os-card">
         <mat-card-content>
             <os-poll
                 [allowEdit]="true"
                 [navigateToPollDetail]="true"
-                [poll]="poll"
+                [poll]="poll.value()"
                 (dialogOpened)="dialogOpened.emit($event)"
             />
         </mat-card-content>

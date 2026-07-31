@@ -61,4 +61,8 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
     public publish(poll: Identifiable): Promise<void> {
         return this.repo.publishPoll(poll);
     }
+
+    public finalize(poll: Identifiable, actions: ('publish' | 'anonymize')[]): Promise<void> {
+        return this.repo.finalizePoll(poll, actions);
+    }
 }

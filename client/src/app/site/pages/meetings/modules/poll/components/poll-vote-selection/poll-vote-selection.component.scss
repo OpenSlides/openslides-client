@@ -51,6 +51,11 @@
     }
 }
 
+.is-strikeout .option-row:not(.general-option).is-selected .vote-option-title {
+    color: var(--theme-no);
+    text-decoration: line-through;
+}
+
 .vote-option-title {
     display: flex;
     align-items: center;

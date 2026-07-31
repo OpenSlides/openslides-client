@@ -172,11 +172,14 @@ export class Settings {
     public topic_poll_config_id: Id;
 
     // General poll settings
+    public poll_enable_max_yes_votes: boolean;
+    public poll_default_required_majority: `no_majority` | `two_third_majority` | `absolute_majority`;
     public poll_default_live_voting_enabled: boolean;
     public poll_enable_max_votes_per_option: boolean;
     public poll_default_allow_invalid: boolean;
     public poll_default_allow_vote_split: boolean;
     public poll_projection_name_order_first: `first_name` | `last_name`;
+    public poll_projection_max_columns: boolean;
 
     // SSO
     public external_id!: string;
@@ -412,11 +415,14 @@ export class Meeting extends BaseModel<Meeting> {
         `motion_poll_config_id`,
         `topic_poll_default_method`,
         `topic_poll_config_id`,
+        `poll_enable_max_yes_votes`,
         `poll_enable_max_votes_per_option`,
+        `poll_default_required_majority`,
         `poll_default_live_voting_enabled`,
         `poll_default_allow_invalid`,
         `poll_default_allow_vote_split`,
         `poll_projection_name_order_first`,
+        `poll_projection_max_columns`,
         `projector_ids`,
         `all_projection_ids`,
         `projector_message_ids`,

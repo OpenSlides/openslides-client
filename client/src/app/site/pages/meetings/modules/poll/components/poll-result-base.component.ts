@@ -1,11 +1,11 @@
-import { Component, computed, input } from '@angular/core';
+import { computed, Directive, input } from '@angular/core';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 
 import { ViewPoll, ViewPollOption } from '../../../pages/polls';
 
 export const PERCENT_DECIMAL_PLACES = 3;
 
-@Component({ template: `` })
+@Directive()
 export abstract class PollResultBaseComponent<T extends BaseViewModel, U> {
     public poll = input.required<ViewPoll>();
 

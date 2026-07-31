@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -9,9 +10,18 @@ import { _, TranslatePipe } from '@ngx-translate/core';
 import { ViewPoll } from '../../../../pages/polls';
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
+export interface PollFormSelection {
+    max_options_amount: number;
+    min_options_amount: number;
+    allow_nota: boolean;
+    onehundred_percent_base: SelectionOnehundredPercentBase;
+    strike_out: boolean;
+    display_chart: string;
+}
+
 @Component({
     selector: 'os-poll-form-selection',
-    imports: [ReactiveFormsModule, MatCheckboxModule, MatInputModule, MatSelectModule, TranslatePipe],
+    imports: [ReactiveFormsModule, MatCheckboxModule, MatInputModule, MatSelectModule, TranslatePipe, AsyncPipe],
     templateUrl: './poll-form-selection.component.html',
     styleUrls: [`../poll-form/poll-form.component.scss`, './poll-form-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -26,6 +36,7 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
         [`disabled`, _('Disabled (no percents)')]
     ];
 
+    public hideMethod = input<boolean>(false);
     public optionAmount = input<number>(null);
 
     public getSerialzedForm(): Record<string, unknown> {

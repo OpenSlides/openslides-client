@@ -1,4 +1,4 @@
-import { Component, inject, viewChild } from '@angular/core';
+import { Component, computed, inject, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
@@ -33,13 +33,9 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
         return this.pollService.isElectronicVotingEnabled;
     }
 
-    public override get formsValid(): boolean {
-        if (!super.formsValid) {
-            return false;
-        }
-
-        return this.approvalForm().form.valid;
-    }
+    public approvalFormValid = computed(() => {
+        return this.approvalForm().formValid();
+    });
 
     public get approvalFormValue(): Partial<PollConfigApproval> {
         return this.approvalForm().form.value;

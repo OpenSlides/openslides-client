@@ -1,14 +1,24 @@
-import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { RatingApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-approval';
+import { RatingScoreOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-score';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { _, TranslatePipe } from '@ngx-translate/core';
 
 import { ViewPoll } from '../../../../pages/polls';
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
+
+export interface PollFormRatingApproval {
+    max_options_amount: number;
+    min_options_amount: number;
+    max_yes_amount: number;
+    onehundred_percent_base: RatingScoreOnehundredPercentBase;
+    display_chart: string;
+}
 
 @Component({
     selector: 'os-poll-form-rating-approval',
@@ -35,7 +45,12 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         [`disabled`, _('Disabled (no percents)')]
     ];
 
+    public hideMethod = input<boolean>(false);
     public optionAmount = input<number>(null);
+
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public maxYesVotesEnabled = this.meetingSettingsService.signal(`poll_enable_max_yes_votes`);
 
     protected initForm(): void {
         this.form = this.fb.group({
@@ -66,7 +81,12 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
     }
 
     public getSerialzedForm(): Record<string, unknown> {
-        return this.form.value;
+        const formValue = this.form.value;
+        if (!this.maxYesVotesEnabled()) {
+            delete formValue.max_yes_amount;
+        }
+
+        return formValue;
     }
 
     private minOptionsAmountValidator(): ValidatorFn {

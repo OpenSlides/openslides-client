@@ -136,6 +136,13 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         });
     }
 
+    public async finalizePoll(poll: Identifiable, actions: ('publish' | 'anonymize')[]): Promise<void> {
+        return this.voteApi.finalize(poll.id, {
+            anonymize: actions.indexOf('anonymize') !== -1,
+            publish: actions.indexOf('publish') !== -1
+        });
+    }
+
     public async updateOptionForPoll(poll: Poll, update: any): Promise<void> {
         if (poll.visibility !== PollVisibility.Manually) {
             throw new Error(`Cannot update an option for an electronic poll!`);

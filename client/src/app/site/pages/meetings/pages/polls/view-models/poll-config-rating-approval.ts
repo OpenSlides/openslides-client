@@ -15,6 +15,7 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
     }
 
     public static COLLECTION = PollConfigRatingApproval.COLLECTION;
+    public override readonly method: string = `rating_approval`;
 
     public get invalidBallots(): number | null {
         return this.parsedResult()?.invalid ?? null;

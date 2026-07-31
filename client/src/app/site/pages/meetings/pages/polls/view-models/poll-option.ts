@@ -10,18 +10,10 @@ export class ViewPollOption extends BaseViewModel<PollOption> {
         return this._model;
     }
 
-    public get isListOption(): boolean {
-        throw new Error(`Not implemented`);
-    }
-
     public getOptionTitle(): OptionTitle {
         return {
             title: this.text
         };
-    }
-
-    public get contentTitlesAsSortedArray(): OptionTitle[] {
-        throw new Error(`Not implemented`);
     }
 
     public static COLLECTION = PollOption.COLLECTION;

@@ -46,7 +46,7 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 
     public get canAnonymize(): boolean {
-        return !this.isAnonymized && !this.isAnalog && !this.isNamed && (this.isFinished || this.isPublished);
+        return !this.isAnonymized && !this.isAnalog && this.isOpen && (this.isFinished || this.isPublished);
     }
 
     public get isPublished(): boolean {

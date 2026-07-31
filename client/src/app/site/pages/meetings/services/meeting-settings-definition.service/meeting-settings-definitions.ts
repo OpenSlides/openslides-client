@@ -826,6 +826,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 label: _(`General`),
                 settings: [
                     {
+                        key: `poll_enable_max_yes_votes`,
+                        label: _(`Allow limiting the amount of yes votes in per candidate polls`),
+                        type: `boolean`
+                    },
+                    {
                         key: `poll_enable_max_votes_per_option`,
                         label: _(`Allow to accumulate several votes on one candidate or option ("comulative voting")`),
                         type: `boolean`
@@ -847,14 +852,20 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     },
                     {
+                        key: `poll_default_required_majority`,
+                        label: _(`Default required majority`),
+                        type: `choice`,
+                        choiceI18nPrefix: 'poll_required_majority',
+                        choices: [`no_majority`, `two_third_majority`, `absolute_majority`]
+                    },
+                    {
                         key: `poll_projection_name_order_first`,
                         label: _(`Sort participant names on single votes projection by`),
                         type: `choice`,
                         choices: {
                             first_name: _(`Given name`),
                             last_name: _(`Surname`)
-                        },
-                        helpText: _(`Only for nominal votes.`)
+                        }
                     },
                     {
                         key: `poll_projection_max_columns`,

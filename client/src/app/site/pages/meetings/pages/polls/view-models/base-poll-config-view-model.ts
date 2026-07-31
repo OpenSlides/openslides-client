@@ -8,6 +8,8 @@ export abstract class BasePollConfigViewModel<
     M extends BaseModel = any,
     R extends BasePollResult = any
 > extends BaseViewModel<M> {
+    public readonly method: string;
+
     private _parsedResult: R;
     public parsedResult(): R | null {
         if (!this.poll.result) {

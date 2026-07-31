@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { VOTE_MAJORITY } from '@app/domain/models/poll';
 import { ThemeService } from '@app/site/services/theme.service';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
@@ -53,8 +53,7 @@ const PollChartBarThickness = 20;
         NgTemplateOutlet
     ],
     templateUrl: './poll-result-selection.component.html',
-    styleUrl: './poll-result-selection.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './poll-result-selection.component.scss'
 })
 export class PollResultSelectionComponent extends PollResultBaseComponent<
     ViewPollConfigSelection,

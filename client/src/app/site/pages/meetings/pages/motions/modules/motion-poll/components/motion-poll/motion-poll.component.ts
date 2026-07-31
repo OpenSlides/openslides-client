@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, output } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
@@ -7,8 +7,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { Permission } from '@app/domain/definitions/permission';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
 import { ProjectorButtonModule } from '@app/site/pages/meetings/modules/meetings-component-collector/projector-button/projector-button.module';
-import { BasePollComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll.component';
 import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/poll/poll.component';
 import { OperatorService } from '@app/site/services/operator.service';
 import { DirectivesModule } from '@app/ui/directives';
@@ -32,42 +32,33 @@ import { ViewPoll } from '../../../../../polls';
         ProjectorButtonModule
     ],
     templateUrl: `./motion-poll.component.html`,
-    styleUrls: [`./motion-poll.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager
+    styleUrls: [`./motion-poll.component.scss`]
 })
-export class MotionPollComponent extends BasePollComponent {
-    public pollViewModel = input.required<ViewPoll>();
+export class MotionPollComponent extends BaseMeetingComponent {
+    public poll = input.required<ViewPoll>();
 
     public dialogOpened = output();
 
-    public get showPoll(): boolean {
-        if (this.poll) {
+    public showPoll = computed<boolean>(() => {
+        if (this.poll()) {
             if (
                 this.operator.hasPerms(Permission.motionCanSeePolls) ||
-                this.poll.isPublished ||
-                (this.poll.isEVoting && !this.poll.isCreated)
+                this.poll().isPublished ||
+                (this.poll().isEVoting && !this.poll().isCreated)
             ) {
                 return true;
             }
         }
         return false;
-    }
+    });
 
-    public get isSameMeeting(): boolean {
-        return !this.poll.meeting_id || this.activeMeetingId === this.poll.meeting_id;
-    }
+    public isSameMeeting = computed<boolean>(() => {
+        return !this.poll().meeting_id || this.activeMeetingId === this.poll().meeting_id;
+    });
 
     private operator = inject(OperatorService);
 
-    public constructor() {
-        super();
-
-        effect(() => {
-            this.poll = this.pollViewModel();
-        });
-    }
-
-    public getDetailLink(): string {
-        return `/${this.activeMeetingId}/polls/${this.poll.sequential_number}`;
-    }
+    public getDetailLink = computed<string>(() => {
+        return `/${this.activeMeetingId}/polls/${this.poll().sequential_number}`;
+    });
 }

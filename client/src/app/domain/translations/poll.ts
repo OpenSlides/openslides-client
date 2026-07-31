@@ -22,5 +22,8 @@ export default {
     'poll_percent_base.cast': _(`All casted ballots`),
     'poll_percent_base.entitled': _(`All entitled users`),
     'poll_percent_base.entitled_present': _(`Present entitled users`),
-    'poll_percent_base.disabled': _(`Disabled (no percents)`)
+    'poll_percent_base.disabled': _(`Disabled (no percents)`),
+    'poll_required_majority.no_majority': _(`No majority`),
+    'poll_required_majority.two_third_majority': _(`Two thirds`),
+    'poll_required_majority.absolute_majority': _(`Absolute`)
 };

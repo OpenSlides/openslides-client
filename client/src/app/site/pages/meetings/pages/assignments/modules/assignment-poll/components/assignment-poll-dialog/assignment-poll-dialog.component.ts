@@ -1,9 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
-import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import {
     BasePollDialogComponent,
     PollMethodPayload,
@@ -11,13 +9,8 @@ import {
 } from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
 import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
 import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
-import { PollFormApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
-import { PollFormRatingApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-rating-approval/poll-form-rating-approval.component';
-import { PollFormRatingScoreComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-rating-score/poll-form-rating-score.component';
-import { PollFormSelectionComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-selection/poll-form-selection.component';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
 import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
-import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -27,10 +20,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         PollEditResultComponent,
         PollFormComponent,
-        PollFormApprovalComponent,
-        PollFormSelectionComponent,
-        PollFormRatingApprovalComponent,
-        PollFormRatingScoreComponent,
         MatDialogModule,
         MatButtonModule,
         MatTabsModule,
@@ -39,50 +28,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     changeDetection: ChangeDetectionStrategy.Eager
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {
-    private approvalForm = viewChild(PollFormApprovalComponent);
-    private selectionForm = viewChild(PollFormSelectionComponent);
-    private ratingApprovalForm = viewChild(PollFormRatingApprovalComponent);
-    private ratingScoreForm = viewChild(PollFormRatingScoreComponent);
-
-    private tabMethodMap = computed(() => {
-        const methods = [];
-        if (!this.hasMultipleOptions) {
-            methods.push(`approval`);
-            if (this.allowCumulative()) {
-                methods.push(`rating_score`);
-            }
-        } else {
-            methods.push(`selection`, `rating_approval`);
-            if (this.allowCumulative()) {
-                methods.push(`rating_score`);
-            }
-            methods.push(`approval`);
-        }
-
-        return methods;
-    });
-
     public get isEVotingEnabled(): boolean {
         return this.pollService.isElectronicVotingEnabled;
-    }
-
-    public override get formsValid(): boolean {
-        if (!super.formsValid) {
-            return false;
-        }
-
-        switch (this.getSelectedMethod()) {
-            case `approval`:
-                return this.approvalForm()?.form.valid;
-            case `selection`:
-                return this.selectionForm()?.form.valid;
-            case `rating_approval`:
-                return this.ratingApprovalForm()?.form.valid;
-            case `rating_score`:
-                return this.ratingScoreForm()?.form.valid;
-        }
-
-        return false;
     }
 
     public get hasMultipleOptions(): boolean {
@@ -92,43 +39,15 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
 
     public get optionAmount(): number {
         const assignment = this.pollData?.content_object as ViewAssignment;
-
         return assignment.candidates.length;
     }
 
-    public selectedTab = signal(0);
-    public allowCumulative = signal(false);
-
     private pollService = inject(PollService);
-    private meetingSettingsService = inject(MeetingSettingsService);
-
-    public constructor() {
-        super();
-
-        this.allowCumulative.set(this.meetingSettingsService.instant(`poll_enable_max_votes_per_option`));
-        let method = this.pollData?.config?.method;
-        if (this.pollData?.config_id) {
-            const collection = collectionFromFqid(this.pollData?.config_id);
-            method = collection.replace(`poll_config_`, ``);
-        }
-        if (method === `rating_score`) {
-            this.allowCumulative.set(true);
-        }
-
-        this.selectedTab.set(this.tabMethodMap().indexOf(method));
-
-        this.meetingSettingsService
-            .get(`poll_enable_max_votes_per_option`)
-            .pipe(takeUntilDestroyed())
-            .subscribe(v => {
-                this.allowCumulative.set(v);
-            });
-    }
 
     public override methodPayload(): PollMethodPayload {
         return {
-            method: this.getSelectedMethod(),
-            method_config: this.getMethodConfig()
+            method: this.pollForm().selectedMethod(),
+            method_config: this.pollForm().methodConfig()
         };
     }
 
@@ -145,7 +64,7 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         const assignment = this.pollData?.content_object as ViewAssignment;
 
         const options = [];
-        if (this.getSelectedMethod() === `approval`) {
+        if (this.pollForm().selectedMethod() === `approval`) {
             options.push([{ key: `approval`, title: null }]);
         } else {
             for (const option of assignment.candidates) {
@@ -154,23 +73,5 @@ export class AssignmentPollDialogComponent extends BasePollDialogComponent {
         }
 
         return options;
-    }
-
-    public getMethodConfig(): unknown {
-        switch (this.getSelectedMethod()) {
-            case `approval`:
-                return { ...this.approvalForm()?.getSerialzedForm() };
-            case `selection`:
-                return { ...this.selectionForm()?.getSerialzedForm() };
-            case `rating_approval`:
-                return { ...this.ratingApprovalForm()?.getSerialzedForm() };
-            case `rating_score`:
-                return { ...this.ratingScoreForm()?.getSerialzedForm() };
-        }
-        return {};
-    }
-
-    public getSelectedMethod(): string {
-        return this.tabMethodMap()[this.selectedTab()];
     }
 }
