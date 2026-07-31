@@ -53,70 +53,9 @@ export abstract class BasePollComponent<C extends PollContentObject = any> exten
     protected choiceService = inject(ChoiceService);
     protected repo = inject(PollControllerService);
 
-    public async nextPollState(): Promise<void> {
-        const currentState: PollState = this._poll.state;
-        if (currentState === PollState.Created || currentState === PollState.Finished) {
-            if (this._poll.nextState === `published`) {
-                this.repo.publish(this._poll);
-            } else {
-                await this.changeState(this._poll.nextState);
-            }
-        } else if (currentState === PollState.Started) {
-            const title = this.translate.instant(`Are you sure you want to stop this voting?`);
-            const STOP_LABEL = this.translate.instant(`Stop`);
-            const STOP_PUBLISH_LABEL = this.translate.instant(`Stop & publish`);
-            const STOP_PUBLISH_ANONYMIZE_LABEL = this.translate.instant(`Stop, publish & anonymize`);
-            const actions = [STOP_LABEL, STOP_PUBLISH_LABEL];
-            if (this._poll.live_voting_enabled) {
-                actions.push(STOP_PUBLISH_ANONYMIZE_LABEL);
-            }
-            const choice = await this.choiceService.open({ title, multiSelect: false, actions });
-
-            if (choice?.action === STOP_LABEL) {
-                await this.changeState(PollState.Finished);
-            } else if (choice?.action === STOP_PUBLISH_LABEL) {
-                await this.repo.publish(this.poll).catch(this.raiseError);
-            } else if (choice?.action === STOP_PUBLISH_ANONYMIZE_LABEL) {
-                await this.repo.anonymize(this.poll, true).catch(this.raiseError);
-            }
-        }
-    }
-
-    private async changeState(targetState: PollState): Promise<void> {
-        this.stateChangePendingSubject.next(true);
-        await this.repo.changePollState(this._poll, targetState).catch(this.raiseError);
-        this.stateChangePendingSubject.next(false);
-    }
-
-    public async resetState(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to reset this vote?`);
-        const content = this.translate.instant(`All votes will be lost.`);
-        if (await this.promptService.open(title, content)) {
-            this.changeState(PollState.Created);
-        }
-    }
-
-    /**
-     * Handler for the 'delete poll' button
-     */
-    public async deletePoll(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to delete this vote?`);
-        const content = this._poll.getTitle();
-        if (await this.promptService.open(title, content)) {
-            await this.repo.delete(this._poll);
-        }
-    }
-
     protected initializePoll(id: Id): void {
         this._id = id;
         this.loadPoll(this._id);
-    }
-
-    public async pseudoanonymizePoll(): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to anonymize all votes? This cannot be undone.`);
-        if (await this.promptService.open(title)) {
-            this.repo.anonymize(this.poll).catch(this.raiseError);
-        }
     }
 
     /**
