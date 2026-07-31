@@ -173,7 +173,7 @@ export class Settings {
 
     // General poll settings
     public poll_enable_max_yes_votes: boolean;
-    public poll_default_required_majority: boolean;
+    public poll_default_required_majority: `no_majority` | `two_third_majority` | `absolute_majority`;
     public poll_default_live_voting_enabled: boolean;
     public poll_enable_max_votes_per_option: boolean;
     public poll_default_allow_invalid: boolean;
