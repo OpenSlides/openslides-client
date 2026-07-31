@@ -188,7 +188,7 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
             this.agendaExportService.exportAsCsv(views, info, csvMetaInfo);
         } else if (this.isXMLFormat) {
             const xmlMeta = [];
-            this.agendaExportService.exportAsXML(views, info, xmlMeta);
+            this.agendaExportService.exportAsXML(views);
         }
         // this.router.navigate([this.activeMeetingIdService.meetingId, `agenda`]);
     }

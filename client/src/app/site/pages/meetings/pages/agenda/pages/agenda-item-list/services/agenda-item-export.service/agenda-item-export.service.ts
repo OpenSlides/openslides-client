@@ -104,47 +104,8 @@ export class AgendaItemExportService {
         });
     }
 
-    public exportAsXML(source: ViewAgendaItem[], info: InfoToExport[], meta: xmlMetaInfo[]): void {
-        const config = [];
-        if (info.includes(`item_number`)) {
-            config.push({ label: `item_number`, property: `item_number` });
-        }
-        if (info.includes(`title`)) {
-            config.push({ label: `title`, map: (viewItem): string => viewItem.content_object?.title });
-        }
-        if (info.includes(`text`)) {
-            config.push({
-                label: `text`,
-                map: (viewItem): string =>
-                    viewItem.content_object?.getCSVExportText ? viewItem.content_object.getCSVExportText() : ``
-            });
-        }
-        if (info.includes(`moderation_notes`)) {
-            config.push({
-                label: `moderation_notes`,
-                map: (viewItem): string => viewItem.content_object?.list_of_speakers?.moderator_notes ?? ``
-            });
-        }
-        if (info.includes(`list_of_speakers`)) {
-            config.push({
-                label: `list_of_speakers`,
-                map: (viewItem): string => {
-                    if (
-                        viewItem.content_object?.list_of_speakers &&
-                        viewItem.content_object.list_of_speakers.waitingSpeakerAmount > 0
-                    ) {
-                        return viewItem.content_object?.list_of_speakers.waitingSpeakerAmount.toString();
-                    }
-                    return ``;
-                }
-            });
-        }
-        if (info.includes(`internal_commentary`)) {
-            config.push({ label: `agenda_comment`, property: `comment` });
-        }
-
+    public exportAsXML(source: ViewAgendaItem[]): void {
         const filename = this.translate.instant(`Agenda`) + `.xml`;
-        this.xmlExportService.export(source, config, filename);
-        console.log('Exported as XML', source, info, filename, meta);
+        this.xmlExportService.export(source, filename);
     }
 }
