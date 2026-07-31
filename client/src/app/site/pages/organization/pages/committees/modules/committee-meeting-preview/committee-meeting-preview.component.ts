@@ -5,9 +5,9 @@ import { MeetingControllerService } from '@app/site/pages/meetings/services/meet
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 import { OperatorService } from '@app/site/services/operator.service';
-import { PromptDialogComponent, PromptService } from '@app/ui/modules/prompt-dialog';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { ViewCommittee } from '../../view-models';
 import { MeetingService } from '../services/meeting.service';
@@ -131,12 +131,8 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     public async onDuplicate(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to duplicate this meeting?`);
         const content = this.title;
-        const dialogRef = this.dialog.open(PromptDialogComponent, {
-            width: `290px`,
-            data: { title, content }
-        });
 
-        const confirmed = await firstValueFrom(dialogRef.afterClosed());
+        const confirmed = await this.promptService.open(title, content);
         if (confirmed) {
             await this.meetingRepo.duplicate({ meeting_id: this.meeting.id }).resolve();
         }

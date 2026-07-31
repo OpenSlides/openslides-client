@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,12 +23,6 @@ const DECLARATIONS = [CommitteeMetaInfoComponent, CommitteeMeetingPreviewCompone
 
 @NgModule({
     declarations: DECLARATIONS,
-    providers: [
-        {
-            provide: MAT_DIALOG_DEFAULT_OPTIONS,
-            useValue: { autoFocus: `dialog`, restoreFocus: true }
-        }
-    ],
     exports: DECLARATIONS,
     imports: [
         CommonModule,
