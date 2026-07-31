@@ -2,7 +2,6 @@ import { inject, Service } from '@angular/core';
 import { FileExportService } from '@app/gateways/export/file-export.service';
 
 import { ViewAgendaItem } from '../../pages/agenda';
-import { InfoToExport } from '../../pages/motions/services/export/definitions';
 
 @Service()
 export class MeetingXmlExportService {
