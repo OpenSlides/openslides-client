@@ -1,14 +1,5 @@
-import {
-    ChangeDetectionStrategy,
-    Component,
-    inject,
-    Input,
-    OnDestroy,
-    OnInit,
-    viewChild,
-    ViewEncapsulation
-} from '@angular/core';
-import { MatMenuTrigger } from '@angular/material/menu';
+import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialog } from '@angular/material/dialog';
 import { CML, OML } from '@app/domain/definitions/organization-permission';
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
@@ -20,7 +11,6 @@ import { firstValueFrom, Subscription } from 'rxjs';
 
 import { ViewCommittee } from '../../view-models';
 import { MeetingService } from '../services/meeting.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: `os-committee-meeting-preview`,
