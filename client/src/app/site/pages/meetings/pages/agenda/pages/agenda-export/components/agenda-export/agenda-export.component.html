@@ -17,6 +17,9 @@
         <mat-tab label="CSV">
             <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
         </mat-tab>
+        <mat-tab label="XML">
+            <ng-container [ngTemplateOutlet]="exportXML"></ng-container>
+        </mat-tab>
     </mat-tab-group>
 </div>
 
@@ -214,5 +217,10 @@
                 </div>
             }
         </div>
+    </form>
+</ng-template>
+<ng-template #exportXML>
+    <form [formGroup]="dialogForm">
+        <div class="export-wrapper"></div>
     </form>
 </ng-template>

@@ -99,6 +99,10 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         return this.fileFormats[this.tabIndex] === ExportFileFormat.CSV;
     }
 
+    public get isXMLFormat(): boolean {
+        return this.fileFormats[this.tabIndex] === ExportFileFormat.XML;
+    }
+
     public agendaItems: Id[] = [];
 
     private pdfDefaults = {
@@ -112,12 +116,17 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         metaInfo: [`duration`]
     };
 
+    private xmlDefaults = {
+        content: ['item_nuber', 'title', 'text', 'attachments', 'moderation_notes'],
+        metaInfo: ['duration']
+    };
+
     private tabIndex = 0;
     // Store fileformats with corresponding tab group index
-    private fileFormats: ExportFileFormat[] = [ExportFileFormat.PDF, ExportFileFormat.CSV];
+    private fileFormats: ExportFileFormat[] = [ExportFileFormat.PDF, ExportFileFormat.CSV, ExportFileFormat.XML];
     private savedSelections: SavedSelections = {
         tab_index: 0,
-        tab_selections: [this.pdfDefaults, this.csvDefaults]
+        tab_selections: [this.pdfDefaults, this.csvDefaults, this.xmlDefaults]
     };
 
     private backNr: string;
@@ -173,11 +182,15 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
                 ...(this.dialogForm.get(`headerFooter`).value ?? [])
             ];
             this.agendaExportService.exportAsPdf(views, info, pdfMeta);
-        } else if (this.isCSVFormat) {
+        }
+        if (this.isCSVFormat) {
             const csvMetaInfo = this.dialogForm.get(`metaInfo`).value ?? [];
             this.agendaExportService.exportAsCsv(views, info, csvMetaInfo);
+        } else if (this.isXMLFormat) {
+            const xmlMeta = [];
+            this.agendaExportService.exportAsXML(views, info, xmlMeta);
         }
-        this.router.navigate([this.activeMeetingIdService.meetingId, `agenda`]);
+        // this.router.navigate([this.activeMeetingIdService.meetingId, `agenda`]);
     }
 
     public afterTabChanged(): void {
