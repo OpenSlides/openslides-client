@@ -8,6 +8,7 @@ import {
     TemplateRef,
     viewChild
 } from '@angular/core';
+import { MatMenuTrigger } from '@angular/material/menu';
 import { BaseComponent } from '@app/site/base/base.component';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
@@ -23,12 +24,9 @@ import { PromptService } from '@app/ui/modules/prompt-dialog';
     standalone: false
 })
 export class UserMultiselectActionsComponent extends BaseComponent {
-    public repo = inject(UserControllerService);
-    private operator = inject(OperatorService);
-    private promptService = inject(PromptService);
-    private activeMeetingIdService = inject(ActiveMeetingIdService);
-
     public implicitContent = viewChild.required(TemplateRef<any>);
+
+    public meetingMenu = viewChild<MatMenuTrigger>(MatMenuTrigger);
 
     public canManage = input<boolean>(true);
     public canUpdate = input<boolean>(true);
@@ -43,6 +41,11 @@ export class UserMultiselectActionsComponent extends BaseComponent {
 
     private _selectedUsers: ViewUser[] = [];
 
+    public repo = inject(UserControllerService);
+    private operator = inject(OperatorService);
+    private promptService = inject(PromptService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+
     public constructor() {
         super();
 
@@ -55,6 +58,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
      * Handler for bulk resetting passwords to the default ones. Needs multiSelect mode.
      */
     public async resetPasswordsToDefaultSelected(): Promise<void> {
+        this.meetingMenu().closeMenu();
         const title = this.translate.instant(`Are you sure you want to reset all passwords to the default ones?`);
         if (!(await this.promptService.open(title))) {
             return;
@@ -76,6 +80,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
      * Handler for bulk generating new passwords. Needs multiSelect mode.
      */
     public async generateNewPasswordsPasswordsSelected(): Promise<void> {
+        this.meetingMenu().closeMenu();
         const title = this.translate.instant(
             `Are you sure you want to generate new passwords for all selected participants?`
         );
@@ -98,6 +103,7 @@ export class UserMultiselectActionsComponent extends BaseComponent {
     }
 
     public async sendInvitationEmailSelected(): Promise<void> {
+        this.meetingMenu().closeMenu();
         const title = this.translate.instant(`Are you sure you want to send emails to all selected participants?`);
         const content = this.selectedUsers().length + ` ` + this.translate.instant(`emails`);
         if (await this.promptService.open(title, content)) {

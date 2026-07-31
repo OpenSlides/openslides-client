@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { CML, OML } from '@app/domain/definitions/organization-permission';
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
@@ -82,6 +83,7 @@ export class CommitteeMeetingPreviewComponent implements OnDestroy, OnInit {
     private meetingService = inject(MeetingService);
     private promptService = inject(PromptService);
     private translate = inject(TranslateService);
+    private dialog = inject(MatDialog);
 
     /**
      * Get the subject
