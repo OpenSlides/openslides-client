@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { MAT_DIALOG_DEFAULT_OPTIONS, MatDialog } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { CML, OML } from '@app/domain/definitions/organization-permission';
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
