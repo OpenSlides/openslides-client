@@ -6,6 +6,7 @@ import { idFromFqid } from '@app/infrastructure/utils/transform-functions';
 import { WaitForActionReason, waitForActionReason } from '@app/site/modules/wait-for-action-dialog/definitions';
 import { WaitForActionDialogService } from '@app/site/modules/wait-for-action-dialog/services/wait-for-action-dialog.service';
 import { ModelRequestService } from '@app/site/services/model-request.service';
+import { WindowVisibilityService } from '@app/site/services/window-visibility.service';
 import { BehaviorSubject, combineLatest, filter, firstValueFrom, map, Observable, timer } from 'rxjs';
 
 import { ActionWorkerRepositoryService } from '../repositories/action-worker/action-worker-repository.service';
@@ -36,6 +37,7 @@ export class ActionWorkerWatchService {
     private actionWorkerRepo = inject(ActionWorkerRepositoryService);
     private modelRequestService = inject(ModelRequestService);
     private dialogService = inject(WaitForActionDialogService);
+    private visibilityService = inject(WindowVisibilityService);
 
     public constructor() {
         this.actionWorkerRepo
@@ -212,6 +214,7 @@ export class ActionWorkerWatchService {
         let hasReportedSlowness = false;
         let lastRefreshedInactivityReport = 0;
         let dataLoaded = false;
+        let visibleCounter = 0;
         const actionWorker = (
             await firstValueFrom(
                 combineLatest([this._workerObservable, timer(0, 2000)]).pipe(
@@ -245,9 +248,16 @@ export class ActionWorkerWatchService {
                                     this.openWaitingPrompt(id, reason, date.name);
                                 }
                             }
-                            if (date.hasPassedDeathThreshold) {
-                                this.showClosingPrompt(date);
-                                throw new Error(`Process has been assumed to be dead`);
+
+                            if (date.hasPassedDeathThreshold && this.visibilityService.visible()) {
+                                if (visibleCounter > 2) {
+                                    this.showClosingPrompt(date);
+                                    throw new Error(`Process has been assumed to be dead`);
+                                } else {
+                                    visibleCounter++;
+                                }
+                            } else {
+                                visibleCounter = 0;
                             }
                             return date.state !== ActionWorkerState.running;
                         } else if (dataLoaded) {
