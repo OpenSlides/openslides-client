@@ -85,7 +85,7 @@
             <!-- Tags -->
             @if (item.tags && item.tags.length) {
                 <div>
-                    <os-icon-container icon="local_offer">
+                    <os-icon-container icon="local_offer" [attr.aria-label]="('Tags' | translate) + ' ' + item.tags">
                         <os-comma-separated-listing [list]="item.tags">
                             <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
                         </os-comma-separated-listing>
@@ -95,13 +95,23 @@
 
             <!-- Visibility (Internal, Public, Hidden) -->
             <div *osPerms="permission.agendaItemCanManage; and: item.verboseType" class="spacer-top-5">
-                <os-icon-container icon="visibility">{{ item.verboseType | translate }}</os-icon-container>
+                <os-icon-container
+                    icon="visibility"
+                    [attr.aria-label]="('Visibility' | translate) + ' ' + (item.verboseType | translate)"
+                >
+                    {{ item.verboseType | translate }}
+                </os-icon-container>
             </div>
 
             <!-- Duration -->
             @if (item.duration) {
                 <div class="spacer-top-5">
-                    <os-icon-container icon="access_time">
+                    <os-icon-container
+                        icon="access_time"
+                        [attr.aria-label]="
+                            ('Duration' | translate) + ' ' + durationService.durationToString(item.duration, 'h')
+                        "
+                    >
                         {{ durationService.durationToString(item.duration, 'h') }}
                     </os-icon-container>
                 </div>
