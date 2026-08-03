@@ -457,10 +457,10 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this.sortAscending = ascend;
     }
 
-    private sortList(firstName: boolean, ascent: boolean, bool = false): ViewAssignmentCandidate[] {
+    private sortList(firstName: boolean, ascent: boolean, sortByGivenVariables = false): ViewAssignmentCandidate[] {
         let byFirstName = this.isSortByFirstName;
         let asc = this.sortAscending;
-        if (bool) {
+        if (sortByGivenVariables) {
             byFirstName = firstName;
             asc = ascent;
         }
