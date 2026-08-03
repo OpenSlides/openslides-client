@@ -2,6 +2,7 @@
     @for (banner of activeBanners | async; track banner) {
         <div
             class="banner flex-center background-accent"
+            role="banner"
             [ngClass]="[banner.class ? banner.class : '', banner.largerOnMobileView ? 'larger-on-mobile' : '']"
         >
             @if (banner.component) {
