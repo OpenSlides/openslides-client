@@ -110,14 +110,20 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     private checkSortOrder(): void {
-        if (this._assignmentCandidates.length < 2) this.updateSort(undefined, undefined);
-        else {
-            if (this._assignmentCandidates.equals(this.sortList(true, true, true))) this.updateSort(true, true);
-            else if (this._assignmentCandidates.equals(this.sortList(true, false, true))) this.updateSort(true, false);
-            else if (this._assignmentCandidates.equals(this.sortList(false, true, true))) this.updateSort(false, true);
-            else if (this._assignmentCandidates.equals(this.sortList(false, false, true)))
+        if (this._assignmentCandidates.length < 2) {
+            this.updateSort(undefined, undefined);
+        } else {
+            if (this._assignmentCandidates.equals(this.sortList(true, true, true))) {
+                this.updateSort(true, true);
+            } else if (this._assignmentCandidates.equals(this.sortList(true, false, true))) {
+                this.updateSort(true, false);
+            } else if (this._assignmentCandidates.equals(this.sortList(false, true, true))) {
+                this.updateSort(false, true);
+            } else if (this._assignmentCandidates.equals(this.sortList(false, false, true))) {
                 this.updateSort(false, false);
-            else this.updateSort(undefined, undefined);
+            } else {
+                this.updateSort(undefined, undefined);
+            }
         }
     }
 
@@ -395,9 +401,13 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Sort Candidates
      */
     public async sortCandidates(byFirstName = true): Promise<void> {
-        if (typeof this.isSortByFirstName === `undefined`) this.updateSort(byFirstName, true);
-        else if (this.isSortByFirstName === byFirstName) this.sortAscending = !this.sortAscending;
-        else this.updateSort(byFirstName, true);
+        if (typeof this.isSortByFirstName === `undefined`) {
+            this.updateSort(byFirstName, true);
+        } else if (this.isSortByFirstName === byFirstName) {
+            this.sortAscending = !this.sortAscending;
+        } else {
+            this.updateSort(byFirstName, true);
+        }
 
         const sorted = this.sortList(byFirstName, this.sortAscending);
         this._assignmentCandidates = sorted;
@@ -408,7 +418,9 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Triggers an update of the sorting.
      */
     public async onSortingChange(candidates: Selectable[], manual = true): Promise<void> {
-        if (manual) this.updateSort(undefined, undefined);
+        if (manual) {
+            this.updateSort(undefined, undefined);
+        }
         await this.assignmentCandidateRepo.sort(this.assignment, candidates);
     }
 
