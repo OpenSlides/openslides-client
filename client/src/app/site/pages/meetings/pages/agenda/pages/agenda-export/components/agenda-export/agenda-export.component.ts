@@ -116,17 +116,12 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         metaInfo: [`duration`]
     };
 
-    private xmlDefaults = {
-        content: ['item_nuber', 'title', 'text', 'attachments', 'moderation_notes'],
-        metaInfo: ['duration']
-    };
-
     private tabIndex = 0;
     // Store fileformats with corresponding tab group index
     private fileFormats: ExportFileFormat[] = [ExportFileFormat.PDF, ExportFileFormat.CSV, ExportFileFormat.XML];
     private savedSelections: SavedSelections = {
         tab_index: 0,
-        tab_selections: [this.pdfDefaults, this.csvDefaults, this.xmlDefaults]
+        tab_selections: [this.pdfDefaults, this.csvDefaults]
     };
 
     private backNr: string;
@@ -189,7 +184,7 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         } else if (this.isXMLFormat) {
             this.agendaExportService.exportAsXML(views);
         }
-        // this.router.navigate([this.activeMeetingIdService.meetingId, `agenda`]);
+        this.router.navigate([this.activeMeetingIdService.meetingId, `agenda`]);
     }
 
     public afterTabChanged(): void {

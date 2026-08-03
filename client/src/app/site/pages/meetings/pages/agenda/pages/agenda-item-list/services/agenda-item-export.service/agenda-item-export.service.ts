@@ -98,7 +98,7 @@ export class AgendaItemExportService {
         const filename = this.translate.instant(`Agenda`);
         const metaExportInfo = { pdfOptions: [...meta] };
         this.pdfExportService.download({
-            docDefinition: this.agendaPdfExportService.agendaListToDocDef([...source], info, meta),
+            docDefinition: this.agendaPdfExportService.agendaListToDocDef(source, info, meta),
             exportInfo: metaExportInfo,
             filename
         });

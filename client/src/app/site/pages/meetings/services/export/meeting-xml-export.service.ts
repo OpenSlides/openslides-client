@@ -74,9 +74,9 @@ export class MeetingXmlExportService {
         }
         if (item.tags?.length) {
             const tags = doc.createElement('tags');
-            item.tags.filter(t => {
+            item.tags.filter(tagName => {
                 const tag = doc.createElement('tag');
-                tag.textContent = t.tag.name;
+                tag.textContent = tagName.tag.name;
                 tags.appendChild(tag);
             });
             agendaItem.appendChild(tags);
