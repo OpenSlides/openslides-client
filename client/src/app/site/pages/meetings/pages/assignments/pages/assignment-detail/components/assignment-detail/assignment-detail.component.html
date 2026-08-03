@@ -274,8 +274,7 @@
                                         <mat-icon>add</mat-icon>
                                         <span>{{ 'Add me' | translate }}</span>
                                     </button>
-                                }
-                                @if (isSelfCandidate) {
+                                } @else {
                                     <button
                                         color="accent"
                                         mat-button
