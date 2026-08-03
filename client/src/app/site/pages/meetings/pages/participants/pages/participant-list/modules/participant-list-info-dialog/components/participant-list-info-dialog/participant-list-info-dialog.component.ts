@@ -62,20 +62,17 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     private _voteDelegationEnabled = false;
     protected participantSubscriptionConfig: SubscriptionConfig<ViewUser>;
     protected structureLevelConfig: SubscriptionConfig<ViewStructureLevel>;
-    protected groupsSubscriptionConfig: SubscriptionConfig<ViewGroup>;
-
-    protected setting: SettingsInput = {} as SettingsInput;
+    private userRepo: UserRepositoryService = inject(UserRepositoryService);
 
     public constructor(
         @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
         protected participantRepo: ParticipantControllerService,
-        protected userSortService: ParticipantListSortService,
-        protected groupRepo: GroupControllerService,
+        private userSortService: ParticipantListSortService,
+        private groupRepo: GroupControllerService,
         protected structureLevelRepo: StructureLevelRepositoryService,
-        protected activeMeetingIdService: ActiveMeetingIdService,
-        protected meetingSettings: MeetingSettingsService,
-        protected operator: OperatorService,
-        protected userRepo: UserRepositoryService = inject(UserRepositoryService)
+        private activeMeetingIdService: ActiveMeetingIdService,
+        private meetingSettings: MeetingSettingsService,
+        private operator: OperatorService
     ) {
         super();
     }
@@ -86,7 +83,6 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
             this.activeMeetingIdService.meetingId
         );
         this.structureLevelConfig = getStructureLevelListSubscriptionConfig(this.activeMeetingIdService.meetingId);
-        this.setting.helpText = 'You can only delete delegations you have received';
         this._currentUser = this.participantRepo.getViewModel(this.infoDialog.id);
         this.subscriptions.push(
             this.userRepo

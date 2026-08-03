@@ -32,6 +32,7 @@ import { ViewStructureLevel } from '../../../structure-levels/view-models/view-s
 import {
     afterDialogClosed,
     areGroupsDiminished,
+    OperatorInfo,
     ParticipantListInfoDialogService
 } from '../../modules/participant-list-info-dialog/services/participant-list-info-dialog.service';
 import { ParticipantListFilterService } from '../../services/participant-list-filter/participant-list-filter.service';
@@ -368,7 +369,14 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
             vote_delegated_to_ids: user.vote_delegated_to_meeting_user_ids()
         });
-        afterDialogClosed(dialogRef, user, this.operator, this.activeMeeting, this.repo, this.prompt);
+        const operatorInfo: OperatorInfo = {
+            operatorId: this.operator.operatorId,
+            operatorGroupIds: this.operator.user.group_ids(),
+            canManage: this.operator.hasPerms(Permission.userCanManage),
+            changeOwnDel: this.operator.hasPerms(Permission.userCanEditOwnDelegation),
+            canUpdate: this.operator.hasPerms(Permission.userCanUpdate)
+        };
+        afterDialogClosed(dialogRef, user, operatorInfo, this.activeMeeting, this.repo, this.prompt);
     }
 
     public getOtherUsersObservable(user: ViewUser): Observable<ViewUser[]> {
@@ -701,5 +709,8 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     public goToEditUser(userId: number): void {
         this.router.navigate([userId, `edit`], { relativeTo: this.route });
     }
+
+    protected hasOptions(): boolean {
+        return this.operator.hasPermsInMeeting(this.activeMeetingId, ...[this.permission.userCanUpdate]);
+    }
 }
-export { areGroupsDiminished };
