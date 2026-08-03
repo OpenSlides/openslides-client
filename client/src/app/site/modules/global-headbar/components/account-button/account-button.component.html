@@ -62,21 +62,21 @@
             @if (user && isLoggedIn) {
                 <div>
                     <!-- present toggle -->
-                    @if (isAllowedSelfSetPresent && hasActiveMeeting) {
-                        <button
-                            aria-checked="{{ isPresent }}"
-                            mat-menu-item
-                            role="menuitemcheckbox"
-                            [ngClass]="{ active: isPresent }"
-                            (click)="toggleOperatorPresence()"
-                        >
-                            <mat-icon class="menu-icon" [color]="isPresent ? 'accent' : ''">
-                                {{ isPresent ? 'check_box' : 'check_box_outline_blank' }}
-                            </mat-icon>
-                            <span class="menu-text">{{ 'Present' | translate }}</span>
-                        </button>
-                    } @else if (hasActiveMeeting) {
-                        @if (isPresent) {
+                    @if (hasActiveMeeting) {
+                        @if (isAllowedSelfSetPresent && hasActiveMeeting) {
+                            <button
+                                aria-checked="{{ isPresent }}"
+                                mat-menu-item
+                                role="menuitemcheckbox"
+                                [ngClass]="{ active: isPresent }"
+                                (click)="toggleOperatorPresence()"
+                            >
+                                <mat-icon class="menu-icon" [color]="isPresent ? 'accent' : ''">
+                                    {{ isPresent ? 'check_box' : 'check_box_outline_blank' }}
+                                </mat-icon>
+                                <span class="menu-text">{{ 'Present' | translate }}</span>
+                            </button>
+                        } @else if (isPresent) {
                             <div mat-menu-item>
                                 <mat-icon class="menu-icon">done</mat-icon>
                                 <span class="menu-text">{{ 'Present' | translate }}</span>
@@ -93,13 +93,13 @@
                             </div>
                         }
                     }
+                    @if (isVoteDelegationEnabled && canEditOwnDelegation()) {
+                        <button mat-menu-item (click)="openEditInfo(user)">
+                            <mat-icon>edit</mat-icon>
+                            <span>{{ 'Change your delegation' | translate }}</span>
+                        </button>
+                    }
                 </div>
-                @if (activeMeetingSetting && canEditOwnDelegation(user)) {
-                    <button mat-menu-item (click)="openEditInfo(user)">
-                        <mat-icon>edit</mat-icon>
-                        <span>{{ 'Change your delegation' | translate }}</span>
-                    </button>
-                }
             }
         </div>
         <mat-divider />

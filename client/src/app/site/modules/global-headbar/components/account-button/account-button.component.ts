@@ -10,6 +10,7 @@ import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import {
     afterDialogClosed,
+    OperatorInfo,
     ParticipantListInfoDialogService
 } from '@app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog';
 import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
@@ -87,10 +88,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         return this.activeMeetingIdService.meetingId;
     }
 
-    public get activeMeetingSetting(): boolean {
-        this.meetingSettingsService
-            .get(`users_enable_vote_delegations`)
-            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
+    protected get isVoteDelegationEnabled(): boolean {
         return this._voteDelegationEnabled;
     }
 
@@ -117,6 +115,9 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     public constructor(chessChallengeService: ChessChallengeService) {
         super();
         chessChallengeService.startListening();
+        this.meetingSettingsService
+            .get(`users_enable_vote_delegations`)
+            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
     }
 
     public ngOnInit(): void {
@@ -245,16 +246,15 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         } else {
             stringForUserPresent = this.translate.instant(`Your account is not in this meeting.`);
         }
-        return stringForUserPresent.replace(`{}`, this.user.short_name);
+        return this.user.short_name + ': ' + stringForUserPresent;
     }
 
-    public canEditOwnDelegation(user: ViewUser): boolean {
+    public canEditOwnDelegation(): boolean {
         if (
             this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
-            !this.operator.hasPerms(Permission.userCanManage) &&
-            !this.operator.hasPerms(Permission.userCanUpdate)
+            this.activeMeeting.meeting.user_ids.includes(this.operator.operatorId)
         ) {
-            return this.operator.operatorId === user.id;
+            return true;
         } else if (
             this.operator.hasPerms(Permission.userCanManage) ||
             this.operator.hasPerms(Permission.userCanUpdate)
@@ -275,13 +275,13 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
             vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
         });
-        afterDialogClosed(
-            dialogRef,
-            user,
-            this.operator,
-            this.activeMeeting.meeting,
-            this.participantRepo,
-            this.prompt
-        );
+        const operatorInfo: OperatorInfo = {
+            operatorId: this.operator.operatorId,
+            operatorGroupIds: this.operator.user.group_ids(),
+            canManage: this.operator.hasPerms(Permission.userCanManage),
+            changeOwnDel: this.operator.hasPerms(Permission.userCanEditOwnDelegation),
+            canUpdate: this.operator.hasPerms(Permission.userCanUpdate)
+        };
+        afterDialogClosed(dialogRef, user, operatorInfo, this.activeMeeting.meeting, this.participantRepo, this.prompt);
     }
 }

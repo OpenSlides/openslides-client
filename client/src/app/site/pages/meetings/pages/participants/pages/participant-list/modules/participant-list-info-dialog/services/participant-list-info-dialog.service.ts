@@ -1,18 +1,24 @@
 import { Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Id } from '@app/domain/definitions/key-types';
-import { Permission } from '@app/domain/definitions/permission';
 import { Identifiable } from '@app/domain/interfaces';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
-import { OperatorService } from '@app/site/services/operator.service';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 
 import { ParticipantControllerService } from '../../../../../services/common/participant-controller.service';
 import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
+
+export interface OperatorInfo {
+    changeOwnDel: boolean;
+    canManage: boolean;
+    canUpdate: boolean;
+    operatorGroupIds: number[];
+    operatorId: number;
+}
 
 /**
  * Interface for the short editing dialog.
@@ -84,7 +90,7 @@ export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[]
 export function afterDialogClosed(
     dialogRef: MatDialogRef<ParticipantListInfoDialogComponent, InfoDialog>,
     user: ViewUser,
-    operator: OperatorService,
+    operator: OperatorInfo,
     activeMeeting: ViewMeeting,
     repo: ParticipantControllerService,
     prompt: PromptService
@@ -105,14 +111,14 @@ export function afterDialogClosed(
             if (
                 !(
                     user.id === operator.operatorId &&
-                    areGroupsDiminished(operator.user.group_ids(), result.group_ids, activeMeeting)
+                    areGroupsDiminished(operator.operatorGroupIds, result.group_ids, activeMeeting)
                 ) ||
                 (await prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
             ) {
                 if (
-                    operator.hasPerms(Permission.userCanEditOwnDelegation) &&
-                    !operator.hasPerms(Permission.userCanManage) &&
-                    !operator.hasPerms(Permission.userCanUpdate) &&
+                    operator.changeOwnDel &&
+                    !operator.canManage &&
+                    !operator.canUpdate &&
                     user.id === operator.operatorId
                 ) {
                     repo.updateSelfDelegation(result, user);

@@ -28,7 +28,7 @@ import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_DETAIL_SUBSCRIPTION
 } from '../../../../participants.subscription';
-import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
+import { areGroupsDiminished } from '../../../participant-list/modules/participant-list-info-dialog';
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';

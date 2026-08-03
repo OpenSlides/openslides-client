@@ -259,6 +259,7 @@
             isHidden: !canSeeItemMenu() && viewport.isMobileSubject
         "
         class="cell-slot"
+        [hidden]="!hasOptions()"
     >
         <button
             mat-icon-button
@@ -369,7 +370,6 @@
                 <mat-icon>record_voice_over</mat-icon>
                 <span translate>Contributions</span>
             </button>
-
             <button mat-menu-item (click)="pdfExportUserList()">
                 <mat-icon>picture_as_pdf</mat-icon>
                 <span>{{ 'List of participants (PDF)' | translate }}</span>
