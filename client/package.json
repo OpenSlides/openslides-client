@@ -44,7 +44,7 @@
     "@angular/platform-browser-dynamic": "^22.0.8",
     "@angular/router": "^22.0.8",
     "@angular/service-worker": "^22.0.8",
-    "@cantoo/pdf-lib": "^2.7.4",
+    "@cantoo/pdf-lib": "^2.8.1",
     "@coreui/angular-chartjs": "~5.7.9",
     "@coreui/chartjs": "^4.1.0",
     "@date-fns/tz": "^1.5.0",
