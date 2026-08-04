@@ -169,7 +169,52 @@
         <mat-card class="os-card spacer-bottom-60">
             <mat-card-content>
                 <ng-container>
-                    <h3>{{ 'Candidates' | translate }}</h3>
+                    <div class="action-title">
+                        <h3>
+                            {{ 'Candidates' | translate }}
+                            @if (assignment.candidateAmount > 0) {
+                                ({{ assignment.candidateAmount }})
+                            }
+                        </h3>
+                        @if (assignment && assignmentCandidates.length > 1 && hasPerms('manage')) {
+                            <div class="buttons">
+                                <button
+                                    mat-button
+                                    [color]="isSortByFirstName === false || isSortByFirstName ? 'accent' : ''"
+                                    [matMenuTriggerFor]="sortMenu"
+                                >
+                                    <mat-icon>sort</mat-icon>
+                                    {{ 'Sort' | translate }}
+                                </button>
+                                <mat-menu #sortMenu="matMenu">
+                                    <button mat-menu-item (click)="sortCandidates()">
+                                        <mat-icon>
+                                            {{
+                                                isSortByFirstName === true
+                                                    ? sortAscending
+                                                        ? 'arrow_upward'
+                                                        : 'arrow_downward'
+                                                    : ''
+                                            }}
+                                        </mat-icon>
+                                        <span>{{ 'Given name' | translate }}</span>
+                                    </button>
+                                    <button mat-menu-item (click)="sortCandidates(false)">
+                                        <mat-icon>
+                                            {{
+                                                isSortByFirstName === false
+                                                    ? sortAscending
+                                                        ? 'arrow_upward'
+                                                        : 'arrow_downward'
+                                                    : ''
+                                            }}
+                                        </mat-icon>
+                                        <span>{{ 'Surname' | translate }}</span>
+                                    </button>
+                                </mat-menu>
+                            </div>
+                        }
+                    </div>
                     <div>
                         @if (assignment?.candidates?.length) {
                             <div class="candidates-list">
@@ -219,32 +264,27 @@
                             }
                             <!-- Add me and remove me if OP has correct permission -->
                             @if (assignment && hasPerms('addSelf')) {
-                                <div>
-                                    <div>
-                                        @if (!isSelfCandidate) {
-                                            <button
-                                                color="accent"
-                                                mat-button
-                                                [attr.aria-label]="'Add me' | translate"
-                                                (click)="addSelf()"
-                                            >
-                                                <mat-icon>add</mat-icon>
-                                                <span>{{ 'Add me' | translate }}</span>
-                                            </button>
-                                        }
-                                        @if (isSelfCandidate) {
-                                            <button
-                                                color="accent"
-                                                mat-button
-                                                [attr.aria-label]="'Remove me' | translate"
-                                                (click)="removeSelf()"
-                                            >
-                                                <mat-icon>remove</mat-icon>
-                                                <span>{{ 'Remove me' | translate }}</span>
-                                            </button>
-                                        }
-                                    </div>
-                                </div>
+                                @if (!isSelfCandidate) {
+                                    <button
+                                        color="accent"
+                                        mat-button
+                                        [attr.aria-label]="'Add me' | translate"
+                                        (click)="addSelf()"
+                                    >
+                                        <mat-icon>add</mat-icon>
+                                        <span>{{ 'Add me' | translate }}</span>
+                                    </button>
+                                } @else {
+                                    <button
+                                        color="accent"
+                                        mat-button
+                                        [attr.aria-label]="'Remove me' | translate"
+                                        (click)="removeSelf()"
+                                    >
+                                        <mat-icon>remove</mat-icon>
+                                        <span>{{ 'Remove me' | translate }}</span>
+                                    </button>
+                                }
                             }
                         </div>
                     </div>
