@@ -2,77 +2,71 @@ import { inject, Service } from '@angular/core';
 import { FileExportService } from '@app/gateways/export/file-export.service';
 
 import { ViewAgendaItem } from '../../pages/agenda';
+import {
+    csvMetaInfo,
+    InfoToExport,
+    xmlMetaInfo
+} from '../../pages/agenda/pages/agenda-item-list/services/agenda-item-export.service/agenda-item-export.service';
 
 @Service()
 export class MeetingXmlExportService {
     private exporter = inject(FileExportService);
     private serializer = new XMLSerializer();
+    private itemMap;
 
-    public export(source: ViewAgendaItem[], filename: string): void {
-        const xml = this.generateXML(source);
+    public export(source: ViewAgendaItem[], filename: string, config: (InfoToExport | csvMetaInfo)[]): void {
+        const xml = this.generateXML(source, config);
         this.exporter.saveFile(xml, filename, 'application/xml');
     }
 
-    private generateXML(source: ViewAgendaItem[]): string {
+    private generateXML(source: ViewAgendaItem[], config: (InfoToExport | csvMetaInfo)[]): string {
         const doc = document.implementation.createDocument('', 'Agenda-Export', null);
         const root = doc.documentElement;
-        const itemMap = new Map(source.map(item => [item.id, item]));
         const mainAgendaTopics = source.filter(item => !item.parent_id);
+        this.itemMap = new Map(source.map(item => [item.id, item]));
         for (const item of mainAgendaTopics) {
-            root.appendChild(this.createAgendaTopic(item, doc, itemMap, false));
+            root.appendChild(this.createAgendaTopic(item, doc, config));
         }
         return this.serializer.serializeToString(doc);
     }
 
     private createAgendaTopic(
         item: ViewAgendaItem,
-        doc,
-        itemMap: Map<number, ViewAgendaItem<any>>,
+        doc: XMLDocument,
+        config: (InfoToExport | csvMetaInfo)[],
         isNested = false
     ): HTMLElement {
         const agendaItem = doc.createElement(isNested ? 'Sub-Agenda-Item' : 'Agenda-Item');
 
-        if (item.item_number) {
-            const item_number = doc.createElement('item-number');
-            item_number.textContent = item.item_number;
-            agendaItem.appendChild(item_number);
-        }
-        if (item.content_object?.title) {
-            const title = doc.createElement('title');
-            title.textContent = item.content_object.title;
-            agendaItem.appendChild(title);
-        }
-        if (item.content_object?.text) {
-            const text = doc.createElement('text');
-            text.textContent = item.content_object.text;
-            agendaItem.appendChild(text);
-        }
-        if (item.content_object?.list_of_speakers.moderator_notes) {
-            const moderator_notes = doc.createElement('moderation_notes');
-            moderator_notes.textContent = item.content_object?.list_of_speakers.moderator_notes;
-            agendaItem.appendChild(moderator_notes);
-        }
-        if (item.content_object?.list_of_speakers?.speaker_ids) {
-            const list_of_speakers = doc.createElement('list_of_speakers');
-            list_of_speakers.textContent = String(item.content_object.list_of_speakers?.speaker_ids?.length);
-            agendaItem.appendChild(list_of_speakers);
-        }
-        if (item.comment) {
-            const agenda_comment = doc.createElement('agenda_comment');
-            agenda_comment.textContent = String(item.comment);
-            agendaItem.appendChild(agenda_comment);
-        }
-        if (item.duration) {
-            const agenda_duration = doc.createElement('agenda_duration');
-            agenda_duration.textContent = String(item.duration);
-            agendaItem.appendChild(agenda_duration);
-        }
-        if (item.type) {
-            const agenda_type = doc.createElement('agenda_type');
-            agenda_type.textContent = String(item.type);
-            agendaItem.appendChild(agenda_type);
-        }
-        if (item.tags?.length) {
+        const addContentNode = (
+            config: (InfoToExport | csvMetaInfo)[],
+            name: InfoToExport | xmlMetaInfo,
+            value: unknown
+        ): void => {
+            if (
+                (config.includes(name as InfoToExport) || config.includes(name as xmlMetaInfo)) &&
+                value !== undefined &&
+                value !== null &&
+                value !== '' &&
+                value !== 0
+            ) {
+                const node = doc.createElement(name.replaceAll('_', '-'));
+                node.textContent = String(value);
+                agendaItem.appendChild(node);
+            }
+        };
+
+        addContentNode(config, 'item_number', item.item_number);
+        addContentNode(config, 'title', item.content_object?.title);
+        addContentNode(config, 'text', item.content_object?.text);
+        addContentNode(config, 'moderation_notes', item.content_object?.list_of_speakers?.moderator_notes);
+        addContentNode(config, 'list_of_speakers', item.content_object?.list_of_speakers?.speaker_ids?.length);
+        addContentNode(config, 'internal_commentary', item.comment);
+        addContentNode(config, 'duration', item.duration);
+        addContentNode(config, 'agenda_visibility', item.type);
+        addContentNode(config, 'done', item.closed);
+
+        if (item.tags?.length && config.includes('tags')) {
             const tags = doc.createElement('tags');
             item.tags.filter(tagName => {
                 const tag = doc.createElement('tag');
@@ -81,19 +75,12 @@ export class MeetingXmlExportService {
             });
             agendaItem.appendChild(tags);
         }
-        if (item.closed) {
-            const agenda_closed = doc.createElement('agenda_closed');
-            agenda_closed.textContent = String(item.closed);
-            agendaItem.appendChild(agenda_closed);
-        }
-
-        for (const childId of item.child_ids ?? []) {
-            const child = itemMap.get(childId);
+        item.child_ids?.forEach(childId => {
+            const child = this.createAgendaTopic(this.itemMap.get(childId), doc, config, true);
             if (child) {
-                agendaItem.appendChild(this.createAgendaTopic(child, doc, itemMap, true));
+                agendaItem.appendChild(child);
             }
-        }
-
+        });
         return agendaItem;
     }
 }

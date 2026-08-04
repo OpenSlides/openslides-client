@@ -18,7 +18,7 @@
             <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
         </mat-tab>
         <mat-tab label="XML">
-            <ng-container [ngTemplateOutlet]="exportXML"></ng-container>
+            <ng-container [ngTemplateOutlet]="exportPdf"></ng-container>
         </mat-tab>
     </mat-tab-group>
 </div>
@@ -173,7 +173,7 @@
                     </mat-chip-listbox>
                 </div>
             }
-            @if (isCSVFormat) {
+            @if (isCSVFormat || isXMLFormat) {
                 <div>
                     <p class="toggle-group-head">{{ 'Meta information' | translate }}</p>
                     <mat-chip-listbox formControlName="metaInfo" multiple>
@@ -219,4 +219,3 @@
         </div>
     </form>
 </ng-template>
-<ng-template #exportXML></ng-template>

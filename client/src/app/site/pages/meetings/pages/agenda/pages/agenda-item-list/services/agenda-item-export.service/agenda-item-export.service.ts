@@ -27,7 +27,7 @@ export type pdfMetaInfo = `table_of_content` | `line_break` | `header` | `footer
 
 export type csvMetaInfo = `duration` | `tags` | `agenda_visibility` | `done`;
 
-export type xmlMetaInfo = `test_info`;
+export type xmlMetaInfo = csvMetaInfo;
 
 @Service()
 export class AgendaItemExportService {
@@ -104,8 +104,9 @@ export class AgendaItemExportService {
         });
     }
 
-    public exportAsXML(source: ViewAgendaItem[]): void {
+    public exportAsXML(source: ViewAgendaItem[], info: InfoToExport[], xmlMeta: xmlMetaInfo[]): void {
         const filename = this.translate.instant(`Agenda`) + `.xml`;
-        this.xmlExportService.export(source, filename);
+        const config: (InfoToExport | csvMetaInfo)[] = [...info, ...xmlMeta];
+        this.xmlExportService.export(source, filename, config);
     }
 }
