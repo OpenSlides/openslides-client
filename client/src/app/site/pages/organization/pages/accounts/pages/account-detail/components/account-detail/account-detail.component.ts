@@ -107,7 +107,8 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get canManageHomeCommittee(): boolean {
         return this.home_committee_id
             ? this.operator.hasCommitteePermissions(this.home_committee_id, CML.can_manage)
-            : this.operator.hasOrganizationPermissions(OML.can_manage_organization) || this.operator.isAnyCommitteeManager;
+            : this.operator.hasOrganizationPermissions(OML.can_manage_organization) ||
+                  this.operator.isAnyCommitteeManager;
     }
 
     public get comitteeAdministrationAmount(): number {
@@ -365,7 +366,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             payload[`organization_management_level`] = undefined;
         }
         if (this.operator.userOML === OML.can_manage_users) {
-            delete payload.home_committee_id
+            delete payload.home_committee_id;
         }
         if (payload.home_committee_id === 0) {
             if (isCreate) {
