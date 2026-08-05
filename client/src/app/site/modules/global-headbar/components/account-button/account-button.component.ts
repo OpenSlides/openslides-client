@@ -8,11 +8,7 @@ import { getOmlVerboseName } from '@app/domain/definitions/organization-permissi
 import { Permission } from '@app/domain/definitions/permission';
 import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
-import {
-    afterDialogClosed,
-    OperatorInfo,
-    ParticipantListInfoDialogService
-} from '@app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog';
+import { ParticipantListInfoDialogService } from '@app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog';
 import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
@@ -26,7 +22,7 @@ import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { PromptService } from '@app/ui/modules/prompt-dialog/services/prompt.service';
 import { ChessDialogComponent } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
 import { ChessChallengeService } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
-import { TranslateService } from '@ngx-translate/core';
+import { _, TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { AccountDialogMainComponent } from '../account-dialog-main/account-dialog-main.component';
@@ -250,19 +246,10 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public canEditOwnDelegation(): boolean {
-        if (
-            this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+        return this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
             this.activeMeeting.meeting.user_ids.includes(this.operator.operatorId)
-        ) {
-            return true;
-        } else if (
-            this.operator.hasPerms(Permission.userCanManage) ||
-            this.operator.hasPerms(Permission.userCanUpdate)
-        ) {
-            return true;
-        } else {
-            return false;
-        }
+            ? true
+            : false;
     }
 
     public async openEditInfo(user: ViewUser): Promise<void> {
@@ -272,16 +259,45 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             number: user.number(),
             group_ids: user.group_ids(),
             structure_level_ids: user.structure_level_ids(),
-            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
+            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids() || [],
             vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
         });
-        const operatorInfo: OperatorInfo = {
-            operatorId: this.operator.operatorId,
-            operatorGroupIds: this.operator.user.group_ids(),
-            canManage: this.operator.hasPerms(Permission.userCanManage),
-            changeOwnDel: this.operator.hasPerms(Permission.userCanEditOwnDelegation),
-            canUpdate: this.operator.hasPerms(Permission.userCanUpdate)
-        };
-        afterDialogClosed(dialogRef, user, operatorInfo, this.activeMeeting.meeting, this.participantRepo, this.prompt);
+        const selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
+        const selfGroupRemovalDialogContent = _(
+            `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
+        );
+
+        dialogRef.afterClosed().subscribe(async result => {
+            if (result) {
+                if (!result.group_ids?.length) {
+                    result.group_ids = [this.activeMeeting.meeting!.default_group_id];
+                }
+                if (!this.participantRepo.getViewModel(result.vote_delegated_to_id)) {
+                    result.vote_delegated_to_id = null;
+                }
+                if (
+                    !(
+                        user.id === this.operator.operatorId &&
+                        this.infoDialog.areGroupsDiminished(
+                            this.operator.user.group_ids(),
+                            result.group_ids,
+                            this.activeMeeting.meeting
+                        )
+                    ) ||
+                    (await this.prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
+                ) {
+                    if (
+                        this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+                        !this.operator.hasPerms(Permission.userCanManage) &&
+                        !this.operator.hasPerms(Permission.userCanUpdate) &&
+                        user.id === this.operator.operatorId
+                    ) {
+                        this.participantRepo.updateSelfDelegation(result, user);
+                    } else {
+                        this.participantRepo.update(result, user).resolve();
+                    }
+                }
+            }
+        });
     }
 }

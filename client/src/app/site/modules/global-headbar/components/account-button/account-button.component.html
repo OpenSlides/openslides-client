@@ -63,7 +63,7 @@
                 <div>
                     <!-- present toggle -->
                     @if (hasActiveMeeting) {
-                        @if (isAllowedSelfSetPresent && hasActiveMeeting) {
+                        @if (isAllowedSelfSetPresent) {
                             <button
                                 aria-checked="{{ isPresent }}"
                                 mat-menu-item
@@ -92,12 +92,13 @@
                                 <span class="menu-text">{{ 'Not present' | translate }}</span>
                             </div>
                         }
-                    }
-                    @if (isVoteDelegationEnabled && canEditOwnDelegation()) {
-                        <button mat-menu-item (click)="openEditInfo(user)">
-                            <mat-icon>edit</mat-icon>
-                            <span>{{ 'Change your delegation' | translate }}</span>
-                        </button>
+
+                        @if (isVoteDelegationEnabled && canEditOwnDelegation()) {
+                            <button mat-menu-item (click)="openEditInfo(user)">
+                                <mat-icon>edit</mat-icon>
+                                <span>{{ 'Change your delegation' | translate }}</span>
+                            </button>
+                        }
                     }
                 </div>
             }

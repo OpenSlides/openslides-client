@@ -34,6 +34,14 @@ import { InfoDialog } from '../../services/participant-list-info-dialog.service'
 })
 export class ParticipantListInfoDialogComponent extends BaseUiComponent implements OnInit, OnDestroy {
     public readonly genders = GENDERS;
+    protected structureLevelRepo = inject(StructureLevelRepositoryService);
+    protected participantRepo = inject(ParticipantControllerService);
+    private userRepo: UserRepositoryService = inject(UserRepositoryService);
+    private groupRepo = inject(GroupControllerService);
+    private operator = inject(OperatorService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private meetingSettings = inject(MeetingSettingsService);
+    private userSortService = inject(ParticipantListSortService);
 
     public get groupsObservable(): Observable<ViewGroup[]> {
         return this.groupRepo.getViewModelListWithoutSystemGroupsObservable();
@@ -57,23 +65,13 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
 
     public structureLevelObservable: Observable<ViewStructureLevel[]>;
 
-    private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
-    private _currentUser: ViewUser | null = null;
-    private _voteDelegationEnabled = false;
     protected participantSubscriptionConfig: SubscriptionConfig<ViewUser>;
     protected structureLevelConfig: SubscriptionConfig<ViewStructureLevel>;
-    private userRepo: UserRepositoryService = inject(UserRepositoryService);
+    private _currentUser: ViewUser | null = null;
+    private _voteDelegationEnabled = false;
+    private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
 
-    public constructor(
-        @Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog,
-        protected participantRepo: ParticipantControllerService,
-        private userSortService: ParticipantListSortService,
-        private groupRepo: GroupControllerService,
-        protected structureLevelRepo: StructureLevelRepositoryService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private meetingSettings: MeetingSettingsService,
-        private operator: OperatorService
-    ) {
+    public constructor(@Inject(MAT_DIALOG_DATA) public readonly infoDialog: InfoDialog) {
         super();
     }
 

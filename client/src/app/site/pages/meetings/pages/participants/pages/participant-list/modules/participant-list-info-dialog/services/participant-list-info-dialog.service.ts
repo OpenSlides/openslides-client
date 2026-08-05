@@ -4,21 +4,9 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';
-import { PromptService } from '@app/ui/modules/prompt-dialog';
-import { _ } from '@ngx-translate/core';
 
-import { ParticipantControllerService } from '../../../../../services/common/participant-controller.service';
 import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
-
-export interface OperatorInfo {
-    changeOwnDel: boolean;
-    canManage: boolean;
-    canUpdate: boolean;
-    operatorGroupIds: number[];
-    operatorId: number;
-}
 
 /**
  * Interface for the short editing dialog.
@@ -77,55 +65,12 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
         });
         return dialogRef;
     }
-}
 
-export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[], activeMeeting: ViewMeeting): boolean {
-    return (
-        oldGroupIds
-            .filter(group => group !== activeMeeting.default_group_id)
-            .some(id => !(newGroupIds ?? []).includes(id)) && !newGroupIds.includes(activeMeeting.admin_group_id)
-    );
-}
-
-export function afterDialogClosed(
-    dialogRef: MatDialogRef<ParticipantListInfoDialogComponent, InfoDialog>,
-    user: ViewUser,
-    operator: OperatorInfo,
-    activeMeeting: ViewMeeting,
-    repo: ParticipantControllerService,
-    prompt: PromptService
-): void {
-    const selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
-    const selfGroupRemovalDialogContent = _(
-        `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
-    );
-
-    dialogRef.afterClosed().subscribe(async result => {
-        if (result) {
-            if (!result.group_ids?.length) {
-                result.group_ids = [this.activeMeeting!.default_group_id];
-            }
-            if (result.vote_delegated_to_id === 0) {
-                result.vote_delegated_to_id = null;
-            }
-            if (
-                !(
-                    user.id === operator.operatorId &&
-                    areGroupsDiminished(operator.operatorGroupIds, result.group_ids, activeMeeting)
-                ) ||
-                (await prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
-            ) {
-                if (
-                    operator.changeOwnDel &&
-                    !operator.canManage &&
-                    !operator.canUpdate &&
-                    user.id === operator.operatorId
-                ) {
-                    repo.updateSelfDelegation(result, user);
-                } else {
-                    repo.update(result, user).resolve();
-                }
-            }
-        }
-    });
+    public areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[], activeMeeting: ViewMeeting): boolean {
+        return (
+            oldGroupIds
+                .filter(group => group !== activeMeeting.default_group_id)
+                .some(id => !(newGroupIds ?? []).includes(id)) && !newGroupIds.includes(activeMeeting.admin_group_id)
+        );
+    }
 }

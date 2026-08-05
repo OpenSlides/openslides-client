@@ -27,12 +27,7 @@ import { ParticipantPdfExportService } from '../../../../export/participant-pdf-
 import { GroupControllerService, ViewGroup } from '../../../../modules';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
-import {
-    afterDialogClosed,
-    areGroupsDiminished,
-    OperatorInfo,
-    ParticipantListInfoDialogService
-} from '../../modules/participant-list-info-dialog';
+import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog';
 import { ParticipantListFilterService } from '../../services/participant-list-filter/participant-list-filter.service';
 import { ParticipantListSortService } from '../../services/participant-list-sort/participant-list-sort.service';
 import { ParticipantSwitchDialogComponent } from '../participant-switch-dialog/participant-switch-dialog.component';
@@ -366,14 +361,43 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
             vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
         });
-        const operatorInfo: OperatorInfo = {
-            operatorId: this.operator.operatorId,
-            operatorGroupIds: this.operator.user.group_ids(),
-            canManage: this.operator.hasPerms(Permission.userCanManage),
-            changeOwnDel: this.operator.hasPerms(Permission.userCanEditOwnDelegation),
-            canUpdate: this.operator.hasPerms(Permission.userCanUpdate)
-        };
-        afterDialogClosed(dialogRef, user, operatorInfo, this.activeMeeting, this.repo, this.prompt);
+        const selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
+        const selfGroupRemovalDialogContent = _(
+            `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
+        );
+
+        dialogRef.afterClosed().subscribe(async result => {
+            if (result) {
+                if (!result.group_ids?.length) {
+                    result.group_ids = [this.activeMeeting.meeting!.default_group_id];
+                }
+                if (result.vote_delegated_to_id === 0) {
+                    result.vote_delegated_to_id = null;
+                }
+                if (
+                    !(
+                        user.id === this.operator.operatorId &&
+                        this.infoDialog.areGroupsDiminished(
+                            this.operator.user.group_ids(),
+                            result.group_ids,
+                            this.activeMeeting
+                        )
+                    ) ||
+                    (await this.prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
+                ) {
+                    if (
+                        this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+                        !this.operator.hasPerms(Permission.userCanManage) &&
+                        !this.operator.hasPerms(Permission.userCanUpdate) &&
+                        user.id === this.operator.operatorId
+                    ) {
+                        this.repo.updateSelfDelegation(result, user);
+                    } else {
+                        this.repo.update(result, user).resolve();
+                    }
+                }
+            }
+        });
     }
 
     public getOtherUsersObservable(user: ViewUser): Observable<ViewUser[]> {
@@ -436,7 +460,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                     user =>
                         !(
                             user.id === this.operator.operatorId &&
-                            areGroupsDiminished(
+                            this.infoDialog.areGroupsDiminished(
                                 this.operator.user.group_ids(),
                                 this.operator.user.group_ids().filter(id => !chosenGroupIds.includes(id)),
                                 this.activeMeeting
@@ -610,8 +634,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     public canSeeItemMenu(): boolean {
         return (
-            this.operator.hasPerms(Permission.userCanUpdate) ||
-            this.operator.hasPerms(Permission.userCanEditOwnDelegation)
+            this.hasOptions() &&
+            (this.operator.hasPerms(Permission.userCanUpdate) ||
+                this.operator.hasPerms(Permission.userCanEditOwnDelegation))
         );
     }
 
