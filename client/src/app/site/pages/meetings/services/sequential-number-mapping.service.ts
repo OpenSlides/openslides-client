@@ -98,13 +98,15 @@ export class SequentialNumberMappingService {
         }
     }
 
-    private doSequentialNumberMapping(
+    private async doSequentialNumberMapping(
         collection: Collection,
         viewModels: (BaseViewModel & HasMeetingId & Partial<HasSequentialNumber>)[]
-    ): void {
+    ): Promise<void> {
+        const unlock = await this._mutex.lock();
         if (!this._mapSequentialNumberId[collection]) {
             this._mapSequentialNumberId[collection] = {};
         }
+        unlock();
         for (const viewModel of viewModels) {
             if (isSequentialNumberHaving(viewModel)) {
                 this.insertViewModelId(viewModel);
@@ -143,12 +145,13 @@ export class SequentialNumberMappingService {
         collection: Collection,
         meetingIdSequentialNumber: string
     ): Promise<number | null> {
+        const unlock = await this._mutex.lock();
         if (!this._mapSequentialNumberId[collection]) {
             this._mapSequentialNumberId[collection] = {};
         }
 
-        const unlock = await this._mutex.lock();
         if (!this._mapSequentialNumberId[collection][meetingIdSequentialNumber]) {
+            // TODO: It seems like this might not resolve
             try {
                 const data = await this.autoupdateService.single(
                     await this.modelRequestBuilder.build(this.getSequentialNumberRequest(collection)),
@@ -167,10 +170,6 @@ export class SequentialNumberMappingService {
     }
 
     private setBehaviorSubject(collection: Collection, meetingIdSequentialNumber: string, value: number): void {
-        if (!this._mapSequentialNumberId[collection]) {
-            this._mapSequentialNumberId[collection] = {};
-        }
-
         this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = value;
     }
 }
