@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -7,7 +7,6 @@ import {
     EventEmitter,
     inject,
     Input,
-    OnDestroy,
     OnInit,
     Output,
     QueryList,
@@ -18,8 +17,10 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Router } from '@angular/router';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
+import { ViewImportedParticipant } from '@app/site/pages/meetings/pages/participants/pages/participant-import/view-models/view-participant-import';
 import { BackendImportService } from '@app/ui/base/import-service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -54,10 +55,9 @@ export enum BackendImportPhase {
     templateUrl: `./backend-import-list.component.html`,
     styleUrls: [`./backend-import-list.component.scss`],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class BackendImportListComponent implements OnInit, OnDestroy {
+export class BackendImportListComponent implements OnInit {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
@@ -245,14 +245,24 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
 
+    public hideOldCard = true;
+    protected uploadButton: boolean;
+    protected selectedNewFile;
+
     private dialog = inject(MatDialog);
     private translate = inject(TranslateService);
+
+    public constructor(
+        private cd: ChangeDetectorRef,
+        private router: Router
+    ) {}
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)
      */
     public ngOnInit(): void {
         this._importer.clearAll();
+        this.uploadButton = true;
         this._requiredFields = this.createRequiredFields();
         this._importer.currentImportPhaseObservable.subscribe(phase => {
             if (phase === BackendImportPhase.LOADING_PREVIEW && this.fileInput) {
@@ -267,13 +277,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
             map(previews => this.calculateRows(previews)),
             delay(50)
         );
-    }
-
-    /**
-     * Resets the importer when leaving the view
-     */
-    public ngOnDestroy(): void {
-        this._importer.clearFile();
+        this.cd.detectChanges();
     }
 
     /**
@@ -295,7 +299,8 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     /**
      * triggers the importer's onSelectFile after a file has been chosen
      */
-    public onSelectFile(event: any): void {
+    public onSelectedFile(event: Event): void {
+        this.uploadButton = false;
         this._importer.onSelectFile(event);
     }
 
@@ -305,6 +310,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     public removeSelectedFile(clearImporter = true): void {
         if (this.fileInput) {
             this.fileInput.nativeElement.value = ``;
+            this.uploadButton = true;
         }
         if (clearImporter) {
             this._importer.clearFile();
@@ -343,7 +349,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
      * @param item a row or an entry with a current state
      * @eturn the icon for the item
      */
-    public getActionIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
+    public getActionIcon(item: ViewImportedParticipant | BackendImportEntryObject): string {
         switch (item[`state`] ?? item[`info`]) {
             case BackendImportState.Error: // no import possible
                 return `block`;
@@ -374,7 +380,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
      * @param entry a row with a current state
      * @eturn the tooltip for the item
      */
-    public getRowTooltip(row: BackendImportIdentifiedRow): string {
+    public getRowTooltip(row: ViewImportedParticipant): string {
         switch (row.state) {
             case BackendImportState.Error: // no import possible
                 return (
@@ -398,7 +404,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         }
     }
 
-    public getWarningRowTooltip(row: BackendImportIdentifiedRow): string {
+    public getWarningRowTooltip(row: ViewImportedParticipant): string {
         switch (row.state) {
             case BackendImportState.Error: // no import possible
                 return (
@@ -489,7 +495,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         }
     }
 
-    private getErrorDescription(entry: BackendImportIdentifiedRow): string {
+    private getErrorDescription(entry: ViewImportedParticipant): string {
         return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`\n `);
     }
 
@@ -508,7 +514,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         }
     }
 
-    private calculateRows(previews: BackendImportPreview[]): BackendImportIdentifiedRow[] {
+    private calculateRows(previews: BackendImportPreview[] | ViewImportedParticipant[]): BackendImportIdentifiedRow[] {
         return previews?.flatMap(preview => preview.rows);
     }
 
@@ -521,5 +527,42 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         } else {
             return [];
         }
+    }
+
+    public onDragOver(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    public onDropSuccess(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+        const files = event.dataTransfer?.files;
+        if (!files || files.length === 0) {
+            return;
+        }
+        const droppedFile = {
+            target: {
+                files: files
+            }
+        };
+        try {
+            this._importer.onSelectFile(droppedFile);
+            this.uploadButton = false;
+        } catch {
+            this.uploadButton = false;
+        }
+    }
+
+    public onChange(event: Event): void {
+        this._importer.onSelectFile(event);
+    }
+
+    protected showPreview(): void {
+        this.router.navigateByUrl(this.router.url.concat('/preview'));
+    }
+
+    protected sendCsvReload(event: Event): void {
+        this._importer.onSelectFile(event);
     }
 }

@@ -11,7 +11,9 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
+import { ParticipantImportService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services';
 import { ViewModelListProvider } from '@app/ui/base/view-model-list-provider';
+import { BackendImportSummary } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { BehaviorSubject, delay, find, map, Observable, of } from 'rxjs';
 
 import { ScrollingTableComponent } from '../../../scrolling-table/components/scrolling-table/scrolling-table.component';
@@ -61,6 +63,27 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Input()
     public searchService: SearchService<V> | undefined;
 
+    @Input()
+    public csvConfiguration: boolean;
+
+    @Output()
+    public selectedEncodingOutput = new EventEmitter<V>();
+
+    @Output()
+    public selectedColSepOutput = new EventEmitter<V>();
+
+    @Output()
+    public selectedTextSeparatorOutput = new EventEmitter<V>();
+
+    @Output()
+    public selectNewFile = new EventEmitter<Event>();
+
+    @Input()
+    public csvReloadButton: boolean;
+
+    @Input()
+    public csvReload: ParticipantImportService;
+
     /**
      * Current state of the multi select mode.
      */
@@ -97,6 +120,15 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
      */
     @Input()
     public showMenu = true;
+
+    /*
+     * To Optionally show the scrolling-table's header bar
+     */
+    @Input()
+    public showHeader: boolean;
+
+    @Input()
+    public horizontalScroll: boolean;
 
     /**
      * Fix value for the height of the rows in the virtual-scroll-list.
@@ -146,6 +178,18 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
         }
     }
 
+    /**
+     * Summary adapted to the footer. Displays only "created", "updated", "referenced" and "error" columns.
+     */
+    @Input()
+    public shortenedSummary: BackendImportSummary[];
+
+    /**
+     * Information to display the correct icons in footer
+     */
+    @Input()
+    public GetSummaryInformation;
+
     private _totalCountObservable: Observable<number> = null;
 
     /**
@@ -164,7 +208,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public get totalCountObservable(): Observable<number> {
-        return this._totalCountObservable ?? this._source.pipe(map(items => items.length));
+        return this._totalCountObservable ?? this._source.pipe(map(items => items?.length));
     }
 
     public get source(): V[] {
@@ -264,5 +308,21 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
 
     public clearSearchField(): void {
         this._sortFilterBarComponent?.clearSearchField();
+    }
+
+    public sendSelectedEncoding($event): void {
+        this.selectedEncodingOutput.emit($event.value);
+    }
+
+    public sendSelectedColSep($event): void {
+        this.selectedColSepOutput.emit($event.value);
+    }
+
+    public sendSelectedTextSeparator($event): void {
+        this.selectedTextSeparatorOutput.emit($event.value);
+    }
+
+    public sendCsvReload(event: Event): void {
+        this.selectNewFile.emit(event);
     }
 }

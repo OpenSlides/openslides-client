@@ -49,7 +49,7 @@ export class ScrollingTableCellDirective implements OnInit, OnDestroy, Scrolling
     }
 
     public set labelTemplate(template: any) {
-        setTimeout(() => (this._labelTemplate = template));
+        this._labelTemplate = template;
     }
 
     public get labelTemplate(): any {

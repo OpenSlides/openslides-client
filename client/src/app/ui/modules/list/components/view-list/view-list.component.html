@@ -3,6 +3,8 @@
         @if (showFilterBar) {
             <os-sort-filter-bar
                 class="sort-filter-bar"
+                [csvConfiguration]="csvConfiguration"
+                [csvReload]="csvReload"
                 [fakeFilters]="fakeFilters"
                 [filterCount]="currentCountObservable | async"
                 [filterService]="filterService!"
@@ -12,6 +14,10 @@
                 [sortService]="sortService!"
                 [totalCount]="totalCountObservable | async"
                 (searchFieldChanged)="searchFilterUpdated.emit($event)"
+                (selectNewFile)="sendCsvReload($event)"
+                (selectedColSepOutput)="sendSelectedColSep($event)"
+                (selectedEncodingOutput)="sendSelectedEncoding($event)"
+                (selectedTextSeparatorOutput)="sendSelectedTextSeparator($event)"
             >
                 <div class="extra-info-slot">
                     <ng-content select=".filter-bar-info-slot"></ng-content>
@@ -24,8 +30,11 @@
             [dataSource]="dataListObservable"
             [fullDataSource]="dataFullListObservable"
             [hiddenColumns]="hiddenColumns"
+            [horizontalScroll]="horizontalScroll"
             [rowHeight]="vScrollFixed"
             [selectionMode]="multiSelect"
+            [shortenedSummary]="shortenedSummary"
+            [showHeader]="showHeader"
             [tableHeight]="fullScreen ? undefined : '50vh'"
             (selectionChanged)="selectedRowsChange.emit($event.selectedRows)"
         >

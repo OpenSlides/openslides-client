@@ -1,6 +1,7 @@
 import {
     ChangeDetectionStrategy,
     Component,
+    ElementRef,
     EventEmitter,
     HostListener,
     inject,
@@ -16,6 +17,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Identifiable } from '@app/domain/interfaces';
 import { OsFilterIndicator } from '@app/site/base/base-filter.service';
 import { OsSortingOption } from '@app/site/base/base-sort.service';
+import { ParticipantImportService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { FilterListService } from '@app/ui/modules/list/definitions/filter-service';
 import { OsSortOption, SortListService } from '@app/ui/modules/list/definitions/sort-service';
@@ -67,6 +69,37 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
 
     @Input()
     public searchService: SearchService<V> | undefined;
+
+    /**
+     * CSV options
+     */
+    @Input()
+    public csvConfiguration: boolean;
+
+    public selectedEncodingOption = 'utf-8';
+    public selectedColumnSeparatorOption = 'Automatic';
+    public selectedTextSeparatorOption = "''";
+
+    @Output()
+    public selectedEncodingOutput = new EventEmitter<V>();
+
+    @Output()
+    public selectedColSepOutput = new EventEmitter<V>();
+
+    @Output()
+    public selectedTextSeparatorOutput = new EventEmitter<V>();
+
+    @Output() // csvReload
+    public selectNewFile = new EventEmitter<Event>();
+
+    @ViewChild(`fileInput`)
+    private fileInput!: ElementRef<HTMLInputElement>;
+
+    @Input()
+    public csvReload: ParticipantImportService;
+
+    @Input()
+    public csvReloadButton: boolean;
 
     /**
      * Optional string to tell the verbose name of the filtered items. This string is displayed,
@@ -127,6 +160,12 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
      */
     @ViewChild(MatDrawer, { static: true })
     public filterMenu: MatDrawer;
+
+    /**
+     * The filter side drawer
+     */
+    @ViewChild(MatDrawer, { static: true })
+    public csvConfigMenu: MatDrawer;
 
     /**
      * The bottom sheet used to alter sorting in mobile view
@@ -300,6 +339,23 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
 
     public clearSearchField(): void {
         this._searchFieldComponent?.clear();
+    }
+
+    public sendSelectedEncoding($event): void {
+        this.selectedEncodingOutput.emit($event);
+    }
+
+    public sendSelectedColumnSeparator($event): void {
+        this.selectedColSepOutput.emit($event);
+    }
+
+    public sendSelectedTextSeparator($event): void {
+        this.selectedTextSeparatorOutput.emit($event);
+    }
+
+    // not working. fix this
+    public sendCsvReload(event: Event): void {
+        this.selectNewFile.emit(event);
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {
