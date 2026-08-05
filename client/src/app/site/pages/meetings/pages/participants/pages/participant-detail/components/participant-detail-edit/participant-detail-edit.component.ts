@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
@@ -18,6 +18,7 @@ import { CommitteeControllerService } from '@app/site/pages/organization/pages/c
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { UserService } from '@app/site/services/user.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -28,10 +29,11 @@ import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_DETAIL_SUBSCRIPTION
 } from '../../../../participants.subscription';
-import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
+import { ParticipantListInfoDialogService } from '../../../participant-list/modules/participant-list-info-dialog/services';
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
+
 @Component({
     selector: `os-participant-detail-edit`,
     templateUrl: `./participant-detail-edit.component.html`,
@@ -41,6 +43,10 @@ import { ViewStructureLevel } from '../../../structure-levels/view-models';
 })
 export class ParticipantDetailEditComponent extends BaseMeetingComponent implements OnInit {
     @ViewChild(UserDetailViewComponent)
+    private infoDialog = inject(ParticipantListInfoDialogService);
+
+    private userRepo = inject(UserControllerService);
+
     private userDetailView;
 
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
@@ -299,7 +305,7 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
 
     public updateByValueChange(event: any): void {
         this.personalInfoFormValue = event;
-        if (this.userDetailView.personalInfoForm.get(`locked_out`).disabled !== this.lockoutCheckboxDisabled) {
+        if (this.userDetailView.personalInfoForm?.get(`locked_out`).disabled !== this.lockoutCheckboxDisabled) {
             if (this.lockoutCheckboxDisabled) {
                 this.userDetailView.personalInfoForm.get(`locked_out`).disable();
             } else {
@@ -334,12 +340,16 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
             }
             const title = _(`This action will remove you from one or more groups.`);
             const content = _(
-                `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
+                `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
             );
             if (
                 !(
                     this.user.id === this.operator.operatorId &&
-                    areGroupsDiminished(this.operator.user.group_ids(), payload.group_ids, this.activeMeeting)
+                    this.infoDialog.areGroupsDiminished(
+                        this.operator.user.group_ids(),
+                        payload.group_ids,
+                        this.activeMeeting
+                    )
                 ) ||
                 (await this.promptService.open(title, content))
             ) {
