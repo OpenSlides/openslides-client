@@ -38,33 +38,23 @@ export class MeetingXmlExportService {
     ): HTMLElement {
         const agendaItem = doc.createElement(isNested ? 'Sub-Agenda-Item' : 'Agenda-Item');
 
-        const addContentNode = (
-            config: (InfoToExport | csvMetaInfo)[],
-            name: InfoToExport | xmlMetaInfo,
-            value: unknown
-        ): void => {
-            if (
-                (config.includes(name as InfoToExport) || config.includes(name as xmlMetaInfo)) &&
-                value !== undefined &&
-                value !== null &&
-                value !== '' &&
-                value !== 0
-            ) {
+        const addContentNode = (name: InfoToExport | xmlMetaInfo, value: unknown): void => {
+            if (config.includes(name) && this.isEmpty(value)) {
                 const node = doc.createElement(name.replaceAll('_', '-'));
                 node.textContent = String(value);
                 agendaItem.appendChild(node);
             }
         };
 
-        addContentNode(config, 'item_number', item.item_number);
-        addContentNode(config, 'title', item.content_object?.title);
-        addContentNode(config, 'text', item.content_object?.text);
-        addContentNode(config, 'moderation_notes', item.content_object?.list_of_speakers?.moderator_notes);
-        addContentNode(config, 'list_of_speakers', item.content_object?.list_of_speakers?.speaker_ids?.length);
-        addContentNode(config, 'internal_commentary', item.comment);
-        addContentNode(config, 'duration', item.duration);
-        addContentNode(config, 'agenda_visibility', item.type);
-        addContentNode(config, 'done', item.closed);
+        addContentNode('item_number', item.item_number);
+        addContentNode('title', item.content_object?.title);
+        addContentNode('text', item.content_object?.text);
+        addContentNode('moderation_notes', item.content_object?.list_of_speakers?.moderator_notes);
+        addContentNode('list_of_speakers', item.content_object?.list_of_speakers?.speaker_ids?.length);
+        addContentNode('internal_commentary', item.comment);
+        addContentNode('duration', item.duration);
+        addContentNode('agenda_visibility', item.type);
+        addContentNode('done', item.closed);
 
         if (item.tags?.length && config.includes('tags')) {
             const tags = doc.createElement('tags');
@@ -82,5 +72,9 @@ export class MeetingXmlExportService {
             }
         });
         return agendaItem;
+    }
+
+    private isEmpty(value: any): boolean {
+        return value !== undefined && value !== null && value !== '' && value !== 0;
     }
 }
