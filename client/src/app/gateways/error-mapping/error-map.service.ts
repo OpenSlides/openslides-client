@@ -41,7 +41,7 @@ export class ErrorMapService {
             if (isMapError(mappedValue)) {
                 return mappedValue.getError();
             }
-            errorMsg = this.translate.instant(mappedValue, translation_args);
+            errorMsg = this.translate.instant(mappedValue, translation_args ?? {});
         } else {
             console.warn(`ErrorMapService has found no matches for "${errorMessage}"`);
         }
