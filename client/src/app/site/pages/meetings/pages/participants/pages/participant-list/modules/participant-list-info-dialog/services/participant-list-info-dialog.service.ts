@@ -5,21 +5,17 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';
+
+import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
+import { ParticipantControllerService } from '../../../../../services/common/participant-controller.service/participant-controller.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
-
-import { ParticipantControllerService } from '../../../../../services/common/participant-controller.service';
-import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
-
-export interface OperatorInfo {
-    changeOwnDel: boolean;
-    canManage: boolean;
-    canUpdate: boolean;
-    operatorGroupIds: number[];
-    operatorId: number;
-}
+import { OperatorService } from '@app/site/services/operator.service';
+import { MeetingService } from '@app/site/pages/organization/pages/committees/modules/services/meeting.service';
+import { MeetingRepositoryService } from '@app/gateways/repositories/meeting-repository.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 
 /**
  * Interface for the short editing dialog.
@@ -65,6 +61,7 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
     InfoDialog
 > {
     private controller = inject(ParticipantControllerService);
+    private activeMeeting = inject(ActiveMeetingService);
 
     public async open(
         data: Partial<InfoDialog> & Identifiable
@@ -80,55 +77,55 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
         });
         return dialogRef;
     }
-}
 
-export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[], activeMeeting: ViewMeeting): boolean {
-    return (
-        oldGroupIds
-            .filter(group => group !== activeMeeting.default_group_id)
-            .some(id => !(newGroupIds ?? []).includes(id)) && !newGroupIds.includes(activeMeeting.admin_group_id)
-    );
-}
+    public areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[], activeMeeting: ViewMeeting): boolean {
+        return (
+            oldGroupIds
+                .filter(group => group !== activeMeeting.default_group_id)
+                .some(id => !(newGroupIds ?? []).includes(id)) && !newGroupIds.includes(activeMeeting.admin_group_id)
+        );
+    }
 
-export function afterDialogClosed(
-    dialogRef: MatDialogRef<ParticipantListInfoDialogComponent, InfoDialog>,
-    user: ViewUser,
-    operator: OperatorInfo,
-    activeMeeting: ViewMeeting,
-    repo: ParticipantControllerService,
-    prompt: PromptService
-): void {
-    const selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
-    const selfGroupRemovalDialogContent = _(
-        `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
-    );
+    public afterDialogClosed(
+        dialogRef: MatDialogRef<ParticipantListInfoDialogComponent, InfoDialog>,
+        user: ViewUser,
+        operator: any,
+        activeMeeting: ViewMeeting,
+        repo: ParticipantControllerService,
+        prompt: PromptService
+    ): void {
+        const selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
+        const selfGroupRemovalDialogContent = _(
+            `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
+        );
 
-    dialogRef.afterClosed().subscribe(async result => {
-        if (result) {
-            if (!result.group_ids?.length) {
-                result.group_ids = [this.activeMeeting!.default_group_id];
-            }
-            if (result.vote_delegated_to_ids.length) {
-                result.vote_delegated_to_ids = null;
-            }
-            if (
-                !(
-                    user.id === operator.operatorId &&
-                    areGroupsDiminished(operator.operatorGroupIds, result.group_ids, activeMeeting)
-                ) ||
-                (await prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
-            ) {
+        dialogRef.afterClosed().subscribe(async result => {
+            if (result) {
+                if (!result.group_ids?.length) {
+                    result.group_ids = [this.activeMeeting!.meeting.default_group_id];
+                }
+                if (result.vote_delegated_to_ids.length) {
+                    result.vote_delegated_to_ids = null;
+                }
                 if (
-                    operator.changeOwnDel &&
-                    !operator.canManage &&
-                    !operator.canUpdate &&
-                    user.id === operator.operatorId
+                    !(
+                        user.id === operator.operatorId &&
+                        this.areGroupsDiminished(operator.operatorGroupIds, result.group_ids, activeMeeting)
+                    ) ||
+                    (await prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
                 ) {
-                    repo.updateSelfDelegation(result, user);
-                } else {
-                    repo.update(result, user).resolve();
+                    if (
+                        operator.changeOwnDel &&
+                        !operator.canManage &&
+                        !operator.canUpdate &&
+                        user.id === operator.operatorId
+                    ) {
+                        repo.updateSelfDelegation(result, user);
+                    } else {
+                        repo.update(result, user).resolve();
+                    }
                 }
             }
-        }
-    });
+        });
+    }
 }
