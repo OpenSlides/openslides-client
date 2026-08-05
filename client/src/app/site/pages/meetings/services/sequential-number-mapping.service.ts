@@ -98,12 +98,14 @@ export class SequentialNumberMappingService {
         }
     }
 
-    private doSequentialNumberMapping(
+    private async doSequentialNumberMapping(
         collection: Collection,
         viewModels: (BaseViewModel & HasMeetingId & Partial<HasSequentialNumber>)[]
-    ): void {
+    ): Promise<void> {
         if (!this._mapSequentialNumberId[collection]) {
+            const unlock = await this._mutex.lock();
             this._mapSequentialNumberId[collection] = {};
+            unlock();
         }
         for (const viewModel of viewModels) {
             if (isSequentialNumberHaving(viewModel)) {
@@ -143,12 +145,12 @@ export class SequentialNumberMappingService {
         collection: Collection,
         meetingIdSequentialNumber: string
     ): Promise<number | null> {
-        if (!this._mapSequentialNumberId[collection]) {
-            this._mapSequentialNumberId[collection] = {};
-        }
-
         const unlock = await this._mutex.lock();
-        if (!this._mapSequentialNumberId[collection][meetingIdSequentialNumber]) {
+        if (
+            !this._mapSequentialNumberId[collection] ||
+            !this._mapSequentialNumberId[collection][meetingIdSequentialNumber]
+        ) {
+            // TODO: It seems like this might not resolve
             try {
                 const data = await this.autoupdateService.single(
                     await this.modelRequestBuilder.build(this.getSequentialNumberRequest(collection)),
@@ -158,7 +160,10 @@ export class SequentialNumberMappingService {
                 const val = Object.values(data[collection]).find(
                     el => el[`meeting_id`] + `/` + el[`sequential_number`] === meetingIdSequentialNumber
                 );
-                this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = val[`id`];
+
+                if (val[`id`]) {
+                    this.setBehaviorSubject(collection, meetingIdSequentialNumber, val[`id`]);
+                }
             } catch (e) {}
         }
         unlock();
@@ -167,10 +172,6 @@ export class SequentialNumberMappingService {
     }
 
     private setBehaviorSubject(collection: Collection, meetingIdSequentialNumber: string, value: number): void {
-        if (!this._mapSequentialNumberId[collection]) {
-            this._mapSequentialNumberId[collection] = {};
-        }
-
         this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = value;
     }
 }
