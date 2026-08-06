@@ -45,7 +45,7 @@ export class ErrorMapService {
         } else {
             console.warn(`ErrorMapService has found no matches for "${errorMessage}"`);
         }
-        return `${this.translate.instant(`Error`)}: ${this.translate.instant(errorMsg, translation_args)}`;
+        return `${this.translate.instant(`Error`)}: ${this.translate.instant(errorMsg, translationArgs)}`;
     }
 
     private getHttpErrorMap(options: GetHttpErrorMapOptions): ErrorMap | null {
