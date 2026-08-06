@@ -25,7 +25,7 @@ export class ErrorMapService {
     public getCleanErrorMessage(
         errorMessage: string,
         options: GetHttpErrorMapOptions,
-        translation_args: Record<string, any>
+        translationArgs: Record<string, any>
     ): string | Error {
         let errorMsg = errorMessage;
         const errorMap = options ? this.getHttpErrorMap(options) : DefaultErrorMap;
@@ -41,7 +41,7 @@ export class ErrorMapService {
             if (isMapError(mappedValue)) {
                 return mappedValue.getError();
             }
-            errorMsg = this.translate.instant(mappedValue, translation_args ?? {});
+            errorMsg = this.translate.instant(mappedValue, translationArgs ?? {});
         } else {
             console.warn(`ErrorMapService has found no matches for "${errorMessage}"`);
         }
