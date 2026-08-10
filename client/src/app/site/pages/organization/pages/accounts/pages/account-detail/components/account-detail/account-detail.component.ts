@@ -116,8 +116,19 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     }
 
     public get canEdit(): boolean {
-        if (!this.operator.userOML) {
+        const userOML = this.user?.organization_management_level;
+        if (this.operator.isSuperAdmin) {
             return true;
+        } else if (userOML === OML.superadmin) {
+            return false;
+        } else if (this.operator.userOML === OML.can_manage_organization) {
+            return true;
+        } else if (userOML === OML.can_manage_organization) {
+            return false;
+        } else if (this.operator.userOML === OML.can_manage_users) {
+            return true;
+        } else if (userOML === OML.can_manage_users) {
+            return false;
         }
         return this.operator.hasOrganizationPermissions(this.operator.userOML);
     }
