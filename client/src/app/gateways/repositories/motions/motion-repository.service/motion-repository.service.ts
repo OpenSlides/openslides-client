@@ -7,6 +7,7 @@ import { NullablePartial } from '@app/infrastructure/utils';
 import { AgendaListTitle } from '@app/site/pages/meetings/pages/agenda';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { MotionFormatResult } from '@app/site/pages/meetings/pages/motions/services/common/motion-format.service';
+import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { map, Observable } from 'rxjs';
@@ -31,6 +32,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
      */
     protected sortProperty: SortProperty = `number`;
     private treeService = inject(TreeService);
+    private sequentialNumber = inject(SequentialNumberMappingService);
 
     public constructor() {
         const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
@@ -50,9 +52,21 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         return super.getViewModelListObservable().pipe(map(motions => this.getCurrentMotions(motions)));
     }
 
-    public create(...motions: NullablePartial<Motion>[]): Promise<CreateResponse[]> {
+    public async create(...motions: NullablePartial<Motion>[]): Promise<CreateResponse[]> {
         const payload = motions.map(motion => this.getCreatePayload(motion));
-        return this.sendBulkActionToBackend(MotionAction.CREATE, payload);
+        const data: CreateResponse[] = await this.sendBulkActionToBackend(MotionAction.CREATE, payload);
+        for (const entry of data) {
+            if (entry.sequential_number) {
+                this.sequentialNumber.setSequentialNumber(
+                    ViewMotion.COLLECTION,
+                    this.activeMeetingId,
+                    entry.sequential_number,
+                    entry.id
+                );
+            }
+        }
+
+        return data;
     }
 
     public async createForwarded(
