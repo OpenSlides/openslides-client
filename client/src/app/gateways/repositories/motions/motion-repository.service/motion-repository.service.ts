@@ -57,7 +57,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
         const data: CreateResponse[] = await this.sendBulkActionToBackend(MotionAction.CREATE, payload);
         for (const entry of data) {
             if (entry.sequential_number) {
-                this.sequentialNumber.setSequentialNumber(
+                await this.sequentialNumber.setSequentialNumber(
                     ViewMotion.COLLECTION,
                     this.activeMeetingId,
                     entry.sequential_number,
