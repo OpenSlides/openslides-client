@@ -166,7 +166,6 @@ export class SequentialNumberMappingService {
             !this._mapSequentialNumberId[collection] ||
             !this._mapSequentialNumberId[collection][meetingIdSequentialNumber]
         ) {
-            // TODO: It seems like this might not resolve
             try {
                 const data = await this.autoupdateService.single(
                     await this.modelRequestBuilder.build(this.getSequentialNumberRequest(collection)),
