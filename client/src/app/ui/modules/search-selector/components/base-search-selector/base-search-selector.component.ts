@@ -43,7 +43,7 @@ export abstract class BaseSearchSelectorComponent
             this._matSelectStateSubscription.unsubscribe();
         }
 
-        value.stateChanges.subscribe(() => {
+        this._matSelectStateSubscription = value.stateChanges.subscribe(() => {
             this.stateChanges.next();
         });
     }
@@ -423,7 +423,7 @@ export abstract class BaseSearchSelectorComponent
     protected override push(value: Selectable): void {
         this._snapshotValue = value;
         const nextValue = this.transformPropagateFn(value);
-        setTimeout(() => super.push(nextValue));
+        super.push(nextValue);
     }
 
     private triggerUpdate(): void {
@@ -438,10 +438,8 @@ export abstract class BaseSearchSelectorComponent
 
     private setNextValue(value: any): void {
         this._snapshotValue = value;
-        setTimeout(() => {
-            this.contentForm.setValue(value);
-            this.triggerUpdate();
-        });
+        this.contentForm.setValue(value);
+        this.triggerUpdate();
     }
 
     /**

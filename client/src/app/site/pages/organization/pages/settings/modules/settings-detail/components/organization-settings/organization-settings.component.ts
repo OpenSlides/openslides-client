@@ -48,11 +48,16 @@ export class OrganizationSettingsComponent extends BaseComponent {
         super();
         super.setTitle(this.pageTitle);
 
+        this.initTimezones();
+        this.subscribeOrganizationData();
+    }
+
+    private subscribeOrganizationData(): void {
         this.subscriptions.push(
             this.controller.getViewModelObservable(ORGANIZATION_ID).subscribe(orga => {
                 this._currentOrgaSettings = orga;
                 if (orga) {
-                    this.initTimezones();
+                    console.log(orga, !this.orgaSettingsForm);
                     if (!this.orgaSettingsForm) {
                         this.orgaSettingsForm = this.createForm();
                     }
@@ -131,31 +136,22 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     private updateForm(viewOrganization: ViewOrganization): void {
         if (!this.orgaSettingsForm) {
-            this.orgaSettingsForm = this.createForm();
+            return;
         }
-        const { time_zone, ...patchMeeting }: any = viewOrganization.organization;
+        const { ...patchMeeting }: any = viewOrganization.organization;
         if (patchMeeting.saml_attr_mapping) {
             const attrMapping = objectToFormattedString(patchMeeting.saml_attr_mapping);
             patchMeeting.saml_attr_mapping = attrMapping;
             this._ssoConfigRows = attrMapping.split(`\n`).length;
         }
-        patchMeeting.time_zone = this.timeZone.getTimezoneIdByName(time_zone);
+
+        console.log(patchMeeting);
         this.orgaSettingsForm!.patchValue(patchMeeting);
     }
 
-    private async initTimezones(): Promise<void> {
-        this.timeZone.getTZForSearchSelector().then(values => {
-            this.timeZones.set(values);
-            this.patchTimezoneInForm();
-        });
-    }
-
-    private patchTimezoneInForm(): void {
-        if (!this.orgaSettingsForm?.get('time_zone').value) {
-            this.orgaSettingsForm
-                .get('time_zone')
-                .setValue(this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone()));
-        }
+    private initTimezones(): void {
+        const values = this.timeZone.getTZForSearchSelector();
+        this.timeZones.set(values);
     }
 
     public getAdditionallySearchedValuesFn(item: Selectable): string[] {
@@ -163,14 +159,14 @@ export class OrganizationSettingsComponent extends BaseComponent {
     }
 
     public onSubmit(): void {
-        const { time_zone, ...payload }: any = this.orgaSettingsForm!.value;
-        payload.time_zone = this.timeZone.getTimezoneNameById(time_zone);
+        const { ...payload }: any = this.orgaSettingsForm!.value;
         if (this.operator.isSuperAdmin) {
             payload.saml_attr_mapping = payload.saml_attr_mapping
                 ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
                 : null;
         }
         for (const key of Object.keys(payload)) {
+            console.log(key, this.orgaSettingsForm.get(key).pristine);
             if (this.orgaSettingsForm.get(key).pristine) {
                 delete payload[key];
             }

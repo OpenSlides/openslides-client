@@ -147,14 +147,14 @@ export abstract class BaseFormFieldControlComponent<T>
         this.value = value;
     }
 
-    public registerOnChange(fn: any): void {
+    public registerOnChange(fn: (_: any) => void): void {
         this._onChange = fn;
         if (this.shouldPropagateOnRegistering) {
             this.push(this.value);
         }
     }
 
-    public registerOnTouched(fn: any): void {
+    public registerOnTouched(fn: (_: any) => void): void {
         this._onTouched = fn;
         if (this.shouldPropagateOnRegistering) {
             this.push(this.value);
@@ -175,9 +175,8 @@ export abstract class BaseFormFieldControlComponent<T>
 
     public abstract onContainerClick(event: MouseEvent): void;
 
-    protected _onChange = (_value: T | null): void => {};
-
-    protected _onTouched = (_value: T | null): void => {};
+    protected _onChange = (_value?: T | null): void => {};
+    protected _onTouched = (_value?: T | null): void => {};
 
     protected abstract initializeForm(): void;
 

@@ -12,9 +12,9 @@ class SearchSelectorHelper implements Selectable {
     public value: string;
     public id: number;
 
-    public constructor(value, id) {
+    public constructor(value: string, id: string) {
         this.value = value;
-        this.id = id;
+        this.id = id as any;
     }
 
     public getTitle(): string {
@@ -30,24 +30,20 @@ class SearchSelectorHelper implements Selectable {
 export class TimeZoneService {
     private activeMeetingRepo = inject(ActiveMeetingService);
     private organizationRepo = inject(OrganizationControllerService);
-    private presenter = inject(GetValidTimezonesPresenterService);
 
     private timezonesCache: Selectable[] | null = null;
 
-    public async getAvailableTimeZones(): Promise<string[]> {
-        const timezones = await this.presenter.call();
-        return Intl.supportedValuesOf('timeZone').filter(value => !value.startsWith(`Etc`) && timezones[value]);
+    public getAvailableTimeZones(): string[] {
+        return Intl.supportedValuesOf('timeZone').filter(value => !value.startsWith(`Etc`));
     }
 
-    public async getTZForSearchSelector(): Promise<Selectable[]> {
+    public getTZForSearchSelector(): Selectable[] {
         if (this.timezonesCache) {
             return this.timezonesCache;
         }
-        const timezones = await this.getAvailableTimeZones();
-        let i = 0;
+        const timezones = this.getAvailableTimeZones();
         this.timezonesCache = timezones.map(value => {
-            i++;
-            return new SearchSelectorHelper(value, i);
+            return new SearchSelectorHelper(value, value);
         });
         return this.timezonesCache;
     }

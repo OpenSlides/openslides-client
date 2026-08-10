@@ -169,11 +169,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         this.availableAdmins = this.filterAccountsForCommitteeAdmins(this.userRepo.getViewModelList());
     }
 
-    private async initTimezones(): Promise<void> {
-        this.timeZone.getTZForSearchSelector().then(values => {
-            this.time_zones.next(values);
-            this.patchTimezoneInForm();
-        });
+    private initTimezones(): void {
+        const values = this.timeZone.getTZForSearchSelector();
+        this.time_zones.next(values);
+        this.patchTimezoneInForm();
     }
 
     private patchTimezoneInForm(): void {

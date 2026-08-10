@@ -42,6 +42,7 @@
                         <mat-label>{{ 'Time zone' | translate }}</mat-label>
                         <os-list-search-selector
                             formControlName="time_zone"
+                            [shouldPropagateOnRegistering]="false"
                             [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
                             [inputListValues]="timeZones()"
                         ></os-list-search-selector>
