@@ -84,6 +84,22 @@ export class SequentialNumberMappingService {
         return await this.getBehaviorSubject(collection, meetingIdSequentialNumber);
     }
 
+    public async setSequentialNumber(
+        collection: Collection,
+        meetingId: number,
+        sequentialNumber: number,
+        value: number
+    ): Promise<void> {
+        if (!this._mapSequentialNumberId[collection]) {
+            const unlock = await this._mutex.lock();
+            this._mapSequentialNumberId[collection] = {};
+            unlock();
+        }
+
+        const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
+        return this.setBehaviorSubject(collection, meetingIdSequentialNumber, value);
+    }
+
     private updateRepositoriesSubscriptions(): void {
         while (this._subscriptions.length > 0) {
             const subscription = this._subscriptions.shift();
@@ -161,10 +177,12 @@ export class SequentialNumberMappingService {
                     el => el[`meeting_id`] + `/` + el[`sequential_number`] === meetingIdSequentialNumber
                 );
 
-                if (val[`id`]) {
+                if (val && val[`id`]) {
                     this.setBehaviorSubject(collection, meetingIdSequentialNumber, val[`id`]);
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.error(e);
+            }
         }
         unlock();
 
