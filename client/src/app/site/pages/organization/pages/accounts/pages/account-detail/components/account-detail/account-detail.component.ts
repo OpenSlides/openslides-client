@@ -117,20 +117,20 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public get canEdit(): boolean {
         const userOML = this.user?.organization_management_level;
-        if (this.operator.isSuperAdmin) {
+        if (
+            this.operator.isSuperAdmin ||
+            (this.operator.isOrgaManager && userOML !== OML.superadmin) ||
+            (this.operator.isAccountAdmin && userOML !== OML.superadmin && userOML !== OML.can_manage_organization)
+        ) {
             return true;
-        } else if (userOML === OML.superadmin) {
-            return false;
-        } else if (this.operator.userOML === OML.can_manage_organization) {
-            return true;
-        } else if (userOML === OML.can_manage_organization) {
-            return false;
-        } else if (this.operator.userOML === OML.can_manage_users) {
-            return true;
-        } else if (userOML === OML.can_manage_users) {
+        } else if (
+            userOML === OML.superadmin ||
+            userOML === OML.can_manage_organization ||
+            userOML === OML.can_manage_users
+        ) {
             return false;
         }
-        return this.operator.hasOrganizationPermissions(this.operator.userOML);
+        return this.operator.isAnyManager;
     }
 
     public shouldEnableFormControl(): boolean {
