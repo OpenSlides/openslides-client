@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, viewChild } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -43,15 +43,8 @@ import { LoadFontService } from '../../services/load-font.service';
     ]
 })
 export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent implements OnInit {
-    /**
-     * HTML element of the side panel
-     */
-    @ViewChild(`sideNav`, { static: true, read: SidenavComponent })
-    public sideNav: SidenavComponent | null = null;
+    public sideNav = viewChild.required<SidenavComponent>('sideNav');
 
-    /**
-     * is the user logged in, or the anonymous is active.
-     */
     public isLoggedIn = false;
 
     public get mainMenuEntries(): MainMenuEntry[] {
@@ -74,24 +67,14 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
         return this.chatNotificationService.allChatGroupsNotificationsObservable;
     }
 
-    /**
-     * Constructor
-     */
-    public constructor(
-        _loadFontService: LoadFontService, // just to initialize this service
-        _notifyService: NotifyService, // just to initialize this service
-        private vp: ViewPortService,
-        private mainMenuService: MainMenuService,
-        private chatNotificationService: ChatNotificationService,
-        private chatService: ChatService,
-        private operator: OperatorService
-    ) {
-        super();
-    }
+    private _loadFontService = inject(LoadFontService); // just to initialize this service
+    private _notifyService = inject(NotifyService); // just to initialize this service
+    private vp = inject(ViewPortService);
+    private mainMenuService = inject(MainMenuService);
+    private chatNotificationService = inject(ChatNotificationService);
+    private chatService = inject(ChatService);
+    private operator = inject(OperatorService);
 
-    /**
-     * Initialize the site component
-     */
     public ngOnInit(): void {
         this.subscriptions.push(...this.getRouterSubscriptions());
         // observe the mainMenuService to receive toggle-requests
@@ -106,7 +89,7 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
      * Toggles the side nav
      */
     public toggleSideNav(): void {
-        this.sideNav?.toggle();
+        this.sideNav()?.toggle();
     }
 
     /**
@@ -114,7 +97,7 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
      */
     public mobileAutoCloseNav(): void {
         if (this.vp.isMobile) {
-            this.sideNav?.close();
+            this.sideNav()?.close();
         }
     }
 
