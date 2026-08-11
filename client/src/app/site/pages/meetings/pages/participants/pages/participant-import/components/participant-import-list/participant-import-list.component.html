@@ -6,10 +6,7 @@
 </os-head-bar>
 
 <os-backend-import-list
-    additionalInfo="{{
-        'Existing accounts can be reused or updated by using:<p>• Membership number <i>(recommended)</i><br>• Username<br>• Email address AND first name AND last name'
-            | translate
-    }}"
+    additionalInfo="<p style='margin-bottom: 4px;margin-top:0px'>Existing accounts can be reused or updated using:</p><ul style='padding-left: 30px; margin-top: 4px'><li>Membership number <i>(recommended)</i></li><li>Username</li><li>Email address, first name, and last name</li></ul>"
     modelName="Participant"
     [defaultColumns]="columns"
     [importer]="importer"

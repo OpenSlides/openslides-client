@@ -21,7 +21,6 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { MatTooltip } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { Group } from '@app/domain/models/users/group';
 import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
@@ -30,6 +29,7 @@ import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { BackendImportPhase } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 import {
+    BackendImportEntry,
     BackendImportEntryObject,
     BackendImportHeader,
     BackendImportIdentifiedRow,
@@ -41,14 +41,14 @@ import { ImportListFirstTabDirective } from '@app/ui/modules/import-list/directi
 import { ImportListLastTabDirective } from '@app/ui/modules/import-list/directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '@app/ui/modules/import-list/directives/import-list-status-template.directive';
 import { ListModule } from '@app/ui/modules/list';
-import { ListSearchService } from '@app/ui/modules/list/services/list-search.service';
 import { ScrollingTableCellDefConfig } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
-import { _, TranslateService } from '@ngx-translate/core';
+import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { map, Observable, of, Subscription } from 'rxjs';
 
 import { ViewGroup } from '../../../../modules';
 import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
+import { ViewStructureLevel } from '../../../structure-levels/view-models';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
@@ -64,6 +64,7 @@ import { ViewImportedParticipant } from '../../view-models/view-participant-impo
         ListModule,
         MatIcon,
         AsyncPipe,
+        TranslatePipe,
         MatTooltip,
         MatCheckbox,
         NgClass,
@@ -102,7 +103,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Define extra filter properties
      */
     protected get filterProps(): string[] {
-        return ViewImportedParticipant.REQUESTABLE_FIELDS;
+        return this.headersOrder;
     }
 
     public filterService = inject(ParticipantImportFilterService);
@@ -355,7 +356,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this.fillPreviewData(previews);
             this.setHeaders({ preview: this._previewColumns });
         });
-        this.searchService = new ListSearchService(this.filterProps, this.alsoFilterByProperties);
     }
 
     /**
@@ -741,14 +741,12 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             maxWidth: `90vw`,
             maxHeight: `90vh`
         };
-        const sleep: (ms: number) => Promise<unknown> = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
         const ref = this.dialog.open(dialogTemplate, {
             data: this.summary,
             ...customOptions,
             hasBackdrop: false
         });
         try {
-            await sleep(2000);
             if (await this.importer.doImport()) {
                 // The close() is needed here so dialogs don't overlap if the second one opens
                 ref.close();
@@ -757,16 +755,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                         data: this.summary,
                         ...customOptions
                     })
-                    .afterClosed()
-                    .subscribe(() => this.redirect());
+                    .afterClosed();
             }
         } catch {}
         this.cd.detectChanges();
         ref.close();
-    }
-
-    private redirect(): void {
-        this.router.navigateByUrl(this.router.url.replace('/import/preview', ''));
     }
 
     private isReferenced(row: ViewImportedParticipant): boolean {
@@ -806,9 +799,13 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             ) {
                 const updatedUser = user.getModel();
                 const changes: Partial<Record<keyof ViewUser, { old?: unknown; new: unknown | unknown[] }>> = {};
-                this.compareStructureLevel(item?.structure_levels, user?.structure_level().split(','));
+                const changedStructureLevels = this.checkArrayFields(
+                    Array.isArray(item.data?.['structure_level']) ? item.data?.['structure_level'] : [],
+                    user?.structure_levels(this.activeMeetingIdService.meetingId)
+                );
                 const userGroups: ViewGroup[] = user?.groups(this.activeMeetingIdService.meetingId) || [];
-                const changedGroups = this.compareGroups(item?.groups, userGroups);
+                const itemGroups = item?.data['groups'] || [];
+                const changedGroups = this.checkArrayFields(itemGroups as BackendImportEntry[], userGroups);
                 for (const key of Object.keys(updatedUser) as (keyof ViewUser)[]) {
                     if (key in item) {
                         const importedValue = item[key as keyof ViewImportedParticipant];
@@ -879,7 +876,14 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             new: changedGroups.new
                         };
                     }
+                    if (changedStructureLevels.new?.length) {
+                        changes['structure_level'] = {
+                            old: changedStructureLevels.old,
+                            new: changedStructureLevels.new
+                        };
+                    }
                 }
+                console.log(changes);
                 if (Object.keys(changes).includes(headerName)) {
                     return 'autorenew';
                 }
@@ -891,44 +895,23 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return '';
     }
 
-    private compareStructureLevel(
-        newSL: string[],
-        oldSL: string[]
+    private checkArrayFields(
+        addedItems: BackendImportEntry[],
+        oldItems: ViewGroup[] | ViewStructureLevel[]
     ): {
-        old: string[];
-        new: string[];
+        old?: number[];
+        new: BackendImportEntry[];
     } {
-        // No need to check new items as they are calculated by the backend
-        const commonSL = newSL.filter(sl => oldSL.includes(sl['value'])).sort();
-        const diffSL = newSL.filter(sl => !oldSL.includes(sl['value']) && sl['id']).sort();
-        diffSL.filter(sl => {
-            sl['info'] = 'updated';
-        });
-        return {
-            old: oldSL,
-            new: commonSL.concat(diffSL)
-        };
-    }
-
-    private compareGroups(
-        newGroups: string[],
-        oldGroups: ViewGroup[]
-    ): {
-        old: string[];
-        new: string[];
-    } {
-        const oldGroupNames = oldGroups.map((g: Group) => g.name).sort();
-        const addedGroups = newGroups
-            .filter(newgroup => !oldGroupNames.includes(newgroup['value'] as string) && newgroup['id'])
+        const oldItemIds = oldItems.map((oldItem: ViewGroup | ViewStructureLevel) => oldItem.id).sort();
+        const diffItemNames = addedItems
+            .filter(addedItem => !oldItems.includes(addedItem['id']) && addedItem['id'])
             .sort();
-        addedGroups.filter(g => {
-            if (g['info'] === 'done') {
-                g['info'] = 'updated';
-            }
+        diffItemNames.filter(infoState => {
+            if (!oldItemIds.includes(infoState['id'])) infoState['info'] = 'updated';
         });
         return {
-            old: oldGroupNames,
-            new: addedGroups
+            old: oldItemIds,
+            new: diffItemNames
         };
     }
 }

@@ -353,7 +353,6 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
         this.selectedTextSeparatorOutput.emit($event);
     }
 
-    // not working. fix this
     public sendCsvReload(event: Event): void {
         this.selectNewFile.emit(event);
     }

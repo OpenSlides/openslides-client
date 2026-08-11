@@ -7,15 +7,15 @@ import {
 } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
 
-export const STATES = [
+export const IMPORTED_PARTICIPANT_STATES = [
     _(`New participant`),
     _(`Updated participant`),
     _('Referenced participant'),
     _(`Faulty participant`)
 ];
-export const STATE_FITERABLE = [`new`, `done`, `referenced`, `error`];
+export const IMPORTED_PARTICIPANT_STATES_ITERABLE = [`new`, `done`, `referenced`, `error`];
 
-export class ViewImportedParticipant implements Identifiable, BackendImportRow /* implements Searchable */ {
+export class ViewImportedParticipant implements Identifiable, BackendImportRow {
     // This class replaces BackendImportIdentifiedRow
 
     public meeting_id: number;
@@ -41,7 +41,7 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
     public comment: string;
     public title: string;
 
-    public structure_levels: string[];
+    public structure_level: string[];
     public groups: string[];
 
     public external: boolean;
@@ -55,79 +55,12 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
         this.id = preview_id;
 
         this.data = preview.data;
-        this.messages = preview.messages;
+        this.messages = preview.messages ?? [];
         this.state = preview.state;
 
-        this.title = this.setValue(this.data?.['title']) as string;
-        this.first_name = this.setValue(this.data?.['first_name']) as string;
-        this.last_name = this.setValue(this.data?.['last_name']) as string;
-        this.email = this.setValue(this.data?.['email']) as string;
-        this.member_number = this.setValue(this.data?.['member_number']) as string;
-        this.structure_levels = this.data?.['structure_level'] as string[];
-        this.groups = this.data?.['groups'] as string[];
-        this.number = this.setValue(this.data?.['number']) as string;
-        this.vote_weight = this.setValue(this.data?.['vote_weight']) as string;
-        this.gender = this.setValue(this.data?.['gender']) as string;
-        this.pronoun = this.setValue(this.data?.['pronoun']) as string;
-        this.username = this.setValue(this.data?.['username']) as string;
-        this.default_password = this.setValue(this.data?.['default_password']) as string;
-
-        this.is_active = this.getBooleanValue(this.setValue(this.data?.['is_active']) as boolean);
-        this.is_physical_person = this.getBooleanValue(this.setValue(this.data?.['is_physical_person']) as boolean);
-        this.is_present = this.getBooleanValue(this.setValue(this.data?.['is_present']) as boolean);
-        this.is_locked_out = this.getBooleanValue(this.setValue(this.data?.['locked_out']) as boolean);
-        this.external = this.getBooleanValue(this.setValue(this.data?.['external'] as boolean));
-
-        this.saml_id = this.setValue(this.data?.['saml_id']) as string;
-        this.home_committee = this.setValue(this.data?.['home_committee']) as string;
-        this.comment = this.setValue(this.data?.['comment']) as string;
-    }
-
-    public static readonly REQUESTABLE_FIELDS: (keyof ViewImportedParticipant)[] = [
-        'id',
-        'first_name',
-        'last_name',
-        'email',
-        'member_number',
-        'vote_weight',
-        'gender',
-        'pronoun',
-        'username',
-        'default_password',
-        'saml_id',
-        'home_committee',
-        'comment',
-        'external',
-        'title',
-        'structure_levels',
-        'groups',
-        'is_active',
-        'is_present',
-        'is_locked_out',
-        'is_physical_person'
-    ];
-
-    public setValue(field: BackendImportEntry | BackendImportEntry[]): string | number | boolean | undefined {
-        if (!field) {
-            return undefined;
+        for (const [key, entry] of Object.entries(preview.data)) {
+            (this as Record<string, unknown>)[key] = Array.isArray(entry) ? entry.map(e => e['value']) : entry['value'];
         }
-        if (Array.isArray(field)) {
-            return this.setValue(field[0]);
-        }
-        if (typeof field === 'string') {
-            return field;
-        }
-        if (typeof field === 'number') {
-            return field;
-        }
-        if (typeof field === 'boolean') {
-            return field;
-        }
-        return field.value;
-    }
-
-    protected getDecimalFields(): (keyof ViewImportedParticipant)[] {
-        return [`vote_weight`];
     }
 
     public get voteWeight(): Decimal {
@@ -139,11 +72,7 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow /
     }
 
     public get getStructureLevels(): string[] {
-        return this.structure_levels;
-    }
-
-    public getBooleanValue(value: string | number | boolean | undefined): boolean {
-        return !!value;
+        return this.structure_level;
     }
 
     public get changedVoteWeight(): boolean {

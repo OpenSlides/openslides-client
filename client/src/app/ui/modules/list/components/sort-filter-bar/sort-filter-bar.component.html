@@ -84,43 +84,8 @@
                 </button>
             }
         }
+        <os-participant-import-csv-options />
 
-        <!-- CSV-Reload Button -->
-        @if (csvReload) {
-            <!-- not working, fix this -->
-            <button
-                mat-button
-                style="width: max-content"
-                [class.not-selected-option]="(filterMenu.opened || csvConfigMenu.opened) === true"
-                (click)="fileInput.click()"
-            >
-                <input #fileInput class="fileInput" type="file" (change)="sendCsvReload($event)" />
-                <mat-icon>autorenew</mat-icon>
-                @if ((vp.isMobileSubject | async) === false) {
-                    <span class="upper">
-                        {{ 'CSV-Reload' | translate }}
-                    </span>
-                }
-            </button>
-        }
-
-        <!-- CSV-Encoding Button -->
-        @if (csvConfiguration) {
-            <button
-                mat-button
-                style="width: max-content"
-                [class.not-selected-option]="filterMenu.opened === true"
-                [class.selected-option]="csvConfigMenu.opened"
-                (click)="csvConfigMenu.opened ? csvConfigMenu.close() : csvConfigMenu.open(); filterMenu.close()"
-            >
-                <mat-icon>settings</mat-icon>
-                @if ((vp.isMobileSubject | async) === false) {
-                    <span class="upper">
-                        {{ 'CSV-Configuration' | translate }}
-                    </span>
-                }
-            </button>
-        }
         <!-- Filter button -->
         @if (hasFilters) {
             <button

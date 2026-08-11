@@ -1,0 +1,23 @@
+<ng-content select="">
+    <!-- CSV-Reload Button -->
+    <div>
+        <button [class.not-selected-option]="" (click)="fileInput.click()">
+            <input #fileInput class="fileInput" type="file" />
+            <mat-icon>autorenew</mat-icon>
+            @if ((vp.isMobileSubject | async) === false) {
+                <span class="upper">
+                    {{ 'CSV-Reload' | translate }}
+                </span>
+            }
+        </button>
+        <!-- CSV-Encoding Button -->
+        <button mat-button style="width: max-content">
+            <mat-icon>settings</mat-icon>
+            @if ((vp.isMobileSubject | async) === false) {
+                <span class="upper">
+                    {{ 'CSV-Configuration' | translate }}
+                </span>
+            }
+        </button>
+    </div>
+</ng-content>

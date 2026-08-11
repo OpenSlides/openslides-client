@@ -16,6 +16,7 @@ import { MatRadioButton, MatRadioModule } from '@angular/material/radio';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { CSVOptions } from '@app/site/pages/meetings/pages/participants/pages/participant-import/components/participant-import-list-preview/participant-import-csv-options/participant-import-csv-options.component';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
 import { InputModule } from '@app/ui/modules/input';
 import { ScrollingTableModule } from '@app/ui/modules/scrolling-table';
@@ -56,7 +57,8 @@ const DECLARATIONS = [ListComponent, ViewListComponent];
         InputModule,
         ...MODULES,
         MatRadioButton,
-        MatRadioModule
+        MatRadioModule,
+        CSVOptions
     ]
 })
 export class ListModule {}

@@ -4,7 +4,11 @@ import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.serv
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { _ } from '@ngx-translate/core';
 
-import { STATE_FITERABLE, STATES, ViewImportedParticipant } from '../view-models/view-participant-import';
+import {
+    IMPORTED_PARTICIPANT_STATES,
+    IMPORTED_PARTICIPANT_STATES_ITERABLE,
+    ViewImportedParticipant
+} from '../view-models/view-participant-import';
 
 @Injectable({
     providedIn: 'root'
@@ -21,10 +25,10 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 property: 'state',
                 label: _('Participant state'),
                 options: [
-                    { condition: STATE_FITERABLE[0], label: STATES[0] },
-                    { condition: STATE_FITERABLE[1], label: STATES[1] },
-                    { condition: STATE_FITERABLE[2], label: STATES[2] },
-                    { condition: STATE_FITERABLE[3], label: STATES[3] }
+                    { condition: IMPORTED_PARTICIPANT_STATES_ITERABLE[0], label: IMPORTED_PARTICIPANT_STATES[0] },
+                    { condition: IMPORTED_PARTICIPANT_STATES_ITERABLE[1], label: IMPORTED_PARTICIPANT_STATES[1] },
+                    { condition: IMPORTED_PARTICIPANT_STATES_ITERABLE[2], label: IMPORTED_PARTICIPANT_STATES[2] },
+                    { condition: IMPORTED_PARTICIPANT_STATES_ITERABLE[3], label: IMPORTED_PARTICIPANT_STATES[3] }
                 ]
             },
             {
