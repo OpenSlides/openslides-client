@@ -15,8 +15,10 @@ import { AgendaItemAction } from './agenda-item.action';
 export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<ViewAgendaItem, AgendaItem> {
     private treeService = inject(TreeService);
 
+    public baseModelCtor = AgendaItem;
+
     public constructor() {
-        super(AgendaItem);
+        super();
 
         this.setSortFunction((a, b) => a.tree_weight - b.tree_weight); // leave the sorting as it is
     }

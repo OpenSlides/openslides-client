@@ -6,9 +6,7 @@ import { ViewHistoryPosition } from './view-history-position';
 
 @Service()
 export class HistoryPositionRepositoryService extends BaseRepository<ViewHistoryPosition, HistoryPosition> {
-    public constructor() {
-        super(HistoryPosition);
-    }
+    public baseModelCtor = HistoryPosition;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `History positions` : `History position`);
     public getTitle = (viewModel: ViewHistoryPosition): string => `Position ${viewModel.id}`;

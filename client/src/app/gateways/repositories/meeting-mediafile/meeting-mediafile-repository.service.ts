@@ -12,8 +12,10 @@ export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetin
 
     private activeMeetingIdService = inject(ActiveMeetingIdService);
 
+    public baseModelCtor = MeetingMediafile;
+
     public constructor() {
-        super(MeetingMediafile);
+        super();
 
         this.viewModelSortFn = (a: ViewMeetingMediafile, b: ViewMeetingMediafile): number =>
             this.languageCollator.compare(a.mediafile?.title, b.mediafile?.title);

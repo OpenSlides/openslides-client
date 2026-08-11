@@ -11,8 +11,10 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
     ViewMotionCommentSection,
     MotionCommentSection
 > {
+    public baseModelCtor = MotionCommentSection;
+
     public constructor() {
-        super(MotionCommentSection);
+        super();
 
         this.viewModelSortFn = (a: ViewMotionCommentSection, b: ViewMotionCommentSection): number => {
             if (a.weight === b.weight) {

@@ -33,9 +33,10 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     private treeService = inject(TreeService);
     private sequentialNumber = inject(SequentialNumberMappingService);
 
+    public baseModelCtor = Motion;
+
     public constructor() {
-        const agendaItemRepo = inject(AgendaItemRepositoryService);
-        super(Motion, agendaItemRepo);
+        super();
         this.meetingSettingsService.get(`motions_default_sorting`).subscribe(conf => {
             this.sortProperty = conf as SortProperty;
             this.setConfigSortFn();

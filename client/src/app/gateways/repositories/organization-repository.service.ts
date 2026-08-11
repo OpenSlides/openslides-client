@@ -8,9 +8,7 @@ import { BaseRepository } from './base-repository';
 
 @Service()
 export class OrganizationRepositoryService extends BaseRepository<ViewOrganization, Organization> {
-    public constructor() {
-        super(Organization);
-    }
+    public baseModelCtor = Organization;
 
     public getTitle = (viewOrganization: ViewOrganization): string => viewOrganization.name;
 

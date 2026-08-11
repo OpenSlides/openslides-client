@@ -14,9 +14,7 @@ export const CHAT_MESSAGE_MAX_LENGTH = 512;
 
 @Service()
 export class ChatMessageRepositoryService extends BaseMeetingRelatedRepository<ViewChatMessage, ChatMessage> {
-    public constructor() {
-        super(ChatMessage);
-    }
+    public baseModelCtor = ChatMessage;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Chat messages` : `Chat message`);
     public getTitle = (): string => `No name`;

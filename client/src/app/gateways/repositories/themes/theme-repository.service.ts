@@ -10,9 +10,7 @@ import { ThemeAction } from './theme.action';
 
 @Service()
 export class ThemeRepositoryService extends BaseRepository<ViewTheme, Theme> {
-    public constructor() {
-        super(Theme);
-    }
+    public baseModelCtor = Theme;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Themes` : `Theme`);
     public getTitle = (viewModel: ViewTheme): string => viewModel.name;

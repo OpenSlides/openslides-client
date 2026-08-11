@@ -29,9 +29,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     private voteController = inject(VoteControllerService);
     private voteRepo = inject(VoteRepositoryService);
 
-    public constructor() {
-        super(Poll);
-    }
+    public baseModelCtor = Poll;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Polls` : `Poll`);
     public getTitle = (viewModel: ViewPoll): string => viewModel.title;

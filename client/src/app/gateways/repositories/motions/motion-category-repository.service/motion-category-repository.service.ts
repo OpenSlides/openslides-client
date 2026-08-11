@@ -12,9 +12,7 @@ import { MotionCategoryAction } from './motion-category.action';
 
 @Service()
 export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepository<ViewMotionCategory, MotionCategory> {
-    public constructor() {
-        super(MotionCategory);
-    }
+    public baseModelCtor = MotionCategory;
 
     public override getViewModelList(): ViewMotionCategory[] {
         return this.filterForeignMeetingModelsFromList(super.getViewModelList());

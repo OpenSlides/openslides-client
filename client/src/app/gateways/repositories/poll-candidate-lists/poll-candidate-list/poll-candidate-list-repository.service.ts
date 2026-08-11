@@ -21,9 +21,7 @@ export class PollCandidateListRepositoryService extends BaseMeetingRelatedReposi
     ViewPollCandidateList,
     PollCandidateList
 > {
-    public constructor() {
-        super(PollCandidateList);
-    }
+    public baseModelCtor = PollCandidateList;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `PollCandidateLists` : `PollCandidateList`);
     public getTitle = (): string => _(`Confirmation of the nomination list`);

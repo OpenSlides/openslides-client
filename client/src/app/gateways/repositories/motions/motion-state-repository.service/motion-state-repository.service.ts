@@ -10,9 +10,7 @@ import { MotionStateAction } from './motion-state.action';
 
 @Service()
 export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<ViewMotionState, MotionState> {
-    public constructor() {
-        super(MotionState);
-    }
+    public baseModelCtor = MotionState;
 
     public getTitle = (viewMotionState: ViewMotionState): string => viewMotionState.name;
 

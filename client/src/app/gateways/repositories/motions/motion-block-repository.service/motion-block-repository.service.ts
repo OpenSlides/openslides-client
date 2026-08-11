@@ -13,9 +13,10 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
     ViewMotionBlock,
     MotionBlock
 > {
+    public baseModelCtor = MotionBlock;
+
     public constructor() {
-        const agendaItemRepo = inject(AgendaItemRepositoryService);
-        super(MotionBlock, agendaItemRepo);
+        super();
         this.initSorting();
     }
 

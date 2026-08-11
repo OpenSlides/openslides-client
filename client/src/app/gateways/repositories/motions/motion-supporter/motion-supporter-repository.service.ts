@@ -15,9 +15,7 @@ export class MotionSupporterRepositoryService extends BaseMeetingRelatedReposito
     public getVerboseName = (plural = false): string =>
         this.translate.instant(plural ? `Motion supporters` : `Motion supporter`);
 
-    public constructor() {
-        super(MotionSupporter);
-    }
+    public baseModelCtor = MotionSupporter;
 
     public getTitle = (model: ViewMotionSupporter): string =>
         model?.user?.getTitle() || this.translate.instant(`Deleted user`);

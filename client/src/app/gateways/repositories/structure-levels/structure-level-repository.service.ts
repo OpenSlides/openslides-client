@@ -11,9 +11,7 @@ import { StructureLevelAction } from './structure-level.action';
 
 @Service()
 export class StructureLevelRepositoryService extends BaseMeetingRelatedRepository<ViewStructureLevel, StructureLevel> {
-    public constructor() {
-        super(StructureLevel);
-    }
+    public baseModelCtor = StructureLevel;
 
     public getVerboseName = (plural?: boolean): string => (plural ? _(`Structure levels`) : _(`Structure level`));
     public getTitle = (viewModel: ViewStructureLevel): string => viewModel.name;

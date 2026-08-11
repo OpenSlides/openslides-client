@@ -1,4 +1,4 @@
-import { Directive, inject } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { HasSequentialNumber, Identifiable } from '@app/domain/interfaces';
 import { OnAfterAppsLoaded } from '@app/infrastructure/definitions/hooks/after-apps-loaded';
 import { ListUpdateData } from '@app/infrastructure/utils';
@@ -17,7 +17,6 @@ import { CollectionMapperService } from '../../site/services/collection-mapper.s
 import { DataStoreService } from '../../site/services/data-store.service';
 import { Fieldsets } from '../../site/services/model-request-builder';
 import { RelationManagerService } from '../../site/services/relation-manager.service';
-import { ViewModelStoreService } from '../../site/services/view-model-store.service';
 import { Action, ActionService } from '../actions';
 import { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
@@ -47,10 +46,10 @@ interface UpdatePipelineAction {
     key?: string;
 }
 
-@Directive()
+@Service()
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel> implements OnAfterAppsLoaded {
     public get collection(): string {
-        return this._collection;
+        return this.baseModelCtor.COLLECTION;
     }
 
     /**
@@ -58,7 +57,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * ModelConstructors and ViewModelConstructors.
      */
     public get COLLECTION(): string {
-        return this._collection;
+        return this.baseModelCtor.COLLECTION;
     }
 
     public abstract getVerboseName: (plural?: boolean) => string;
@@ -112,14 +111,14 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected relationsByKey: Record<string, Relation> = {};
 
     /**
+     * The model ctor of the encapsulated model.
+     */
+    protected abstract baseModelCtor: ModelConstructor<M>;
+
+    /**
      * The view model ctor of the encapsulated view model.
      */
     protected baseViewModelCtor!: ViewModelConstructor<V>;
-
-    /**
-     * The collection string of the managed model.
-     */
-    private _collection: string;
 
     private _createViewModelPipes: ((viewModel: V) => void)[] = [];
 
@@ -145,10 +144,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private foreignSortBaseKeys: Record<string, Record<string, string[]>> = {};
     private foreignSortBaseKeySubscriptions: Record<string, Subscription[]> = {};
 
-    // TODO: REMOVE
-    protected viewModelStoreService = inject(ViewModelStoreService);
-    // END
-
     protected DS = inject(DataStoreService);
     protected actions = inject(ActionService);
     protected collectionMapperService = inject(CollectionMapperService);
@@ -157,9 +152,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     private repositoryServiceCollector = inject(RepositoryServiceCollectorService);
 
-    public constructor(protected baseModelCtor: ModelConstructor<M>) {
-        this._collection = baseModelCtor.COLLECTION;
-
+    public constructor() {
         this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {
             this.relationsByKey[relation.ownField as any] = relation;
         });

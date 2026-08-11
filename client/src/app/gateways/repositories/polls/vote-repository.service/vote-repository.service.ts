@@ -39,9 +39,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     private operator = inject(OperatorService);
     private http = inject(HttpService);
 
-    public constructor() {
-        super(Vote);
-    }
+    public baseModelCtor = Vote;
 
     public getTitle = (): string => `Vote`;
 

@@ -11,9 +11,7 @@ export class StructureLevelListOfSpeakersRepositoryService extends BaseMeetingRe
     ViewStructureLevelListOfSpeakers,
     StructureLevelListOfSpeakers
 > {
-    public constructor() {
-        super(StructureLevelListOfSpeakers);
-    }
+    public baseModelCtor = StructureLevelListOfSpeakers;
 
     public getVerboseName = (): string => `StructureLevelListOfSpeakers`;
     public getTitle = (): string => ``;

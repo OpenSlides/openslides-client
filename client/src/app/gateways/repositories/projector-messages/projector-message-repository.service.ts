@@ -11,9 +11,7 @@ export class ProjectorMessageRepositoryService extends BaseMeetingRelatedReposit
     ViewProjectorMessage,
     ProjectorMessage
 > {
-    public constructor() {
-        super(ProjectorMessage);
-    }
+    public baseModelCtor = ProjectorMessage;
 
     public getTitle = (): string => this.getVerboseName();
 

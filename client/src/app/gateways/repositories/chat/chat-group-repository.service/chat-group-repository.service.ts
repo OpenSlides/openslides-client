@@ -9,9 +9,7 @@ import { ChatGroupAction } from './chat-group.action';
 
 @Service()
 export class ChatGroupRepositoryService extends BaseMeetingRelatedRepository<ViewChatGroup, ChatGroup> {
-    public constructor() {
-        super(ChatGroup);
-    }
+    public baseModelCtor = ChatGroup;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Chat groups` : `Chat group`);
     public getTitle = (viewModel: ViewChatGroup): string => viewModel.name;

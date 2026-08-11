@@ -11,9 +11,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseMeetingRela
     ViewMotionChangeRecommendation,
     MotionChangeRecommendation
 > {
-    public constructor() {
-        super(MotionChangeRecommendation);
-    }
+    public baseModelCtor = MotionChangeRecommendation;
 
     public getTitle = (): string => this.getVerboseName();
 

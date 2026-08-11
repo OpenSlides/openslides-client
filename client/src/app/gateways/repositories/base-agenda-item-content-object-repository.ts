@@ -1,5 +1,6 @@
+import { inject, Injectable, Service } from '@angular/core';
 import { HasAgendaItemId } from '@app/domain/interfaces';
-import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
+import { BaseModel } from '@app/domain/models/base/base-model';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { AgendaListTitle, HasAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 
@@ -25,6 +26,7 @@ export interface AgendaItemContentObjectRepository<
 /**
  * The base repository for objects with an agenda item.
  */
+@Service()
 export abstract class BaseAgendaItemContentObjectRepository<
     V extends BaseViewModel & HasAgendaItem,
     M extends BaseModel & HasAgendaItemId
@@ -32,12 +34,7 @@ export abstract class BaseAgendaItemContentObjectRepository<
     extends BaseMeetingRelatedRepository<V, M>
     implements AgendaItemContentObjectRepository<V, M>
 {
-    public constructor(
-        baseModelCtor: ModelConstructor<M>,
-        protected agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(baseModelCtor);
-    }
+    protected agendaItemRepo = inject(AgendaItemRepositoryService);
 
     /**
      * @returns the agenda title for the agenda item list. Should

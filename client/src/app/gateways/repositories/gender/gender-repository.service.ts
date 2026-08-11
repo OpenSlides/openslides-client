@@ -11,9 +11,7 @@ import { GenderAction } from './gender.action';
 
 @Service()
 export class GenderRepositoryService extends BaseRepository<ViewGender, Gender> {
-    public constructor() {
-        super(Gender);
-    }
+    public baseModelCtor = Gender;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Genders` : `Gender`);
     public getTitle = (viewModel: ViewGender): string => viewModel.name;

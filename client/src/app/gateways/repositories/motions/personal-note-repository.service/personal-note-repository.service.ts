@@ -10,9 +10,7 @@ import { PersonalNoteAction } from './personal-note.action';
 
 @Service()
 export class PersonalNoteRepositoryService extends BaseMeetingRelatedRepository<ViewPersonalNote, PersonalNote> {
-    public constructor() {
-        super(PersonalNote);
-    }
+    public baseModelCtor = PersonalNote;
 
     public getTitle = (): string => this.getVerboseName();
 

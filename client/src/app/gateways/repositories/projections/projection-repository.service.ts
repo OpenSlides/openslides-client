@@ -9,9 +9,7 @@ import { ProjectionAction } from './projection.action';
 
 @Service()
 export class ProjectionRepositoryService extends BaseMeetingRelatedRepository<ViewProjection, Projection> {
-    public constructor() {
-        super(Projection);
-    }
+    public baseModelCtor = Projection;
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Projections` : `Projection`);
 

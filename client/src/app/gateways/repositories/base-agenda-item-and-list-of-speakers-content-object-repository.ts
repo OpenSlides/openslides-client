@@ -1,6 +1,6 @@
-import { Directive } from '@angular/core';
+import { inject, Injectable, Service } from '@angular/core';
 import { HasAgendaItemId, HasListOfSpeakersId } from '@app/domain/interfaces';
-import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
+import { BaseModel } from '@app/domain/models/base/base-model';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { AgendaListTitle, HasAgendaItem, HasListOfSpeakers } from '@app/site/pages/meetings/pages/agenda';
 
@@ -9,7 +9,7 @@ import { AgendaItemContentObjectRepository } from './base-agenda-item-content-ob
 import { ListOfSpeakersContentObjectRepository } from './base-list-of-speakers-content-object-repository';
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
 
-@Directive()
+@Service()
 export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     V extends BaseViewModel & HasListOfSpeakers & HasAgendaItem,
     M extends BaseModel & HasListOfSpeakersId & HasAgendaItemId
@@ -17,12 +17,7 @@ export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     extends BaseMeetingRelatedRepository<V, M>
     implements ListOfSpeakersContentObjectRepository<V, M>, AgendaItemContentObjectRepository<V, M>
 {
-    public constructor(
-        baseModelCtor: ModelConstructor<M>,
-        protected agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(baseModelCtor);
-    }
+    protected agendaItemRepo = inject(AgendaItemRepositoryService);
 
     public getAgendaListTitle(viewModel: V): AgendaListTitle {
         // Return the agenda title with the model's verbose name appended

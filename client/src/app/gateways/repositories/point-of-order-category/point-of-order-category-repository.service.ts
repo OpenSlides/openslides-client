@@ -15,9 +15,7 @@ export class PointOfOrderCategoryRepositoryService
     extends BaseMeetingRelatedRepository<ViewPointOfOrderCategory, PointOfOrderCategory>
     implements CanPerformListUpdates<PointOfOrderCategory, void | Identifiable>
 {
-    public constructor() {
-        super(PointOfOrderCategory);
-    }
+    public baseModelCtor = PointOfOrderCategory;
 
     public getVerboseName = (plural?: boolean): string =>
         plural ? `Point of order categories` : `Point of order category`;

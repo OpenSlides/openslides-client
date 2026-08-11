@@ -83,9 +83,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     private meetingSettingsService = inject(MeetingSettingsService);
     private meetingUserRepo = inject(MeetingUserRepositoryService);
 
-    public constructor() {
-        super(User);
-    }
+    public baseModelCtor = User;
 
     /**
      * The property the incoming data is sorted by

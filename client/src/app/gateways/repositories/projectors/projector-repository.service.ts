@@ -15,9 +15,7 @@ import { ProjectorAction, ScrollScaleDirection } from './projector.action';
  */
 @Service()
 export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<ViewProjector, Projector> {
-    public constructor() {
-        super(Projector);
-    }
+    public baseModelCtor = Projector;
 
     public getTitle = (viewProjector: ViewProjector): string => viewProjector.name;
 

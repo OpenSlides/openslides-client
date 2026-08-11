@@ -10,11 +10,10 @@ export class MotionSubmitterRepositoryService extends BaseMotionMeetingUserRepos
     ViewMotionSubmitter,
     MotionSubmitter
 > {
+    protected actionDefs = MotionSubmitterAction;
     protected sortPayloadField = `motion_submitter_ids`;
 
-    public constructor() {
-        super(MotionSubmitter, MotionSubmitterAction);
-    }
+    public baseModelCtor = MotionSubmitter;
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Submitters` : `Submitter`);
 }

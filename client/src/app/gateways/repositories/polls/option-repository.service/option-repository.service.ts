@@ -6,9 +6,7 @@ import { BaseMeetingRelatedRepository } from '../../base-meeting-related-reposit
 
 @Service()
 export class OptionRepositoryService extends BaseMeetingRelatedRepository<ViewOption, Option> {
-    public constructor() {
-        super(Option);
-    }
+    public baseModelCtor = Option;
 
     public getTitle = (_viewOption: ViewOption): string => `Option`;
 

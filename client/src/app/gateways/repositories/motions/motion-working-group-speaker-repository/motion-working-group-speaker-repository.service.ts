@@ -10,11 +10,10 @@ export class MotionWorkingGroupSpeakerRepositoryService extends BaseMotionMeetin
     ViewMotionWorkingGroupSpeaker,
     MotionWorkingGroupSpeaker
 > {
+    protected actionDefs = MotionWorkingGroupSpeakerAction;
     protected sortPayloadField = `motion_working_group_speaker_ids`;
 
-    public constructor() {
-        super(MotionWorkingGroupSpeaker, MotionWorkingGroupSpeakerAction);
-    }
+    public baseModelCtor = MotionWorkingGroupSpeaker;
 
     public getVerboseName = (plural = false): string =>
         this.translate.instant(plural ? `Spokespersons` : `Spokesperson`);

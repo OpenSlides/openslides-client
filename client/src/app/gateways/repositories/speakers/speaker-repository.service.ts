@@ -17,9 +17,7 @@ export interface PointOfOrderInformation {
 
 @Service()
 export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewSpeaker, Speaker> {
-    public constructor() {
-        super(Speaker);
-    }
+    public baseModelCtor = Speaker;
 
     public getVerboseName = (plural = false): any => this.translate.instant(plural ? `Speakers` : `Speaker`);
 

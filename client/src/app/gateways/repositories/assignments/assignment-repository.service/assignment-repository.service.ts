@@ -1,7 +1,6 @@
 import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
-import { AgendaItemRepositoryService } from '@app/gateways/repositories/agenda';
 import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
 import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 import { Fieldsets } from '@app/site/services/model-request-builder';
@@ -19,10 +18,7 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
 > {
     private sequentialNumber = inject(SequentialNumberMappingService);
 
-    public constructor() {
-        const agendaItemRepo = inject(AgendaItemRepositoryService);
-        super(Assignment, agendaItemRepo);
-    }
+    public baseModelCtor = Assignment;
 
     public override getFieldsets(): Fieldsets<Assignment> {
         const titleFields: (keyof Assignment)[] = [`sequential_number`, `meeting_id`, `title`];

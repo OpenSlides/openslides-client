@@ -14,9 +14,7 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
 > {
     private serverTime = inject(ServerTimeService);
 
-    public constructor() {
-        super(ProjectorCountdown);
-    }
+    public baseModelCtor = ProjectorCountdown;
 
     public getTitle = (viewProjectorCountdown: ViewProjectorCountdown): string =>
         viewProjectorCountdown.description

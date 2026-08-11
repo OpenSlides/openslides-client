@@ -10,11 +10,10 @@ export class MotionEditorRepositoryService extends BaseMotionMeetingUserReposito
     ViewMotionEditor,
     MotionEditor
 > {
+    protected actionDefs = MotionEditorAction;
     protected sortPayloadField = `motion_editor_ids`;
 
-    public constructor() {
-        super(MotionEditor, MotionEditorAction);
-    }
+    public baseModelCtor = MotionEditor;
 
     public getVerboseName = (plural = false): string =>
         this.translate.instant(plural ? `Motion editors` : `Motion editor`);

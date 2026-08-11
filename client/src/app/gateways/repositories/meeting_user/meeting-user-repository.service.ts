@@ -16,9 +16,7 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
 
     private meetingUserIdMap = new Map<Id, Map<Id, Id>>();
 
-    public constructor() {
-        super(MeetingUser);
-    }
+    public baseModelCtor = MeetingUser;
 
     public override getFieldsets(): Fieldsets<MeetingUser> {
         const groupFields: TypedFieldset<MeetingUser> = [`group_ids`, `meeting_id`, `user_id`];

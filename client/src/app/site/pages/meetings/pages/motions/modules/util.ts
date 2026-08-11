@@ -1,6 +1,6 @@
 import { Directive, inject } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
-import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
+import { BaseModel } from '@app/domain/models/base/base-model';
 import { Action } from '@app/gateways/actions';
 import { BaseMotionMeetingUserRepositoryService } from '@app/gateways/repositories/motions/util';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
@@ -14,12 +14,8 @@ export abstract class BaseMotionMeetingUserControllerService<
     V extends BaseHasMeetingUserViewModel<M>,
     M extends BaseModel
 > extends BaseMeetingControllerService<V, M> {
-    protected repo: BaseMotionMeetingUserRepositoryService<V, M>;
+    protected abstract override repo: BaseMotionMeetingUserRepositoryService<V, M>;
     private userRepo: UserControllerService = inject(UserControllerService);
-
-    public constructor(ctor: ModelConstructor<M>) {
-        super(ctor);
-    }
 
     public create(motion: ViewMotion, ...users: Identifiable[]): Action<Identifiable[]> {
         const meetingUsers = users.map(user => this.userRepo.getViewModel(user.id)?.getMeetingUser(motion.meeting_id));

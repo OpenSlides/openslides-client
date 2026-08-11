@@ -8,9 +8,7 @@ import { MotionCommentAction } from './motion-comment.action';
 
 @Service()
 export class MotionCommentRepositoryService extends BaseMeetingRelatedRepository<ViewMotionComment, MotionComment> {
-    public constructor() {
-        super(MotionComment);
-    }
+    public baseModelCtor = MotionComment;
 
     public getTitle = (): string => `Comment`;
 

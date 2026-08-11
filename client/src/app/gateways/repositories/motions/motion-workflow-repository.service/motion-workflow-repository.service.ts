@@ -10,9 +10,7 @@ import { MotionWorkflowAction } from './motion-workflow.action';
 
 @Service()
 export class MotionWorkflowRepositoryService extends BaseMeetingRelatedRepository<ViewMotionWorkflow, MotionWorkflow> {
-    public constructor() {
-        super(MotionWorkflow);
-    }
+    public baseModelCtor = MotionWorkflow;
 
     public override getFieldsets(): Fieldsets<MotionWorkflow> {
         const routingFields: (keyof MotionWorkflow)[] = [`sequential_number`, `meeting_id`, `name`];

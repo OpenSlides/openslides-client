@@ -1,5 +1,6 @@
+import { Injectable, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
-import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
+import { BaseModel } from '@app/domain/models/base/base-model';
 import { Action } from '@app/gateways/actions';
 import { BaseHasMeetingUserViewModel } from '@app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
@@ -11,18 +12,13 @@ interface MotionMeetingUserActions {
     SORT: string;
 }
 
+@Service()
 export abstract class BaseMotionMeetingUserRepositoryService<
     V extends BaseHasMeetingUserViewModel<M>,
     M extends BaseModel
 > extends BaseMeetingRelatedRepository<V, M> {
+    protected abstract actionDefs: MotionMeetingUserActions;
     protected abstract sortPayloadField: string;
-
-    public constructor(
-        ctor: ModelConstructor<M>,
-        private actionDefs: MotionMeetingUserActions
-    ) {
-        super(ctor);
-    }
 
     public getTitle = (model: V): string => model?.user?.getTitle() || this.translate.instant(`Deleted user`);
 

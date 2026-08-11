@@ -14,9 +14,7 @@ export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepo
     ViewAssignmentCandidate,
     AssignmentCandidate
 > {
-    public constructor() {
-        super(AssignmentCandidate);
-    }
+    public baseModelCtor = AssignmentCandidate;
 
     public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate): string =>
         viewAssignmentCandidate.user?.getTitle() ?? UnknownUserLabel;

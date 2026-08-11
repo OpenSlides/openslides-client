@@ -40,9 +40,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     private meetingSettingsDefinitionProvider = inject(MeetingSettingsDefinitionService);
     private orgaSettingsService = inject(OrganizationSettingsService);
 
-    public constructor() {
-        super(Meeting);
-    }
+    public baseModelCtor = Meeting;
 
     public override getFieldsets(): Fieldsets<Meeting> {
         // This field is used to determine, if a user can access a meeting: It is restricted for non-authorized users

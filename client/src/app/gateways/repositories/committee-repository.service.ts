@@ -20,9 +20,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
     private operator = inject(OperatorService);
     private userRepo = inject(UserRepositoryService);
 
-    public constructor() {
-        super(Committee);
-    }
+    public baseModelCtor = Committee;
 
     public getTitle = (viewCommittee: ViewCommittee): string => viewCommittee.name;
 

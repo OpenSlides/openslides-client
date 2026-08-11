@@ -17,9 +17,7 @@ import { BaseMeetingRelatedRepository } from '../../base-meeting-related-reposit
  */
 @Service()
 export class PollCandidateRepositoryService extends BaseMeetingRelatedRepository<ViewPollCandidate, PollCandidate> {
-    public constructor() {
-        super(PollCandidate);
-    }
+    public baseModelCtor = PollCandidate;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `PollCandidates` : `PollCandidate`);
     public getTitle = (viewModel: ViewPollCandidate): string => viewModel.user?.getShortName();

@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Topic } from '@app/domain/models/topics/topic';
@@ -7,16 +7,12 @@ import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions
 
 import { Action } from '../../actions';
 import { createAgendaItem } from '../agenda';
-import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { TopicAction } from './topic.action';
 
 @Service()
 export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<ViewTopic, Topic> {
-    public constructor() {
-        const agendaItemRepo = inject(AgendaItemRepositoryService);
-        super(Topic, agendaItemRepo);
-    }
+    protected baseModelCtor = Topic;
 
     public create(...topics: any[]): Promise<Identifiable[]> {
         const payload: any[] = topics.map(partialTopic => this.getCreatePayload(partialTopic));

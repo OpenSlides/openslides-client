@@ -22,8 +22,10 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     private activeMeetingService = inject(ActiveMeetingService);
     private meetingMediaRepo = inject(MeetingMediafileRepositoryService);
 
+    public baseModelCtor = Mediafile;
+
     public constructor() {
-        super(Mediafile);
+        super();
 
         this.viewModelSortFn = (a: ViewMediafile, b: ViewMediafile): number =>
             this.languageCollator.compare(a.title, b.title);

@@ -9,9 +9,7 @@ import { GroupAction } from './group.action';
 
 @Service()
 export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGroup, Group> {
-    public constructor() {
-        super(Group);
-    }
+    public baseModelCtor = Group;
 
     public override getFieldsets(): Fieldsets<Group> {
         const titleFields: (keyof Group)[] = [`name`];
