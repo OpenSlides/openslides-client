@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { NavigationEnd, RouterModule } from '@angular/router';
 import { NotifyService } from '@app/gateways/notify.service';
-import { navItemAnim } from '@app/infrastructure/animations';
 import { getCustomStyleForEntry } from '@app/site/base/base-menu-entry';
 import { GlobalHeadbarModule } from '@app/site/modules/global-headbar';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
@@ -28,7 +27,6 @@ import { LoadFontService } from '../../services/load-font.service';
     selector: `os-meetings-navigation-wrapper`,
     templateUrl: `./meetings-navigation-wrapper.component.html`,
     styleUrls: [`./meetings-navigation-wrapper.component.scss`],
-    animations: [navItemAnim],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CommonModule,

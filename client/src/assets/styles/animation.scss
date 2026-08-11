@@ -1,0 +1,26 @@
+
+@keyframes navSlideIn {
+  from {
+    transform: translateX(-85%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes navSlideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-85%);
+  }
+}
+
+.nav-slide-in {
+  animation: navSlideIn 600ms ease forwards;
+}
+
+.nav-slide-out {
+  animation: navSlideOut 600ms ease forwards;
+}
