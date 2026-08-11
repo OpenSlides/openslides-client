@@ -21,7 +21,7 @@ import {
     MotionCommentSectionRepositoryService
 } from '@app/gateways/repositories/motions/motion-comments';
 import { MotionEditorRepositoryService } from '@app/gateways/repositories/motions/motion-editor-repository';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service/motion-repository.service';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { MotionStateRepositoryService } from '@app/gateways/repositories/motions/motion-state-repository.service';
 import { MotionSubmitterRepositoryService } from '@app/gateways/repositories/motions/motion-submitter-repository.service';
 import { MotionSupporterRepositoryService } from '@app/gateways/repositories/motions/motion-supporter';
