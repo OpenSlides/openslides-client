@@ -31,7 +31,7 @@ export class GroupControllerService extends BaseMeetingControllerService<ViewGro
     protected repo: GroupRepositoryService = inject(GroupRepositoryService);
 
     public constructor() {
-        super(ViewGroup);
+        super(Group);
     }
 
     public create(...groups: Partial<Group>[]): Promise<Identifiable[]> {
