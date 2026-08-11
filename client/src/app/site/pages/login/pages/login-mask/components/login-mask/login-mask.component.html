@@ -1,7 +1,7 @@
 <div class="form-wrapper">
     @if ({ organization: organizationObservable | async }; as observables) {
         @if (meeting || observables.organization) {
-            <div class="header-name" [@fadeIn]>
+            <div animate.enter="fade-in" animate.leave="fade-out" class="header-name">
                 <!-- Meeting's name -->
                 @if (meeting && meeting.name) {
                     <h1>{{ meeting.name }}</h1>

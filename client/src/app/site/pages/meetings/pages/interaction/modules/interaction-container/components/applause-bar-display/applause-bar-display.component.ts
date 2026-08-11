@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
-import { fadeInAnim } from '@app/infrastructure/animations';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -9,7 +8,6 @@ import { ApplauseService } from '../../../../services/applause.service';
     selector: `os-applause-bar-display`,
     templateUrl: `./applause-bar-display.component.html`,
     styleUrls: [`./applause-bar-display.component.scss`],
-    animations: [fadeInAnim],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     standalone: false

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { fadeInAnim } from '@app/infrastructure/animations';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
 import { InteractionService } from '@app/site/pages/meetings/pages/interaction/services/interaction.service';
 import { _ } from '@ngx-translate/core';
@@ -15,7 +14,6 @@ import { RtcService } from '../../../../services/rtc.service';
     templateUrl: `./action-bar.component.html`,
     styleUrls: [`./action-bar.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [fadeInAnim],
     standalone: false
 })
 export class ActionBarComponent extends BaseMeetingComponent {

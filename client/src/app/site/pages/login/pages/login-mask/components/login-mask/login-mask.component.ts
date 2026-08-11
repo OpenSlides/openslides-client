@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Meeting } from '@app/domain/models/meetings/meeting';
-import { fadeInAnim } from '@app/infrastructure/animations';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ORGANIZATION_ID, OrganizationService } from '@app/site/pages/organization/services/organization.service';
@@ -34,7 +33,6 @@ interface LoginValues {
     selector: `os-login-mask`,
     templateUrl: `./login-mask.component.html`,
     styleUrls: [`./login-mask.component.scss`],
-    animations: [fadeInAnim],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
