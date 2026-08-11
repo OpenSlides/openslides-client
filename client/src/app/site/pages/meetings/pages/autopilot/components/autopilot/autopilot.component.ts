@@ -12,12 +12,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
-import { ViewListOfSpeakers } from '../../../agenda';
 import { CurrentListOfSpeakersService } from '../../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
 import { ListOfSpeakersControllerService } from '../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
-import { HasPolls } from '../../../polls';
-import { ViewProjection, ViewProjector } from '../../../projectors';
+import { ViewListOfSpeakers } from '../../../agenda/modules/list-of-speakers/view-models/view-list-of-speakers';
+import { HasPolls } from '../../../polls/view-models/has-polls';
 import { ProjectorControllerService } from '../../../projectors/services/projector-controller.service';
+import { ViewProjection } from '../../../projectors/view-models/view-projection';
+import { ViewProjector } from '../../../projectors/view-models/view-projector';
 import { AutopilotService } from '../../services/autopilot.service';
 import { AutopilotSettingsComponent } from '../autopilot-settings/autopilot-settings.component';
 

@@ -4,7 +4,7 @@ import { BaseModel } from '@app/domain/models/base/base-model';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { AgendaListTitle, HasAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 
-import { AgendaItemRepositoryService } from './agenda';
+import { AgendaItemRepositoryService } from './agenda/agenda-item-repository.service';
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
 
 export function isAgendaItemContentObjectRepository(obj: any): obj is BaseAgendaItemContentObjectRepository<any, any> {

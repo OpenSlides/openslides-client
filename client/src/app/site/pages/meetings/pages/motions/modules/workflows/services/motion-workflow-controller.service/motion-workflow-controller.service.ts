@@ -6,9 +6,9 @@ import { Action } from '@app/gateways/actions';
 import { MotionWorkflowRepositoryService } from '@app/gateways/repositories/motions/motion-workflow-repository.service';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 
-import { ViewMotion } from '../../../../view-models';
-import { ViewMotionState } from '../../../states';
-import { ViewMotionWorkflow } from '../../view-models';
+import { ViewMotion } from '../../../../view-models/view-motion';
+import { ViewMotionState } from '../../../states/view-models/view-motion-state';
+import { ViewMotionWorkflow } from '../../view-models/view-motion-workflow';
 
 @Service()
 export class MotionWorkflowControllerService extends BaseMeetingControllerService<ViewMotionWorkflow, MotionWorkflow> {

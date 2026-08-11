@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 
-import { Deferred } from '../../infrastructure/utils/promises';
-import { CollectionMapperService } from './collection-mapper.service';
+import { Deferred } from '../../infrastructure/utils/promises/deferred';
+import { CollectionMapperService } from './collection-mapper.service/collection-mapper.service';
 import { DataStoreService } from './data-store.service';
 import { ChangedModels } from './view-model-store-update.service';
 

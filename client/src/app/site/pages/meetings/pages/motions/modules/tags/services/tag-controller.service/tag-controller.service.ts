@@ -4,7 +4,7 @@ import { Tag } from '@app/domain/models/tag/tag';
 import { TagRepositoryService } from '@app/gateways/repositories/tags/tag-repository.service';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 
-import { ViewTag } from '../../view-models';
+import { ViewTag } from '../../view-models/view-tag';
 
 @Injectable({
     providedIn: `root`

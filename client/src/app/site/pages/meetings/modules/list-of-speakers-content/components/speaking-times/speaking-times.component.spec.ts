@@ -2,7 +2,7 @@
 // import { BaseViewModel } from '@app/site/base/base-view-model';
 // import { E2EImportsModule } from 'src/e2e-imports.module';
 
-// import { PollModule } from '../../../../modules/poll';
+// import { PollModule } from '../../../../modules/poll/poll.module';
 // import { PollCollectionComponent } from './poll-collection.component';
 
 // xdescribe(`SpeakingTimesComponent`, () => {

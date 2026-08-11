@@ -20,7 +20,8 @@ import { SidenavComponent } from '@app/ui/modules/sidenav/components/sidenav/sid
 import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 
-import { ChatNotificationService, ChatService } from '../../pages/chat';
+import { ChatService } from '../../pages/chat/services/chat.service';
+import { ChatNotificationService } from '../../pages/chat/services/chat-notification.service';
 import { InteractionModule } from '../../pages/interaction/interaction.module';
 import { LoadFontService } from '../../services/load-font.service';
 

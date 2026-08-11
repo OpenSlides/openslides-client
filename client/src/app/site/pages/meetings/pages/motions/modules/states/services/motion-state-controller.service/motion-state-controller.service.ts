@@ -6,7 +6,7 @@ import { Action } from '@app/gateways/actions';
 import { MotionStateRepositoryService } from '@app/gateways/repositories/motions/motion-state-repository.service';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 
-import { ViewMotionState } from '../../view-models';
+import { ViewMotionState } from '../../view-models/view-motion-state';
 
 @Service()
 export class MotionStateControllerService extends BaseMeetingControllerService<ViewMotionState, MotionState> {

@@ -3,7 +3,7 @@ import { MotionWorkingGroupSpeaker } from '@app/domain/models/motions/motion-wor
 import { MotionWorkingGroupSpeakerRepositoryService } from '@app/gateways/repositories/motions/motion-working-group-speaker-repository';
 
 import { BaseMotionMeetingUserControllerService } from '../../../util';
-import { ViewMotionWorkingGroupSpeaker } from '../../view-models';
+import { ViewMotionWorkingGroupSpeaker } from '../../view-models/view-motion-working-group-speaker';
 
 @Service()
 export class MotionWorkingGroupSpeakerControllerService extends BaseMotionMeetingUserControllerService<

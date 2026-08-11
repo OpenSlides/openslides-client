@@ -4,7 +4,7 @@ import { OrganizationTag } from '@app/domain/models/organization-tags/organizati
 import { OrganizationTagRepositoryService } from '@app/gateways/repositories/organization-tags/organization-tag-repository.service';
 import { BaseController } from '@app/site/base/base-controller';
 
-import { ViewOrganizationTag } from '../../view-models';
+import { ViewOrganizationTag } from '../../view-models/view-organization-tag';
 
 @Injectable({
     providedIn: 'root'

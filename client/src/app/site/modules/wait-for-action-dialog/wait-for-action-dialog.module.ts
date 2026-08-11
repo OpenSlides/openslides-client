@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
-import { OpenSlidesTranslationModule } from '../translations';
+import { OpenSlidesTranslationModule } from '../translations/openslides-translation.module';
 import { StoppedWaitingForActionDialogComponent } from './components/stopped-waiting-for-action-dialog/stopped-waiting-for-action-dialog.component';
 import { WaitForActionBannerComponent } from './components/wait-for-action-banner/wait-for-action-banner.component';
 

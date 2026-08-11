@@ -4,7 +4,7 @@ import { ChatMessage } from '@app/domain/models/chat/chat-message';
 import { ChatMessageRepositoryService } from '@app/gateways/repositories/chat/chat-message-repository.service';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 
-import { ViewChatMessage } from '../view-models';
+import { ViewChatMessage } from '../view-models/view-chat-message';
 
 @Service()
 export class ChatMessageControllerService extends BaseMeetingControllerService<ViewChatMessage, ChatMessage> {

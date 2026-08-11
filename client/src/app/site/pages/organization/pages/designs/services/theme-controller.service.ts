@@ -6,7 +6,7 @@ import { ThemeRepositoryService } from '@app/gateways/repositories/themes/theme-
 import { BaseController } from '@app/site/base/base-controller';
 import { OrganizationControllerService } from '@app/site/pages/organization/services/organization-controller.service';
 
-import { ViewTheme } from '../view-models';
+import { ViewTheme } from '../view-models/view-theme';
 
 @Service()
 export class ThemeControllerService extends BaseController<ViewTheme, Theme> {

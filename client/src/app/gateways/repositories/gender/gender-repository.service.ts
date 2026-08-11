@@ -6,7 +6,7 @@ import { BaseRepository } from '@app/gateways/repositories/base-repository';
 import { ViewGender } from '@app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
 import { Fieldsets } from '@app/site/services/model-request-builder';
 
-import { Action } from '../../actions';
+import { Action } from '../../actions/action';
 import { GenderAction } from './gender.action';
 
 @Service()

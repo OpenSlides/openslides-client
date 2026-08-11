@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
-import { ViewMediafile } from '../view-models';
+import { ViewMediafile } from '../view-models/view-mediafile';
 
 @Service()
 export class MediafileControllerService extends BaseController<ViewMediafile, Mediafile> {

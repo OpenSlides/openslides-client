@@ -14,9 +14,9 @@ import {
 import { OperatorService } from '@app/site/services/operator.service';
 import { Observable } from 'rxjs';
 
-import { Identifiable } from '../../domain/interfaces';
+import { Identifiable } from '../../domain/interfaces/identifiable';
 import { User } from '../../domain/models/users/user';
-import { Action } from '../../gateways/actions';
+import { Action } from '../../gateways/actions/action';
 import { BaseController } from '../base/base-controller';
 import { ViewUser } from '../pages/meetings/view-models/view-user';
 

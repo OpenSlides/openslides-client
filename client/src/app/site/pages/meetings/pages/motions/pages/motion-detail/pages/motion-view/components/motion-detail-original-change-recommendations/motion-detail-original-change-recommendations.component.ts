@@ -20,7 +20,7 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { filter, firstValueFrom } from 'rxjs';
 
 import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 
 /**
  * This component displays either the original motion text or the original amendment diff text

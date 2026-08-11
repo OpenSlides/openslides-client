@@ -7,8 +7,8 @@ import { MotionRepositoryService } from '@app/gateways/repositories/motions/moti
 import { viewModelListEqual } from '@app/infrastructure/utils';
 import { distinctUntilChanged, map, Observable } from 'rxjs';
 
-import { ViewMotion } from '../../../view-models';
-import { MotionControllerService } from '../motion-controller.service';
+import { ViewMotion } from '../../../view-models/view-motion';
+import { MotionControllerService } from '../motion-controller.service/motion-controller.service';
 
 @Service()
 export class AmendmentControllerService {

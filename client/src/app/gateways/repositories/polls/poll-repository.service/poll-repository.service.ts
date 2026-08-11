@@ -9,7 +9,7 @@ import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { VoteRepositoryService } from '../vote-repository.service';
+import { VoteRepositoryService } from '../vote-repository.service/vote-repository.service';
 import { PollAction } from './poll.action';
 
 interface AnalogPollVotesValues {

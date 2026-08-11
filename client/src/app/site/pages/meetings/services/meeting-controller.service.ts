@@ -5,7 +5,7 @@ import { ImportMeeting } from '@app/gateways/repositories/meeting-repository.ser
 import { BaseController } from '@app/site/base/base-controller';
 import { Observable } from 'rxjs';
 
-import { Identifiable } from '../../../../domain/interfaces';
+import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { Meeting } from '../../../../domain/models/meetings/meeting';
 import { MeetingRepositoryService } from '../../../../gateways/repositories/meeting-repository.service';
 import { ViewMeeting } from '../view-models/view-meeting';

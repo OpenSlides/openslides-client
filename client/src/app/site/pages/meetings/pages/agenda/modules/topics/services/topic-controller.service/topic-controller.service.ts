@@ -5,7 +5,7 @@ import { TopicRepositoryService } from '@app/gateways/repositories/topics/topic-
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 
-import { ViewTopic } from '../../view-models';
+import { ViewTopic } from '../../view-models/view-topic';
 
 @Service()
 export class TopicControllerService extends BaseMeetingControllerService<ViewTopic, Topic> {

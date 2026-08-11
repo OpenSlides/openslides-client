@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentColumns, ContentText } from 'pdfmake/interfaces';
 
 import { AssignmentPollService, UnknownUserLabel } from '../modules/assignment-poll/services/assignment-poll.service';
-import { ViewAssignment } from '../view-models';
+import { ViewAssignment } from '../view-models/view-assignment';
 
 /**
  * Creates a PDF document from a single assignment

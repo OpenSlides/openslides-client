@@ -13,8 +13,9 @@ import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { map, Observable } from 'rxjs';
 
 import { DiffLinesInParagraph } from '../../../definitions';
-import { LineNumberingService, MotionDiffService } from '../../../modules/change-recommendations/services';
 import { DiffServiceFactory } from '../../../modules/change-recommendations/services/diff-factory.service';
+import { LineNumberingService } from '../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { MotionDiffService } from '../../../modules/change-recommendations/services/motion-diff.service/motion-diff.service';
 import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
 
 export const REFERENCED_MOTION_REGEX = /\[motion[:/](\d+)\]/g;

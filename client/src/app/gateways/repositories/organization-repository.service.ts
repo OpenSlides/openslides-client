@@ -3,7 +3,7 @@ import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organizat
 
 import { Organization, OrganizationAction, OrganizationSetting } from '../../domain/models/organizations/organization';
 import { ViewOrganization } from '../../site/pages/organization/view-models/view-organization';
-import { Fieldsets } from '../../site/services/model-request-builder';
+import { Fieldsets } from '../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from './base-repository';
 
 @Service()

@@ -8,7 +8,8 @@ import { BaseViewModel } from '@app/site/base/base-view-model';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { map, Observable } from 'rxjs';
 
-import { HasPersonalNote, ViewPersonalNote } from '../../view-models';
+import { HasPersonalNote } from '../../view-models/has-personal-note';
+import { ViewPersonalNote } from '../../view-models/view-personal-note';
 
 @Service()
 export class PersonalNoteControllerService extends BaseMeetingControllerService<ViewPersonalNote, PersonalNote> {

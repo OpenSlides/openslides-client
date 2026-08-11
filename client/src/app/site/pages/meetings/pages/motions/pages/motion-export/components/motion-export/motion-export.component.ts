@@ -33,15 +33,18 @@ import { Observable, pairwise, Subscription } from 'rxjs';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
 import { getMotionDetailSubscriptionConfig } from '../../../../motions.subscription';
-import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
-import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service';
+import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
+import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
 import {
     ExportFileFormat,
     InfoToExport,
     motionImportExportHeaderOrder,
     noMetaData
 } from '../../../../services/export/definitions';
-import { MotionExportInfo, MotionExportService } from '../../../../services/export/motion-export.service';
+import {
+    MotionExportInfo,
+    MotionExportService
+} from '../../../../services/export/motion-export.service/motion-export.service';
 
 interface SavedSelections {
     tab_index: number;

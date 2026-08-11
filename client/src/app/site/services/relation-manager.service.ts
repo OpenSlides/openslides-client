@@ -3,10 +3,11 @@ import { filter, map, merge, Observable } from 'rxjs';
 
 import { Fqid } from '../../domain/definitions/key-types';
 import { BaseModel } from '../../domain/models/base/base-model';
-import { Relation } from '../../infrastructure/definitions/relations';
+import { RELATIONS } from '../../infrastructure/definitions/relations/relations';
+import { Relation } from '../../infrastructure/definitions/relations/utils';
 import { collectionIdFromFqid, idFromFqid } from '../../infrastructure/utils/transform-functions';
 import { BaseViewModel } from '../base/base-view-model';
-import { CollectionMapperService } from './collection-mapper.service';
+import { CollectionMapperService } from './collection-mapper.service/collection-mapper.service';
 import { ViewModelStoreService } from './view-model-store.service';
 
 export function ensureIdField(relation: Partial<Relation>): string {
@@ -150,8 +151,6 @@ export class RelationManagerService {
     }
 
     private loadRelations(): void {
-        // TODO: Import cycle when importing RELATIONS
-        /*
         for (const relation of RELATIONS) {
             relation.ownIdField = this.ensureIdField(
                 relation.ownField as string,
@@ -165,7 +164,6 @@ export class RelationManagerService {
                 this.relationsByCollection[ownViewModel.COLLECTION].push(relation);
             }
         }
-        */
     }
 
     private handleNormalRelation<M extends BaseModel>(model: M, relation: Relation, idField: keyof M): any {

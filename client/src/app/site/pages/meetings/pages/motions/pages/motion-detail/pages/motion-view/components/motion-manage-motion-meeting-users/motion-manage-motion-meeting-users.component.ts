@@ -15,7 +15,7 @@ import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { BehaviorSubject, filter, firstValueFrom, map, Observable } from 'rxjs';
 
 import { BaseMotionMeetingUserControllerService } from '../../../../../../modules/util';
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 
 type MotionMeetingUser = Selectable & { fqid?: Fqid; user_id?: Id };

@@ -10,13 +10,13 @@ import { ProjectorRepositoryService } from '@app/gateways/repositories/projector
 import { Observable } from 'rxjs';
 
 import { BaseMeetingControllerService } from '../../../base/base-meeting-controller.service';
+import { isProjectable, Projectable } from '../../../view-models/projectable';
 import {
-    isProjectable,
     MultiProjectionBuildDescriptor,
-    Projectable,
     ProjectionBuildDescriptor
-} from '../../../view-models';
-import { ViewProjection, ViewProjector } from '../view-models';
+} from '../../../view-models/projection-build-descriptor';
+import { ViewProjection } from '../view-models/view-projection';
+import { ViewProjector } from '../view-models/view-projector';
 
 @Service()
 export class ProjectorControllerService extends BaseMeetingControllerService<ViewProjector, Projector> {

@@ -11,7 +11,7 @@ import { MeetingSettingsService } from '@app/site/pages/meetings/services/meetin
 import { _ } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ViewMotion } from '../../../view-models';
+import { ViewMotion } from '../../../view-models/view-motion';
 
 @Directive()
 export class MotionListBaseSortService extends BaseSortListService<ViewMotion> {

@@ -4,7 +4,7 @@ import { MotionComment } from '@app/domain/models/motions/motion-comment';
 import { MotionCommentRepositoryService } from '@app/gateways/repositories/motions/motion-comments';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 
-import { ViewMotionComment } from '../view-models';
+import { ViewMotionComment } from '../view-models/view-motion-comment';
 
 @Service()
 export class MotionCommentControllerService extends BaseMeetingControllerService<ViewMotionComment, MotionComment> {

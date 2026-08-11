@@ -10,10 +10,11 @@ import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { distinctUntilChanged, map, Observable } from 'rxjs';
 
 import { LineRange } from '../../../../definitions';
-import { ViewMotion } from '../../../../view-models';
-import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
+import { ViewMotion } from '../../../../view-models/view-motion';
+import { ViewMotionChangeRecommendation } from '../../view-models/view-motion-change-recommendation';
+import { ViewUnifiedChange } from '../../view-models/view-unified-change';
 import { DiffServiceFactory } from '../diff-factory.service';
-import { MotionDiffService } from '../motion-diff.service';
+import { MotionDiffService } from '../motion-diff.service/motion-diff.service';
 
 @Service()
 export class MotionChangeRecommendationControllerService extends BaseMeetingControllerService<

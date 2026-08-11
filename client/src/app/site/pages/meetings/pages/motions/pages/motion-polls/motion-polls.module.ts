@@ -13,7 +13,7 @@ import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { ListModule } from '@app/ui/modules/list';
 
 import { ParticipantCommonServiceModule } from '../../../participants/services/common/participant-common-service.module';
-import { MotionPollModule } from '../../modules/motion-poll';
+import { MotionPollModule } from '../../modules/motion-poll/motion-poll.module';
 import { MotionPollDetailComponent } from './components/motion-poll-detail/motion-poll-detail.component';
 import { MotionPollMainComponent } from './components/motion-poll-main/motion-poll-main.component';
 import { MotionPollsRoutingModule } from './motion-polls-routing.module';

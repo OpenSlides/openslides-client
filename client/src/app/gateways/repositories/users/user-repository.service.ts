@@ -13,12 +13,12 @@ import { Id } from '../../../domain/definitions/key-types';
 import { Displayable } from '../../../domain/interfaces/displayable';
 import { Identifiable } from '../../../domain/interfaces/identifiable';
 import { User, UserSortProperty } from '../../../domain/models/users/user';
-import { PreventedInDemoError } from '../../../infrastructure/errors';
-import { toDecimal } from '../../../infrastructure/utils';
+import { PreventedInDemoError } from '../../../infrastructure/errors/prevented-in-demo.error';
+import { toDecimal } from '../../../infrastructure/utils/functions';
 import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
-import { Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
-import { Action } from '../../actions';
-import { MeetingUserRepositoryService } from '../meeting_user';
+import { Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
+import { Action } from '../../actions/action';
+import { MeetingUserRepositoryService } from '../meeting_user/meeting-user-repository.service';
 
 export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid; meeting_user_id?: Id };
 

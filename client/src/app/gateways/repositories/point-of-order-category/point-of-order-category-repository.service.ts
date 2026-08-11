@@ -5,7 +5,7 @@ import { PointOfOrderCategory } from '@app/domain/models/point-of-order-category
 import { ListUpdateData } from '@app/infrastructure/utils';
 import { ViewPointOfOrderCategory } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 
-import { Action } from '../../actions';
+import { Action } from '../../actions/action';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { CanPerformListUpdates } from '../base-repository';
 import { PointOfOrderCategoryAction } from './point-of-order-category.action';

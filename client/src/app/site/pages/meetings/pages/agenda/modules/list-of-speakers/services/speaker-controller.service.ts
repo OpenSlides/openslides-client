@@ -11,7 +11,8 @@ import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { map, Observable } from 'rxjs';
 
-import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
+import { ViewListOfSpeakers } from '../view-models/view-list-of-speakers';
+import { ViewSpeaker } from '../view-models/view-speaker';
 
 @Service()
 export class SpeakerControllerService extends BaseMeetingControllerService<ViewSpeaker, Speaker> {

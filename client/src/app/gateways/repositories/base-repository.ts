@@ -11,13 +11,14 @@ import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription }
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
-import { Relation } from '../../infrastructure/definitions/relations';
+import { Relation } from '../../infrastructure/definitions/relations/utils';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
-import { CollectionMapperService } from '../../site/services/collection-mapper.service';
+import { CollectionMapperService } from '../../site/services/collection-mapper.service/collection-mapper.service';
 import { DataStoreService } from '../../site/services/data-store.service';
-import { Fieldsets } from '../../site/services/model-request-builder';
+import { Fieldsets } from '../../site/services/model-request-builder/model-request-builder.service';
 import { RelationManagerService } from '../../site/services/relation-manager.service';
-import { Action, ActionService } from '../actions';
+import { Action } from '../actions/action';
+import { ActionService } from '../actions/action.service';
 import { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 

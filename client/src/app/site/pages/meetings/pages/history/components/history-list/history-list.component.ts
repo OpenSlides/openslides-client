@@ -29,9 +29,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { distinctUntilChanged, filter, Observable, Subject, Subscription, switchMap } from 'rxjs';
 
 import { ViewUser } from '../../../../view-models/view-user';
-import { ViewAssignment } from '../../../assignments';
-import { ViewMotion, ViewMotionState } from '../../../motions';
-import { ParticipantControllerService } from '../../../participants/services/common/participant-controller.service';
+import { ViewAssignment } from '../../../assignments/view-models/view-assignment';
+import { ViewMotionState } from '../../../motions/modules/states/view-models/view-motion-state';
+import { ViewMotion } from '../../../motions/view-models/view-motion';
+import { ParticipantControllerService } from '../../../participants/services/common/participant-controller.service/participant-controller.service';
 
 const HISTORY_SUBSCRIPTION_PREFIX = `history`;
 const HISTORY_DETAIL_SUBSCRIPTION = `history_detail`;

@@ -6,7 +6,8 @@ import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base
 import { OperatorService } from '@app/site/services/operator.service';
 import { Observable } from 'rxjs';
 
-import { ViewPoll, ViewVote } from '../../../../pages/polls';
+import { ViewPoll } from '../../../../pages/polls/view-models/view-poll';
+import { ViewVote } from '../../../../pages/polls/view-models/view-vote';
 
 @Service()
 export class VoteControllerService extends BaseMeetingControllerService<ViewVote, Vote> {

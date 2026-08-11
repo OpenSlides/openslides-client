@@ -6,7 +6,7 @@ import { SequentialNumberMappingService } from '@app/site/pages/meetings/service
 import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { Assignment } from '../../../../domain/models/assignments/assignment';
-import { createAgendaItem } from '../../agenda';
+import { createAgendaItem } from '../../agenda/functions';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { CreateResponse } from '../../base-repository';
 import { AssignmentAction } from './assignment.action';

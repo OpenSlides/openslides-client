@@ -5,8 +5,8 @@ import { Topic } from '@app/domain/models/topics/topic';
 import { ViewAgendaItem, ViewTopic } from '@app/site/pages/meetings/pages/agenda';
 import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 
-import { Action } from '../../actions';
-import { createAgendaItem } from '../agenda';
+import { Action } from '../../actions/action';
+import { createAgendaItem } from '../agenda/functions';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { TopicAction } from './topic.action';
 

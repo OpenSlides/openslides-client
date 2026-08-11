@@ -1,9 +1,9 @@
 import { inject, Service } from '@angular/core';
 import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 
-import { Identifiable } from '../../../domain/interfaces';
+import { Identifiable } from '../../../domain/interfaces/identifiable';
 import { OrganizationTag } from '../../../domain/models/organization-tags/organization-tag';
-import { ViewOrganizationTag } from '../../../site/pages/organization/pages/organization-tags';
+import { ViewOrganizationTag } from '../../../site/pages/organization/pages/organization-tags/view-models/view-organization-tag';
 import { ThemeService } from '../../../site/services/theme.service';
 import { BaseRepository } from '../base-repository';
 import { OrganizationTagAction } from './organization-tag.action';

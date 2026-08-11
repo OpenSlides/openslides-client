@@ -7,7 +7,7 @@ import { BaseProjectableViewModel } from '@app/site/pages/meetings/view-models/b
 import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
 
 import { HasAttachmentMeetingMediafiles } from '../../../../mediafiles/view-models/has-attachment';
-import { HasPolls, VotingTextContext } from '../../../../polls';
+import { HasPolls, VotingTextContext } from '../../../../polls/view-models/has-polls';
 
 export class ViewTopic extends BaseProjectableViewModel<Topic> {
     public static COLLECTION = Topic.COLLECTION;

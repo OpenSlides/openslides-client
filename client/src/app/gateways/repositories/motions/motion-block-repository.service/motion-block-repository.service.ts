@@ -4,7 +4,7 @@ import { ViewMotionBlock } from '@app/site/pages/meetings/pages/motions';
 import { map, Observable } from 'rxjs';
 
 import { MotionBlock } from '../../../../domain/models/motions/motion-block';
-import { createAgendaItem } from '../../agenda';
+import { createAgendaItem } from '../../agenda/functions';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { MotionBlockAction } from './motion-block.action';
 

@@ -6,7 +6,7 @@ import { GroupRepositoryService } from '@app/gateways/repositories/groups';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { map, Observable, OperatorFunction } from 'rxjs';
 
-import { ViewGroup } from '../view-models';
+import { ViewGroup } from '../view-models/view-group';
 
 export class MeetingGroupsObject {
     public readonly groups: Record<string, ViewGroup>;

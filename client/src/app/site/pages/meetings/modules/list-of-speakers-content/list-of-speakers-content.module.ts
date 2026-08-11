@@ -20,10 +20,10 @@ import { SortingListModule } from '@app/ui/modules/sorting/modules/sorting-list/
 import { PipesModule } from '@app/ui/pipes';
 
 import { ParticipantCommonServiceModule } from '../../pages/participants/services/common/participant-common-service.module';
-import { MeetingExportModule } from '../../services/export';
+import { MeetingExportModule } from '../../services/export/meeting-export.module';
 import { DetailViewModule } from '../meetings-component-collector/detail-view/detail-view.module';
 import { ProjectorButtonModule } from '../meetings-component-collector/projector-button/projector-button.module';
-import { ParticipantSearchSelectorModule } from '../participant-search-selector';
+import { ParticipantSearchSelectorModule } from '../participant-search-selector/participant-search-selector.module';
 import { CountdownTimeModule } from '../projector/modules/countdown-time/countdown-time.module';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ListOfSpeakersEntryComponent } from './components/list-of-speakers-entry/list-of-speakers-entry.component';

@@ -1,6 +1,6 @@
 import { Service } from '@angular/core';
 
-import { MotionListBaseSortService } from '../motion-list-base-sort.service';
+import { MotionListBaseSortService } from '../motion-list-base-sort.service/motion-list-base-sort.service';
 
 @Service()
 export class MotionListSortService extends MotionListBaseSortService {

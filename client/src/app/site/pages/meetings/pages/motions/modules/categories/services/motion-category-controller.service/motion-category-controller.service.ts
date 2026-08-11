@@ -9,7 +9,7 @@ import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base
 import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ViewMotionCategory } from '../../view-models';
+import { ViewMotionCategory } from '../../view-models/view-motion-category';
 
 @Service()
 export class MotionCategoryControllerService extends BaseMeetingControllerService<ViewMotionCategory, MotionCategory> {

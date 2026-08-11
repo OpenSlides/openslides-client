@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { MockTranslateService } from '@app/site/pages/meetings/modules/poll/pipes/poll-parse-number/poll-parse-number.pipe.spec';
 import { TranslateService } from '@ngx-translate/core';
 
-import { MeetingAction } from '../repositories/meetings';
+import { MeetingAction } from '../repositories/meetings/meeting-action';
 import { MotionAction } from '../repositories/motions';
 import { ErrorMapService } from './error-map.service';
 import { ErrorMap, UrlFragmentToHttpErrorMap } from './error-map-utils';

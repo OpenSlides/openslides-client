@@ -6,8 +6,9 @@ import { BaseController } from '@app/site/base/base-controller';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 
-import { ViewStructureLevel } from '../../../../participants/pages/structure-levels/view-models';
-import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
+import { ViewStructureLevel } from '../../../../participants/pages/structure-levels/view-models/view-structure-level';
+import { ViewListOfSpeakers } from '../view-models/view-list-of-speakers';
+import { ViewSpeaker } from '../view-models/view-speaker';
 
 /**
  * An object, that contains information about

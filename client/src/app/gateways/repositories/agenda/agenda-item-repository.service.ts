@@ -7,7 +7,7 @@ import { BaseViewModel } from '@app/site/base/base-view-model';
 import { AgendaListTitle, HasAgendaItem, ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 
-import { Action } from '../../actions';
+import { Action } from '../../actions/action';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { AgendaItemAction } from './agenda-item.action';
 

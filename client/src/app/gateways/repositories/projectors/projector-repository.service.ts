@@ -6,7 +6,7 @@ import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
 import { ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models/projection-build-descriptor';
 import { map, Observable } from 'rxjs';
 
-import { Action } from '../../actions';
+import { Action } from '../../actions/action';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { ProjectorAction, ScrollScaleDirection } from './projector.action';
 

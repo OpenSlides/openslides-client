@@ -6,7 +6,7 @@ import { MotionSupporterRepositoryService } from '@app/gateways/repositories/mot
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 
-import { ViewMotion } from '../../../../view-models';
+import { ViewMotion } from '../../../../view-models/view-motion';
 import { ViewMotionSupporter } from '../../view-models/view-motion-supporter';
 
 @Service()

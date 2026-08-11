@@ -9,7 +9,7 @@ import { BaseViewModel } from '@app/site/base/base-view-model';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { HasAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 
-import { ViewAgendaItem } from '../../view-models';
+import { ViewAgendaItem } from '../../view-models/view-agenda-item';
 
 @Service()
 export class AgendaItemControllerService extends BaseMeetingControllerService<ViewAgendaItem, AgendaItem> {
