@@ -31,8 +31,8 @@ export abstract class BaseMeetingControllerService<V extends BaseViewModel, M ex
     protected collectionMapperService = inject(MeetingCollectionMapperService);
     protected meetingSettingsService = inject(MeetingSettingsService);
 
-    public constructor(baseModelConstructor: ModelConstructor<M>) {
-        super(baseModelConstructor);
+    public constructor() {
+        super();
         this.activeMeetingIdService.meetingIdObservable.subscribe(id => this.onNextMeetingId(id));
         this._isConstructed = true;
     }

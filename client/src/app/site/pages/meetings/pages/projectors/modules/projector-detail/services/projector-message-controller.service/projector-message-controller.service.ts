@@ -12,9 +12,7 @@ export class ProjectorMessageControllerService extends BaseMeetingControllerServ
 > {
     protected repo: ProjectorMessageRepositoryService = inject(ProjectorMessageRepositoryService);
 
-    public constructor() {
-        super(ProjectorMessage);
-    }
+    public baseModelCtor = ProjectorMessage;
 
     public create(payload: any): Promise<Identifiable> {
         return this.repo.create(payload);

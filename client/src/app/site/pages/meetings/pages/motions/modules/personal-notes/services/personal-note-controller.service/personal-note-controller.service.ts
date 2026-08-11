@@ -14,9 +14,7 @@ import { HasPersonalNote, ViewPersonalNote } from '../../view-models';
 export class PersonalNoteControllerService extends BaseMeetingControllerService<ViewPersonalNote, PersonalNote> {
     protected override repo: PersonalNoteRepositoryService = inject(PersonalNoteRepositoryService);
 
-    public constructor() {
-        super(PersonalNote);
-    }
+    public baseModelCtor = PersonalNote;
 
     public getPersonalNoteFor(contentObjectId: Fqid): Observable<ViewPersonalNote> {
         return this.getViewModelListObservable().pipe(

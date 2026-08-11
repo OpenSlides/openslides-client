@@ -24,8 +24,10 @@ export class AccountControllerService extends BaseController<ViewUser, User> {
     private prompt = inject(PromptService);
     private operator = inject(OperatorService);
 
+    public baseModelCtor = User;
+
     public constructor() {
-        super(User);
+        super();
 
         this.operator.user.committee_managements$.subscribe(committees => {
             const userIdsSet = new Set(committees.flatMap(committee => committee.user_ids ?? []));

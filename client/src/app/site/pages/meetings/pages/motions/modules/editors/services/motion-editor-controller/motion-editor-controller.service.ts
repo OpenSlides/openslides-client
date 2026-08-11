@@ -12,7 +12,5 @@ export class MotionEditorControllerService extends BaseMotionMeetingUserControll
 > {
     protected override repo = inject(MotionEditorRepositoryService);
 
-    public constructor() {
-        super(MotionEditor);
-    }
+    public baseModelCtor = MotionEditor;
 }

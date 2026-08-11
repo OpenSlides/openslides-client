@@ -13,9 +13,7 @@ export class MotionCommentSectionControllerService extends BaseMeetingController
 > {
     protected repo: MotionCommentSectionRepositoryService = inject(MotionCommentSectionRepositoryService);
 
-    public constructor() {
-        super(MotionCommentSection);
-    }
+    public baseModelCtor = MotionCommentSection;
 
     public create(partialModel: Partial<MotionCommentSection>): Promise<Identifiable> {
         return this.repo.create(partialModel);

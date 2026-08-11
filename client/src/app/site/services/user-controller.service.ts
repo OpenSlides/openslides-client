@@ -40,9 +40,7 @@ export class UserControllerService extends BaseController<ViewUser, User> {
     private presenter = inject(GetActiveUsersAmountPresenterService);
     private operator = inject(OperatorService);
 
-    public constructor() {
-        super(User);
-    }
+    public baseModelCtor = User;
 
     ///////////////////
     /// //////////////// TODO: Remove, because participants and accounts have their dedicated "controller"

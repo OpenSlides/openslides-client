@@ -13,9 +13,7 @@ export class VoteControllerService extends BaseMeetingControllerService<ViewVote
     protected repo: VoteRepositoryService = inject(VoteRepositoryService);
     private operator = inject(OperatorService);
 
-    public constructor() {
-        super(Vote);
-    }
+    public baseModelCtor = Vote;
 
     public subscribeVoted(...viewPolls: ViewPoll[]): Observable<Record<Id, Id[]>> {
         return new Observable<Record<Id, Id[]>>(subscriber => {

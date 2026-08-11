@@ -12,9 +12,7 @@ export class ProjectorCountdownControllerService extends BaseMeetingControllerSe
 > {
     protected repo: ProjectorCountdownRepositoryService = inject(ProjectorCountdownRepositoryService);
 
-    public constructor() {
-        super(ProjectorCountdown);
-    }
+    public baseModelCtor = ProjectorCountdown;
 
     public create(payload: any): Promise<Identifiable> {
         return this.repo.create(payload);

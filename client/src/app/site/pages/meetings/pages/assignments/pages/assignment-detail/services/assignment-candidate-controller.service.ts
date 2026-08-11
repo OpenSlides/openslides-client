@@ -14,9 +14,7 @@ export class AssignmentCandidateControllerService extends BaseMeetingControllerS
 > {
     protected repo: AssignmentCandidateRepositoryService = inject(AssignmentCandidateRepositoryService);
 
-    public constructor() {
-        super(AssignmentCandidate);
-    }
+    public baseModelCtor = AssignmentCandidate;
 
     public create(assignment: Identifiable, meetingUserId: Id): Promise<Identifiable> {
         return this.repo.create(assignment, meetingUserId);

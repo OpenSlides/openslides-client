@@ -18,9 +18,7 @@ export class SpeakerControllerService extends BaseMeetingControllerService<ViewS
     protected userRepo = inject(UserControllerService);
     protected repo: SpeakerRepositoryService = inject(SpeakerRepositoryService);
 
-    public constructor() {
-        super(Speaker);
-    }
+    public baseModelCtor = Speaker;
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     /// ///////////////////////////////////////// Repo's functions

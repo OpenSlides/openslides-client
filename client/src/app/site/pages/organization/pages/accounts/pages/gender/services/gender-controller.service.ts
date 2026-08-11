@@ -10,9 +10,7 @@ import { ViewGender } from '../view-models/view-gender';
 export class GenderControllerService extends BaseController<ViewGender, Gender> {
     protected repo: GenderRepositoryService = inject(GenderRepositoryService);
 
-    public constructor() {
-        super(Gender);
-    }
+    public baseModelCtor = Gender;
 
     public create(...models: Partial<Gender>[]): void {
         this.repo.create(...models).resolve();

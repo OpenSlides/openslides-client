@@ -14,9 +14,7 @@ import { ViewMotionWorkflow } from '../../view-models';
 export class MotionWorkflowControllerService extends BaseMeetingControllerService<ViewMotionWorkflow, MotionWorkflow> {
     protected repo: MotionWorkflowRepositoryService = inject(MotionWorkflowRepositoryService);
 
-    public constructor() {
-        super(MotionWorkflow);
-    }
+    public baseModelCtor = MotionWorkflow;
 
     public create(workflow: Partial<MotionWorkflow>): Promise<Identifiable> {
         return this.repo.create(workflow);

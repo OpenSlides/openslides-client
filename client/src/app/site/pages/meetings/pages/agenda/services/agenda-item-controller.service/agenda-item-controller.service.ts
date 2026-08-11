@@ -15,9 +15,7 @@ import { ViewAgendaItem } from '../../view-models';
 export class AgendaItemControllerService extends BaseMeetingControllerService<ViewAgendaItem, AgendaItem> {
     protected repo: AgendaItemRepositoryService = inject(AgendaItemRepositoryService);
 
-    public constructor() {
-        super(AgendaItem);
-    }
+    public baseModelCtor = AgendaItem;
 
     public update(update: any, item: ViewAgendaItem): Promise<void> {
         return this.repo.update(update, item);

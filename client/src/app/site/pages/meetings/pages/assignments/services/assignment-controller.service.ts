@@ -9,9 +9,7 @@ import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
 export class AssignmentControllerService extends BaseMeetingControllerService<ViewAssignment, Assignment> {
     protected repo: AssignmentRepositoryService = inject(AssignmentRepositoryService);
 
-    public constructor() {
-        super(Assignment);
-    }
+    public baseModelCtor = Assignment;
 
     public create(assignment: any): Promise<CreateResponse> {
         return this.repo.create(assignment);

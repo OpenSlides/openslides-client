@@ -12,9 +12,7 @@ import { ViewTag } from '../../view-models';
 export class TagControllerService extends BaseMeetingControllerService<ViewTag, Tag> {
     protected repo: TagRepositoryService = inject(TagRepositoryService);
 
-    public constructor() {
-        super(Tag);
-    }
+    public baseModelCtor = Tag;
 
     public create(...tags: Partial<Tag>[]): Promise<Identifiable[]> {
         return this.repo.create(...tags);

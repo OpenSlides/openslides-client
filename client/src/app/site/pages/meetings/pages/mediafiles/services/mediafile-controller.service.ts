@@ -18,9 +18,7 @@ export class MediafileControllerService extends BaseController<ViewMediafile, Me
     private operator = inject(OperatorService);
     private activeMeeting = inject(ActiveMeetingService);
 
-    public constructor() {
-        super(Mediafile);
-    }
+    public baseModelCtor = Mediafile;
 
     public move(files: Identifiable[], directoryId: Id | null): Promise<void> {
         return this.repo.move(files, directoryId);

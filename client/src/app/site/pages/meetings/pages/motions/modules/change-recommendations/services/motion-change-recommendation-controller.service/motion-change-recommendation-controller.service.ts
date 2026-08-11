@@ -23,9 +23,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
     protected repo: MotionChangeRecommendationRepositoryService = inject(MotionChangeRecommendationRepositoryService);
     private diffServiceFactory = inject(DiffServiceFactory);
 
-    public constructor() {
-        super(MotionChangeRecommendation);
-    }
+    public baseModelCtor = MotionChangeRecommendation;
 
     public create(changeRecommendation: Partial<MotionChangeRecommendation>, firstLine = 1): Promise<Identifiable> {
         return this.repo.create(changeRecommendation, firstLine);

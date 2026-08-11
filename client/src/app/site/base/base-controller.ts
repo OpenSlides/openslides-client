@@ -1,4 +1,4 @@
-import { Directive, inject } from '@angular/core';
+import { Directive, inject, Injectable, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
@@ -7,16 +7,15 @@ import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model
 import { BaseRepository } from '../../gateways/repositories/base-repository';
 import { BaseViewModel } from './base-view-model';
 
-@Directive()
+@Injectable()
 export abstract class BaseController<V extends BaseViewModel, M extends BaseModel> {
+    protected abstract baseModelCtor: ModelConstructor<M>;
     protected abstract repo: BaseRepository<V, M>;
     public translate = inject(TranslateService);
 
     public get collection(): string {
         return this.repo.collection;
     }
-
-    public constructor(protected baseModelCtor: ModelConstructor<M>) {}
 
     public getViewModel(id: Id): V | null {
         return this.repo.getViewModel(id);

@@ -22,9 +22,7 @@ export interface MeetingUserModifiedFields {
 export class MeetingControllerService extends BaseController<ViewMeeting, Meeting> {
     protected repo: MeetingRepositoryService = inject(MeetingRepositoryService);
 
-    public constructor() {
-        super(Meeting);
-    }
+    public baseModelCtor = Meeting;
 
     public create(...payload: any[]): Action<Identifiable[]> {
         return this.repo.create(...payload);

@@ -18,8 +18,10 @@ export class MotionCategoryControllerService extends BaseMeetingControllerServic
     protected repo: MotionCategoryRepositoryService = inject(MotionCategoryRepositoryService);
     private treeService = inject(TreeService);
 
+    public baseModelCtor = MotionCategory;
+
     public constructor() {
-        super(MotionCategory);
+        super();
         this.repo
             .getViewModelListObservable()
             .subscribe(categories => this._currentCategoriesSubject.next(this.createCategoriesTree(categories)));

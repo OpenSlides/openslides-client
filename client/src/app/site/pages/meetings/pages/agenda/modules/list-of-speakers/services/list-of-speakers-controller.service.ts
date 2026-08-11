@@ -25,9 +25,7 @@ export class ListOfSpeakersControllerService extends BaseController<ViewListOfSp
     protected repo: ListOfSpeakersRepositoryService = inject(ListOfSpeakersRepositoryService);
     private meetingSettings = inject(MeetingSettingsService);
 
-    public constructor() {
-        super(ListOfSpeakers);
-    }
+    public baseModelCtor = ListOfSpeakers;
 
     public readdLastSpeaker(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
         return this.repo.readdLastSpeaker(listOfSpeakers);

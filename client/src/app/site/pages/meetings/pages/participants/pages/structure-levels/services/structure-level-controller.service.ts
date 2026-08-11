@@ -12,9 +12,7 @@ import { ViewStructureLevel } from '../view-models/view-structure-level';
 export class StructureLevelControllerService extends BaseMeetingControllerService<ViewStructureLevel, StructureLevel> {
     protected repo: StructureLevelRepositoryService = inject(StructureLevelRepositoryService);
 
-    public constructor() {
-        super(StructureLevel);
-    }
+    public baseModelCtor = StructureLevel;
 
     public create(...structureLevels: Partial<StructureLevel>[]): Promise<Identifiable[] | void> {
         return this.repo.create(structureLevels).resolve();

@@ -12,9 +12,7 @@ import { ViewOrganizationTag } from '../../view-models';
 export class OrganizationTagControllerService extends BaseController<ViewOrganizationTag, OrganizationTag> {
     protected repo: OrganizationTagRepositoryService = inject(OrganizationTagRepositoryService);
 
-    public constructor() {
-        super(OrganizationTag);
-    }
+    public baseModelCtor = OrganizationTag;
 
     public create(...models: Partial<OrganizationTag>[]): Promise<Identifiable[]> {
         return this.repo.create(...models);

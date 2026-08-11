@@ -10,9 +10,7 @@ import { ViewMotionComment } from '../view-models';
 export class MotionCommentControllerService extends BaseMeetingControllerService<ViewMotionComment, MotionComment> {
     protected repo: MotionCommentRepositoryService = inject(MotionCommentRepositoryService);
 
-    public constructor() {
-        super(MotionComment);
-    }
+    public baseModelCtor = MotionComment;
 
     public create(comment: Partial<MotionComment>): Promise<Identifiable> {
         return this.repo.create(comment);

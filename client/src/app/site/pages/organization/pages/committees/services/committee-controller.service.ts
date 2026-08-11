@@ -13,9 +13,7 @@ import { ViewCommittee } from '../view-models';
 export class CommitteeControllerService extends BaseController<ViewCommittee, Committee> {
     protected repo: CommitteeRepositoryService = inject(CommitteeRepositoryService);
 
-    public constructor() {
-        super(Committee);
-    }
+    public baseModelCtor = Committee;
 
     public bulkForwardToCommittees(committees: ViewCommittee[], committeeIds: Ids): Promise<void> {
         return this.repo.bulkForwardToCommittees(committees, committeeIds);

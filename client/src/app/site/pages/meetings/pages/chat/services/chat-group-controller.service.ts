@@ -10,9 +10,7 @@ import { ViewChatGroup } from '../view-models';
 export class ChatGroupControllerService extends BaseMeetingControllerService<ViewChatGroup, ChatGroup> {
     protected repo: ChatGroupRepositoryService = inject(ChatGroupRepositoryService);
 
-    public constructor() {
-        super(ChatGroup);
-    }
+    public baseModelCtor = ChatGroup;
 
     public create(chatGroup: Partial<ChatGroup>): Promise<Identifiable[]> {
         return this.repo.create(chatGroup);

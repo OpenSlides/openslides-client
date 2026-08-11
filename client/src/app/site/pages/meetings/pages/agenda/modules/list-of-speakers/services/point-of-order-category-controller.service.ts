@@ -12,7 +12,5 @@ export class PointOfOrderCategoryControllerService extends BaseMeetingController
 > {
     protected repo: PointOfOrderCategoryRepositoryService = inject(PointOfOrderCategoryRepositoryService);
 
-    public constructor() {
-        super(PointOfOrderCategory);
-    }
+    public baseModelCtor = PointOfOrderCategory;
 }

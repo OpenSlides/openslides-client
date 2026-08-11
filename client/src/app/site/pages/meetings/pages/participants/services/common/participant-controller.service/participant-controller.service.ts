@@ -69,8 +69,10 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     private userService = inject(UserService);
     private actions = inject(ActionService);
 
+    public baseModelCtor = User;
+
     public constructor() {
-        super(User);
+        super();
 
         let meetingUserIds = [];
         this.activeMeetingIdService.meetingIdObservable

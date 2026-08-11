@@ -10,9 +10,7 @@ import { ViewChatMessage } from '../view-models';
 export class ChatMessageControllerService extends BaseMeetingControllerService<ViewChatMessage, ChatMessage> {
     protected repo: ChatMessageRepositoryService = inject(ChatMessageRepositoryService);
 
-    public constructor() {
-        super(ChatMessage);
-    }
+    public baseModelCtor = ChatMessage;
 
     public create(chatMessage: Partial<ChatMessage>): Promise<Identifiable[]> {
         return this.repo.create(chatMessage);

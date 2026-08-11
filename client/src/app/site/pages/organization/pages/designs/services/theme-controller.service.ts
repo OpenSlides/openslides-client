@@ -13,9 +13,7 @@ export class ThemeControllerService extends BaseController<ViewTheme, Theme> {
     protected repo: ThemeRepositoryService = inject(ThemeRepositoryService);
     private orgaRepo = inject(OrganizationControllerService);
 
-    public constructor() {
-        super(Theme);
-    }
+    public baseModelCtor = Theme;
 
     public create(...themes: any[]): Promise<Identifiable[]> {
         return this.repo.create(...themes);

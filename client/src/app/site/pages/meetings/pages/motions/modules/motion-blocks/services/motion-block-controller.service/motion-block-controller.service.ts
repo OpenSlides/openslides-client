@@ -12,9 +12,7 @@ export class MotionBlockControllerService extends BaseMeetingControllerService<V
     protected override repo: MotionBlockRepositoryService = inject(MotionBlockRepositoryService);
     private motionRepo = inject(MotionControllerService);
 
-    public constructor() {
-        super(MotionBlock);
-    }
+    public baseModelCtor = MotionBlock;
 
     public create(...blocks: Partial<MotionBlock>[]): Promise<Identifiable[]> {
         return this.repo.create(...blocks);

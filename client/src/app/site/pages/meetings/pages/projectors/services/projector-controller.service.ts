@@ -23,9 +23,7 @@ export class ProjectorControllerService extends BaseMeetingControllerService<Vie
     private meetingRepo = inject(MeetingRepositoryService);
     protected repo: ProjectorRepositoryService = inject(ProjectorRepositoryService);
 
-    public constructor() {
-        super(Projector);
-    }
+    public baseModelCtor = Projector;
 
     public create(payload: any): Promise<Identifiable> {
         return this.repo.create(payload);

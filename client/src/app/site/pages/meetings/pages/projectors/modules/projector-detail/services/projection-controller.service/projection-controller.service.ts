@@ -9,9 +9,7 @@ import { ViewProjection } from '@app/site/pages/meetings/pages/projectors';
 export class ProjectionControllerService extends BaseMeetingControllerService<ViewProjection, Projection> {
     protected repo: ProjectionRepositoryService = inject(ProjectionRepositoryService);
 
-    public constructor() {
-        super(Projection);
-    }
+    public baseModelCtor = Projection;
 
     public updateOption(projection: ViewProjection): Promise<void> {
         return this.repo.updateOption(projection);

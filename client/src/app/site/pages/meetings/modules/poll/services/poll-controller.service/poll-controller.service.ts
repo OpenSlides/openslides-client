@@ -16,8 +16,10 @@ export class PollControllerService extends BaseMeetingControllerService<ViewPoll
     protected repo: PollRepositoryService = inject(PollRepositoryService);
     protected voteRepo = inject(VoteRepositoryService);
 
+    public baseModelCtor = Poll;
+
     public constructor() {
-        super(Poll);
+        super();
 
         this.getViewModelListObservableOfStarted()
             .pipe(

@@ -9,9 +9,7 @@ import { ViewOrganization } from '../view-models/view-organization';
 export class OrganizationControllerService extends BaseController<ViewOrganization, Organization> {
     protected repo: OrganizationRepositoryService = inject(OrganizationRepositoryService);
 
-    public constructor() {
-        super(Organization);
-    }
+    public baseModelCtor = Organization;
 
     public getTitle = (_viewModel: ViewOrganization): string => ``;
 

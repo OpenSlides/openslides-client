@@ -30,9 +30,7 @@ export class MeetingGroupsObject {
 export class GroupControllerService extends BaseMeetingControllerService<ViewGroup, Group> {
     protected repo: GroupRepositoryService = inject(GroupRepositoryService);
 
-    public constructor() {
-        super(Group);
-    }
+    public baseModelCtor = Group;
 
     public create(...groups: Partial<Group>[]): Promise<Identifiable[]> {
         return this.repo.create(...groups);

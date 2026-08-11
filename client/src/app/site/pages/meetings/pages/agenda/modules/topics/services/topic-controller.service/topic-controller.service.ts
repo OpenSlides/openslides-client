@@ -11,9 +11,7 @@ import { ViewTopic } from '../../view-models';
 export class TopicControllerService extends BaseMeetingControllerService<ViewTopic, Topic> {
     protected repo: TopicRepositoryService = inject(TopicRepositoryService);
 
-    public constructor() {
-        super(Topic);
-    }
+    public baseModelCtor = Topic;
 
     public create(...topics: Partial<Topic>[]): Promise<Identifiable[]> {
         return this.repo.create(...topics);

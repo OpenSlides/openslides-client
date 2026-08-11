@@ -17,9 +17,7 @@ export class MotionSupporterControllerService extends BaseMeetingControllerServi
     protected repo: MotionSupporterRepositoryService = inject(MotionSupporterRepositoryService);
     private userRepo = inject(UserControllerService);
 
-    public constructor() {
-        super(MotionSupporter);
-    }
+    public baseModelCtor = MotionSupporter;
 
     public create(motion: ViewMotion, ...users: Identifiable[]): Action<Identifiable[]> {
         const meetingUsers = users.map(user => this.userRepo.getViewModel(user.id)?.getMeetingUser(motion.meeting_id));

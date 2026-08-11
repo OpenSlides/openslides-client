@@ -12,7 +12,5 @@ export class MotionWorkingGroupSpeakerControllerService extends BaseMotionMeetin
 > {
     protected override repo = inject(MotionWorkingGroupSpeakerRepositoryService);
 
-    public constructor() {
-        super(MotionWorkingGroupSpeaker);
-    }
+    public baseModelCtor = MotionWorkingGroupSpeaker;
 }

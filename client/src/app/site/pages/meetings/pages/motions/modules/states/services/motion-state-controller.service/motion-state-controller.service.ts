@@ -12,9 +12,7 @@ import { ViewMotionState } from '../../view-models';
 export class MotionStateControllerService extends BaseMeetingControllerService<ViewMotionState, MotionState> {
     protected override repo: MotionStateRepositoryService = inject(MotionStateRepositoryService);
 
-    public constructor() {
-        super(MotionState);
-    }
+    public baseModelCtor = MotionState;
 
     public create(state: Partial<MotionState>): Promise<Identifiable> {
         return this.repo.create(state);

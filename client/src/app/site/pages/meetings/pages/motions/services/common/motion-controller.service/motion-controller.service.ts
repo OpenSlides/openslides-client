@@ -26,8 +26,10 @@ export class MotionControllerService extends BaseMeetingControllerService<ViewMo
     private motionLineNumbering = inject(MotionLineNumberingService);
     private diffFactroy = inject(DiffServiceFactory);
 
+    public baseModelCtor = Motion;
+
     public constructor() {
-        super(Motion);
+        super();
 
         this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this._lineLength = lineLength));
         this.repo.registerCreateViewModelPipe(viewModel => this.onCreateViewModel(viewModel));
