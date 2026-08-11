@@ -1,6 +1,6 @@
 import { Directive, inject } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
-import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
+import { BaseModel } from '@app/domain/models/base/base-model';
 import { BaseController } from '@app/site/base/base-controller';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';

@@ -1,4 +1,4 @@
-import { Injectable, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { Tag } from '@app/domain/models/tag/tag';
 import { ViewTag } from '@app/site/pages/meetings/pages/motions';

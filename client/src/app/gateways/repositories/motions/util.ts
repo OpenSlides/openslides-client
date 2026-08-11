@@ -1,4 +1,4 @@
-import { Injectable, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { BaseModel } from '@app/domain/models/base/base-model';
 import { Action } from '@app/gateways/actions';

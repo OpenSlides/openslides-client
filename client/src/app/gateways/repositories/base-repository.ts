@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HasSequentialNumber, Identifiable } from '@app/domain/interfaces';
 import { OnAfterAppsLoaded } from '@app/infrastructure/definitions/hooks/after-apps-loaded';
 import { ListUpdateData } from '@app/infrastructure/utils';
@@ -46,7 +46,7 @@ interface UpdatePipelineAction {
     key?: string;
 }
 
-@Service()
+@Injectable()
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel> implements OnAfterAppsLoaded {
     public get collection(): string {
         return this.baseModelCtor.COLLECTION;
@@ -153,10 +153,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private repositoryServiceCollector = inject(RepositoryServiceCollectorService);
 
     public constructor() {
-        this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {
-            this.relationsByKey[relation.ownField as any] = relation;
-        });
-
         // All data is piped through an auditTime of 1ms. This is to prevent massive
         // updates, if e.g. an autoupdate with a lot motions come in. The result is just one
         // update of the new list instead of many unnecessary updates.
@@ -170,6 +166,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     public onAfterAppsLoaded(): void {
+        this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {
+            this.relationsByKey[relation.ownField as any] = relation;
+        });
+
         this.baseViewModelCtor = this.collectionMapperService.getViewModelConstructor(this.collection)!;
         this.DS.clearObservable.subscribe(removedCollections => {
             if (

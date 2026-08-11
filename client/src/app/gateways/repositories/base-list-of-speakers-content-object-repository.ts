@@ -1,4 +1,4 @@
-import { Injectable, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { HasListOfSpeakersId } from '@app/domain/interfaces';
 import { BaseModel } from '@app/domain/models/base/base-model';
 import { BaseViewModel } from '@app/site/base/base-view-model';

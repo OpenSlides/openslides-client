@@ -13,7 +13,7 @@ import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { map, Observable } from 'rxjs';
 
 import { Motion } from '../../../../domain/models/motions/motion';
-import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
+import { createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { CreateResponse } from '../../base-repository';
 import { AmendmentAction } from './amendment.action';

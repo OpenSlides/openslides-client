@@ -1,10 +1,10 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { ViewMotionBlock } from '@app/site/pages/meetings/pages/motions';
 import { map, Observable } from 'rxjs';
 
 import { MotionBlock } from '../../../../domain/models/motions/motion-block';
-import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
+import { createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { MotionBlockAction } from './motion-block.action';
 
