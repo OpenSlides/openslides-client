@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { fadeInAnim, fadeInOutAnim } from '@app/infrastructure/animations';
+import { fadeInAnim } from '@app/infrastructure/animations';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
 import { InteractionService } from '@app/site/pages/meetings/pages/interaction/services/interaction.service';
 import { _ } from '@ngx-translate/core';
@@ -15,7 +15,7 @@ import { RtcService } from '../../../../services/rtc.service';
     templateUrl: `./action-bar.component.html`,
     styleUrls: [`./action-bar.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: [fadeInAnim, fadeInOutAnim],
+    animations: [fadeInAnim],
     standalone: false
 })
 export class ActionBarComponent extends BaseMeetingComponent {
@@ -38,7 +38,6 @@ export class ActionBarComponent extends BaseMeetingComponent {
      * for the pulse animation
      */
     public enterCallAnimHelper = true;
-    public meetingActiveAnimHelper = true;
 
     public get isConfStateStream(): Observable<boolean> {
         return this.interactionService.isConfStateStream;
@@ -88,9 +87,5 @@ export class ActionBarComponent extends BaseMeetingComponent {
 
     public sendApplause(): void {
         this.applauseService.sendApplause();
-    }
-
-    public triggerCallHiddenAnimation(): void {
-        this.meetingActiveAnimHelper = !this.meetingActiveAnimHelper;
     }
 }

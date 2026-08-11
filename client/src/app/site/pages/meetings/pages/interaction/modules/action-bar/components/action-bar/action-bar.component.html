@@ -10,13 +10,7 @@
                     matTooltip="{{ 'Show conference room' | translate }}"
                     (click)="maximizeCallDialog()"
                 >
-                    <mat-icon
-                        color="primary"
-                        [@fadeInOut]="meetingActiveAnimHelper"
-                        (@fadeInOut.done)="triggerCallHiddenAnimation()"
-                    >
-                        fullscreen
-                    </mat-icon>
+                    <mat-icon class="icon-pulse" color="primary">fullscreen</mat-icon>
                 </button>
             }
         }

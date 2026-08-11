@@ -24,3 +24,12 @@
 .nav-slide-out {
   animation: navSlideOut 600ms ease forwards;
 }
+
+@keyframes pulseFadeInOut {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.2; }
+}
+
+.icon-pulse {
+  animation: pulseFadeInOut 2s ease-in-out infinite;
+}
