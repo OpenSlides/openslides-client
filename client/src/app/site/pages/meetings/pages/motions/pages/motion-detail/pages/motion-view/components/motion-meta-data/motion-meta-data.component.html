@@ -57,7 +57,7 @@
         >
             <span class="trigger-menu">
                 @if (perms.isAllowed('change_state', motion)) {
-                    @for (state of motionState.next_states; track state.id) {
+                    @for (state of getSortedNextStates(motionState.next_states); track trackById($index, state)) {
                         <button mat-menu-item (click)="setState(state.id)">
                             {{ state.name }}
                             @if (state.show_state_extension_field) {
