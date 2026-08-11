@@ -305,9 +305,9 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                         delete payload[field];
                     }
                 }
-                // this.repo.create(payload);
+                this.repo.create(payload);
             }
-            // this.onCancel();
+            this.onCancel();
         };
     }
 
