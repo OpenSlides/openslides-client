@@ -3,7 +3,7 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Motion } from '@app/domain/models/motions/motion';
 import { CreateResponse } from '@app/gateways/repositories/base-repository';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { viewModelListEqual } from '@app/infrastructure/utils';
 import { distinctUntilChanged, map, Observable } from 'rxjs';
 

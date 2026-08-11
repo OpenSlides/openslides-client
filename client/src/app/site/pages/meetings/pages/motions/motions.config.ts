@@ -13,20 +13,20 @@ import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
 import { MotionWorkingGroupSpeaker } from '@app/domain/models/motions/motion-working-group-speaker';
 import { PersonalNote } from '@app/domain/models/motions/personal-note';
 import { Tag } from '@app/domain/models/tag/tag';
+import { MotionBlockRepositoryService } from '@app/gateways/repositories/motions/motion-block-repository.service';
+import { MotionCategoryRepositoryService } from '@app/gateways/repositories/motions/motion-category-repository.service';
+import { MotionChangeRecommendationRepositoryService } from '@app/gateways/repositories/motions/motion-change-recommendation-repository.service';
 import {
-    MotionBlockRepositoryService,
-    MotionCategoryRepositoryService,
-    MotionChangeRecommendationRepositoryService,
     MotionCommentRepositoryService,
-    MotionCommentSectionRepositoryService,
-    MotionEditorRepositoryService,
-    MotionRepositoryService,
-    MotionStateRepositoryService,
-    MotionSubmitterRepositoryService,
-    MotionWorkflowRepositoryService,
-    MotionWorkingGroupSpeakerRepositoryService
-} from '@app/gateways/repositories/motions';
+    MotionCommentSectionRepositoryService
+} from '@app/gateways/repositories/motions/motion-comments';
+import { MotionEditorRepositoryService } from '@app/gateways/repositories/motions/motion-editor-repository';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service/motion-repository.service';
+import { MotionStateRepositoryService } from '@app/gateways/repositories/motions/motion-state-repository.service';
+import { MotionSubmitterRepositoryService } from '@app/gateways/repositories/motions/motion-submitter-repository.service';
 import { MotionSupporterRepositoryService } from '@app/gateways/repositories/motions/motion-supporter';
+import { MotionWorkflowRepositoryService } from '@app/gateways/repositories/motions/motion-workflow-repository.service';
+import { MotionWorkingGroupSpeakerRepositoryService } from '@app/gateways/repositories/motions/motion-working-group-speaker-repository';
 import { PersonalNoteRepositoryService } from '@app/gateways/repositories/motions/personal-note-repository.service';
 import { TagRepositoryService } from '@app/gateways/repositories/tags';
 import { AppConfig } from '@app/infrastructure/definitions/app-config';

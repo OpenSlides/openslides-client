@@ -2,7 +2,7 @@ import { _ } from '@ngx-translate/core';
 
 import { AgendaItemAction } from '../repositories/agenda';
 import { MeetingAction } from '../repositories/meetings';
-import { MotionAction } from '../repositories/motions';
+import { MotionAction } from '../repositories/motions/motion-repository.service';
 import { UserAction } from '../repositories/users/user-action';
 
 export class MapError {

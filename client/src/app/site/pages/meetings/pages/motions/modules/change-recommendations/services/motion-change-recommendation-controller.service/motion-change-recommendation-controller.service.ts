@@ -3,7 +3,7 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionChangeRecommendation } from '@app/domain/models/motions/motion-change-recommendation';
 import { ChangeRecoMode, ModificationType } from '@app/domain/models/motions/motions.constants';
-import { MotionChangeRecommendationRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionChangeRecommendationRepositoryService } from '@app/gateways/repositories/motions/motion-change-recommendation-repository.service';
 import { viewModelListEqual } from '@app/infrastructure/utils';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';

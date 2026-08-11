@@ -19,7 +19,7 @@ import { MatTabChangeEvent, MatTabGroup, MatTabsModule } from '@angular/material
 import { ActivatedRoute } from '@angular/router';
 import { Settings } from '@app/domain/models/meetings/meeting';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from '@app/domain/models/motions/motions.constants';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { StorageService } from '@app/gateways/storage.service';
 import { BaseComponent } from '@app/site/base/base.component';
 import { OpenSlidesTranslationModule } from '@app/site/modules/translations';

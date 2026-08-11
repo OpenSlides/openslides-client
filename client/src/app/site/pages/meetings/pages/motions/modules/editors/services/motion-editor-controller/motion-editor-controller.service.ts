@@ -1,6 +1,6 @@
 import { inject, Service } from '@angular/core';
 import { MotionEditor } from '@app/domain/models/motions/motion-editor';
-import { MotionEditorRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionEditorRepositoryService } from '@app/gateways/repositories/motions/motion-editor-repository';
 
 import { BaseMotionMeetingUserControllerService } from '../../../util';
 import { ViewMotionEditor } from '../../view-models';

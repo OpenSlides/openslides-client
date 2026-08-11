@@ -9,7 +9,7 @@ import {
     GetForwardingMeetingsPresenterMeeting,
     GetForwardingMeetingsPresenterService
 } from '@app/gateways/presenter';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ViewCommittee } from '@app/site/pages/organization/pages/committees';

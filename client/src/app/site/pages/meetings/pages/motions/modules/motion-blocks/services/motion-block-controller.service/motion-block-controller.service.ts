@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionBlock } from '@app/domain/models/motions/motion-block';
-import { MotionBlockRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionBlockRepositoryService } from '@app/gateways/repositories/motions/motion-block-repository.service';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';

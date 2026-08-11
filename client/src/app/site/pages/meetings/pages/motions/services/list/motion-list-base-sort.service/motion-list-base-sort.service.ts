@@ -1,6 +1,6 @@
 import { Directive, inject, ProviderToken } from '@angular/core';
 import { BaseRepository } from '@app/gateways/repositories/base-repository';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import {
     BaseSortListService,
     OsSortingDefinition,

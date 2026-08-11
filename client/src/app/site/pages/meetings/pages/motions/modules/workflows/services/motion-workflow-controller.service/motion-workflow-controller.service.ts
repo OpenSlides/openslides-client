@@ -3,7 +3,7 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
 import { Action } from '@app/gateways/actions';
-import { MotionWorkflowRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionWorkflowRepositoryService } from '@app/gateways/repositories/motions/motion-workflow-repository.service';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 
 import { ViewMotion } from '../../../../view-models';

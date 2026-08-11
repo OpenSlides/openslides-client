@@ -5,7 +5,7 @@ import { Motion } from '@app/domain/models/motions/motion';
 import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
 import { Action, createEmptyAction } from '@app/gateways/actions';
 import { CreateResponse } from '@app/gateways/repositories/base-repository';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { TreeIdNode } from '@app/infrastructure/definitions/tree';
 import { NullablePartial } from '@app/infrastructure/utils';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';

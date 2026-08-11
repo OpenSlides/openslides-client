@@ -3,7 +3,7 @@ import { Ids } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionCategory } from '@app/domain/models/motions/motion-category';
 import { Action } from '@app/gateways/actions';
-import { MotionCategoryRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionCategoryRepositoryService } from '@app/gateways/repositories/motions/motion-category-repository.service';
 import { TreeIdNode } from '@app/infrastructure/definitions/tree';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';

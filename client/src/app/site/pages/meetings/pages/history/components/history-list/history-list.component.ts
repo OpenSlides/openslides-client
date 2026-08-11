@@ -12,7 +12,7 @@ import { AssignmentRepositoryService } from '@app/gateways/repositories/assignme
 import { BaseRepository } from '@app/gateways/repositories/base-repository';
 import { ViewHistoryEntry } from '@app/gateways/repositories/history-entry/view-history-entry';
 import { ViewHistoryPosition } from '@app/gateways/repositories/history-position/view-history-position';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import {
     collectionIdFromFqid,
     fqidFromCollectionAndId,
