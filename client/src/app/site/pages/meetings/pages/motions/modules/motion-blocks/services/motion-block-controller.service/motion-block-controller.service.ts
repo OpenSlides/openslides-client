@@ -3,20 +3,17 @@ import { Identifiable } from '@app/domain/interfaces';
 import { MotionBlock } from '@app/domain/models/motions/motion-block';
 import { MotionBlockRepositoryService } from '@app/gateways/repositories/motions';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 import { ViewMotionBlock } from '../../view-models';
 
 @Service()
 export class MotionBlockControllerService extends BaseMeetingControllerService<ViewMotionBlock, MotionBlock> {
-    protected override repo: MotionBlockRepositoryService;
+    protected override repo: MotionBlockRepositoryService = inject(MotionBlockRepositoryService);
     private motionRepo = inject(MotionControllerService);
 
     public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(MotionBlockRepositoryService);
-        super(controllerServiceCollector, MotionBlock, repo);
+        super(MotionBlock);
     }
 
     public create(...blocks: Partial<MotionBlock>[]): Promise<Identifiable[]> {

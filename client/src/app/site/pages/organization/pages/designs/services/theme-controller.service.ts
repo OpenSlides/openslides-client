@@ -5,19 +5,16 @@ import { Theme } from '@app/domain/models/theme/theme';
 import { ThemeRepositoryService } from '@app/gateways/repositories/themes/theme-repository.service';
 import { BaseController } from '@app/site/base/base-controller';
 import { OrganizationControllerService } from '@app/site/pages/organization/services/organization-controller.service';
-import { ControllerServiceCollectorService } from '@app/site/services/controller-service-collector.service';
 
 import { ViewTheme } from '../view-models';
 
 @Service()
 export class ThemeControllerService extends BaseController<ViewTheme, Theme> {
-    protected override repo: ThemeRepositoryService;
+    protected repo: ThemeRepositoryService = inject(ThemeRepositoryService);
     private orgaRepo = inject(OrganizationControllerService);
 
     public constructor() {
-        const controllerServiceCollector = inject(ControllerServiceCollectorService);
-        const repo = inject(ThemeRepositoryService);
-        super(controllerServiceCollector, Theme, repo);
+        super(Theme);
     }
 
     public create(...themes: any[]): Promise<Identifiable[]> {

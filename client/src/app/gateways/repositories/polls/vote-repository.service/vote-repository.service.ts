@@ -7,7 +7,6 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { BehaviorSubject } from 'rxjs';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 
 const VOTE_URL = `/system/vote`;
 const HAS_VOTED_URL = `${VOTE_URL}/voted`;
@@ -41,8 +40,7 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     private http = inject(HttpService);
 
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, Vote);
+        super(Vote);
     }
 
     public getTitle = (): string => `Vote`;

@@ -6,7 +6,6 @@ import { map, Observable } from 'rxjs';
 import { MotionBlock } from '../../../../domain/models/motions/motion-block';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionBlockAction } from './motion-block.action';
 
 @Service()
@@ -15,9 +14,8 @@ export class MotionBlockRepositoryService extends BaseAgendaItemAndListOfSpeaker
     MotionBlock
 > {
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         const agendaItemRepo = inject(AgendaItemRepositoryService);
-        super(repositoryServiceCollector, MotionBlock, agendaItemRepo);
+        super(MotionBlock, agendaItemRepo);
         this.initSorting();
     }
 

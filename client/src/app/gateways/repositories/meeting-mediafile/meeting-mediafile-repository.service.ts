@@ -5,7 +5,6 @@ import { ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles/
 
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { BaseRepository } from '../base-repository';
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 
 @Service()
 export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetingMediafile, MeetingMediafile> {
@@ -14,8 +13,7 @@ export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetin
     private activeMeetingIdService = inject(ActiveMeetingIdService);
 
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
-        super(repositoryServiceCollector, MeetingMediafile);
+        super(MeetingMediafile);
 
         this.viewModelSortFn = (a: ViewMeetingMediafile, b: ViewMeetingMediafile): number =>
             this.languageCollator.compare(a.mediafile?.title, b.mediafile?.title);

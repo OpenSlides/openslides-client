@@ -6,19 +6,16 @@ import { Action } from '@app/gateways/actions';
 import { PersonalNoteRepositoryService } from '@app/gateways/repositories/motions/personal-note-repository.service';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { map, Observable } from 'rxjs';
 
 import { HasPersonalNote, ViewPersonalNote } from '../../view-models';
 
 @Service()
 export class PersonalNoteControllerService extends BaseMeetingControllerService<ViewPersonalNote, PersonalNote> {
-    protected override repo: PersonalNoteRepositoryService;
+    protected override repo: PersonalNoteRepositoryService = inject(PersonalNoteRepositoryService);
 
     public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(PersonalNoteRepositoryService);
-        super(controllerServiceCollector, PersonalNote, repo);
+        super(PersonalNote);
     }
 
     public getPersonalNoteFor(contentObjectId: Fqid): Observable<ViewPersonalNote> {

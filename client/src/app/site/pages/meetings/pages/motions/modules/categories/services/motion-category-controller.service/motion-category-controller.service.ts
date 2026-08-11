@@ -6,7 +6,6 @@ import { Action } from '@app/gateways/actions';
 import { MotionCategoryRepositoryService } from '@app/gateways/repositories/motions';
 import { TreeIdNode } from '@app/infrastructure/definitions/tree';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -16,13 +15,11 @@ import { ViewMotionCategory } from '../../view-models';
 export class MotionCategoryControllerService extends BaseMeetingControllerService<ViewMotionCategory, MotionCategory> {
     private readonly _currentCategoriesSubject = new BehaviorSubject<ViewMotionCategory[]>([]);
 
-    protected override repo: MotionCategoryRepositoryService;
+    protected repo: MotionCategoryRepositoryService = inject(MotionCategoryRepositoryService);
     private treeService = inject(TreeService);
 
     public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(MotionCategoryRepositoryService);
-        super(controllerServiceCollector, MotionCategory, repo);
+        super(MotionCategory);
         this.repo
             .getViewModelListObservable()
             .subscribe(categories => this._currentCategoriesSubject.next(this.createCategoriesTree(categories)));

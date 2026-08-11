@@ -31,7 +31,7 @@ export abstract class BaseListOfSpeakersContentObjectRepository<
         repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         baseModelCtor: ModelConstructor<M>
     ) {
-        super(repositoryServiceCollector, baseModelCtor);
+        super(baseModelCtor);
     }
 
     public getListOfSpeakersTitle(viewModel: V): string {

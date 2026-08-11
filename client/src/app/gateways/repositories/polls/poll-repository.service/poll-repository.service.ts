@@ -9,7 +9,6 @@ import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { VoteRepositoryService } from '../vote-repository.service';
 import { PollAction } from './poll.action';
 
@@ -31,8 +30,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     private voteRepo = inject(VoteRepositoryService);
 
     public constructor() {
-        const repoServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repoServiceCollector, Poll);
+        super(Poll);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Polls` : `Poll`);

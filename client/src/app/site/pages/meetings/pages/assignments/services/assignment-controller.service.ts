@@ -4,16 +4,13 @@ import { AssignmentRepositoryService } from '@app/gateways/repositories/assignme
 import { CreateResponse } from '@app/gateways/repositories/base-repository';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 @Service()
 export class AssignmentControllerService extends BaseMeetingControllerService<ViewAssignment, Assignment> {
-    protected override repo: AssignmentRepositoryService;
+    protected repo: AssignmentRepositoryService = inject(AssignmentRepositoryService);
 
     public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(AssignmentRepositoryService);
-        super(controllerServiceCollector, Assignment, repo);
+        super(Assignment);
     }
 
     public create(assignment: any): Promise<CreateResponse> {

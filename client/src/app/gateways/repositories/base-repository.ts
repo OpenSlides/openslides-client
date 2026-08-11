@@ -1,3 +1,4 @@
+import { Directive, inject } from '@angular/core';
 import { HasSequentialNumber, Identifiable } from '@app/domain/interfaces';
 import { OnAfterAppsLoaded } from '@app/infrastructure/definitions/hooks/after-apps-loaded';
 import { ListUpdateData } from '@app/infrastructure/utils';
@@ -46,6 +47,7 @@ interface UpdatePipelineAction {
     key?: string;
 }
 
+@Directive()
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel> implements OnAfterAppsLoaded {
     public get collection(): string {
         return this._collection;
@@ -114,30 +116,6 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      */
     protected baseViewModelCtor!: ViewModelConstructor<V>;
 
-    protected get DS(): DataStoreService {
-        return this.repositoryServiceCollector.DS;
-    }
-
-    protected get actions(): ActionService {
-        return this.repositoryServiceCollector.actionService;
-    }
-
-    protected get collectionMapperService(): CollectionMapperService {
-        return this.repositoryServiceCollector.collectionMapperService;
-    }
-
-    protected get viewModelStoreService(): ViewModelStoreService {
-        return this.repositoryServiceCollector.viewModelStoreService;
-    }
-
-    protected get translate(): TranslateService {
-        return this.repositoryServiceCollector.translate;
-    }
-
-    protected get relationManager(): RelationManagerService {
-        return this.repositoryServiceCollector.relationManager;
-    }
-
     /**
      * The collection string of the managed model.
      */
@@ -167,10 +145,19 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private foreignSortBaseKeys: Record<string, Record<string, string[]>> = {};
     private foreignSortBaseKeySubscriptions: Record<string, Subscription[]> = {};
 
-    public constructor(
-        private repositoryServiceCollector: RepositoryServiceCollectorService,
-        protected baseModelCtor: ModelConstructor<M>
-    ) {
+    // TODO: REMOVE
+    protected viewModelStoreService = inject(ViewModelStoreService);
+    // END
+
+    protected DS = inject(DataStoreService);
+    protected actions = inject(ActionService);
+    protected collectionMapperService = inject(CollectionMapperService);
+    protected translate = inject(TranslateService);
+    protected relationManager = inject(RelationManagerService);
+
+    private repositoryServiceCollector = inject(RepositoryServiceCollectorService);
+
+    public constructor(protected baseModelCtor: ModelConstructor<M>) {
         this._collection = baseModelCtor.COLLECTION;
 
         this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {

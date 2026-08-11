@@ -14,38 +14,22 @@ import { RepositoryServiceCollectorService } from './repository-service-collecto
 
 @Service()
 export class RepositoryMeetingServiceCollectorService {
-    public get DS(): DataStoreService {
-        return this.repositoryServiceCollector.DS;
-    }
-
-    public get actionService(): ActionService {
-        return this.repositoryServiceCollector.actionService;
-    }
-
-    public get collectionMapperService(): CollectionMapperService {
-        return this.repositoryServiceCollector.collectionMapperService;
-    }
-
-    public get viewModelStoreService(): ViewModelStoreService {
-        return this.repositoryServiceCollector.viewModelStoreService;
-    }
-
-    public get translate(): TranslateService {
-        return this.repositoryServiceCollector.translate;
-    }
-
-    public get relationManager(): RelationManagerService {
-        return this.repositoryServiceCollector.relationManager;
-    }
-
     public get collectionToKeyUpdatesObservableMap(): Record<string, BehaviorSubject<string[]>> {
         return this.repositoryServiceCollector.collectionToKeyUpdatesObservableMap;
     }
 
-    private repositoryServiceCollector = inject(RepositoryServiceCollectorService);
+    public DS = inject(DataStoreService);
+    public actionService = inject(ActionService);
+    public collectionMapperService = inject(CollectionMapperService);
+    public viewModelStoreService = inject(ViewModelStoreService);
+    public translate = inject(TranslateService);
+    public relationManager = inject(RelationManagerService);
+
     public activeMeetingIdService = inject(ActiveMeetingIdService);
     public activeMeetingService = inject(ActiveMeetingService);
     public meetingSettingsService = inject(MeetingSettingsService);
+
+    private repositoryServiceCollector = inject(RepositoryServiceCollectorService);
 
     /**
      * Allows repositories to register if there have been updates on a certain key of their model,

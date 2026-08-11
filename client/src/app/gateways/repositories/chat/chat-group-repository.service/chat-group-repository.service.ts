@@ -1,18 +1,16 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { ChatGroup } from '@app/domain/models/chat/chat-group';
 import { ViewChatGroup } from '@app/site/pages/meetings/pages/chat';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { ChatGroupAction } from './chat-group.action';
 
 @Service()
 export class ChatGroupRepositoryService extends BaseMeetingRelatedRepository<ViewChatGroup, ChatGroup> {
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, ChatGroup);
+        super(ChatGroup);
     }
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Chat groups` : `Chat group`);

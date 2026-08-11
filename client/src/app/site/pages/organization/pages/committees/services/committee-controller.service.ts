@@ -7,17 +7,14 @@ import { Identifiable } from '../../../../../../domain/interfaces';
 import { Committee } from '../../../../../../domain/models/comittees/committee';
 import { CommitteeRepositoryService } from '../../../../../../gateways/repositories/committee-repository.service';
 import { BaseController } from '../../../../../base/base-controller';
-import { ControllerServiceCollectorService } from '../../../../../services/controller-service-collector.service';
 import { ViewCommittee } from '../view-models';
 
 @Service()
 export class CommitteeControllerService extends BaseController<ViewCommittee, Committee> {
-    protected override repo: CommitteeRepositoryService;
+    protected repo: CommitteeRepositoryService = inject(CommitteeRepositoryService);
 
     public constructor() {
-        const repositoryServiceCollector = inject(ControllerServiceCollectorService);
-        const repo = inject(CommitteeRepositoryService);
-        super(repositoryServiceCollector, Committee, repo);
+        super(Committee);
     }
 
     public bulkForwardToCommittees(committees: ViewCommittee[], committeeIds: Ids): Promise<void> {

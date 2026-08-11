@@ -8,18 +8,15 @@ import { TreeIdNode } from '@app/infrastructure/definitions/tree';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { HasAgendaItem } from '@app/site/pages/meetings/pages/agenda';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { ViewAgendaItem } from '../../view-models';
 
 @Service()
 export class AgendaItemControllerService extends BaseMeetingControllerService<ViewAgendaItem, AgendaItem> {
-    protected override repo: AgendaItemRepositoryService;
+    protected repo: AgendaItemRepositoryService = inject(AgendaItemRepositoryService);
 
     public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(AgendaItemRepositoryService);
-        super(controllerServiceCollector, AgendaItem, repo);
+        super(AgendaItem);
     }
 
     public update(update: any, item: ViewAgendaItem): Promise<void> {

@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Id, UnsafeHtml } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { ListOfSpeakers } from '@app/domain/models/list-of-speakers/list-of-speakers';
@@ -7,7 +7,6 @@ import { SpeechState } from '@app/domain/models/speakers/speech-state';
 import { ViewSpeaker } from '@app/site/pages/meetings/pages/agenda';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { SpeakerAction } from './speaker.action';
 
 export interface PointOfOrderInformation {
@@ -19,8 +18,7 @@ export interface PointOfOrderInformation {
 @Service()
 export class SpeakerRepositoryService extends BaseMeetingRelatedRepository<ViewSpeaker, Speaker> {
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, Speaker);
+        super(Speaker);
     }
 
     public getVerboseName = (plural = false): any => this.translate.instant(plural ? `Speakers` : `Speaker`);

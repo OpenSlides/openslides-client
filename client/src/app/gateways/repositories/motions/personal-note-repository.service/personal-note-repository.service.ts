@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Fqid } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { PersonalNote } from '@app/domain/models/motions/personal-note';
@@ -6,14 +6,12 @@ import { Action } from '@app/gateways/actions';
 import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
 import { ViewPersonalNote } from '@app/site/pages/meetings/pages/motions';
 
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { PersonalNoteAction } from './personal-note.action';
 
 @Service()
 export class PersonalNoteRepositoryService extends BaseMeetingRelatedRepository<ViewPersonalNote, PersonalNote> {
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, PersonalNote);
+        super(PersonalNote);
     }
 
     public getTitle = (): string => this.getVerboseName();

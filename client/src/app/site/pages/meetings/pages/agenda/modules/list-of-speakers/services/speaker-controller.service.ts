@@ -11,18 +11,15 @@ import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { map, Observable } from 'rxjs';
 
-import { MeetingControllerServiceCollectorService } from '../../../../../services/meeting-controller-service-collector.service';
 import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
 
 @Service()
 export class SpeakerControllerService extends BaseMeetingControllerService<ViewSpeaker, Speaker> {
     protected userRepo = inject(UserControllerService);
-    protected override repo: SpeakerRepositoryService;
+    protected repo: SpeakerRepositoryService = inject(SpeakerRepositoryService);
 
     public constructor() {
-        const repo = inject(SpeakerRepositoryService);
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        super(controllerServiceCollector, Speaker, repo);
+        super(Speaker);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

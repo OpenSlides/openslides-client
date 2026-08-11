@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Projector } from '@app/domain/models/projector/projector';
@@ -8,7 +8,6 @@ import { map, Observable } from 'rxjs';
 
 import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorAction, ScrollScaleDirection } from './projector.action';
 
 /**
@@ -17,8 +16,7 @@ import { ProjectorAction, ScrollScaleDirection } from './projector.action';
 @Service()
 export class ProjectorRepositoryService extends BaseMeetingRelatedRepository<ViewProjector, Projector> {
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, Projector);
+        super(Projector);
     }
 
     public getTitle = (viewProjector: ViewProjector): string => viewProjector.name;

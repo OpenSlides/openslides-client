@@ -10,7 +10,6 @@ import { Assignment } from '../../../../domain/models/assignments/assignment';
 import { createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { CreateResponse } from '../../base-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentAction } from './assignment.action';
 
 @Service()
@@ -21,9 +20,8 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
     private sequentialNumber = inject(SequentialNumberMappingService);
 
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         const agendaItemRepo = inject(AgendaItemRepositoryService);
-        super(repositoryServiceCollector, Assignment, agendaItemRepo);
+        super(Assignment, agendaItemRepo);
     }
 
     public override getFieldsets(): Fieldsets<Assignment> {

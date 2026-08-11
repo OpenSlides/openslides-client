@@ -1,10 +1,9 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionChangeRecommendation } from '@app/domain/models/motions/motion-change-recommendation';
 import { ViewMotionChangeRecommendation } from '@app/site/pages/meetings/pages/motions';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionChangeRecommendationAction } from './motion-change-recommendation.action';
 
 @Service()
@@ -13,8 +12,7 @@ export class MotionChangeRecommendationRepositoryService extends BaseMeetingRela
     MotionChangeRecommendation
 > {
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, MotionChangeRecommendation);
+        super(MotionChangeRecommendation);
     }
 
     public getTitle = (): string => this.getVerboseName();

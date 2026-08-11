@@ -10,7 +10,6 @@ import { TreeIdNode } from '@app/infrastructure/definitions/tree';
 import { NullablePartial } from '@app/infrastructure/utils';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { map, Observable } from 'rxjs';
 
 import { DiffLinesInParagraph } from '../../../definitions';
@@ -23,17 +22,15 @@ export const REFERENCED_MOTION_REGEX = /\[motion[:/](\d+)\]/g;
 @Service()
 export class MotionControllerService extends BaseMeetingControllerService<ViewMotion, Motion> {
     private _lineLength = 80;
-    protected override repo: MotionRepositoryService;
+    protected repo: MotionRepositoryService = inject(MotionRepositoryService);
     private motionLineNumbering = inject(MotionLineNumberingService);
     private diffFactroy = inject(DiffServiceFactory);
 
     public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(MotionRepositoryService);
-        super(controllerServiceCollector, Motion, repo);
+        super(Motion);
 
         this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this._lineLength = lineLength));
-        repo.registerCreateViewModelPipe(viewModel => this.onCreateViewModel(viewModel));
+        this.repo.registerCreateViewModelPipe(viewModel => this.onCreateViewModel(viewModel));
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

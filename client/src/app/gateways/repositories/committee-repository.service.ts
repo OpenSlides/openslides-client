@@ -13,7 +13,6 @@ import { OperatorService } from '../../site/services/operator.service';
 import { Action } from '../actions';
 import { BaseRepository } from './base-repository';
 import { CommitteeAction } from './committees/committee.action';
-import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 import { UserRepositoryService } from './users/user-repository.service';
 
 @Service()
@@ -22,8 +21,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
     private userRepo = inject(UserRepositoryService);
 
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
-        super(repositoryServiceCollector, Committee);
+        super(Committee);
     }
 
     public getTitle = (viewCommittee: ViewCommittee): string => viewCommittee.name;

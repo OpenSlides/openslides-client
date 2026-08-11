@@ -1,10 +1,9 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { ProjectorMessage } from '@app/domain/models/projector/projector-message';
 import { ViewProjectorMessage } from '@app/site/pages/meetings/pages/projectors';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorMessageAction } from './projector-message.action';
 
 @Service()
@@ -13,8 +12,7 @@ export class ProjectorMessageRepositoryService extends BaseMeetingRelatedReposit
     ProjectorMessage
 > {
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, ProjectorMessage);
+        super(ProjectorMessage);
     }
 
     public getTitle = (): string => this.getVerboseName();

@@ -10,7 +10,6 @@ import { ProjectorRepositoryService } from '@app/gateways/repositories/projector
 import { Observable } from 'rxjs';
 
 import { BaseMeetingControllerService } from '../../../base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '../../../services/meeting-controller-service-collector.service';
 import {
     isProjectable,
     MultiProjectionBuildDescriptor,
@@ -22,12 +21,10 @@ import { ViewProjection, ViewProjector } from '../view-models';
 @Service()
 export class ProjectorControllerService extends BaseMeetingControllerService<ViewProjector, Projector> {
     private meetingRepo = inject(MeetingRepositoryService);
-    protected override repo: ProjectorRepositoryService;
+    protected repo: ProjectorRepositoryService = inject(ProjectorRepositoryService);
 
     public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(ProjectorRepositoryService);
-        super(controllerServiceCollector, Projector, repo);
+        super(Projector);
     }
 
     public create(payload: any): Promise<Identifiable> {

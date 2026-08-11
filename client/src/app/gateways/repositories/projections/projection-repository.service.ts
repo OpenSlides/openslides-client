@@ -1,18 +1,16 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { Projection } from '@app/domain/models/projector/projection';
 import { ViewProjection } from '@app/site/pages/meetings/pages/projectors';
 import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectionAction } from './projection.action';
 
 @Service()
 export class ProjectionRepositoryService extends BaseMeetingRelatedRepository<ViewProjection, Projection> {
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, Projection);
+        super(Projection);
     }
 
     public getVerboseName = (plural = false): string => this.translate.instant(plural ? `Projections` : `Projection`);

@@ -14,7 +14,6 @@ import { Fieldsets } from '../../site/services/model-request-builder';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from './base-repository';
 import { MeetingAction } from './meetings';
-import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 import { UserAction } from './users/user-action';
 
 export enum MeetingProjectionType {
@@ -42,8 +41,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     private orgaSettingsService = inject(OrganizationSettingsService);
 
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
-        super(repositoryServiceCollector, Meeting);
+        super(Meeting);
     }
 
     public override getFieldsets(): Fieldsets<Meeting> {

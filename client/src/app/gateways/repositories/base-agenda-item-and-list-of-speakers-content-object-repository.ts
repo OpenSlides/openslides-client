@@ -1,3 +1,4 @@
+import { Directive } from '@angular/core';
 import { HasAgendaItemId, HasListOfSpeakersId } from '@app/domain/interfaces';
 import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
 import { BaseViewModel } from '@app/site/base/base-view-model';
@@ -7,8 +8,8 @@ import { AgendaItemRepositoryService } from './agenda/agenda-item-repository.ser
 import { AgendaItemContentObjectRepository } from './base-agenda-item-content-object-repository';
 import { ListOfSpeakersContentObjectRepository } from './base-list-of-speakers-content-object-repository';
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
 
+@Directive()
 export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     V extends BaseViewModel & HasListOfSpeakers & HasAgendaItem,
     M extends BaseModel & HasListOfSpeakersId & HasAgendaItemId
@@ -17,11 +18,10 @@ export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     implements ListOfSpeakersContentObjectRepository<V, M>, AgendaItemContentObjectRepository<V, M>
 {
     public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
         baseModelCtor: ModelConstructor<M>,
         protected agendaItemRepo: AgendaItemRepositoryService
     ) {
-        super(repositoryServiceCollector, baseModelCtor);
+        super(baseModelCtor);
     }
 
     public getAgendaListTitle(viewModel: V): AgendaListTitle {

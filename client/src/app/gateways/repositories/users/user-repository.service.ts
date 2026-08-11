@@ -19,7 +19,6 @@ import { ViewUser } from '../../../site/pages/meetings/view-models/view-user';
 import { Fieldsets, TypedFieldset } from '../../../site/services/model-request-builder';
 import { Action } from '../../actions';
 import { MeetingUserRepositoryService } from '../meeting_user';
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 
 export type RawUser = FullNameInformation & Identifiable & Displayable & { fqid: Fqid; meeting_user_id?: Id };
 
@@ -85,8 +84,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
     private meetingUserRepo = inject(MeetingUserRepositoryService);
 
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
-        super(repositoryServiceCollector, User);
+        super(User);
     }
 
     /**

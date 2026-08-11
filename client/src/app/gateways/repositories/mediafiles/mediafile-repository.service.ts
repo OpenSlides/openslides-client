@@ -11,7 +11,6 @@ import { Fieldsets } from '@app/site/services/model-request-builder';
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from '../base-repository';
 import { MeetingMediafileRepositoryService } from '../meeting-mediafile/meeting-mediafile-repository.service';
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { MediafileAction } from './mediafile.action';
 
 @Service()
@@ -24,8 +23,7 @@ export class MediafileRepositoryService extends BaseRepository<ViewMediafile, Me
     private meetingMediaRepo = inject(MeetingMediafileRepositoryService);
 
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
-        super(repositoryServiceCollector, Mediafile);
+        super(Mediafile);
 
         this.viewModelSortFn = (a: ViewMediafile, b: ViewMediafile): number =>
             this.languageCollator.compare(a.title, b.title);

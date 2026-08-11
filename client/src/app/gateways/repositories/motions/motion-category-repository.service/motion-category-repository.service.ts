@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionCategory } from '@app/domain/models/motions/motion-category';
 import { Action } from '@app/gateways/actions';
@@ -8,14 +8,12 @@ import { Fieldsets } from '@app/site/services/model-request-builder';
 import { map, Observable } from 'rxjs';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionCategoryAction } from './motion-category.action';
 
 @Service()
 export class MotionCategoryRepositoryService extends BaseMeetingRelatedRepository<ViewMotionCategory, MotionCategory> {
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, MotionCategory);
+        super(MotionCategory);
     }
 
     public override getViewModelList(): ViewMotionCategory[] {

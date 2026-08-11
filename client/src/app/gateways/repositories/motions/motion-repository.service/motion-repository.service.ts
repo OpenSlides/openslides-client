@@ -16,7 +16,6 @@ import { Motion } from '../../../../domain/models/motions/motion';
 import { AgendaItemRepositoryService, createAgendaItem } from '../../agenda';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { CreateResponse } from '../../base-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AmendmentAction } from './amendment.action';
 import { MotionAction } from './motion.action';
 
@@ -35,9 +34,8 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     private sequentialNumber = inject(SequentialNumberMappingService);
 
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         const agendaItemRepo = inject(AgendaItemRepositoryService);
-        super(repositoryServiceCollector, Motion, agendaItemRepo);
+        super(Motion, agendaItemRepo);
         this.meetingSettingsService.get(`motions_default_sorting`).subscribe(conf => {
             this.sortProperty = conf as SortProperty;
             this.setConfigSortFn();

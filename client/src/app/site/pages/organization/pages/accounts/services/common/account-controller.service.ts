@@ -9,7 +9,6 @@ import { BaseController } from '@app/site/base/base-controller';
 import { UserDeleteDialogService } from '@app/site/modules/user-components';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
-import { ControllerServiceCollectorService } from '@app/site/services/controller-service-collector.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
@@ -20,15 +19,14 @@ import { firstValueFrom, map, Observable } from 'rxjs';
 export class AccountControllerService extends BaseController<ViewUser, User> {
     private _committee_users_set = new Set<Id>();
 
-    protected override repo: UserRepositoryService;
+    protected repo: UserRepositoryService = inject(UserRepositoryService);
     private userDeleteDialog = inject(UserDeleteDialogService);
     private prompt = inject(PromptService);
     private operator = inject(OperatorService);
 
     public constructor() {
-        const controllerServiceCollector = inject(ControllerServiceCollectorService);
-        const repo = inject(UserRepositoryService);
-        super(controllerServiceCollector, User, repo);
+        super(User);
+
         this.operator.user.committee_managements$.subscribe(committees => {
             const userIdsSet = new Set(committees.flatMap(committee => committee.user_ids ?? []));
             const userIdsAllChilds = committees
