@@ -3,7 +3,7 @@ import { MockTranslateService } from '@app/site/pages/meetings/modules/poll/pipe
 import { TranslateService } from '@ngx-translate/core';
 
 import { MeetingAction } from '../repositories/meetings/meeting-action';
-import { MotionAction } from '../repositories/motions';
+import { MotionAction } from '../repositories/motions/motion-repository.service';
 import { ErrorMapService } from './error-map.service';
 import { ErrorMap, UrlFragmentToHttpErrorMap } from './error-map-utils';
 
