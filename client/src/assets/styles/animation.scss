@@ -1,4 +1,8 @@
 
+.nav-slide-in {
+  animation: navSlideIn 600ms ease forwards;
+}
+
 @keyframes navSlideIn {
   from {
     transform: translateX(-85%);
@@ -8,6 +12,10 @@
   }
 }
 
+.nav-slide-out {
+  animation: navSlideOut 600ms ease forwards;
+}
+
 @keyframes navSlideOut {
   from {
     transform: translateX(0);
@@ -15,23 +23,6 @@
   to {
     transform: translateX(-85%);
   }
-}
-
-.nav-slide-in {
-  animation: navSlideIn 600ms ease forwards;
-}
-
-.nav-slide-out {
-  animation: navSlideOut 600ms ease forwards;
-}
-
-@keyframes pulseFadeInOut {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.2; }
-}
-
-.icon-pulse {
-  animation: pulseFadeInOut 2s ease-in-out infinite;
 }
 
 .fade-in {
@@ -60,4 +51,13 @@
   to {
     opacity: 0;
   }
+}
+
+.icon-pulse {
+  animation: pulseFadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes pulseFadeInOut {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.2; }
 }
