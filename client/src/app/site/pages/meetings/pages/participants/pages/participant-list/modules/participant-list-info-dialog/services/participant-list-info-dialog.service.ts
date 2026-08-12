@@ -3,6 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
@@ -63,5 +64,13 @@ export class ParticipantListInfoDialogService extends BaseDialogService<
             }
         });
         return dialogRef;
+    }
+
+    public areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[], activeMeeting: ViewMeeting): boolean {
+        return (
+            oldGroupIds
+                .filter(group => group !== activeMeeting.default_group_id)
+                .some(id => !(newGroupIds ?? []).includes(id)) && !newGroupIds.includes(activeMeeting.admin_group_id)
+        );
     }
 }
