@@ -300,11 +300,6 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
                     this.repo.setPresent(true, { ...payload, id: this._accountId }).resolve();
                 }
             } else {
-                for (const field in payload) {
-                    if (payload[field] === null) {
-                        delete payload[field];
-                    }
-                }
                 this.repo.create(payload);
             }
             this.onCancel();

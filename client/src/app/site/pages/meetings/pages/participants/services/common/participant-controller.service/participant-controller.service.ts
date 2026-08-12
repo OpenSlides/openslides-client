@@ -365,6 +365,9 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     }
 
     private validateField(participant: Partial<ViewUser> | Partial<User & MeetingUser>, fieldname: string): any {
+        if (fieldname === `structure_level_ids`) {
+            return participant[fieldname] ?? [];
+        }
         return typeof participant[fieldname] === `function` ? participant[fieldname]() : participant[fieldname];
     }
 }
