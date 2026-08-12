@@ -6,7 +6,7 @@ import { BaseMeetingModelRequestHandler } from '@app/site/pages/meetings/base/ba
 import { getAmendmentListSubscriptionConfig } from '../../../../motions.subscription';
 
 @Component({
-    selector: `os-motion-main`,
+    selector: `os-amendment-main`,
     templateUrl: `./amendment-list-main.component.html`,
     styleUrls: [`./amendment-list-main.component.scss`],
     changeDetection: ChangeDetectionStrategy.Eager,
