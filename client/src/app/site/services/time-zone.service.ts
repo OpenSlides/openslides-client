@@ -1,7 +1,6 @@
 import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Selectable } from '@app/domain/interfaces';
-import { GetValidTimezonesPresenterService } from '@app/gateways/presenter/get-valid-timezones';
 import { TZDate } from '@date-fns/tz';
 
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
