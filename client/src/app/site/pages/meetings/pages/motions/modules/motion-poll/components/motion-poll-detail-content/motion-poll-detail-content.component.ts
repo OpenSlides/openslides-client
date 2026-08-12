@@ -10,7 +10,7 @@ import { ThemeService } from '@app/site/services/theme.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { combineLatestWith, map } from 'rxjs';
 
-import { MotionPollService } from '../../services';
+import { MotionPollService } from '../../services/motion-poll.service/motion-poll.service';
 
 const CHART_DATA_SUBSCRIPTION_NAME = `chart_data_subscription`;
 

@@ -18,7 +18,8 @@ import { findIndexInSortedArray } from '@app/infrastructure/utils';
 import { SortDefinition } from '@app/site/base/base-sort.service';
 import { auditTime, Observable, Subscription } from 'rxjs';
 
-import { TreeService, TreeSortService } from '../../services';
+import { TreeService } from '../../services/tree.service';
+import { TreeSortService } from '../../services/tree-sort.service';
 
 /**
  * Enumaration to separate between the directions.

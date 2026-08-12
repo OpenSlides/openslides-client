@@ -23,7 +23,7 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable } from 'rxjs';
 
-import { GroupControllerService } from '../../../../modules';
+import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_DETAIL_SUBSCRIPTION
@@ -31,7 +31,7 @@ import {
 import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
-import { ViewStructureLevel } from '../../../structure-levels/view-models';
+import { ViewStructureLevel } from '../../../structure-levels/view-models/view-structure-level';
 @Component({
     selector: `os-participant-detail-edit`,
     templateUrl: `./participant-detail-edit.component.html`,

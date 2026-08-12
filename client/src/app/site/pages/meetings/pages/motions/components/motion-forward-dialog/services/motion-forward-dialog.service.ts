@@ -9,7 +9,7 @@ import {
     GetForwardingMeetingsPresenterMeeting,
     GetForwardingMeetingsPresenterService
 } from '@app/gateways/presenter';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ViewCommittee } from '@app/site/pages/organization/pages/committees';
@@ -20,10 +20,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { endOfDay, fromUnixTime } from 'date-fns';
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 
-import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
 import { getMotionForwardDataSubscriptionConfig } from '../../../motions.subscription';
-import { MotionFormatService } from '../../../services/common/motion-format.service';
-import { ViewMotion } from '../../../view-models';
+import { MotionFormatService } from '../../../services/common/motion-format.service/motion-format.service';
+import { ViewMotion } from '../../../view-models/view-motion';
 import {
     MotionForwardDialogComponent,
     MotionForwardDialogReturnData

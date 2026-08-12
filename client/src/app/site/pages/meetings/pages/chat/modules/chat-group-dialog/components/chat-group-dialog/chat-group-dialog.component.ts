@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/cor
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { ViewGroup } from '../../../../../participants';
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
+import { ViewGroup } from '../../../../../participants/modules/groups/view-models/view-group';
 import { ChatGroupDialogData } from '../../services/chat-group-dialog.service';
 
 @Component({

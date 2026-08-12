@@ -8,8 +8,8 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
-import { ViewMotionCategory } from '../../../../modules';
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
+import { MotionCategoryControllerService } from '../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { ViewMotionCategory } from '../../../../modules/categories/view-models/view-motion-category';
 
 const CATEGORY_LIST_STORAGE_INDEX = `category_list`;
 

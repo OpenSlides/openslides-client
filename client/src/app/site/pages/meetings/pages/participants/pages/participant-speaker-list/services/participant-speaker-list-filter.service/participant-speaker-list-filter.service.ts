@@ -5,7 +5,10 @@ import { BaseFilterListService, OsFilter, OsHideFilterSetting } from '@app/site/
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { _ } from '@ngx-translate/core';
 
-import { SpeechWaitingState, ViewSpeaker } from '../../../../../agenda';
+import {
+    SpeechWaitingState,
+    ViewSpeaker
+} from '../../../../../agenda/modules/list-of-speakers/view-models/view-speaker';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 
 @Service()

@@ -18,7 +18,6 @@ import { toDecimal } from '@app/infrastructure/utils';
 import { UserDeleteDialogService } from '@app/site/modules/user-components';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
@@ -60,7 +59,7 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
 
     private _participantIdMapSubject = new BehaviorSubject<Record<number, ViewUser>>({});
 
-    protected override repo: UserRepositoryService;
+    protected repo: UserRepositoryService = inject(UserRepositoryService);
     private meetingUserRepo = inject(MeetingUserRepositoryService);
     public meetingController = inject(MeetingControllerService);
     private userController = inject(UserControllerService);
@@ -70,10 +69,10 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     private userService = inject(UserService);
     private actions = inject(ActionService);
 
+    public baseModelCtor = User;
+
     public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(UserRepositoryService);
-        super(controllerServiceCollector, User, repo);
+        super();
 
         let meetingUserIds = [];
         this.activeMeetingIdService.meetingIdObservable

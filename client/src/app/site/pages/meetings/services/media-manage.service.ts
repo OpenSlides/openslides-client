@@ -14,7 +14,8 @@ import { MediafileRepositoryService } from '@app/gateways/repositories/mediafile
 import { MeetingMediafileRepositoryService } from '@app/gateways/repositories/meeting-mediafile/meeting-mediafile-repository.service';
 import { BehaviorSubject, distinctUntilChanged, merge, Observable } from 'rxjs';
 
-import { ViewMediafile, ViewMeetingMediafile } from '../pages/mediafiles';
+import { ViewMediafile } from '../pages/mediafiles/view-models/view-mediafile';
+import { ViewMeetingMediafile } from '../pages/mediafiles/view-models/view-meeting-mediafile';
 import { ActiveMeetingService } from './active-meeting.service';
 
 @Service()

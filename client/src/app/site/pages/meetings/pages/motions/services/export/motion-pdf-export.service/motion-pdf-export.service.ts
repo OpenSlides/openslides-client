@@ -7,11 +7,11 @@ import { PDFDocument } from '@cantoo/pdf-lib';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 
-import { ViewMotion } from '../../../view-models';
-import { AmendmentListPdfService } from '../amendment-list-pdf.service';
-import { MotionExportInfo } from '../motion-export.service';
-import { MotionPdfService } from '../motion-pdf.service';
-import { MotionPdfCatalogService } from '../motion-pdf-catalog.service';
+import { ViewMotion } from '../../../view-models/view-motion';
+import { AmendmentListPdfService } from '../amendment-list-pdf.service/amendment-list-pdf.service';
+import { MotionExportInfo } from '../motion-export.service/motion-export.service';
+import { MotionPdfService } from '../motion-pdf.service/motion-pdf.service';
+import { MotionPdfCatalogService } from '../motion-pdf-catalog.service/motion-pdf-catalog.service';
 
 /**
  * Export service to handle various kind of exporting necessities.

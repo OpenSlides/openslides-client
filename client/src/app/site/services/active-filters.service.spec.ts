@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { StorageService } from '@app/gateways/storage.service';
 
-import { OsFilter } from '../base/base-filter.service';
+import { OsFilter } from '../base/base-filter.service/os-filter';
 import { ActiveFiltersService } from './active-filters.service';
 
 class MockStorageService {

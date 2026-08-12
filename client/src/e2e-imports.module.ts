@@ -5,7 +5,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { OpenSlidesMainModule } from './app/openslides-main-module/openslides-main.module';
 import { OpenSlidesMainRoutingModule } from './app/openslides-main-module/openslides-main-routing.module';
-import { OpenSlidesTranslationModule } from './app/site/modules/translations';
+import { OpenSlidesTranslationModule } from './app/site/modules/translations/openslides-translation.module';
 
 /**
  * Share Module for all "dumb" components and pipes.

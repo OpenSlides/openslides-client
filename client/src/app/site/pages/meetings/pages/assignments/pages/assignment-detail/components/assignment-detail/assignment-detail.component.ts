@@ -23,7 +23,7 @@ import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
-import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service';
+import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { AssignmentPhases } from '../../../../definitions';
 import { AssignmentPollService } from '../../../../modules/assignment-poll/services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../../../modules/assignment-poll/services/assignment-poll-dialog.service';

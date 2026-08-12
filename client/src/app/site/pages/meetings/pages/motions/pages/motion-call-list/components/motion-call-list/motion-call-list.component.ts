@@ -9,11 +9,11 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
-import { TagControllerService } from '../../../../modules/tags/services';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service';
-import { MotionCsvExportService } from '../../../../services/export/motion-csv-export.service';
-import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service';
+import { MotionCategoryControllerService } from '../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionCsvExportService } from '../../../../services/export/motion-csv-export.service/motion-csv-export.service';
+import { MotionPdfExportService } from '../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
 
 @Component({
     selector: `os-motion-call-list`,

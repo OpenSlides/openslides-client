@@ -1,3 +1,4 @@
+import { inject, Injectable } from '@angular/core';
 import { HasSequentialNumber, Identifiable } from '@app/domain/interfaces';
 import { OnAfterAppsLoaded } from '@app/infrastructure/definitions/hooks/after-apps-loaded';
 import { ListUpdateData } from '@app/infrastructure/utils';
@@ -10,14 +11,14 @@ import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription }
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
-import { Relation } from '../../infrastructure/definitions/relations';
+import { Relation } from '../../infrastructure/definitions/relations/utils';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
-import { CollectionMapperService } from '../../site/services/collection-mapper.service';
+import { CollectionMapperService } from '../../site/services/collection-mapper.service/collection-mapper.service';
 import { DataStoreService } from '../../site/services/data-store.service';
-import { Fieldsets } from '../../site/services/model-request-builder';
+import { Fieldsets } from '../../site/services/model-request-builder/model-request-builder.service';
 import { RelationManagerService } from '../../site/services/relation-manager.service';
-import { ViewModelStoreService } from '../../site/services/view-model-store.service';
-import { Action, ActionService } from '../actions';
+import { Action } from '../actions/action';
+import { ActionService } from '../actions/action.service';
 import { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
@@ -46,9 +47,10 @@ interface UpdatePipelineAction {
     key?: string;
 }
 
+@Injectable()
 export abstract class BaseRepository<V extends BaseViewModel, M extends BaseModel> implements OnAfterAppsLoaded {
     public get collection(): string {
-        return this._collection;
+        return this.baseModelCtor.COLLECTION;
     }
 
     /**
@@ -56,7 +58,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
      * ModelConstructors and ViewModelConstructors.
      */
     public get COLLECTION(): string {
-        return this._collection;
+        return this.baseModelCtor.COLLECTION;
     }
 
     public abstract getVerboseName: (plural?: boolean) => string;
@@ -110,38 +112,14 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     protected relationsByKey: Record<string, Relation> = {};
 
     /**
+     * The model ctor of the encapsulated model.
+     */
+    protected abstract baseModelCtor: ModelConstructor<M>;
+
+    /**
      * The view model ctor of the encapsulated view model.
      */
     protected baseViewModelCtor!: ViewModelConstructor<V>;
-
-    protected get DS(): DataStoreService {
-        return this.repositoryServiceCollector.DS;
-    }
-
-    protected get actions(): ActionService {
-        return this.repositoryServiceCollector.actionService;
-    }
-
-    protected get collectionMapperService(): CollectionMapperService {
-        return this.repositoryServiceCollector.collectionMapperService;
-    }
-
-    protected get viewModelStoreService(): ViewModelStoreService {
-        return this.repositoryServiceCollector.viewModelStoreService;
-    }
-
-    protected get translate(): TranslateService {
-        return this.repositoryServiceCollector.translate;
-    }
-
-    protected get relationManager(): RelationManagerService {
-        return this.repositoryServiceCollector.relationManager;
-    }
-
-    /**
-     * The collection string of the managed model.
-     */
-    private _collection: string;
 
     private _createViewModelPipes: ((viewModel: V) => void)[] = [];
 
@@ -167,16 +145,15 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private foreignSortBaseKeys: Record<string, Record<string, string[]>> = {};
     private foreignSortBaseKeySubscriptions: Record<string, Subscription[]> = {};
 
-    public constructor(
-        private repositoryServiceCollector: RepositoryServiceCollectorService,
-        protected baseModelCtor: ModelConstructor<M>
-    ) {
-        this._collection = baseModelCtor.COLLECTION;
+    protected DS = inject(DataStoreService);
+    protected actions = inject(ActionService);
+    protected collectionMapperService = inject(CollectionMapperService);
+    protected translate = inject(TranslateService);
+    protected relationManager = inject(RelationManagerService);
 
-        this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {
-            this.relationsByKey[relation.ownField as any] = relation;
-        });
+    private repositoryServiceCollector = inject(RepositoryServiceCollectorService);
 
+    public constructor() {
         // All data is piped through an auditTime of 1ms. This is to prevent massive
         // updates, if e.g. an autoupdate with a lot motions come in. The result is just one
         // update of the new list instead of many unnecessary updates.
@@ -190,6 +167,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     }
 
     public onAfterAppsLoaded(): void {
+        this.relationManager.getRelationsForCollection(this.collection).forEach(relation => {
+            this.relationsByKey[relation.ownField as any] = relation;
+        });
+
         this.baseViewModelCtor = this.collectionMapperService.getViewModelConstructor(this.collection)!;
         this.DS.clearObservable.subscribe(removedCollections => {
             if (

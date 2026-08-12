@@ -9,7 +9,7 @@ import { BaseProjectableViewModel } from '@app/site/pages/meetings/view-models/b
 import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
 
 import { SpeakerStateOnList } from '../../../definitions/index';
-import { HasAgendaItem } from '../../../view-models';
+import { HasAgendaItem } from '../../../view-models/has-agenda-item';
 import { HasListOfSpeakers } from './has-list-of-speakers';
 import { ViewSpeaker } from './view-speaker';
 

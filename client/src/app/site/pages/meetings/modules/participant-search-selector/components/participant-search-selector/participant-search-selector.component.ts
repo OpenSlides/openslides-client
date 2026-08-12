@@ -12,7 +12,7 @@ import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
 } from '../../../../pages/participants/participants.subscription';
-import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service';
+import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { ViewUser } from '../../../../view-models/view-user';
 import { UserSelectionData } from '../..';

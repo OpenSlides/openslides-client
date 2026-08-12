@@ -24,7 +24,7 @@ import { BehaviorSubject, debounceTime, distinctUntilChanged, Observable, Subscr
 import { BaseFormFieldControlComponent } from '../../../../base/base-form-field-control';
 import { OsOptionSelectionChanged } from '../../definitions';
 import { SearchSelectorNotFoundTemplateDirective } from '../../directives/search-selector-not-found-template.directive';
-import { ParentErrorStateMatcher } from '../../validators';
+import { ParentErrorStateMatcher } from '../../validators/parent-error-state-matcher';
 
 @Directive()
 export abstract class BaseSearchSelectorComponent

@@ -9,7 +9,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { ActiveMeetingIdService } from '../../../services/active-meeting-id.service';
 import { MediafileDeleteDialogComponent } from '../components/mediafile-delete-dialog/mediafile-delete-dialog.component';
-import { ViewMediafile } from '../view-models';
+import { ViewMediafile } from '../view-models/view-mediafile';
 import { MediafileControllerService } from './mediafile-controller.service';
 
 @Service()

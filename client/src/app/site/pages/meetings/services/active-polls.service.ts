@@ -4,8 +4,8 @@ import { viewModelListEqual } from '@app/infrastructure/utils';
 import { ModelRequestService } from '@app/site/services/model-request.service';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 
-import { PollControllerService } from '../modules/poll/services/poll-controller.service';
-import { ViewPoll } from '../pages/polls';
+import { PollControllerService } from '../modules/poll/services/poll-controller.service/poll-controller.service';
+import { ViewPoll } from '../pages/polls/view-models/view-poll';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ACTIVE_POLLS_SUBSCRIPTION, getActivePollsSubscriptionConfig } from './active-polls.subscription';
 

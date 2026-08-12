@@ -5,9 +5,9 @@ import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ViewMotionWorkflow } from '../../../../modules';
-import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
-import { WorkflowExportService } from '../../services';
+import { MotionWorkflowControllerService } from '../../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
+import { ViewMotionWorkflow } from '../../../../modules/workflows/view-models/view-motion-workflow';
+import { WorkflowExportService } from '../../services/workflow-export.service/workflow-export.service';
 
 const WORKFLOW_LIST_STORAGE_INDEX = `workflows`;
 

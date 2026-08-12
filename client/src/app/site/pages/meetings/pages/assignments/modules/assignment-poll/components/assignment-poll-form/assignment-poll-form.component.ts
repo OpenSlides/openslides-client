@@ -6,7 +6,7 @@ import {
 } from '@app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
 import { _ } from '@ngx-translate/core';
 
-import { ViewAssignment } from '../../../../view-models';
+import { ViewAssignment } from '../../../../view-models/view-assignment';
 
 @Component({
     selector: `os-assignment-poll-form`,
