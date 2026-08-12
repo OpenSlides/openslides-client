@@ -42,6 +42,9 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         return this.orgaService.organizationObservable;
     }
 
+    /**
+     * Show or hide password and change the indicator accordingly
+     */
     public hide = false;
 
     public loginAreaExpanded = false;

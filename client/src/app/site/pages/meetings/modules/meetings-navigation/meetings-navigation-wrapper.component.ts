@@ -45,6 +45,9 @@ import { LoadFontService } from '../../services/load-font.service';
 export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent implements OnInit {
     public sideNav = viewChild.required<SidenavComponent>('sideNav');
 
+    /**
+     * is the user logged in, or the anonymous is active.
+     */
     public isLoggedIn = false;
 
     public get mainMenuEntries(): MainMenuEntry[] {
