@@ -293,6 +293,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return allStates.filter(state => state.recommendation_label).sort((a, b) => a.weight - b.weight);
     }
 
+    public getSortedNextStates(states: ViewMotionState[]): ViewMotionState[] {
+        return states.sort((a, b) => a.weight - b.weight);
+    }
+
     public getMeetingName(origin: ViewMotion | ViewMeeting): string {
         if (this.isViewMotion(origin)) {
             const motion = origin as ViewMotion;
