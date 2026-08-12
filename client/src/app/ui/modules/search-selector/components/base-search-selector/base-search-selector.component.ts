@@ -423,7 +423,7 @@ export abstract class BaseSearchSelectorComponent
     protected override push(value: Selectable): void {
         this._snapshotValue = value;
         const nextValue = this.transformPropagateFn(value);
-        super.push(nextValue);
+        setTimeout(() => super.push(nextValue));
     }
 
     private triggerUpdate(): void {
@@ -438,8 +438,10 @@ export abstract class BaseSearchSelectorComponent
 
     private setNextValue(value: any): void {
         this._snapshotValue = value;
-        this.contentForm.setValue(value);
-        this.triggerUpdate();
+        setTimeout(() => {
+            this.contentForm.setValue(value);
+            this.triggerUpdate();
+        });
     }
 
     /**
