@@ -10,7 +10,7 @@ export class MotionEditorControllerService extends BaseMotionMeetingUserControll
     ViewMotionEditor,
     MotionEditor
 > {
-    protected override repo = inject(MotionEditorRepositoryService);
+    protected repo = inject(MotionEditorRepositoryService);
 
     public baseModelCtor = MotionEditor;
 }

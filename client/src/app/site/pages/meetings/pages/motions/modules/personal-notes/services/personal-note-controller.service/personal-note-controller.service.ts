@@ -13,7 +13,7 @@ import { ViewPersonalNote } from '../../view-models/view-personal-note';
 
 @Service()
 export class PersonalNoteControllerService extends BaseMeetingControllerService<ViewPersonalNote, PersonalNote> {
-    protected override repo: PersonalNoteRepositoryService = inject(PersonalNoteRepositoryService);
+    protected repo: PersonalNoteRepositoryService = inject(PersonalNoteRepositoryService);
 
     public baseModelCtor = PersonalNote;
 

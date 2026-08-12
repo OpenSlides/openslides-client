@@ -9,7 +9,7 @@ import { ViewMotionBlock } from '../../view-models/view-motion-block';
 
 @Service()
 export class MotionBlockControllerService extends BaseMeetingControllerService<ViewMotionBlock, MotionBlock> {
-    protected override repo: MotionBlockRepositoryService = inject(MotionBlockRepositoryService);
+    protected repo: MotionBlockRepositoryService = inject(MotionBlockRepositoryService);
     private motionRepo = inject(MotionControllerService);
 
     public baseModelCtor = MotionBlock;

@@ -10,7 +10,7 @@ export class MotionSubmitterControllerService extends BaseMotionMeetingUserContr
     ViewMotionSubmitter,
     MotionSubmitter
 > {
-    protected override repo = inject(MotionSubmitterRepositoryService);
+    protected repo = inject(MotionSubmitterRepositoryService);
 
     public baseModelCtor = MotionSubmitter;
 }

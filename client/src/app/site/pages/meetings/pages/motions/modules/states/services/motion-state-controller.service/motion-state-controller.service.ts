@@ -10,7 +10,7 @@ import { ViewMotionState } from '../../view-models/view-motion-state';
 
 @Service()
 export class MotionStateControllerService extends BaseMeetingControllerService<ViewMotionState, MotionState> {
-    protected override repo: MotionStateRepositoryService = inject(MotionStateRepositoryService);
+    protected repo: MotionStateRepositoryService = inject(MotionStateRepositoryService);
 
     public baseModelCtor = MotionState;
 
