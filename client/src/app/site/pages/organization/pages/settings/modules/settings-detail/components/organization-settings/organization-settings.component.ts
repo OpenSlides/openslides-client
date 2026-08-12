@@ -54,6 +54,44 @@ export class OrganizationSettingsComponent extends BaseComponent {
         this.subscribeOrganizationData();
     }
 
+    public revertChanges(): void {
+        if (this.orgaSettingsForm) {
+            this.updateForm(this._currentOrgaSettings!);
+            this.markFormAsClean();
+        }
+    }
+
+    public filterTimezones(): void {
+        const filterValue = this.timeZoneInput()?.nativeElement.value ?? ``;
+        if (filterValue !== this.orgaSettingsForm.get(`time_zone`).getRawValue()) {
+            this.filteredTimeZones.set(this.timeZones.filter(o => o.toLowerCase().includes(filterValue.toLowerCase())));
+        } else {
+            this.filteredTimeZones.set(this.timeZones);
+        }
+    }
+
+    public getAdditionallySearchedValuesFn(item: Selectable): string[] {
+        return [item.getTitle()];
+    }
+
+    public onSubmit(): void {
+        const { ...payload }: any = this.orgaSettingsForm!.value;
+        if (this.operator.isSuperAdmin) {
+            payload.saml_attr_mapping = payload.saml_attr_mapping
+                ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
+                : null;
+        }
+        for (const key of Object.keys(payload)) {
+            if (this.orgaSettingsForm.get(key).pristine) {
+                delete payload[key];
+            }
+        }
+        this.controller
+            .update(payload)
+            .then(() => this.markFormAsClean())
+            .catch(this.raiseError);
+    }
+
     private subscribeOrganizationData(): void {
         this.subscriptions.push(
             this.controller.getViewModelObservable(ORGANIZATION_ID).subscribe(orga => {
@@ -119,44 +157,6 @@ export class OrganizationSettingsComponent extends BaseComponent {
             console.warn(`no Organization loaded`);
         }
         return this.formBuilder.group(rawSettingsForm);
-    }
-
-    public revertChanges(): void {
-        if (this.orgaSettingsForm) {
-            this.updateForm(this._currentOrgaSettings!);
-            this.markFormAsClean();
-        }
-    }
-
-    public filterTimezones(): void {
-        const filterValue = this.timeZoneInput()?.nativeElement.value ?? ``;
-        if (filterValue !== this.orgaSettingsForm.get(`time_zone`).getRawValue()) {
-            this.filteredTimeZones.set(this.timeZones.filter(o => o.toLowerCase().includes(filterValue.toLowerCase())));
-        } else {
-            this.filteredTimeZones.set(this.timeZones);
-        }
-    }
-
-    public getAdditionallySearchedValuesFn(item: Selectable): string[] {
-        return [item.getTitle()];
-    }
-
-    public onSubmit(): void {
-        const { ...payload }: any = this.orgaSettingsForm!.value;
-        if (this.operator.isSuperAdmin) {
-            payload.saml_attr_mapping = payload.saml_attr_mapping
-                ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
-                : null;
-        }
-        for (const key of Object.keys(payload)) {
-            if (this.orgaSettingsForm.get(key).pristine) {
-                delete payload[key];
-            }
-        }
-        this.controller
-            .update(payload)
-            .then(() => this.markFormAsClean())
-            .catch(this.raiseError);
     }
 
     private markFormAsClean(): void {

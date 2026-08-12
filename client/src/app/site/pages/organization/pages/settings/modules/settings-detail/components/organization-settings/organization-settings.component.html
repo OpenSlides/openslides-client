@@ -40,18 +40,17 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ 'Time zone' | translate }}</mat-label>
-
                         <input
                             #timeZoneInput
                             formControlName="time_zone"
                             matInput
                             type="text"
-                            [matAutocomplete]="auto"
+                            [matAutocomplete]="timeZoneAuto"
                             (focus)="filterTimezones()"
                             (input)="filterTimezones()"
                         />
 
-                        <mat-autocomplete #auto="matAutocomplete" requireSelection>
+                        <mat-autocomplete #timeZoneAuto="matAutocomplete" requireSelection>
                             @for (option of filteredTimeZones(); track option) {
                                 <mat-option [value]="option">{{ option | translate }}</mat-option>
                             }

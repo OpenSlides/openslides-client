@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, signal, viewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
@@ -41,11 +41,17 @@ const SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES = [`jitsi_domain`, `jitsi_r
     standalone: false
 })
 export class MeetingEditComponent extends BaseComponent implements OnInit {
+    public timeZoneInput = viewChild<ElementRef<HTMLInputElement>>('timeZoneInput');
+
     public readonly availableUsers: Observable<ViewUser[]>;
     public readonly translations = availableTranslations;
     public time_zones = new BehaviorSubject([]);
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
+
+    public get isCommitteeManagerAndRequireDuplicateFrom(): boolean {
+        return this.requireDuplicateFrom && !this.operator.isOrgaManager;
+    }
 
     public get isValid(): boolean {
         if (this.isCommitteeManagerAndRequireDuplicateFrom) {
@@ -102,6 +108,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     private cameFromList = false;
     private requireDuplicateFrom = false;
 
+    private timeZones = this.timeZone.getAvailableTimeZones();
+    public filteredTimeZones = signal<string[]>(this.timeZones.slice());
+
     /**
      * The operating user received from the OperatorService
      */
@@ -130,7 +139,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         super();
         this.checkCreateView();
         this.createForm();
-        this.initTimezones();
         this.init();
 
         if (this.isCreateView) {
@@ -169,17 +177,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         this.availableAdmins = this.filterAccountsForCommitteeAdmins(this.userRepo.getViewModelList());
     }
 
-    private initTimezones(): void {
-        const values = this.timeZone.getTZForSearchSelector();
-        this.time_zones.next(values);
-        this.patchTimezoneInForm();
-    }
-
-    private patchTimezoneInForm(): void {
-        if (!this.meetingForm?.get('time_zone').value) {
-            this.meetingForm
-                .get('time_zone')
-                .setValue(this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone()));
+    public filterTimezones(): void {
+        const filterValue = this.timeZoneInput()?.nativeElement.value ?? ``;
+        if (filterValue !== this.meetingForm.get(`time_zone`).getRawValue()) {
+            this.filteredTimeZones.set(this.timeZones.filter(o => o.toLowerCase().includes(filterValue.toLowerCase())));
+        } else {
+            this.filteredTimeZones.set(this.timeZones);
         }
     }
 
@@ -192,6 +195,11 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     public async onSubmit(): Promise<void> {
+        const { ...payload }: any = this.meetingForm!.value;
+        for (const key of Object.keys(payload)) {
+            console.log(this.meetingForm.get(key).pristine, key);
+        }
+
         if (this.isCreateView) {
             await this.doCreateMeeting();
         } else {
@@ -288,7 +296,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         };
 
         rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
-        rawForm[`time_zone`] = [this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone())];
+        rawForm[`time_zone`] = [this.timeZone.getOrganizationTimeZone()];
 
         if (this.isJitsiManipulationAllowed) {
             rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^/]$/)];
@@ -331,7 +339,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const {
             start_time: start,
             end_time: end,
-            time_zone,
             ...patchMeeting
         }: any = meeting.getUpdatedModelData({
             start_time: start_time,
@@ -343,9 +350,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             end
         };
         this.meetingForm.patchValue(patchMeeting);
-        this.meetingForm.get(`time_zone`).patchValue(this.timeZone.getTimezoneIdByName(time_zone));
         this.daterangeControl?.patchValue(patchDaterange);
         this.onAfterCreateForm();
+
+        this.meetingForm.markAsPristine();
     }
 
     private updateFormByCommittee(): void {
@@ -392,19 +400,13 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private getPayload(): any {
-        const {
-            daterange: { start: start_time, end: end_time } = { start: null, end: null },
-            time_zone,
-            ...rawPayload
-        } = {
+        const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
             ...this.meetingForm.value
         };
-        const time_zone_string = this.timeZone.getTimezoneNameById(time_zone);
         if (!this.meetingForm.get(`daterange`).disabled) {
             return {
                 start_time: this.timeZone.transformFromDate(start_time, rawPayload.time_zone),
                 end_time: this.timeZone.transformFromDate(end_time, rawPayload.time_zone),
-                time_zone: time_zone_string,
                 ...rawPayload
             };
         }
@@ -453,17 +455,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         } else {
             this.router.navigate([`committees`, this.committeeId]);
         }
-    }
-
-    private makeDatesValid(endDateChanged: boolean): void {
-        if (!this.isTimeValid) {
-            const patchValue = endDateChanged ? this.daterangeControl?.value.end : this.daterangeControl?.value.start;
-            this.daterangeControl?.patchValue({ start: patchValue, end: patchValue });
-        }
-    }
-
-    public get isCommitteeManagerAndRequireDuplicateFrom(): boolean {
-        return this.requireDuplicateFrom && !this.operator.isOrgaManager;
     }
 
     private filterAccountsForCommitteeAdmins(accounts: ViewUser[]): ViewUser[] {

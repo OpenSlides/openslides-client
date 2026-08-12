@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -34,6 +35,7 @@ import { MeetingImportComponent } from './components/meeting-import/meeting-impo
         MatCheckboxModule,
         MatInputModule,
         MatSelectModule,
+        MatAutocompleteModule,
         MatIconModule,
         AccountSearchSelectorModule,
         SearchSelectorModule,
