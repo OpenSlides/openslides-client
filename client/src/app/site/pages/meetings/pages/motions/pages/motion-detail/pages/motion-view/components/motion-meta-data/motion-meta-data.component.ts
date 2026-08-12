@@ -63,6 +63,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         .get(`motions_enable_origin_motion_display`)
         .pipe(map(v => !!v));
 
+    // TODO: Use actual setting
+    public displayFutureForward$ = this.meetingSettingsService
+        .get(`motions_enable_origin_motion_display`)
+        .pipe(map(v => !!v));
+
     /**
      * @returns the current recommendation label (with extension)
      */
@@ -122,6 +127,18 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     public get originMotions$(): Observable<ViewMotion[] | ViewMeeting[]> {
+        let futureForward = false;
+        this.displayFutureForward$.subscribe(a => {
+            futureForward = a;
+        })
+        // If futureForward is true then the current meeting needs to be added and potential deriveed_motion meetings
+        // the amount of splits is  the amount of lists which need to be presented
+        for (const motion of this.motion.derived_motions) {
+            console.log(motion.meeting_id)
+            console.log(motion.meeting.name)
+
+        }
+        console.log(futureForward)
         if (this.motion.origin_id) {
             return this.motion.all_origins$.pipe(map(origins => origins?.reverse()));
         } else if (this.motion.origin_meeting_id) {

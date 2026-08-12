@@ -317,7 +317,11 @@
 @if (originMotions$ | async; as originMotions) {
     @if (originMotions.length) {
         <div>
-            <h4>{{ 'Origin' | translate }}</h4>
+            @if ((displayFutureForward$ | async)) {
+                <h4>{{ 'Sequence of deliberation' | translate }}</h4>
+            } @else {
+                <h4>{{ 'Origin' | translate }}</h4>
+            }
             <div class="origin-view">
                 @for (origin of originMotions; track origin.id; let last = $last) {
                     <div>
