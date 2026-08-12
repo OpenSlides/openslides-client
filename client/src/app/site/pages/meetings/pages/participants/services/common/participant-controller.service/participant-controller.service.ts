@@ -351,7 +351,10 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
             meeting_users: [
                 {
                     group_ids: this.validateField(participant, `group_ids`),
-                    structure_level_ids: this.validateField(participant, `structure_level_ids`),
+                    structure_level_ids:
+                        this.validateField(participant, `structure_level_ids`) === null
+                            ? undefined
+                            : this.validateField(participant, `structure_level_ids`),
                     number: this.validateField(participant, `number`),
                     vote_weight: toDecimal(this.validateField(participant, `vote_weight`), false),
                     vote_delegated_to_id: this.validateField(participant, `vote_delegated_to_id`),
@@ -365,9 +368,6 @@ export class ParticipantControllerService extends BaseMeetingControllerService<V
     }
 
     private validateField(participant: Partial<ViewUser> | Partial<User & MeetingUser>, fieldname: string): any {
-        if (fieldname === `structure_level_ids`) {
-            return participant[fieldname] ?? [];
-        }
         return typeof participant[fieldname] === `function` ? participant[fieldname]() : participant[fieldname];
     }
 }
