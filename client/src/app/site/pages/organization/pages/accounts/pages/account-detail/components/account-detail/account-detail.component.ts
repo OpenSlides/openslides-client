@@ -13,10 +13,10 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 
-import { ViewCommittee } from '../../../../../committees';
 import { getCommitteeListMinimalSubscriptionConfig } from '../../../../../committees/committees.subscription';
 import { CommitteeSortService } from '../../../../../committees/pages/committee-list/services/committee-list-sort.service/committee-sort.service';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
+import { ViewCommittee } from '../../../../../committees/view-models/view-committee';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
 type ParticipationTableData = Record<Id, ParticipationTableDataRow>;

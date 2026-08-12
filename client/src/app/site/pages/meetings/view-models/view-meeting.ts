@@ -11,37 +11,46 @@ import { ViewHistoryEntry } from '@app/gateways/repositories/history-entry/view-
 import { ViewModelRelations } from '@app/site/base/base-view-model';
 import { endOfDay, fromUnixTime, startOfDay } from 'date-fns';
 
-import { ViewCommittee } from '../../organization/pages/committees';
-import { HasOrganizationTags } from '../../organization/pages/organization-tags';
+import { ViewCommittee } from '../../organization/pages/committees/view-models/view-committee';
+import { HasOrganizationTags } from '../../organization/pages/organization-tags/view-models/has-organization-tags';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { BaseHasMeetingUsersViewModel } from '../base/base-has-meeting-user-view-model';
-import { ViewAgendaItem, ViewListOfSpeakers, ViewSpeaker, ViewTopic } from '../pages/agenda';
+import { ViewListOfSpeakers } from '../pages/agenda/modules/list-of-speakers/view-models/view-list-of-speakers';
 import { ViewPointOfOrderCategory } from '../pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
-import { ViewAssignment, ViewAssignmentCandidate } from '../pages/assignments';
-import { ViewChatGroup, ViewChatMessage } from '../pages/chat';
-import { ViewMediafile, ViewMeetingMediafile } from '../pages/mediafiles';
-import {
-    ViewMotion,
-    ViewMotionBlock,
-    ViewMotionCategory,
-    ViewMotionChangeRecommendation,
-    ViewMotionComment,
-    ViewMotionCommentSection,
-    ViewMotionState,
-    ViewMotionSubmitter,
-    ViewMotionWorkflow,
-    ViewPersonalNote,
-    ViewTag
-} from '../pages/motions';
-import { ViewMotionEditor } from '../pages/motions/modules/editors';
-import { ViewMotionSupporter } from '../pages/motions/modules/supporters';
-import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
-import { ViewGroup } from '../pages/participants';
-import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
-import { ViewOption, ViewPoll, ViewVote } from '../pages/polls';
+import { ViewSpeaker } from '../pages/agenda/modules/list-of-speakers/view-models/view-speaker';
+import { ViewTopic } from '../pages/agenda/modules/topics/view-models/view-topic';
+import { ViewAgendaItem } from '../pages/agenda/view-models/view-agenda-item';
+import { ViewAssignment } from '../pages/assignments/view-models/view-assignment';
+import { ViewAssignmentCandidate } from '../pages/assignments/view-models/view-assignment-candidate';
+import { ViewChatGroup } from '../pages/chat/view-models/view-chat-group';
+import { ViewChatMessage } from '../pages/chat/view-models/view-chat-message';
+import { ViewMediafile } from '../pages/mediafiles/view-models/view-mediafile';
+import { ViewMeetingMediafile } from '../pages/mediafiles/view-models/view-meeting-mediafile';
+import { ViewMotionCategory } from '../pages/motions/modules/categories/view-models/view-motion-category';
+import { ViewMotionChangeRecommendation } from '../pages/motions/modules/change-recommendations/view-models/view-motion-change-recommendation';
+import { ViewMotionComment } from '../pages/motions/modules/comments/view-models/view-motion-comment';
+import { ViewMotionCommentSection } from '../pages/motions/modules/comments/view-models/view-motion-comment-section';
+import { ViewMotionEditor } from '../pages/motions/modules/editors/view-models/view-motion-editor';
+import { ViewMotionBlock } from '../pages/motions/modules/motion-blocks/view-models/view-motion-block';
+import { ViewPersonalNote } from '../pages/motions/modules/personal-notes/view-models/view-personal-note';
+import { ViewMotionState } from '../pages/motions/modules/states/view-models/view-motion-state';
+import { ViewMotionSubmitter } from '../pages/motions/modules/submitters/view-models/view-motion-submitter';
+import { ViewMotionSupporter } from '../pages/motions/modules/supporters/view-models/view-motion-supporter';
+import { ViewTag } from '../pages/motions/modules/tags/view-models/view-tag';
+import { ViewMotionWorkflow } from '../pages/motions/modules/workflows/view-models/view-motion-workflow';
+import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers/view-models/view-motion-working-group-speaker';
+import { ViewMotion } from '../pages/motions/view-models/view-motion';
+import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models/view-structure-level';
+import { ViewOption } from '../pages/polls/view-models/view-option';
+import { ViewPoll } from '../pages/polls/view-models/view-poll';
 import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
 import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
-import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../pages/projectors';
+import { ViewVote } from '../pages/polls/view-models/view-vote';
+import { ViewProjection } from '../pages/projectors/view-models/view-projection';
+import { ViewProjector } from '../pages/projectors/view-models/view-projector';
+import { ViewProjectorCountdown } from '../pages/projectors/view-models/view-projector-countdown';
+import { ViewProjectorMessage } from '../pages/projectors/view-models/view-projector-message';
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;

@@ -24,11 +24,11 @@ import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-
 import { SortingListModule } from '@app/ui/modules/sorting/modules';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ViewMotionSupporter } from '../../../../../../modules/supporters';
-import { MotionSupporterControllerService } from '../../../../../../modules/supporters/services';
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
-import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service';
-import { ViewMotion } from '../../../../../../view-models';
+import { MotionSupporterControllerService } from '../../../../../../modules/supporters/services/motion-supporter-controller/motion-supporter-controller.service';
+import { ViewMotionSupporter } from '../../../../../../modules/supporters/view-models/view-motion-supporter';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
+import { ViewMotion } from '../../../../../../view-models/view-motion';
 
 type IdMap = Record<number, number>;
 

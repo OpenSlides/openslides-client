@@ -9,7 +9,7 @@ import { MeetingSettingsService } from '@app/site/pages/meetings/services/meetin
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 
-import { ViewOption } from '../../../../../polls';
+import { ViewOption } from '../../../../../polls/view-models/view-option';
 
 @Component({
     selector: `os-motion-poll-vote`,

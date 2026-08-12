@@ -15,9 +15,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, Observable, Subscription } from 'rxjs';
 
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
-import { MotionEditorControllerService } from '../../../../../../modules/editors/services';
-import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services';
-import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services';
+import { MotionEditorControllerService } from '../../../../../../modules/editors/services/motion-editor-controller/motion-editor-controller.service';
+import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services/motion-submitter-controller/motion-submitter-controller.service';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services/motion-working-group-speaker-controller/motion-working-group-speaker-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
@@ -291,6 +291,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public getPossibleRecommendations(): ViewMotionState[] {
         const allStates = this.motion.state?.workflow?.states || [];
         return allStates.filter(state => state.recommendation_label).sort((a, b) => a.weight - b.weight);
+    }
+
+    public getSortedNextStates(states: ViewMotionState[]): ViewMotionState[] {
+        return states.sort((a, b) => a.weight - b.weight);
     }
 
     public getMeetingName(origin: ViewMotion | ViewMeeting): string {

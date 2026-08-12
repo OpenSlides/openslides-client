@@ -1,24 +1,9 @@
-import { inject, Service } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { Service } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-import { CollectionMapperService } from '../../site/services/collection-mapper.service';
-import { DataStoreService } from '../../site/services/data-store.service';
-import { RelationManagerService } from '../../site/services/relation-manager.service';
-import { ViewModelStoreService } from '../../site/services/view-model-store.service';
-import { ActionService } from '../actions';
 
 @Service()
 export class RepositoryServiceCollectorService {
     public collectionToKeyUpdatesObservableMap: Record<string, BehaviorSubject<string[]>> = {};
-
-    public DS = inject(DataStoreService);
-    public actionService = inject(ActionService);
-    public collectionMapperService = inject(CollectionMapperService);
-    public viewModelStoreService = inject(ViewModelStoreService);
-    public translate = inject(TranslateService);
-    public relationManager = inject(RelationManagerService);
-    // public errorService: ErrorService
 
     /**
      * Allows repositories to register if there have been updates on a certain key of their model,

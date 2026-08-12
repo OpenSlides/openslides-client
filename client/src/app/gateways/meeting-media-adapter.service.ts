@@ -1,8 +1,8 @@
 import { inject, Service } from '@angular/core';
 
 import { Id } from '../domain/definitions/key-types';
-import { ViewMediafile } from '../site/pages/meetings/pages/mediafiles';
-import { ActionService } from './actions';
+import { ViewMediafile } from '../site/pages/meetings/pages/mediafiles/view-models/view-mediafile';
+import { ActionService } from './actions/action.service';
 
 type MediaAdapterActionParameters = ({ action: `set`; mediafile: ViewMediafile } | { action: `unset` }) & {
     type: `logo` | `font`;

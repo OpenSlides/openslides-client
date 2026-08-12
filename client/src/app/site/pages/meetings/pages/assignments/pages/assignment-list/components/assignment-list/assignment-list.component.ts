@@ -13,7 +13,7 @@ import { getAssignmentDetailSubscriptionConfig } from '../../../../assignments.s
 import { AssignmentPhases } from '../../../../definitions/index';
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
 import { AssignmentExportService } from '../../../../services/assignment-export.service';
-import { ViewAssignment } from '../../../../view-models';
+import { ViewAssignment } from '../../../../view-models/view-assignment';
 import { AssignmentFilterListService } from '../../services/assignment-filter-list.service';
 import { AssignmentSortListService } from '../../services/assignment-sort-list.service';
 

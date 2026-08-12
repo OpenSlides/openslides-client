@@ -1,7 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
-import { fadeInAnim } from '@app/infrastructure/animations';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewEncapsulation } from '@angular/core';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
-import { TranslateService } from '@ngx-translate/core';
 
 import { ApplauseService } from '../../../../services/applause.service';
 
@@ -9,7 +7,6 @@ import { ApplauseService } from '../../../../services/applause.service';
     selector: `os-applause-bar-display`,
     templateUrl: `./applause-bar-display.component.html`,
     styleUrls: [`./applause-bar-display.component.scss`],
-    animations: [fadeInAnim],
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     standalone: false
@@ -19,20 +16,19 @@ export class ApplauseBarDisplayComponent extends BaseMeetingComponent {
 
     private level = 0;
 
-    public constructor(
-        protected override translate: TranslateService,
-        cd: ChangeDetectorRef,
-        private applauseService: ApplauseService
-    ) {
+    private cd = inject(ChangeDetectorRef);
+    private applauseService = inject(ApplauseService);
+
+    public constructor() {
         super();
         this.subscriptions.push(
-            applauseService.applauseLevelObservable.subscribe(applauseLevel => {
+            this.applauseService.applauseLevelObservable.subscribe(applauseLevel => {
                 this.level = applauseLevel || 0;
                 this.percent = this.applauseService.getApplauseQuote(this.level) * 100;
-                cd.markForCheck();
+                this.cd.markForCheck();
             }),
             this.meetingSettingsService.get(`applause_type`).subscribe(() => {
-                cd.markForCheck();
+                this.cd.markForCheck();
             })
         );
     }

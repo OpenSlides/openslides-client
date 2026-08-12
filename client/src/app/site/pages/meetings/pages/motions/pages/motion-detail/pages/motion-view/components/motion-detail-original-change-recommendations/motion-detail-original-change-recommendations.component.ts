@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Permission } from '@app/domain/definitions/permission';
 import { ModificationType } from '@app/domain/models/motions/motions.constants';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { LineRange } from '@app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from '@app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
@@ -20,7 +20,7 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { filter, firstValueFrom } from 'rxjs';
 
 import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 
 /**
  * This component displays either the original motion text or the original amendment diff text

@@ -25,7 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
-import { ViewCommittee } from '../../../../../../view-models';
+import { ViewCommittee } from '../../../../../../view-models/view-committee';
 
 const ADD_MEETING_LABEL = _(`New meeting`);
 const EDIT_MEETING_LABEL = _(`Edit meeting`);

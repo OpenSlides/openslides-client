@@ -8,8 +8,8 @@ import { UserRepositoryService } from '@app/gateways/repositories/users';
 import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
 import { ViewUser } from '../../view-models/view-user';
-import { ViewGroup } from './modules';
-import { ViewStructureLevel } from './pages/structure-levels/view-models';
+import { ViewGroup } from './modules/groups/view-models/view-group';
+import { ViewStructureLevel } from './pages/structure-levels/view-models/view-structure-level';
 
 export const ParticipantsAppConfig: AppConfig = {
     name: `users`,

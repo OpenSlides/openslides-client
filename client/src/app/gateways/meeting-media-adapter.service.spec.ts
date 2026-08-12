@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
 import { FONT_PLACES, LOGO_PLACES } from '../domain/models/mediafiles/mediafile.constants';
-import { ViewMediafile } from '../site/pages/meetings/pages/mediafiles';
+import { ViewMediafile } from '../site/pages/meetings/pages/mediafiles/view-models/view-mediafile';
 import { ActionService } from './actions/action.service';
 import { ActionRequest } from './actions/action-utils';
 import { MeetingMediaAdapterService } from './meeting-media-adapter.service';
-import { MeetingAction } from './repositories/meetings';
+import { MeetingAction } from './repositories/meetings/meeting-action';
 
 class MockAction<T> {
     public constructor(

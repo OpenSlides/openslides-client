@@ -3,23 +3,18 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
 import { Action } from '@app/gateways/actions';
-import { MotionWorkflowRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionWorkflowRepositoryService } from '@app/gateways/repositories/motions/motion-workflow-repository.service';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
-import { ViewMotion } from '../../../../view-models';
-import { ViewMotionState } from '../../../states';
-import { ViewMotionWorkflow } from '../../view-models';
+import { ViewMotion } from '../../../../view-models/view-motion';
+import { ViewMotionState } from '../../../states/view-models/view-motion-state';
+import { ViewMotionWorkflow } from '../../view-models/view-motion-workflow';
 
 @Service()
 export class MotionWorkflowControllerService extends BaseMeetingControllerService<ViewMotionWorkflow, MotionWorkflow> {
-    protected override repo: MotionWorkflowRepositoryService;
+    protected repo: MotionWorkflowRepositoryService = inject(MotionWorkflowRepositoryService);
 
-    public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(MotionWorkflowRepositoryService);
-        super(controllerServiceCollector, MotionWorkflow, repo);
-    }
+    public baseModelCtor = MotionWorkflow;
 
     public create(workflow: Partial<MotionWorkflow>): Promise<Identifiable> {
         return this.repo.create(workflow);

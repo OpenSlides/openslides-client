@@ -3,22 +3,17 @@ import { Action } from '@app/gateways/actions';
 import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { Ids } from '../../../../../../domain/definitions/key-types';
-import { Identifiable } from '../../../../../../domain/interfaces';
+import { Identifiable } from '../../../../../../domain/interfaces/identifiable';
 import { Committee } from '../../../../../../domain/models/comittees/committee';
 import { CommitteeRepositoryService } from '../../../../../../gateways/repositories/committee-repository.service';
 import { BaseController } from '../../../../../base/base-controller';
-import { ControllerServiceCollectorService } from '../../../../../services/controller-service-collector.service';
-import { ViewCommittee } from '../view-models';
+import { ViewCommittee } from '../view-models/view-committee';
 
 @Service()
 export class CommitteeControllerService extends BaseController<ViewCommittee, Committee> {
-    protected override repo: CommitteeRepositoryService;
+    protected repo: CommitteeRepositoryService = inject(CommitteeRepositoryService);
 
-    public constructor() {
-        const repositoryServiceCollector = inject(ControllerServiceCollectorService);
-        const repo = inject(CommitteeRepositoryService);
-        super(repositoryServiceCollector, Committee, repo);
-    }
+    public baseModelCtor = Committee;
 
     public bulkForwardToCommittees(committees: ViewCommittee[], committeeIds: Ids): Promise<void> {
         return this.repo.bulkForwardToCommittees(committees, committeeIds);
