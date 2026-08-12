@@ -59,7 +59,6 @@ export class OrganizationSettingsComponent extends BaseComponent {
             this.controller.getViewModelObservable(ORGANIZATION_ID).subscribe(orga => {
                 this._currentOrgaSettings = orga;
                 if (orga) {
-                    console.log(orga, !this.orgaSettingsForm);
                     if (!this.orgaSettingsForm) {
                         this.orgaSettingsForm = this.createForm();
                     }
@@ -150,7 +149,6 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 : null;
         }
         for (const key of Object.keys(payload)) {
-            console.log(key, this.orgaSettingsForm.get(key).pristine);
             if (this.orgaSettingsForm.get(key).pristine) {
                 delete payload[key];
             }
@@ -179,7 +177,6 @@ export class OrganizationSettingsComponent extends BaseComponent {
             this._ssoConfigRows = attrMapping.split(`\n`).length;
         }
 
-        console.log(patchMeeting);
         this.orgaSettingsForm!.patchValue(patchMeeting);
     }
 }
