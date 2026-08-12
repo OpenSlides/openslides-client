@@ -195,11 +195,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     public async onSubmit(): Promise<void> {
-        const { ...payload }: any = this.meetingForm!.value;
-        for (const key of Object.keys(payload)) {
-            console.log(this.meetingForm.get(key).pristine, key);
-        }
-
         if (this.isCreateView) {
             await this.doCreateMeeting();
         } else {
