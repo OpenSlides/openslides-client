@@ -5,7 +5,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { GlobalSpinnerModule } from '@app/site/modules/global-spinner';
-import { provideTranslateService, TranslateLoader, TranslateParser } from '@ngx-translate/core';
+import { CustomMissingTranslationHandler } from '@app/site/modules/translations/missing-translation-handler';
+import {
+    provideMissingTranslationHandler,
+    provideTranslateService,
+    TranslateLoader,
+    TranslateParser
+} from '@ngx-translate/core';
 
 import { environment } from '../../environments/environment';
 import { CustomTranslationService } from '../site/modules/translations/custom-translation.service';
@@ -66,6 +72,7 @@ if (isFirefox && `serviceWorker` in navigator) {
                 useClass: PruningTranslationLoader,
                 deps: [HttpClient]
             },
+            missingTranslationHandler: provideMissingTranslationHandler(CustomMissingTranslationHandler),
             parser: {
                 provide: TranslateParser,
                 useClass: CustomTranslationParser,
