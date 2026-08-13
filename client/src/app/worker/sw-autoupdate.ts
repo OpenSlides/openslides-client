@@ -101,7 +101,7 @@ function openConnection(
         // Action worker subscriptions should not be bundeled as they may introduce side effects
         // when added to subscriptions with a lot of fields as they constantly receive data
         if (description.startsWith(`action_worker`)) {
-            return `sequentialnumbermapping`;
+            return null;
         }
 
         return `other`;
