@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { ListOfSpeakers } from '@app/domain/models/list-of-speakers/list-of-speakers';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { hasListOfSpeakers, ViewListOfSpeakers } from '@app/site/pages/meetings/pages/agenda';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { SpeakerAction } from '../speakers/speaker.action';
 import { ListOfSpeakersAction } from './list-of-speakers.action';
 
@@ -13,13 +12,9 @@ import { ListOfSpeakersAction } from './list-of-speakers.action';
  *
  * Documentation partially provided in {@link BaseRepository}
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ListOfSpeakersRepositoryService extends BaseMeetingRelatedRepository<ViewListOfSpeakers, ListOfSpeakers> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, ListOfSpeakers);
-    }
+    public baseModelCtor = ListOfSpeakers;
 
     public getVerboseName = (plural = false): string =>
         this.translate.instant(plural ? `Lists of speakers` : `List of speakers`);

@@ -3,21 +3,16 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionState } from '@app/domain/models/motions/motion-state';
 import { Action } from '@app/gateways/actions';
-import { MotionStateRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionStateRepositoryService } from '@app/gateways/repositories/motions/motion-state-repository.service';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
-import { ViewMotionState } from '../../view-models';
+import { ViewMotionState } from '../../view-models/view-motion-state';
 
 @Service()
 export class MotionStateControllerService extends BaseMeetingControllerService<ViewMotionState, MotionState> {
-    protected override repo: MotionStateRepositoryService;
+    protected repo: MotionStateRepositoryService = inject(MotionStateRepositoryService);
 
-    public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(MotionStateRepositoryService);
-        super(controllerServiceCollector, MotionState, repo);
-    }
+    public baseModelCtor = MotionState;
 
     public create(state: Partial<MotionState>): Promise<Identifiable> {
         return this.repo.create(state);

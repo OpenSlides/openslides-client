@@ -8,9 +8,10 @@ import { SortingListComponent } from '@app/ui/modules/sorting/modules/sorting-li
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 
-import { ViewMotionState, ViewMotionWorkflow } from '../../../../modules';
-import { MotionStateControllerService } from '../../../../modules/states/services';
-import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
+import { MotionStateControllerService } from '../../../../modules/states/services/motion-state-controller.service/motion-state-controller.service';
+import { ViewMotionState } from '../../../../modules/states/view-models/view-motion-state';
+import { MotionWorkflowControllerService } from '../../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
+import { ViewMotionWorkflow } from '../../../../modules/workflows/view-models/view-motion-workflow';
 import { getMotionWorkflowDetailSubscriptionConfig } from '../../../../motions.subscription';
 
 @Component({

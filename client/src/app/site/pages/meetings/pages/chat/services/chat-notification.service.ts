@@ -3,7 +3,7 @@ import { Id } from '@app/domain/definitions/key-types';
 import { StorageService } from '@app/gateways/storage.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ViewChatMessage } from '../view-models';
+import { ViewChatMessage } from '../view-models/view-chat-message';
 import { ChatMessageControllerService } from './chat-message-controller.service';
 
 export type NotificationAmountEvent = Record<number, BehaviorSubject<number>>;

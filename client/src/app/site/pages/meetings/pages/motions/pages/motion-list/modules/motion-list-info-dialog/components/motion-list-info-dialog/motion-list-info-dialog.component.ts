@@ -5,11 +5,11 @@ import { ViewMotionBlock, ViewMotionCategory, ViewMotionState, ViewTag } from '@
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { Observable } from 'rxjs';
 
-import { MotionCategoryControllerService } from '../../../../../../modules/categories/services/motion-category-controller.service';
-import { MotionBlockControllerService } from '../../../../../../modules/motion-blocks/services/motion-block-controller.service';
-import { TagControllerService } from '../../../../../../modules/tags/services/tag-controller.service';
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
-import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service';
+import { MotionCategoryControllerService } from '../../../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionBlockControllerService } from '../../../../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
+import { TagControllerService } from '../../../../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { MotionListInfoDialogConfig } from '../../definitions';
 
 @Component({

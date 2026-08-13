@@ -12,8 +12,8 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service';
+import { MotionCategoryControllerService } from '../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 
 /**
  * Detail component to display one motion block

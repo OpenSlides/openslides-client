@@ -11,7 +11,7 @@ import {
     QueryParams,
     ResponseType
 } from '../infrastructure/definitions/http';
-import { ProcessError } from '../infrastructure/errors';
+import { ProcessError } from '../infrastructure/errors/process.error';
 import { toBase64 } from '../infrastructure/utils/functions';
 import { ActionWorkerWatchService } from './action-worker-watch/action-worker-watch.service';
 import { ErrorMapService } from './error-mapping/error-map.service';

@@ -16,9 +16,10 @@ import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { GroupControllerService, ViewGroup } from '../../../../modules';
-import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
-import { ViewStructureLevel } from '../../../structure-levels/view-models';
+import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
+import { ViewGroup } from '../../../../modules/groups/view-models/view-group';
+import { ParticipantControllerService } from '../../../../services/common/participant-controller.service/participant-controller.service';
+import { ViewStructureLevel } from '../../../structure-levels/view-models/view-structure-level';
 
 const FEMALE_ID = 2;
 const MALE_ID = 1;

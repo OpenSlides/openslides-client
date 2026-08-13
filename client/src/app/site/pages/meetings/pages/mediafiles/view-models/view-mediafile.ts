@@ -11,7 +11,7 @@ import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeeting } from '../../../view-models/view-meeting';
-import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
+import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers/view-models/has-list-of-speakers';
 import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
 import { FONT_MIMETYPES, IMAGE_MIMETYPES, PDF_MIMETYPES } from '../definitions';
 import { VIDEO_MIMETYPES } from '../definitions/index';

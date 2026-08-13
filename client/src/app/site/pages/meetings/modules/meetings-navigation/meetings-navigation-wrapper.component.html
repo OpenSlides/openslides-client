@@ -4,9 +4,10 @@
         <div class="main-nav">
             @if (showMeetingNav) {
                 <a
+                    animate.enter="nav-slide-in"
+                    animate.leave="nav-slide-out"
                     class="foreground-icon nav-item dashboard-entry"
                     mat-menu-item
-                    [@navItemAnim]
                     [routerLink]="['/']"
                     (click)="mobileAutoCloseNav()"
                 >
@@ -19,10 +20,11 @@
                 <span>
                     <a
                         *osPerms="entry.permission"
+                        animate.enter="nav-slide-in"
+                        animate.leave="nav-slide-out"
                         class="foreground-icon nav-item"
                         mat-menu-item
                         routerLinkActive="active"
-                        [@navItemAnim]
                         [ngStyle]="getCustomStyleForEntry(entry)"
                         [routerLink]="entry.route"
                         [routerLinkActiveOptions]="{ exact: isRouteExact(entry.route) }"
@@ -39,11 +41,12 @@
             ) {
                 @if (chat.canSee) {
                     <a
+                        animate.enter="nav-slide-in"
+                        animate.leave="nav-slide-out"
                         class="foreground-icon nav-item"
                         mat-menu-item
                         routerLink="chat"
                         routerLinkActive="active"
-                        [@navItemAnim]
                         (click)="mobileAutoCloseNav()"
                     >
                         <mat-icon

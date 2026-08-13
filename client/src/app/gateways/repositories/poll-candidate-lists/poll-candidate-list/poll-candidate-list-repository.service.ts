@@ -1,11 +1,10 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { PollCandidateList } from '@app/domain/models/poll-candidate-lists/poll-candidate-list';
 import { ViewPollCandidateList } from '@app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { DEFAULT_FIELDSET, Fieldsets } from '@app/site/services/model-request-builder';
 import { _ } from '@ngx-translate/core';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 
 /**
  * Repository service for the PollCandidateList.
@@ -22,10 +21,7 @@ export class PollCandidateListRepositoryService extends BaseMeetingRelatedReposi
     ViewPollCandidateList,
     PollCandidateList
 > {
-    public constructor() {
-        const repoServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repoServiceCollector, PollCandidateList);
-    }
+    public baseModelCtor = PollCandidateList;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `PollCandidateLists` : `PollCandidateList`);
     public getTitle = (): string => _(`Confirmation of the nomination list`);

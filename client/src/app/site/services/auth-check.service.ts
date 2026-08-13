@@ -10,8 +10,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { ActiveMeetingService } from '../pages/meetings/services/active-meeting.service';
 import { MeetingSettingsService } from '../pages/meetings/services/meeting-settings.service';
 import { ViewMeeting } from '../pages/meetings/view-models/view-meeting';
-import { AutoupdateService } from './autoupdate';
-import { ModelRequestBuilderService } from './model-request-builder';
+import { AutoupdateService } from './autoupdate/autoupdate.service';
+import { ModelRequestBuilderService } from './model-request-builder/model-request-builder.service';
 import { OpenSlidesRouterService } from './openslides-router.service';
 import { OperatorService } from './operator.service';
 

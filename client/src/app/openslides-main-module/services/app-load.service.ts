@@ -13,7 +13,7 @@ import { HomeAppConfig } from '@app/site/pages/meetings/pages/home/home.config';
 import { MediafileAppConfig } from '@app/site/pages/meetings/pages/mediafiles/mediafiles.config';
 import { MeetingMediafileAppConfig } from '@app/site/pages/meetings/pages/mediafiles/meeting-mediafiles.config';
 import { MeetingSettingsAppConfig } from '@app/site/pages/meetings/pages/meeting-settings/meeting-settings.config';
-import { MotionsAppConfig } from '@app/site/pages/meetings/pages/motions';
+import { MotionsAppConfig } from '@app/site/pages/meetings/pages/motions/motions.config';
 import { PollsAppConfig } from '@app/site/pages/meetings/pages/polls/polls.config';
 import { ProjectorAppConfig } from '@app/site/pages/meetings/pages/projectors/projector.config';
 import { MainMenuService } from '@app/site/pages/meetings/services/main-menu.service';

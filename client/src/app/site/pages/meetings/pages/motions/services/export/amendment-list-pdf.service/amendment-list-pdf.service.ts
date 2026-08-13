@@ -3,8 +3,8 @@ import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentTable, TableCell } from 'pdfmake/interfaces';
 
-import { ViewMotion } from '../../../view-models';
-import { MotionControllerService } from '../../common/motion-controller.service';
+import { ViewMotion } from '../../../view-models/view-motion';
+import { MotionControllerService } from '../../common/motion-controller.service/motion-controller.service';
 
 /**
  * Creates a PDF list for amendments

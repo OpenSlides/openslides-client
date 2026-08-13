@@ -25,7 +25,7 @@ import {
 import { MEETING_RELATED_FORM_CONTROLS } from '../../../../../../services/common/participant-controller.service/participant-controller.service';
 import { ParticipantListSortService } from '../../../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
-import { ViewStructureLevel } from '../../../../../structure-levels/view-models';
+import { ViewStructureLevel } from '../../../../../structure-levels/view-models/view-structure-level';
 
 @Component({
     selector: `os-participant-create-wizard`,
