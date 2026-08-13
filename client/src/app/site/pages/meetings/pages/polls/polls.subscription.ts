@@ -5,7 +5,7 @@ import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription
 import { BaseSimplifiedModelRequest } from '@app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../../view-models/view-meeting';
-import { ViewPoll } from './view-models';
+import { ViewPoll } from './view-models/view-poll';
 
 export const POLL_LIST_SUBSCRIPTION = `poll_list`;
 export const POLL_DETAIL_SUBSCRIPTION = `poll_detail`;

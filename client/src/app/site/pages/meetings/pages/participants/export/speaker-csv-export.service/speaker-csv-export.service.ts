@@ -11,7 +11,7 @@ import { format, fromUnixTime } from 'date-fns';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
 
 import { MeetingCsvExportForBackendService } from '../../../../services/export/meeting-csv-export-for-backend.service';
-import { ViewSpeaker } from '../../../agenda';
+import { ViewSpeaker } from '../../../agenda/modules/list-of-speakers/view-models/view-speaker';
 
 export const speakerHeadersAndVerboseNames = {
     user_title: _(`Title`),

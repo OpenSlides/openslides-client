@@ -5,7 +5,7 @@ import { ViewMotionWorkflow } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
 
-import { MotionStateControllerService } from '../../../../modules/states/services';
+import { MotionStateControllerService } from '../../../../modules/states/services/motion-state-controller.service/motion-state-controller.service';
 
 @Service()
 export class WorkflowExportService {

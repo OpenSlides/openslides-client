@@ -17,7 +17,9 @@ import { BackendImportSummary } from '@app/ui/modules/import-list/definitions/ba
 import { BehaviorSubject, delay, find, map, Observable, of } from 'rxjs';
 
 import { ScrollingTableComponent } from '../../../scrolling-table/components/scrolling-table/scrolling-table.component';
-import { FilterListService, SearchService, SortListService } from '../../definitions';
+import { FilterListService } from '../../definitions/filter-service';
+import { SearchService } from '../../definitions/search-service';
+import { SortListService } from '../../definitions/sort-service';
 import { SortFilterBarComponent } from '../sort-filter-bar/sort-filter-bar.component';
 
 @Component({

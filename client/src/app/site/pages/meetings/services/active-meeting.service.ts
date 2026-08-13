@@ -13,7 +13,7 @@ import { ACTIVE_MEETING_SUBSCRIPTION, getActiveMeetingSubscriptionConfig } from 
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ArchiveStatusService } from './archive-status.service';
 import { MeetingControllerService } from './meeting-controller.service';
-import { MeetingSettingsDefinitionService } from './meeting-settings-definition.service';
+import { MeetingSettingsDefinitionService } from './meeting-settings-definition.service/meeting-settings-definition.service';
 
 @Service()
 export class ActiveMeetingService {

@@ -1,18 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { Tag } from '@app/domain/models/tag/tag';
 import { ViewTag } from '@app/site/pages/meetings/pages/motions';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { TagAction } from './tag.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class TagRepositoryService extends BaseMeetingRelatedRepository<ViewTag, Tag> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, Tag);
+    public baseModelCtor = Tag;
+
+    public constructor() {
+        super();
         this.initSorting();
     }
 

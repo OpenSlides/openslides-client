@@ -7,7 +7,7 @@ import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { _ } from '@ngx-translate/core';
 
-import { MotionPollService } from '../../services';
+import { MotionPollService } from '../../services/motion-poll.service/motion-poll.service';
 
 export const MotionPollMethodsVerbose = {
     YN: _(`Yes/No`),

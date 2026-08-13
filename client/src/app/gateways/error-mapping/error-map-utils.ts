@@ -1,8 +1,8 @@
 import { _ } from '@ngx-translate/core';
 
-import { AgendaItemAction } from '../repositories/agenda';
-import { MeetingAction } from '../repositories/meetings';
-import { MotionAction } from '../repositories/motions';
+import { AgendaItemAction } from '../repositories/agenda/agenda-item.action';
+import { MeetingAction } from '../repositories/meetings/meeting-action';
+import { MotionAction } from '../repositories/motions/motion-repository.service/motion.action';
 import { UserAction } from '../repositories/users/user-action';
 
 export class MapError {

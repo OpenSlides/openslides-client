@@ -19,7 +19,7 @@ import { MatTabChangeEvent, MatTabGroup, MatTabsModule } from '@angular/material
 import { ActivatedRoute } from '@angular/router';
 import { Settings } from '@app/domain/models/meetings/meeting';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from '@app/domain/models/motions/motions.constants';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { StorageService } from '@app/gateways/storage.service';
 import { BaseComponent } from '@app/site/base/base.component';
 import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
@@ -33,15 +33,18 @@ import { Observable, pairwise, Subscription } from 'rxjs';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
 import { getMotionDetailSubscriptionConfig } from '../../../../motions.subscription';
-import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
-import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service';
+import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
+import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
 import {
     ExportFileFormat,
     InfoToExport,
     motionImportExportHeaderOrder,
     noMetaData
 } from '../../../../services/export/definitions';
-import { MotionExportInfo, MotionExportService } from '../../../../services/export/motion-export.service';
+import {
+    MotionExportInfo,
+    MotionExportService
+} from '../../../../services/export/motion-export.service/motion-export.service';
 
 interface SavedSelections {
     tab_index: number;
