@@ -42,16 +42,44 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
 
     public readonly hasLoaded = new Deferred<boolean>();
 
+    /**
+     * Determines if the assignment is new
+     */
     public isCreating = false;
+
+    /**
+     * If true, the page is supposed to be in 'edit' mode (i.e. the assignment itself can be edited)
+     */
     public isEditing = false;
+
+    /**
+     * Array containing the currently selected candidates
+     */
     public candidateUserIds: number[] = [];
 
+    /**
+     * The different phases of an assignment. Info is fetched from server
+     */
     public phaseOptions = AssignmentPhases;
 
+    /**
+     * Form for editing the assignment itself (TODO mergeable with candidates?)
+     */
     public assignmentForm: UntypedFormGroup;
 
+    /**
+     * Used in the search Value selector to assign tags
+     */
     public tagsObserver = new BehaviorSubject<ViewTag[]>([]);
+
+    /**
+     * Used for the search value selector
+     */
     public mediafilesObserver = new BehaviorSubject<ViewMediafile[]>([]);
+
+    /**
+     * Used in the search Value selector to assign an agenda item
+     */
     public agendaObserver = new BehaviorSubject<ViewAgendaItem[]>([]);
 
     /**
@@ -67,20 +95,34 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this.checkSortOrder();
     }
 
+    /**
+     * Returns the target assignment.
+     */
     public get assignment(): ViewAssignment {
         return this._assignment!;
     }
 
+    /**
+     * Returns the target assignment candidates.
+     */
     public get assignmentCandidates(): ViewAssignmentCandidate[] {
         return this._assignmentCandidates;
     }
 
+    /**
+     * Check if the operator is a candidate
+     *
+     * @returns true if they are in the list of candidates
+     */
     public get isSelfCandidate(): boolean {
         return this.assignment.candidates.find(candidate => candidate.user_id === this.operator.operatorId)
             ? true
             : false;
     }
 
+    /**
+     * Checks if there are any tags available
+     */
     public get tagsAvailable(): boolean {
         return this.tagsObserver.getValue().length > 0;
     }
@@ -89,6 +131,9 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         return this.assignment.attachment_meeting_mediafiles.sort((a, b) => a.getTitle().localeCompare(b.getTitle()));
     }
 
+    /**
+     * Current instance of ViewAssignment. Accessed via getter and setter.
+     */
     private _assignment: ViewAssignment | null = null;
     private _assignmentCandidates: ViewAssignmentCandidate[] = [];
 
@@ -202,6 +247,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
+    /**
+     * Sets/unsets the 'edit assignment' mode
+     *
+     * @param newMode
+     */
     public setEditMode(newMode: boolean): void {
         if (newMode && this.hasPerms(`manage`)) {
             this.patchForm(this.assignment);
@@ -226,6 +276,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this.pollDialog.open(this.getDialogData(pollId));
     }
 
+    /**
+     * Adds the user from the candidates form to the list of candidates
+     *
+     * @param userId the id of a ViewUser
+     */
     public async addCandidate(data: UserSelectionData): Promise<void> {
         if (data.userId && typeof data.userId === `number`) {
             const meetingUserId =
@@ -238,11 +293,19 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
+    /**
+     * Removes a user from the list of candidates
+     *
+     * @param candidate A ViewAssignmentUser currently in the list of related users
+     */
     public async removeCandidate(candidate: ViewAssignmentCandidate): Promise<void> {
         await this.assignmentCandidateRepo.delete(candidate);
         this.updateCandidatesArray();
     }
 
+    /**
+     * Adds the operator to list of candidates
+     */
     public async addSelf(): Promise<void> {
         if (!this.operator.isInMeeting(this.activeMeetingIdService.meetingId)) {
             const infoMessage = this.translate.instant(`Action not possible. You have to be part of the meeting.`);
@@ -253,6 +316,9 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
+    /**
+     * Removes the operator from list of candidates
+     */
     public async removeSelf(): Promise<void> {
         const candidate = this.assignment.candidates.find(c => c.user_id === this.operator.operatorId);
         if (candidate) {
@@ -274,6 +340,9 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         await this.onSortingChange(sorted, false);
     }
 
+    /**
+     * Triggers an update of the sorting.
+     */
     public async onSortingChange(candidates: Selectable[], manual = true): Promise<void> {
         if (manual) {
             this.updateSort(undefined, undefined);
@@ -281,6 +350,9 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         await this.assignmentCandidateRepo.sort(this.assignment, candidates);
     }
 
+    /**
+     * Handler for deleting the assignment
+     */
     public async onDeleteAssignmentButton(): Promise<void> {
         const title = this.translate.instant(`Are you sure you want to delete this election?`);
         const content = this.assignment.getTitle();
@@ -291,6 +363,13 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
+    /**
+     * Handler for changing the phase of an assignment
+     *
+     * TODO check permissions and conditions
+     *
+     * @param value the phase to set
+     */
     public async onSetPhaseButton(value: AssignmentPhase): Promise<void> {
         await this.assignmentRepo.update({ phase: value }, this.assignment);
     }
@@ -337,6 +416,9 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         );
     }
 
+    /**
+     * Save the current state of the assignment
+     */
     private async saveAssignment(): Promise<void> {
         if (this.isCreating) {
             this.createAssignment();
@@ -345,6 +427,9 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
+    /**
+     * Creates an assignment. Calls the "patchValues" function
+     */
     private async createAssignment(): Promise<void> {
         try {
             const response = await this.assignmentRepo.create(this.assignmentForm.value);
@@ -354,6 +439,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
+    /**
+     * Changes/updates the assignment form values
+     *
+     * @param assignment
+     */
     private patchForm(assignment: ViewAssignment): void {
         const contentPatch: Record<string, any> = {};
         Object.keys(this.assignmentForm.controls).forEach(control => {
