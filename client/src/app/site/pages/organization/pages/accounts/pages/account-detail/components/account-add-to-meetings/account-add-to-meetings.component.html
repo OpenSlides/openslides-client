@@ -20,9 +20,11 @@
         <div class="assign-meetings-element">
             <h2>{{ 'Add to meetings' | translate }}</h2>
             <div class="assign-meetings-subtext">
-                <p translate>
-                    Please select your target meetings and enter the name of an existing group which should be assigned
-                    to the account in each meeting.
+                <p>
+                    {{
+                        'Please select your target meetings and enter the name of an existing group which should ' +
+                            'be assigned to the account in each meeting.' | translate
+                    }}
                 </p>
                 <p>{{ 'Important: New groups are not created.' | translate }}</p>
                 <br />

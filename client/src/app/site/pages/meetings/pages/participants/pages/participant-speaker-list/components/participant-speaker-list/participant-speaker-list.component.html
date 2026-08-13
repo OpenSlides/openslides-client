@@ -90,7 +90,7 @@
             }
             @if (speaker.end_time) {
                 <div class="spacer-top-5">
-                    <os-icon-container icon="schedule" translate>
+                    <os-icon-container icon="schedule">
                         <os-countdown-time
                             [countdown]="{ running: false, countdown_time: speaker.speakingTime }"
                             [unstyled]="true"
