@@ -6,7 +6,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>New participant</h1>
+        <h1 class="mock-h2">{{ 'New participant' | translate }}</h1>
     </div>
 
     <!-- Next-button -->
@@ -88,7 +88,7 @@
                                     <mat-icon>help</mat-icon>
                                 </button>
                                 @if (createUserForm.controls['username'].errors?.['noSpace']) {
-                                    <mat-error translate>Username may not contain spaces</mat-error>
+                                    <mat-error>{{ 'Username may not contain spaces' | translate }}</mat-error>
                                 }
                             </mat-form-field>
                         </div>

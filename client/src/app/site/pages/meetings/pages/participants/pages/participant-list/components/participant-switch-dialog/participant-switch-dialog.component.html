@@ -1,4 +1,4 @@
-<h2 mat-dialog-title translate>Swap mandates</h2>
+<h2 mat-dialog-title>{{ 'Swap mandates' | translate }}</h2>
 
 <mat-dialog-content>
     <table class="participant-switch-table">
@@ -10,7 +10,7 @@
         </colgroup>
         <tr>
             <th>
-                <span translate>Name</span>
+                <span>{{ 'Name' | translate }}</span>
             </th>
             <td colSpan="2">
                 <span>{{ left.short_name }}</span>
@@ -25,7 +25,7 @@
         </tr>
         <tr>
             <th>
-                <span translate>Structure level</span>
+                <span>{{ 'Structure level' | translate }}</span>
             </th>
             <td colSpan="2">
                 <span>{{ left.structure_level() }}</span>
@@ -41,7 +41,7 @@
         </tr>
         <tr>
             <th>
-                <span translate>Groups</span>
+                <span>{{ 'Groups' | translate }}</span>
             </th>
             <td class="red-warning-text">
                 <os-comma-separated-listing [list]="left.groups()"></os-comma-separated-listing>
@@ -60,7 +60,7 @@
         </tr>
         <tr>
             <th>
-                <span translate>Participant number</span>
+                <span>{{ 'Participant number' | translate }}</span>
             </th>
             <td class="red-warning-text">
                 <span>{{ left.number() }}</span>
@@ -88,9 +88,9 @@
 
 <mat-dialog-actions>
     <button mat-button [disabled]="!right" [matDialogClose]="{ leftUser: left, rightUser: right }">
-        <span translate>Switch</span>
+        <span>{{ 'Switch' | translate }}</span>
     </button>
     <button mat-button [matDialogClose]="false">
-        <span translate>Cancel</span>
+        <span>{{ 'Cancel' | translate }}</span>
     </button>
 </mat-dialog-actions>

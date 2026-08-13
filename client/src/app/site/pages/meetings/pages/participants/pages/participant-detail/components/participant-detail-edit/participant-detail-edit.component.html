@@ -98,7 +98,9 @@
                                 </mat-error>
                             }
                             @if (isVoteWeightError && form.controls['vote_weight'].value <= 0) {
-                                <mat-error translate>Please select a vote weight greater than zero.</mat-error>
+                                <mat-error>
+                                    {{ 'Please select a vote weight greater than zero.' | translate }}
+                                </mat-error>
                             }
                         </mat-form-field>
                     }

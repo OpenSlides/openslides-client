@@ -1,7 +1,7 @@
 <os-head-bar [nav]="false">
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Contributions</h1>
+        <h1 class="mock-h2">{{ 'Contributions' | translate }}</h1>
     </div>
 
     <!-- Menu -->
@@ -40,7 +40,7 @@
             }
             @if (speaker.point_of_order) {
                 <div class="spacer-top-5">
-                    <os-icon-container icon="warning" translate>Point of order</os-icon-container>
+                    <os-icon-container icon="warning">{{ 'Point of order' | translate }}</os-icon-container>
                 </div>
             }
 
