@@ -81,9 +81,6 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Input()
     public csvReloadButton: boolean;
 
-    @Input()
-    public csvReload: ParticipantImportService;
-
     /**
      * Current state of the multi select mode.
      */

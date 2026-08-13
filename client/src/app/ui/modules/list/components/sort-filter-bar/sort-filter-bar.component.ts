@@ -27,6 +27,7 @@ import { Observable, Subscription } from 'rxjs';
 import { RoundedInputComponent } from '../../../input/components/rounded-input/rounded-input.component';
 import { SearchService } from '../../definitions/search-service';
 import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet.component';
+import { sideNavCoordinationService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-csv-options.service';
 
 /**
  * Reusable bar for list views, offering sorting and filter options.
@@ -75,31 +76,6 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
      */
     @Input()
     public csvConfiguration: boolean;
-
-    public selectedEncodingOption = 'utf-8';
-    public selectedColumnSeparatorOption = 'Automatic';
-    public selectedTextSeparatorOption = "''";
-
-    @Output()
-    public selectedEncodingOutput = new EventEmitter<V>();
-
-    @Output()
-    public selectedColSepOutput = new EventEmitter<V>();
-
-    @Output()
-    public selectedTextSeparatorOutput = new EventEmitter<V>();
-
-    @Output() // csvReload
-    public selectNewFile = new EventEmitter<Event>();
-
-    @ViewChild(`fileInput`)
-    private fileInput!: ElementRef<HTMLInputElement>;
-
-    @Input()
-    public csvReload: ParticipantImportService;
-
-    @Input()
-    public csvReloadButton: boolean;
 
     /**
      * Optional string to tell the verbose name of the filtered items. This string is displayed,
@@ -160,12 +136,6 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
      */
     @ViewChild(MatDrawer, { static: true })
     public filterMenu: MatDrawer;
-
-    /**
-     * The filter side drawer
-     */
-    @ViewChild(MatDrawer, { static: true })
-    public csvConfigMenu: MatDrawer;
 
     /**
      * The bottom sheet used to alter sorting in mobile view
@@ -243,11 +213,17 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     public vp = inject(ViewPortService);
     protected translate = inject(TranslateService);
     private bottomSheet = inject(MatBottomSheet);
+    private sideNavCoordinator = inject(sideNavCoordinationService);
 
     public ngOnInit(): void {
         this.mobileSubscription = this.vp.isMobileSubject.subscribe(v => {
             if (v) {
                 this.searchEdit = false;
+            }
+        });
+        this.sideNavCoordinator.drawer$.subscribe(drawer => {
+            if (drawer === 'csvConfigMenu' && this.filterMenu.opened) {
+                this.filterMenu.close();
             }
         });
     }
@@ -341,20 +317,15 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
         this._searchFieldComponent?.clear();
     }
 
-    public sendSelectedEncoding($event): void {
-        this.selectedEncodingOutput.emit($event);
-    }
-
-    public sendSelectedColumnSeparator($event): void {
-        this.selectedColSepOutput.emit($event);
-    }
-
-    public sendSelectedTextSeparator($event): void {
-        this.selectedTextSeparatorOutput.emit($event);
-    }
-
-    public sendCsvReload(event: Event): void {
-        this.selectNewFile.emit(event);
+    public openFilterMenu(): void {
+        if (this.filterMenu.opened) {
+            this.sideNavCoordinator.open('csvConfigMenu');
+            this.filterMenu.close();
+            return;
+        } else {
+            this.sideNavCoordinator.open('filterMenu');
+            this.filterMenu.open();
+        }
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {
