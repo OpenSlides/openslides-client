@@ -317,7 +317,7 @@
 @if (originMotions$ | async; as originMotions) {
     @if (originMotions.length) {
         <div>
-            @if ((displayFutureForward$ | async)) {
+            @if (displayFutureForward$ | async) {
                 <h4>{{ 'Sequence of deliberation' | translate }}</h4>
             } @else {
                 <h4>{{ 'Origin' | translate }}</h4>

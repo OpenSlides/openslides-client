@@ -12,7 +12,7 @@ import { MeetingControllerService } from '@app/site/pages/meetings/services/meet
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
-import { map, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionEditorControllerService } from '../../../../../../modules/editors/services/motion-editor-controller/motion-editor-controller.service';
@@ -128,17 +128,27 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public get originMotions$(): Observable<ViewMotion[] | ViewMeeting[]> {
         let futureForward = false;
-        this.displayFutureForward$.subscribe(a => {
-            futureForward = a;
-        })
-        // If futureForward is true then the current meeting needs to be added and potential deriveed_motion meetings
-        // the amount of splits is  the amount of lists which need to be presented
-        for (const motion of this.motion.derived_motions) {
-            console.log(motion.meeting_id)
-            console.log(motion.meeting.name)
+        this.displayFutureForward$.subscribe(bool => {
+            futureForward = bool;
+        });
+        futureForward = true; // TODO: remove this line
 
+        // TODO: Fix splitting paths
+        if (futureForward) {
+            const list = this.motion.all_derived_motions ?? [];
+            // console.log(this.motion.origin_id);
+            // console.log(this.motion.origin_meeting_id);
+            if (this.motion.origin_id) {
+                return this.motion.all_origins$.pipe(
+                    map(origins => [...list.reverse(), this.motion, ...origins.reverse()])
+                );
+            } else if (this.motion.origin_meeting_id) {
+                return this.motion.origin_meeting$.pipe(map(origin => [origin]));
+            } else {
+                return new BehaviorSubject([...list.reverse(), this.motion]);
+            }
         }
-        console.log(futureForward)
+
         if (this.motion.origin_id) {
             return this.motion.all_origins$.pipe(map(origins => origins?.reverse()));
         } else if (this.motion.origin_meeting_id) {
