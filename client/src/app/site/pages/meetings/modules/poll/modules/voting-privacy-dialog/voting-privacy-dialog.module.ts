@@ -7,7 +7,7 @@ import { VotingPrivacyWarningDialogComponent } from './components/voting-privacy
 
 @NgModule({
     declarations: [VotingPrivacyWarningDialogComponent],
-    imports: [CommonModule, MatDialogModule, OpenSlidesTranslationModule.forChild()]
+    imports: [CommonModule, MatDialogModule, OpenSlidesTranslationModule]
 })
 export class VotingPrivacyDialogModule {
     public static getComponent(): typeof VotingPrivacyWarningDialogComponent {

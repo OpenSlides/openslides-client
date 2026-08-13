@@ -22,7 +22,7 @@ const DECLARATIONS = [HeadBarComponent];
         MatTooltipModule,
         MatToolbarModule,
         MatButtonModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         SpinnerModule
     ]
 })

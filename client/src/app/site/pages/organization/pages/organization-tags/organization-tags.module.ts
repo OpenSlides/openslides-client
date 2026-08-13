@@ -30,7 +30,7 @@ import { OrganizationTagCommonServiceModule } from './services/organization-tag-
         ReactiveFormsModule,
         FormsModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         ChipComponent,
         HeadBarModule,

@@ -38,7 +38,7 @@ import { MeetingImportComponent } from './components/meeting-import/meeting-impo
         AccountSearchSelectorModule,
         SearchSelectorModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         OpenSlidesDateAdapterModule,
         FormsModule,
         DirectivesModule,

@@ -27,7 +27,7 @@ import { SettingsDetailRoutingModule } from './settings-detail-routing.module';
         MatSelectModule,
         MatCardModule,
         MatCheckboxModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         DirectivesModule,
         SearchSelectorModule
     ]

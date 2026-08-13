@@ -22,7 +22,7 @@ import { MotionBlockCreateDialogComponent } from './components/motion-block-crea
         MatButtonModule,
         ReactiveFormsModule,
         AgendaContentObjectFormModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class MotionBlockCreateDialogModule {

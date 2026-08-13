@@ -18,7 +18,7 @@ import { PollListServiceModule } from './services/poll-list-service.module';
         PollListServiceModule,
         MeetingsComponentCollectorModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatTooltipModule
     ]

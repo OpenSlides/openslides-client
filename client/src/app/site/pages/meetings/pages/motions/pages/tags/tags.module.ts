@@ -28,7 +28,7 @@ import { TagsRoutingModule } from './tags-routing.module';
         ReactiveFormsModule,
         HeadBarModule,
         ListModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class TagsModule {}

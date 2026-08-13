@@ -44,7 +44,7 @@ import { WorkflowsRoutingModule } from './workflows-routing.module';
         FileUploadModule,
         HeadBarModule,
         MatCardModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatMenuModule,
         MatIconModule,
         MatFormFieldModule,
