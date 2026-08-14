@@ -331,14 +331,16 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
 
     public async sortCandidates(sortType: SortOption): Promise<void> {
         if (this.sortBy === `undefined`) {
-            this.updateSort(sortType, true);
+            this.sortBy = sortType;
+            this.sortAscending = true;
         } else if (this.sortBy === sortType) {
             this.sortAscending = !this.sortAscending;
         } else {
-            this.updateSort(sortType, true);
+            this.sortBy = sortType;
+            this.sortAscending = true;
         }
 
-        const sorted = this.sortList(sortType, this.sortAscending);
+        const sorted = this.sortList();
         this._assignmentCandidates = sorted;
         await this.onSortingChange(sorted, false);
     }
@@ -348,7 +350,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     public async onSortingChange(candidates: Selectable[], manual = true): Promise<void> {
         if (manual) {
-            this.updateSort(undefined, undefined);
+            this.sortBy = `unsorted`;
+            this.sortAscending = undefined;
         }
         await this.assignmentCandidateRepo.sort(this.assignment, candidates);
     }
@@ -488,18 +491,24 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
 
     private checkSortOrder(): void {
         if (this._assignmentCandidates.length < 2) {
-            this.updateSort(`unsorted`, undefined);
+            this.sortBy = `unsorted`;
+            this.sortAscending = undefined;
         } else {
-            if (this._assignmentCandidates.equals(this.sortList(`first_name`, true, true))) {
-                this.updateSort(`first_name`, true);
-            } else if (this._assignmentCandidates.equals(this.sortList(`first_name`, false, true))) {
-                this.updateSort(`first_name`, false);
-            } else if (this._assignmentCandidates.equals(this.sortList(`last_name`, true, true))) {
-                this.updateSort(`last_name`, true);
-            } else if (this._assignmentCandidates.equals(this.sortList(`last_name`, false, true))) {
-                this.updateSort(`last_name`, false);
+            if (this._assignmentCandidates.equals(this.sortList(`first_name`, true))) {
+                this.sortBy = `first_name`;
+                this.sortAscending = true;
+            } else if (this._assignmentCandidates.equals(this.sortList(`first_name`, false))) {
+                this.sortBy = `first_name`;
+                this.sortAscending = false;
+            } else if (this._assignmentCandidates.equals(this.sortList(`last_name`, true))) {
+                this.sortBy = `last_name`;
+                this.sortAscending = true;
+            } else if (this._assignmentCandidates.equals(this.sortList(`last_name`, false))) {
+                this.sortBy = `last_name`;
+                this.sortAscending = false;
             } else {
-                this.updateSort(`unsorted`, undefined);
+                this.sortBy = `unsorted`;
+                this.sortAscending = undefined;
             }
         }
     }
@@ -509,33 +518,16 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this.checkSortOrder();
     }
 
-    private updateSort(sortType: string, ascend: boolean | undefined): void {
-        this.sortBy = sortType;
-        this.sortAscending = ascend;
-    }
+    private sortList(sortBy?: SortOption, ascent?: boolean): ViewAssignmentCandidate[] {
+        const sort = sortBy ?? this.sortBy;
+        const ascend = ascent ?? this.sortAscending;
 
-    private sortList(sortBy: SortOption, ascent: boolean, sortByGivenVariables = false): ViewAssignmentCandidate[] {
-        const sort = sortByGivenVariables ? sortBy : this.sortBy;
-        const ascend = sortByGivenVariables ? ascent : this.sortAscending;
-        switch (sort) {
-            case `first_name`:
-                return [...this.assignmentCandidates].sort((a, b) => {
-                    const nameA = a.user?.first_name ?? '';
-                    const nameB = b.user?.first_name ?? '';
-                    const comparison = this.compareNames(nameA, nameB);
-                    return ascend ? comparison : -comparison;
-                });
-            case `last_name`:
-                return [...this.assignmentCandidates].sort((a, b) => {
-                    const nameA = a.user?.last_name ?? '';
-                    const nameB = b.user?.last_name ?? '';
-                    const comparison = this.compareNames(nameA, nameB);
-                    return ascend ? comparison : -comparison;
-                });
-            case `unsorted`:
-            default:
-                return this.assignmentCandidates;
-        }
+        return [...this.assignmentCandidates].sort((a, b) => {
+            const nameA = sort === `first_name` ? (a.user?.first_name ?? '') : (a.user?.last_name ?? '');
+            const nameB = sort === `first_name` ? (b.user?.first_name ?? '') : (b.user?.last_name ?? '');
+            const comparison = this.compareNames(nameA, nameB);
+            return ascend ? comparison : -comparison;
+        });
     }
 
     private compareNames(nameA: string, nameB: string): number {
