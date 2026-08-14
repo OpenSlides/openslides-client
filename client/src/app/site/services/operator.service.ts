@@ -192,10 +192,6 @@ export class OperatorService {
         return this._permissionsSubject;
     }
 
-    public get userOML(): OML {
-        return this._OML as OML;
-    }
-
     private get activeMeetingId(): number | null {
         return this.activeMeetingService.meetingId;
     }

@@ -135,12 +135,12 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public shouldEnableFormControl(): boolean {
         if (
-            !this.operator.userOML &&
+            !this.operator.hasOrganizationPermissions(OML.can_manage_organization) &&
             (!this.home_committee_id || this.operator.hasCommitteePermissions(this.home_committee_id, CML.can_manage))
         ) {
             return true;
         }
-        return this.operator.hasOrganizationPermissions(this.operator.userOML);
+        return this.operator.hasOrganizationPermissions(OML.can_manage_users);
     }
 
     public shouldEnableFormControlFn: (_: string) => boolean = (_: string) => this.shouldEnableFormControl();
@@ -376,7 +376,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             payload[`committee_management_ids`] = undefined;
             payload[`organization_management_level`] = undefined;
         }
-        if (this.operator.userOML === OML.can_manage_users) {
+        if (this.operator.isAccountAdmin) {
             delete payload.home_committee_id;
         }
         if (payload.home_committee_id === 0) {
