@@ -1,4 +1,4 @@
-import { HasMeetingId } from '../../interfaces';
+import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { BasePollConfigModel } from './base-poll-config';
 
 export class PollConfigStvScottish extends BasePollConfigModel<PollConfigStvScottish> {

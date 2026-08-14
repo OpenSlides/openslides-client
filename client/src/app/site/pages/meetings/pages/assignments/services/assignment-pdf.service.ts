@@ -3,12 +3,12 @@ import { AssignmentPhase } from '@app/domain/models/assignments/assignment-phase
 import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
 import { PollTableData, VotingResult } from '@app/domain/models/poll/poll-constants';
 import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentColumns, ContentText } from 'pdfmake/interfaces';
 
 import { AssignmentPollService, UnknownUserLabel } from '../modules/assignment-poll/services/assignment-poll.service';
-import { ViewAssignment } from '../view-models';
+import { ViewAssignment } from '../view-models/view-assignment';
 
 /**
  * Creates a PDF document from a single assignment

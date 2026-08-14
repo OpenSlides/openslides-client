@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ViewPollOption } from '../../../../pages/polls';
+import { ViewPollOption } from '../../../../pages/polls/view-models/poll-option';
 
 @Component({
     selector: 'os-poll-vote-option',

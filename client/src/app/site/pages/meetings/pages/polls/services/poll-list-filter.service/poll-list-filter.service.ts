@@ -1,10 +1,9 @@
 import { inject, Service } from '@angular/core';
 import { PollState } from '@app/domain/models/poll/poll-constants';
 import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { _, TranslateService } from '@ngx-translate/core';
-
-import { ViewPoll } from '../../view-models';
 
 @Service()
 export class PollListFilterService extends BaseFilterListService<ViewPoll> {

@@ -2,8 +2,7 @@ import { Component, computed, effect, inject, input, signal } from '@angular/cor
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { PollState } from '@app/domain/models/poll';
-
-import { ViewPoll } from '../../../pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 @Component({ template: `` })
 export abstract class PollFormBaseComponent {

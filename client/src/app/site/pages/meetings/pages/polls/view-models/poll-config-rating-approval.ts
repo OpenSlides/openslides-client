@@ -3,7 +3,9 @@ import { PollConfigRatingApproval } from '@app/domain/models/poll/poll-config-ra
 import { ViewModelRelations } from '@app/site/base/base-view-model';
 import Big from 'big.js';
 
-import { HasPoll, RatingApprovalPollResult, ViewPollOption } from '..';
+import { HasPoll } from '../view-models/has-polls';
+import { ViewPollOption } from '../view-models/poll-option';
+import { RatingApprovalPollResult } from '../view-models/poll-result-rating-approval';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
 
 export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<

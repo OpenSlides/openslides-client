@@ -16,14 +16,14 @@ import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from '@app/site/pages/meetings/pages/assignments';
 import { ViewMediafile, ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
 import { ViewTag } from '@app/site/pages/meetings/pages/motions';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
-import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service';
+import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { AssignmentPhases } from '../../../../definitions';
 import { AssignmentPollService } from '../../../../modules/assignment-poll/services/assignment-poll.service';
 import { AssignmentPollDialogService } from '../../../../modules/assignment-poll/services/assignment-poll-dialog.service';

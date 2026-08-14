@@ -6,7 +6,7 @@ import { Permission } from '@app/domain/definitions/permission';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
 import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/poll/poll.component';
 import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 
 @Component({

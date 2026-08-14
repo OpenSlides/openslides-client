@@ -2,9 +2,9 @@ import { inject, Service } from '@angular/core';
 import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.service';
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 
-import { GroupControllerService } from '../../../pages/participants';
+import { GroupControllerService } from '../../../pages/participants/modules/groups/services/group-controller.service';
 import { StructureLevelControllerService } from '../../../pages/participants/pages/structure-levels/services/structure-level-controller.service';
-import { ViewPollBallot } from '../../../pages/polls';
+import { ViewPollBallot } from '../../../pages/polls/view-models/poll-ballot';
 
 @Service()
 export class VotesFilterService extends BaseFilterListService<any> {

@@ -14,11 +14,11 @@ import {
     YES_KEY
 } from '@app/domain/models/poll/poll-constants';
 import { ChartData, ChartDate } from '@app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { ThemeService } from '@app/site/services/theme.service';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ViewPoll } from '../../../../pages/polls';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 

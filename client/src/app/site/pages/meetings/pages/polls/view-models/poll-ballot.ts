@@ -1,4 +1,5 @@
 import { Id } from '@app/domain/definitions/key-types';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { Observable, switchMap } from 'rxjs';
 
 import { PollBallot } from '../../../../../../domain/models/poll/poll-ballot';
@@ -6,7 +7,6 @@ import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
-import { ViewPoll } from '..';
 import { ViewPollBallotUser } from './poll-ballot-user';
 
 export type PollApprovalBallotValue = 'yes' | 'no' | 'abstain';

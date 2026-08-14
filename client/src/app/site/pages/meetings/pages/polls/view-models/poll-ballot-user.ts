@@ -1,12 +1,13 @@
 import { Id } from '@app/domain/definitions/key-types';
 import { PollBallotUser } from '@app/domain/models/poll/poll-ballot-user';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { Observable, switchMap } from 'rxjs';
 
 import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../view-models/view-user';
-import { ViewPoll, ViewPollBallot } from '..';
+import { ViewPollBallot } from '../view-models/poll-ballot';
 
 export class ViewPollBallotUser extends BaseViewModel<PollBallotUser> {
     public static COLLECTION = PollBallotUser.COLLECTION;

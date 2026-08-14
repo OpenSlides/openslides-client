@@ -1,7 +1,7 @@
-import { HasMeetingId } from '../../interfaces';
+import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { BaseModel } from '../base/base-model';
-import { PollVisibility } from '../poll';
 import { BaseOnehundredPercentBase } from '../poll/poll-config-types';
+import { PollVisibility } from '../poll/poll-constants';
 
 export class MeetingPollDefault extends BaseModel<MeetingPollDefault> {
     public static COLLECTION = `meeting_poll_default`;

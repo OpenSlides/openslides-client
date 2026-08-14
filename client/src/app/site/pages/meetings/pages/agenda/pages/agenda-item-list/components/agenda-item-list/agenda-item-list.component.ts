@@ -26,12 +26,12 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 
-import { ViewTag } from '../../../../../motions';
-import { TagControllerService } from '../../../../../motions/modules/tags/services';
+import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
+import { ViewTag } from '../../../../../motions/modules/tags/view-models/view-tag';
 import { getTopicDuplicateSubscriptionConfig } from '../../../../agenda.subscription';
 import { AgendaForwardDialogService } from '../../../../components/agenda-forward-dialog/services/agenda-forward-dialog.service';
 import { TopicControllerService } from '../../../../modules/topics/services/topic-controller.service/topic-controller.service';
-import { AgendaItemControllerService } from '../../../../services';
+import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 import { AgendaItemFilterService } from '../../services/agenda-item-filter.service/agenda-item-filter.service';
 import { AgendaItemMultiselectService } from '../../services/agenda-item-multiselect.service/agenda-item-multiselect.service';
 import { AgendaItemInfoDialogComponent } from '../agenda-item-info-dialog/agenda-item-info-dialog.component';

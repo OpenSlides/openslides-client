@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UserRepositoryService } from '@app/gateways/repositories/users';
 import { BaseComponent } from '@app/site/base/base.component';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { DirectivesModule } from '@app/ui/directives';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
@@ -25,10 +26,9 @@ import { ProjectorButtonModule } from '../../../../modules/meetings-component-co
 import { PollMetaComponent } from '../../../../modules/poll/components/poll-meta/poll-meta.component';
 import { PollProgressComponent } from '../../../../modules/poll/components/poll-progress/poll-progress.component';
 import { PollResultComponent } from '../../../../modules/poll/components/poll-result/poll-result.component';
-import { PollControllerService } from '../../../../modules/poll/services/poll-controller.service';
+import { PollControllerService } from '../../../../modules/poll/services/poll-controller.service/poll-controller.service';
 import { PollPdfService } from '../../../../modules/poll/services/poll-pdf.service';
-import { VotingService } from '../../../../modules/poll/services/voting.service';
-import { ViewPoll } from '../../../../pages/polls';
+import { VotingService } from '../../../../modules/poll/services/voting.service/voting.service';
 import { PollEntitledUserComponent } from '../poll-entitled-users/poll-entitled-user.component';
 import { PollSingleVotesComponent } from '../poll-single-votes/poll-single-votes.component';
 

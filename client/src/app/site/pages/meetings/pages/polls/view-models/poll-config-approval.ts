@@ -2,7 +2,7 @@ import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval
 import { ViewModelRelations } from '@app/site/base/base-view-model';
 import Big from 'big.js';
 
-import { ViewPollOption } from '..';
+import { ViewPollOption } from '../view-models/poll-option';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
 import { ApprovalPollResult } from './poll-result-approval';
 

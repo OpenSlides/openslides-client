@@ -1,19 +1,17 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-listing';
 import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import {
-    ViewPoll,
-    ViewPollConfigApproval,
-    ViewPollConfigRatingApproval,
-    ViewPollConfigRatingScore,
-    ViewPollConfigSelection,
-    ViewPollConfigStvScottish,
-    ViewPollOption
-} from '../../../../pages/polls';
+import { ViewPollConfigApproval } from '../../../../pages/polls/view-models/poll-config-approval';
+import { ViewPollConfigRatingApproval } from '../../../../pages/polls/view-models/poll-config-rating-approval';
+import { ViewPollConfigRatingScore } from '../../../../pages/polls/view-models/poll-config-rating-score';
+import { ViewPollConfigSelection } from '../../../../pages/polls/view-models/poll-config-selection';
+import { ViewPollConfigStvScottish } from '../../../../pages/polls/view-models/poll-config-stv-scottish';
+import { ViewPollOption } from '../../../../pages/polls/view-models/poll-option';
 
 @Component({
     selector: 'os-poll-meta',

@@ -9,7 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DirectivesModule } from '@app/ui/directives';
 
-import { OpenSlidesTranslationModule } from '../../../site/modules/translations';
+import { OpenSlidesTranslationModule } from '../../../site/modules/translations/openslides-translation.module';
 import { ListSearchSelectorComponent } from './components/list-search-selector/list-search-selector.component';
 import { RepoSearchSelectorComponent } from './components/repo-search-selector/repo-search-selector.component';
 import { SearchSelectorNotFoundTemplateDirective } from './directives/search-selector-not-found-template.directive';

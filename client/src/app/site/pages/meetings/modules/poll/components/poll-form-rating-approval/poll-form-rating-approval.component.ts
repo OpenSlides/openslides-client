@@ -6,10 +6,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { RatingApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-approval';
 import { RatingScoreOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-score';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { _, TranslatePipe } from '@ngx-translate/core';
 
-import { ViewPoll } from '../../../../pages/polls';
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
 export interface PollFormRatingApproval {

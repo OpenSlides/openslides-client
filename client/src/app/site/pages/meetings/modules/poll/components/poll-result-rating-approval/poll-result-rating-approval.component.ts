@@ -4,8 +4,10 @@ import { RatingApprovalOnehundredPercentBase } from '@app/domain/models/poll/pol
 import { TranslatePipe } from '@ngx-translate/core';
 import Big from 'big.js';
 
-import { RatingApprovalPollResult, ViewPollConfigRatingApproval, ViewPollOption } from '../../../../pages/polls';
-import { PollParseNumberPipe } from '../../pipes';
+import { ViewPollConfigRatingApproval } from '../../../../pages/polls/view-models/poll-config-rating-approval';
+import { ViewPollOption } from '../../../../pages/polls/view-models/poll-option';
+import { RatingApprovalPollResult } from '../../../../pages/polls/view-models/poll-result-rating-approval';
+import { PollParseNumberPipe } from '../../pipes/poll-parse-number/poll-parse-number.pipe';
 import { PollResultBaseComponent } from '../poll-result-base.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
 

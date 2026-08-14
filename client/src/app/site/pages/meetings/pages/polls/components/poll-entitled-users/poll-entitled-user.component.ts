@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
 import { BaseComponent } from '@app/site/base/base.component';
-
-import { ViewPoll } from '../../../../pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 @Component({
     selector: `os-poll-entitled-user`,

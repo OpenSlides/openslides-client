@@ -4,9 +4,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-approval';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { _, TranslatePipe } from '@ngx-translate/core';
 
-import { ViewPoll } from '../../../../pages/polls';
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
 export interface PollFormApproval {

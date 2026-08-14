@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { PollState } from '@app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ViewPollBallotUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-ballot-user';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from '@app/site/services/operator.service';

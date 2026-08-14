@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, On
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Permission } from '@app/domain/definitions/permission';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { AutoupdateService, ModelSubscription } from '@app/site/services/autoupdate';
 import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
 import { OperatorService } from '@app/site/services/operator.service';

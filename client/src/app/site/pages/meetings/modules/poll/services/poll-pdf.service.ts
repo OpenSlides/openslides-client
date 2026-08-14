@@ -1,5 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import {
     ViewPollBallot,
     ViewPollConfigApproval,
@@ -8,12 +7,13 @@ import {
     ViewPollConfigSelection,
     ViewPollOption
 } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 import { TranslateService } from '@ngx-translate/core';
 import Big from 'big.js';
 import { Content } from 'pdfmake/interfaces';
 
-import { MeetingPdfExportService } from '../../../services/export';
+import { MeetingPdfExportService } from '../../../services/export/meeting-pdf-export.service';
 
 @Injectable({
     providedIn: `root`

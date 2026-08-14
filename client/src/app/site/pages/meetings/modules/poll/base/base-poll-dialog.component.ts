@@ -5,7 +5,7 @@ import { Fqid, Id } from '@app/domain/definitions/key-types';
 import { BaseModel } from '@app/domain/models/base/base-model';
 import { PollVisibility } from '@app/domain/models/poll';
 import { PollUpdatePayload } from '@app/gateways/vote-api.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
 import { PollEditResultComponent } from '../components/poll-edit-result/poll-edit-result.component';

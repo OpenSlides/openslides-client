@@ -3,7 +3,6 @@ import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval
 import { ViewPollConfigApproval } from '@app/site/pages/meetings/pages/polls/view-models/poll-config-approval';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 @Injectable({
     providedIn: `root`
@@ -12,9 +11,7 @@ export class PollConfigApprovalRepositoryService extends BaseMeetingRelatedRepos
     ViewPollConfigApproval,
     PollConfigApproval
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, PollConfigApproval);
-    }
+    protected baseModelCtor = PollConfigApproval;
 
     public getTitle = (_viewPollConfigApproval: ViewPollConfigApproval): string => `Approval poll config`;
 

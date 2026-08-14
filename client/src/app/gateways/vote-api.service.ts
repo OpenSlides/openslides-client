@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Id } from '../domain/definitions/key-types';
-import { PollVisibility } from '../domain/models/poll';
+import { PollVisibility } from '../domain/models/poll/poll-constants';
 import { HttpService } from './http.service';
 
 export interface PollCreatePayload extends PollUpdatePayload {

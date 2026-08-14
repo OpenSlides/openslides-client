@@ -2,19 +2,19 @@ import { Location } from '@angular/common';
 import { inject, Service } from '@angular/core';
 import { BorderType, PdfError, StyleType } from '@app/gateways/export/pdf-document.service';
 import { PdfImagesService } from '@app/gateways/export/pdf-document.service/pdf-images.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { DurationService } from '@app/site/services/duration.service';
 import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, TableCell } from 'pdfmake/interfaces';
 
-import { MeetingPdfExportService } from '../../../../services/export';
+import { MeetingPdfExportService } from '../../../../services/export/meeting-pdf-export.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
-import { MotionHtmlToPdfService } from '../../../motions/services/export/motion-html-to-pdf.service';
-import { ViewPoll } from '../../../polls';
+import { MotionHtmlToPdfService } from '../../../motions/services/export/motion-html-to-pdf.service/motion-html-to-pdf.service';
 import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
-import { ViewTopic } from '../../modules/topics/view-models';
-import { ViewAgendaItem } from '../../view-models';
+import { ViewTopic } from '../../modules/topics/view-models/view-topic';
+import { ViewAgendaItem } from '../../view-models/view-agenda-item';
 
 const PDF_A4_POINTS_WIDTH = 595.296;
 const PDF_A5_POINTS_WIDTH = 419.544;

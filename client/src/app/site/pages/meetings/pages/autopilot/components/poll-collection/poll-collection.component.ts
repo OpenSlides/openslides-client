@@ -8,7 +8,7 @@ import { Topic } from '@app/domain/models/topics/topic';
 import { BaseComponent } from '@app/site/base/base.component';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';

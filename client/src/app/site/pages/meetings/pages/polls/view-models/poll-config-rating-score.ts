@@ -2,7 +2,9 @@ import { PollConfigRatingScore } from '@app/domain/models/poll/poll-config-ratin
 import { ViewModelRelations } from '@app/site/base/base-view-model';
 import Big from 'big.js';
 
-import { HasPoll, RatingScorePollResult, ViewPollOption } from '..';
+import { HasPoll } from '../view-models/has-polls';
+import { ViewPollOption } from '../view-models/poll-option';
+import { RatingScorePollResult } from '../view-models/poll-result-rating-score';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
 
 export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfigRatingScore, RatingScorePollResult> {

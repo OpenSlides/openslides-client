@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 import { PollState, PollVisibility } from '@app/domain/models/poll';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { DirectivesModule } from '@app/ui/directives';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
@@ -16,10 +17,9 @@ import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
-import { ViewPoll } from '../../../../pages/polls';
 import { ProjectorButtonModule } from '../../../meetings-component-collector/projector-button/projector-button.module';
 import { PollBallotPdfService } from '../../services/poll-ballot-pdf.service';
-import { PollControllerService } from '../../services/poll-controller.service';
+import { PollControllerService } from '../../services/poll-controller.service/poll-controller.service';
 import { PollMetaComponent } from '../poll-meta/poll-meta.component';
 import { PollProgressComponent } from '../poll-progress/poll-progress.component';
 import { PollResultComponent } from '../poll-result/poll-result.component';

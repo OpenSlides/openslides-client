@@ -173,7 +173,7 @@
 
                                 <div class="extra-data">
                                     <!-- Category form -->
-                                    @if (newMotion && hasCategories) {
+                                    @if (newMotion && !amendmentEdit && hasCategories) {
                                         <div class="content-field">
                                             <mat-form-field>
                                                 <mat-label>{{ 'Category' | translate }}</mat-label>

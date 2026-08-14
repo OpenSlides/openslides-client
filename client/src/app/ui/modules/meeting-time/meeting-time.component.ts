@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { TimeZoneService } from '@app/site/services/time-zone.service';
 
-import { PipesModule } from '../../pipes';
+import { PipesModule } from '../../pipes/pipes.module';
 
 @Component({
     selector: `os-meeting-time`,

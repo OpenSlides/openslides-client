@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { ViewPollConfigApproval } from '../../../../pages/polls';
+import { ViewPollConfigApproval } from '../../../../pages/polls/view-models/poll-config-approval';
 import { PollVoteBaseComponent } from '../poll-vote-base.component';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 

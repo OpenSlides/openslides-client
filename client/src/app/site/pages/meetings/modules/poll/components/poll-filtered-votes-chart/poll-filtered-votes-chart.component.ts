@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
 import { VoteValue, VoteValueVerbose } from '@app/domain/models/poll';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ThemeService } from '@app/site/services/theme.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
-import { ViewPoll, ViewPollBallot } from '../../../../pages/polls';
+import { ViewPollBallot } from '../../../../pages/polls/view-models/poll-ballot';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VotesFilterService } from '../../services/votes-filter.service';
 

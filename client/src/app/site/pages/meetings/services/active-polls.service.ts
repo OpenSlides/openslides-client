@@ -1,11 +1,11 @@
 import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { viewModelListEqual } from '@app/infrastructure/utils';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ModelRequestService } from '@app/site/services/model-request.service';
 import { BehaviorSubject, distinctUntilChanged, map, Observable, Subscription } from 'rxjs';
 
-import { PollControllerService } from '../modules/poll/services/poll-controller.service';
-import { ViewPoll } from '../pages/polls';
+import { PollControllerService } from '../modules/poll/services/poll-controller.service/poll-controller.service';
 import { ActiveMeetingIdService } from './active-meeting-id.service';
 import { ACTIVE_POLLS_SUBSCRIPTION, getActivePollsSubscriptionConfig } from './active-polls.subscription';
 

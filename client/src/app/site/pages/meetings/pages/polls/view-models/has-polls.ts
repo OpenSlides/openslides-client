@@ -1,8 +1,8 @@
 import { PollContentObject } from '@app/domain/models/poll';
 import { ViewModelRelations } from '@app/site/base/base-view-model';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
-import { ViewPoll } from './poll';
 
 export type HasPoll<C extends PollContentObject = any> = ViewModelRelations<{
     poll: ViewPoll<C>;

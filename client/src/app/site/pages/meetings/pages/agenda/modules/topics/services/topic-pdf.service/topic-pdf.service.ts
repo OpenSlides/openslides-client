@@ -1,13 +1,14 @@
 import { inject, Service } from '@angular/core';
 import { PollTableData, VotingResult } from '@app/domain/models/poll';
 import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText } from 'pdfmake/interfaces';
 
-import { ViewPoll, ViewPollConfigSelection } from '../../../../../polls';
+import { ViewPollConfigSelection } from '../../../../../polls/view-models/poll-config-selection';
 import { TopicPollService } from '../../modules/topic-poll/services/topic-poll.service';
-import { ViewTopic } from '../../view-models';
+import { ViewTopic } from '../../view-models/view-topic';
 
 /**
  * Creates a PDF document from a single tpoic

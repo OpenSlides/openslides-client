@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
-import { ViewPoll } from '../../../../pages/polls';
 import { PollResultApprovalComponent } from '../poll-result-approval/poll-result-approval.component';
 import { PollResultRatingApprovalComponent } from '../poll-result-rating-approval/poll-result-rating-approval.component';
 import { PollResultRatingScoreComponent } from '../poll-result-rating-score/poll-result-rating-score.component';

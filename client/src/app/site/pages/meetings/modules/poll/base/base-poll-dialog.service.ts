@@ -6,7 +6,7 @@ import { PollCreatePayload } from '@app/gateways/vote-api.service';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { PollDialogData } from '@app/site/pages/meetings/modules/poll/definitions';
 import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { firstValueFrom } from 'rxjs';
 
 @Service()

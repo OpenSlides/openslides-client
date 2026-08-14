@@ -7,8 +7,10 @@ import { IconContainerComponent } from '@app/ui/modules/icon-container';
 import { TranslatePipe } from '@ngx-translate/core';
 import Big from 'big.js';
 
-import { ApprovalPollResult, ViewPollConfigApproval } from '../../../../pages/polls';
-import { PollKeyVerbosePipe, PollParseNumberPipe } from '../../pipes';
+import { ViewPollConfigApproval } from '../../../../pages/polls/view-models/poll-config-approval';
+import { ApprovalPollResult } from '../../../../pages/polls/view-models/poll-result-approval';
+import { PollKeyVerbosePipe } from '../../pipes/poll-key-verbose/poll-key-verbose.pipe';
+import { PollParseNumberPipe } from '../../pipes/poll-parse-number/poll-parse-number.pipe';
 import { ChartComponent, ChartData } from '../chart/chart.component';
 import { PollResultBaseComponent } from '../poll-result-base.component';
 

@@ -3,7 +3,6 @@ import { PollConfigRatingApproval } from '@app/domain/models/poll/poll-config-ra
 import { ViewPollConfigRatingApproval } from '@app/site/pages/meetings/pages/polls/view-models/poll-config-rating-approval';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 @Injectable({
     providedIn: `root`
@@ -12,9 +11,7 @@ export class PollConfigRatingApprovalRepositoryService extends BaseMeetingRelate
     ViewPollConfigRatingApproval,
     PollConfigRatingApproval
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, PollConfigRatingApproval);
-    }
+    protected baseModelCtor = PollConfigRatingApproval;
 
     public getTitle = (_viewPollConfigRatingApproval: ViewPollConfigRatingApproval): string =>
         `Rating approval poll config`;

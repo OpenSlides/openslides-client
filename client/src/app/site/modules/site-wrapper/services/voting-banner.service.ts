@@ -4,7 +4,7 @@ import { Permission } from '@app/domain/definitions/permission';
 import { viewModelListEqual } from '@app/infrastructure/utils';
 import { PollBallotControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-ballot-controller.service';
 import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ActivePollsService } from '@app/site/pages/meetings/services/active-polls.service';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';

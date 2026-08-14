@@ -3,10 +3,10 @@ import { Motion } from '@app/domain/models/motions/motion';
 import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import { PollVisibility } from '@app/domain/models/poll/poll-constants';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
 
-import { MotionPollControllerService } from '../motion-poll-controller.service';
+import { MotionPollControllerService } from '../motion-poll-controller.service/motion-poll-controller.service';
 
 /**
  * Service class for motion polls.

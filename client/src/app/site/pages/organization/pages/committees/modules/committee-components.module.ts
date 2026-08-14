@@ -14,7 +14,7 @@ import { ChipComponent } from '@app/ui/modules/chip';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
 
 import { MeetingTimeComponent } from '../../../../../../ui/modules/meeting-time/meeting-time.component';
-import { OpenSlidesTranslationModule } from '../../../../../modules/translations';
+import { OpenSlidesTranslationModule } from '../../../../../modules/translations/openslides-translation.module';
 import { CommitteeMeetingPreviewComponent } from './committee-meeting-preview/committee-meeting-preview.component';
 import { CommitteeMetaInfoComponent } from './committee-meta-info/committee-meta-info.component';
 import { CommitteeComponentsServiceModule } from './services/committee-components-service.module';

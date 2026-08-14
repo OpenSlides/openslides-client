@@ -4,12 +4,12 @@ import { PollVisibility } from '@app/domain/models/poll';
 import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import { PollServiceMapperService } from '@app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
 import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
 import { _ } from '@ngx-translate/core';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
-import { ViewPoll } from '../../../../polls';
 
 export const UnknownUserLabel = _(`Deleted user`);
 

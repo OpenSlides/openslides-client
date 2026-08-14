@@ -1,7 +1,8 @@
 import { Component, computed, input, output } from '@angular/core';
 import { BaseViewModel } from '@app/site/base/base-view-model';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
-import { ViewPoll, ViewPollOption } from '../../../pages/polls';
+import { ViewPollOption } from '../../../pages/polls/view-models/poll-option';
 import { ViewUser } from '../../../view-models/view-user';
 
 @Component({ template: `` })

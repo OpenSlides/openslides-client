@@ -1,7 +1,8 @@
 import { PollConfigStvScottish } from '@app/domain/models/poll/poll-config-stv-scottish';
 import { ViewModelRelations } from '@app/site/base/base-view-model';
 
-import { HasPoll, ViewPollOption } from '..';
+import { HasPoll } from '../view-models/has-polls';
+import { ViewPollOption } from '../view-models/poll-option';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
 
 export class ViewPollConfigStvScottish extends BasePollConfigViewModel<PollConfigStvScottish, any> {

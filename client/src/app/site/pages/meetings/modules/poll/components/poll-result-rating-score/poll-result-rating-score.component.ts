@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { RatingScorePollResult, ViewPollConfigRatingScore } from '../../../../pages/polls';
+import { ViewPollConfigRatingScore } from '../../../../pages/polls/view-models/poll-config-rating-score';
+import { RatingScorePollResult } from '../../../../pages/polls/view-models/poll-result-rating-score';
 import { PollResultBaseComponent } from '../poll-result-base.component';
 import { PollResultSelectionComponent } from '../poll-result-selection/poll-result-selection.component';
 

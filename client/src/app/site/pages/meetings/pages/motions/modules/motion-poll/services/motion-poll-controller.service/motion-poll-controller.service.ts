@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { Fqid } from '@app/domain/definitions/key-types';
 import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 @Service()
 export class MotionPollControllerService {

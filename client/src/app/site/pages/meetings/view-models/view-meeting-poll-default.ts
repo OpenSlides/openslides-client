@@ -1,7 +1,7 @@
 import { MeetingPollDefault } from '@app/domain/models/meetings/meeting-poll-default';
 import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
 
-import { ViewGroup } from '../pages/participants';
+import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewMeeting } from './view-meeting';
 
 export class ViewMeetingPollDefault extends BaseViewModel<MeetingPollDefault> {

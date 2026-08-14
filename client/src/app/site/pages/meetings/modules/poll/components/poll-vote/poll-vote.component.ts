@@ -2,12 +2,12 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, signal } f
 import { rxResource } from '@angular/core/rxjs-interop';
 import { VoteApiService } from '@app/gateways/vote-api.service';
 import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ViewPoll } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
-import { VotingService } from '../../services/voting.service';
+import { VotingService } from '../../services/voting.service/voting.service';
 import { PollCannotVoteMessageComponent } from '../poll-cannot-vote-message/poll-cannot-vote-message.component';
 import { PollVoteApprovalComponent } from '../poll-vote-approval/poll-vote-approval.component';
 import { PollVoteRatingApprovalComponent } from '../poll-vote-rating-approval/poll-vote-rating-approval.component';

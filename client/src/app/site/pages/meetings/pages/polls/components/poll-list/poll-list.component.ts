@@ -6,6 +6,7 @@ import { PollState } from '@app/domain/models/poll/poll-constants';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
 import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service/poll-controller.service';
 import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -13,7 +14,6 @@ import { map, Observable, of } from 'rxjs';
 
 import { DetailViewModule } from '../../../../modules/meetings-component-collector/detail-view/detail-view.module';
 import { ProjectableListModule } from '../../../../modules/meetings-component-collector/projectable-list/projectable-list.module';
-import { ViewPoll } from '../../../../pages/polls';
 import { PollListFilterService } from '../../../../pages/polls/services/poll-list-filter.service/poll-list-filter.service';
 
 const POLL_LIST_STORAGE_INDEX = `polls`;

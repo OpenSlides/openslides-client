@@ -5,7 +5,6 @@ import { ViewPoll, ViewPollBallot } from '@app/site/pages/meetings/pages/polls';
 import { BehaviorSubject } from 'rxjs';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 
 /**
  * keys are poll ids,
@@ -22,9 +21,7 @@ export interface VotePayload {
     providedIn: `root`
 })
 export class PollBallotRepositoryService extends BaseMeetingRelatedRepository<ViewPollBallot, PollBallot> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, PollBallot);
-    }
+    protected baseModelCtor = PollBallot;
 
     public getTitle = (): string => `Vote`;
 

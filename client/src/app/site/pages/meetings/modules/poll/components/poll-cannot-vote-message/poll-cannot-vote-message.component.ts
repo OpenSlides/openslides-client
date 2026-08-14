@@ -2,13 +2,13 @@ import { ChangeDetectionStrategy, Component, computed, inject, input } from '@an
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
-import { ViewPoll } from '../../../../pages/polls';
 import { ViewUser } from '../../../../view-models/view-user';
-import { VotingProhibition, VotingService } from '../../services/voting.service';
+import { VotingProhibition, VotingService } from '../../services/voting.service/voting.service';
 
 @Component({
     selector: `os-poll-cannot-vote-message`,

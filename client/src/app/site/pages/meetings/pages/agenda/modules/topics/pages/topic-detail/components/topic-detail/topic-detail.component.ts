@@ -13,7 +13,7 @@ import { PollControllerService } from '@app/site/pages/meetings/modules/poll/ser
 import { ViewTopic } from '@app/site/pages/meetings/pages/agenda';
 import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda/view-models';
 import { ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
@@ -23,10 +23,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { filter, map, Observable } from 'rxjs';
 
 import { AgendaForwardDialogService } from '../../../../../../components/agenda-forward-dialog/services/agenda-forward-dialog.service';
-import { AgendaItemControllerService } from '../../../../../../services';
+import { AgendaItemControllerService } from '../../../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 import { TopicPollService } from '../../../../modules/topic-poll/services/topic-poll.service';
 import { TopicPollDialogService } from '../../../../modules/topic-poll/services/topic-poll-dialog.service';
-import { TopicControllerService } from '../../../../services/topic-controller.service';
+import { TopicControllerService } from '../../../../services/topic-controller.service/topic-controller.service';
 import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pdf.service';
 
 @Component({

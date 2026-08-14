@@ -5,9 +5,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { SelectionOnehundredPercentBase } from '@app/domain/models/poll/poll-config-selection';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { _, TranslatePipe } from '@ngx-translate/core';
 
-import { ViewPoll } from '../../../../pages/polls';
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
 
 export interface PollFormSelection {

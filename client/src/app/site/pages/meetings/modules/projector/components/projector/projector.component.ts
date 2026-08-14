@@ -10,7 +10,7 @@ import { PipesModule } from '@app/ui/pipes';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { Dimension } from '../../../../pages/projectors/definitions';
+import { Dimension } from '../../../../pages/projectors/definitions/dimension';
 
 @Component({
     standalone: true,

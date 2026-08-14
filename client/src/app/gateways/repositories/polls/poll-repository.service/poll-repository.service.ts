@@ -1,28 +1,22 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Poll } from '@app/domain/models/poll/poll';
 import { PollState, PollVisibility } from '@app/domain/models/poll/poll-constants';
 import { PollCreatePayload, PollUpdatePayload, VoteApiService } from '@app/gateways/vote-api.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ViewPollBallotUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-ballot-user';
 import { Fieldsets } from '@app/site/services/model-request-builder';
 import { map, Observable, switchMap, takeWhile } from 'rxjs';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { PollAction } from './poll.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll, Poll> {
     private voteApi = inject(VoteApiService);
 
-    public constructor() {
-        const repoServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repoServiceCollector, Poll);
-    }
+    public baseModelCtor = Poll;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Polls` : `Poll`);
     public getTitle = (viewModel: ViewPoll): string => viewModel.title;

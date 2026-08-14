@@ -10,11 +10,10 @@ import { Permission } from '@app/domain/definitions/permission';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
 import { ProjectorButtonModule } from '@app/site/pages/meetings/modules/meetings-component-collector/projector-button/projector-button.module';
 import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/poll/poll.component';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { DirectivesModule } from '@app/ui/directives';
 import { TranslatePipe } from '@ngx-translate/core';
-
-import { ViewPoll } from '../../../../../polls';
 
 @Component({
     selector: `os-motion-poll`,

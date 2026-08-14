@@ -12,6 +12,7 @@ import { Ids } from '@app/domain/definitions/key-types';
 import { PollVisibility } from '@app/domain/models/poll';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from '@app/site/base/base.component';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { DirectivesModule } from '@app/ui/directives';
 import { EditableListComponent } from '@app/ui/modules/editable-list';
@@ -19,8 +20,8 @@ import { SearchSelectorModule } from '@app/ui/modules/search-selector';
 import { PipesModule } from '@app/ui/pipes';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { GroupControllerService, ViewGroup } from '../../../../pages/participants';
-import { ViewPoll } from '../../../../pages/polls';
+import { GroupControllerService } from '../../../../pages/participants/modules/groups/services/group-controller.service';
+import { ViewGroup } from '../../../../pages/participants/modules/groups/view-models/view-group';
 import { PollFormApprovalComponent } from '../poll-form-approval/poll-form-approval.component';
 import { PollFormRatingApprovalComponent } from '../poll-form-rating-approval/poll-form-rating-approval.component';
 import { PollFormRatingScoreComponent } from '../poll-form-rating-score/poll-form-rating-score.component';

@@ -14,6 +14,7 @@ import { Identifiable } from '@app/domain/interfaces';
 import { PollState } from '@app/domain/models/poll';
 import { KeyedTranslations } from '@app/domain/translations';
 import { BaseComponent } from '@app/site/base/base.component';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { DirectivesModule } from '@app/ui/directives';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
@@ -23,8 +24,10 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 
 import { VotesFilterService } from '../../../../modules/poll/services/votes-filter.service';
-import { VotingService } from '../../../../modules/poll/services/voting.service';
-import { ViewPoll, ViewPollBallot, ViewPollConfigApproval, ViewPollOption } from '../../../../pages/polls';
+import { VotingService } from '../../../../modules/poll/services/voting.service/voting.service';
+import { ViewPollBallot } from '../../../../pages/polls/view-models/poll-ballot';
+import { ViewPollConfigApproval } from '../../../../pages/polls/view-models/poll-config-approval';
+import { ViewPollOption } from '../../../../pages/polls/view-models/poll-option';
 import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
 import { ViewUser } from '../../../../view-models/view-user';
 

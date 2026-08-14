@@ -7,8 +7,10 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import Big from 'big.js';
 
 import { UnknownUserLabel } from '../../../../pages/assignments/modules/assignment-poll/services/assignment-poll.service';
-import { SelectionPollResult, ViewPollConfigSelection, ViewPollOption } from '../../../../pages/polls';
-import { PollParseNumberPipe } from '../../pipes';
+import { ViewPollConfigSelection } from '../../../../pages/polls/view-models/poll-config-selection';
+import { ViewPollOption } from '../../../../pages/polls/view-models/poll-option';
+import { SelectionPollResult } from '../../../../pages/polls/view-models/poll-result-selection';
+import { PollParseNumberPipe } from '../../pipes/poll-parse-number/poll-parse-number.pipe';
 import { ChartComponent, ChartData } from '../chart/chart.component';
 import { PollResultBaseComponent } from '../poll-result-base.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';

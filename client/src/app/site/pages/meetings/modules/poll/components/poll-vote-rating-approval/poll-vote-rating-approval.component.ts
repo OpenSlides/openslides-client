@@ -6,7 +6,7 @@ import { YES_KEY } from '@app/domain/models/poll';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-import { ViewPollConfigRatingApproval } from '../../../../pages/polls';
+import { ViewPollConfigRatingApproval } from '../../../../pages/polls/view-models/poll-config-rating-approval';
 import { PollVoteBaseComponent } from '../poll-vote-base.component';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';

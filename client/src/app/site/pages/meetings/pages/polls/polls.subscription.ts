@@ -2,10 +2,10 @@ import { Id } from '@app/domain/definitions/key-types';
 import { FULL_FIELDSET } from '@app/domain/fieldsets/misc';
 import { MeetingUserFieldsets } from '@app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { BaseSimplifiedModelRequest } from '@app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../../view-models/view-meeting';
-import { ViewPoll } from './view-models';
 
 export const POLL_LIST_SUBSCRIPTION = `poll_list`;
 export const POLL_DETAIL_SUBSCRIPTION = `poll_detail`;

@@ -16,19 +16,17 @@ import { PollConfigSelectionRepositoryService } from '@app/gateways/repositories
 import { PollConfigStvScottishRepositoryService } from '@app/gateways/repositories/polls/poll-config-stv-scottish-repository.service';
 import { PollOptionRepositoryService } from '@app/gateways/repositories/polls/poll-option-repository.service';
 import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 import { AppConfig } from '../../../../../infrastructure/definitions/app-config';
-import {
-    ViewPoll,
-    ViewPollBallot,
-    ViewPollConfigApproval,
-    ViewPollConfigRatingApproval,
-    ViewPollConfigRatingScore,
-    ViewPollConfigSelection,
-    ViewPollConfigStvScottish,
-    ViewPollOption
-} from './view-models';
+import { ViewPollBallot } from './view-models/poll-ballot';
 import { ViewPollBallotUser } from './view-models/poll-ballot-user';
+import { ViewPollConfigApproval } from './view-models/poll-config-approval';
+import { ViewPollConfigRatingApproval } from './view-models/poll-config-rating-approval';
+import { ViewPollConfigRatingScore } from './view-models/poll-config-rating-score';
+import { ViewPollConfigSelection } from './view-models/poll-config-selection';
+import { ViewPollConfigStvScottish } from './view-models/poll-config-stv-scottish';
+import { ViewPollOption } from './view-models/poll-option';
 
 export const PollsAppConfig: AppConfig = {
     name: `poll`,

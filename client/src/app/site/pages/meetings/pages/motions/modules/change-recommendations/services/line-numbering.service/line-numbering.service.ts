@@ -2,7 +2,7 @@ import { inject, Service } from '@angular/core';
 import { djb2hash } from '@app/infrastructure/utils';
 import { DiffCompat, LineNumbering, VERSION } from '@openslides/motion-diff';
 
-import { DiffCache } from '../../../../definitions';
+import { DiffCache } from '../../../../definitions/cache';
 import { DIFF_VERSION } from '../diff-factory.service';
 
 /**

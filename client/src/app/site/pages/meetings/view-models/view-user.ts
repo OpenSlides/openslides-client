@@ -5,11 +5,12 @@ import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-mode
 
 import { Id } from '../../../../domain/definitions/key-types';
 import { ViewGender } from '../../organization/pages/accounts/pages/gender/view-models/view-gender';
-import { ViewCommittee } from '../../organization/pages/committees';
+import { ViewCommittee } from '../../organization/pages/committees/view-models/view-committee';
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
-import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
-import { ViewPollBallot, ViewPollOption } from '../pages/polls';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models/view-structure-level';
+import { ViewPollBallot } from '../pages/polls/view-models/poll-ballot';
+import { ViewPollOption } from '../pages/polls/view-models/poll-option';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
 import { ViewMeetingUser } from './view-meeting-user';

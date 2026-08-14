@@ -6,10 +6,10 @@ import { Topic } from '@app/domain/models/topics/topic';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
 import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { PollServiceMapperService } from '@app/site/pages/meetings/modules/poll/services/poll-service-mapper.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
 
-import { ViewTopic } from '../../../view-models';
+import { ViewTopic } from '../../../view-models/view-topic';
 
 @Service()
 export class TopicPollService extends PollService {

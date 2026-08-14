@@ -17,25 +17,28 @@ import { HasMeeting } from '../../../view-models/has-meeting';
 import { SlideOptions } from '../../../view-models/slide-options';
 import { ViewMeeting } from '../../../view-models/view-meeting';
 import { ViewUser } from '../../../view-models/view-user';
-import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
+import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers/view-models/has-list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachmentMeetingMediafiles } from '../../mediafiles/view-models/has-attachment';
-import { HasPolls, ViewPollConfigApproval, VotingTextContext } from '../../polls';
+import { HasPolls, VotingTextContext } from '../../polls/view-models/has-polls';
+import { ViewPollConfigApproval } from '../../polls/view-models/poll-config-approval';
 import { DiffLinesInParagraph } from '../definitions';
-import { ViewMotionChangeRecommendation, ViewMotionWorkflow } from '../modules';
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
-import { LineNumberingService, MotionDiffService } from '../modules/change-recommendations/services';
+import { LineNumberingService } from '../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { MotionDiffService } from '../modules/change-recommendations/services/motion-diff.service/motion-diff.service';
+import { ViewMotionChangeRecommendation } from '../modules/change-recommendations/view-models/view-motion-change-recommendation';
 import { ViewMotionComment } from '../modules/comments/view-models/view-motion-comment';
 import { ViewMotionCommentSection } from '../modules/comments/view-models/view-motion-comment-section';
-import { ViewMotionEditor } from '../modules/editors';
+import { ViewMotionEditor } from '../modules/editors/view-models/view-motion-editor';
 import { ViewMotionBlock } from '../modules/motion-blocks/view-models/view-motion-block';
 import { HasPersonalNote } from '../modules/personal-notes/view-models/has-personal-note';
 import { ViewPersonalNote } from '../modules/personal-notes/view-models/view-personal-note';
 import { ViewMotionState } from '../modules/states/view-models/view-motion-state';
-import { ViewMotionSubmitter } from '../modules/submitters';
+import { ViewMotionSubmitter } from '../modules/submitters/view-models/view-motion-submitter';
 import { ViewMotionSupporter } from '../modules/supporters/view-models/view-motion-supporter';
 import { HasTags } from '../modules/tags/view-models/has-tags';
-import { ViewMotionWorkingGroupSpeaker } from '../modules/working-group-speakers';
+import { ViewMotionWorkflow } from '../modules/workflows/view-models/view-motion-workflow';
+import { ViewMotionWorkingGroupSpeaker } from '../modules/working-group-speakers/view-models/view-motion-working-group-speaker';
 
 export type HasReferencedMotionsInExtension = HasReferencedMotionInExtensionIds &
     ViewModelRelations<{

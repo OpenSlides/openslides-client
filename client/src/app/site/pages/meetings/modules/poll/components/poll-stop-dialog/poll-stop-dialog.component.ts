@@ -9,7 +9,7 @@ import {
     MatDialogTitle
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { TranslatePipe } from '@ngx-translate/core';
 
 export interface DialogData {

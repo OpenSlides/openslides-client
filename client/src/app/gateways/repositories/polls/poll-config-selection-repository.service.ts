@@ -3,7 +3,6 @@ import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selecti
 import { ViewPollConfigSelection } from '@app/site/pages/meetings/pages/polls/view-models/poll-config-selection';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 @Injectable({
     providedIn: `root`
@@ -12,9 +11,7 @@ export class PollConfigSelectionRepositoryService extends BaseMeetingRelatedRepo
     ViewPollConfigSelection,
     PollConfigSelection
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, PollConfigSelection);
-    }
+    protected baseModelCtor = PollConfigSelection;
 
     public getTitle = (_viewPollConfigSelection: ViewPollConfigSelection): string => `Selection poll config`;
 

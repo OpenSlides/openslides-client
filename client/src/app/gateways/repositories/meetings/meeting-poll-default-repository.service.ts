@@ -3,7 +3,6 @@ import { MeetingPollDefault } from '@app/domain/models/meetings/meeting-poll-def
 import { ViewMeetingPollDefault } from '@app/site/pages/meetings/view-models/view-meeting-poll-default';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 @Injectable({
     providedIn: `root`
@@ -12,9 +11,7 @@ export class MeetingPollDefaultRepositoryService extends BaseMeetingRelatedRepos
     ViewMeetingPollDefault,
     MeetingPollDefault
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MeetingPollDefault);
-    }
+    public baseModelCtor = MeetingPollDefault;
 
     public getTitle = (_viewMeetingPollDefault: ViewMeetingPollDefault): string => `Meeting poll default`;
 

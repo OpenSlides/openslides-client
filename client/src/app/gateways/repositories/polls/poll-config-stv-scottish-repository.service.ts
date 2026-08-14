@@ -3,7 +3,6 @@ import { PollConfigStvScottish } from '@app/domain/models/poll/poll-config-stv-s
 import { ViewPollConfigStvScottish } from '@app/site/pages/meetings/pages/polls/view-models/poll-config-stv-scottish';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 @Injectable({
     providedIn: `root`
@@ -12,9 +11,7 @@ export class PollConfigStvScottishRepositoryService extends BaseMeetingRelatedRe
     ViewPollConfigStvScottish,
     PollConfigStvScottish
 > {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, PollConfigStvScottish);
-    }
+    protected baseModelCtor = PollConfigStvScottish;
 
     public getTitle = (_viewPollConfigStvScottish: ViewPollConfigStvScottish): string => `STV (Scottish) poll config`;
 

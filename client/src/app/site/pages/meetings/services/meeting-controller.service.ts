@@ -1,15 +1,13 @@
-import { inject, Injector, Service } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Action } from '@app/gateways/actions';
 import { ImportMeeting } from '@app/gateways/repositories/meeting-repository.service';
-import { PointOfOrderCategoryRepositoryService } from '@app/gateways/repositories/point-of-order-category/point-of-order-category-repository.service';
 import { BaseController } from '@app/site/base/base-controller';
 import { Observable } from 'rxjs';
 
-import { Identifiable } from '../../../../domain/interfaces';
+import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { Meeting } from '../../../../domain/models/meetings/meeting';
 import { MeetingRepositoryService } from '../../../../gateways/repositories/meeting-repository.service';
-import { ControllerServiceCollectorService } from '../../../services/controller-service-collector.service';
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ViewUser } from '../view-models/view-user';
 
@@ -22,23 +20,9 @@ export interface MeetingUserModifiedFields {
 
 @Service()
 export class MeetingControllerService extends BaseController<ViewMeeting, Meeting> {
-    private get pointOfOrdercategoryRepo(): PointOfOrderCategoryRepositoryService {
-        if (!this._pointOfOrdercategoryRepo) {
-            this._pointOfOrdercategoryRepo = this.injector.get(PointOfOrderCategoryRepositoryService);
-        }
-        return this._pointOfOrdercategoryRepo;
-    }
+    protected repo: MeetingRepositoryService = inject(MeetingRepositoryService);
 
-    private _pointOfOrdercategoryRepo: PointOfOrderCategoryRepositoryService;
-
-    protected override repo: MeetingRepositoryService;
-    private injector = inject(Injector);
-
-    public constructor() {
-        const repositoryServiceCollector = inject(ControllerServiceCollectorService);
-        const repo = inject(MeetingRepositoryService);
-        super(repositoryServiceCollector, Meeting, repo);
-    }
+    public baseModelCtor = Meeting;
 
     public create(...payload: any[]): Action<Identifiable[]> {
         return this.repo.create(...payload);

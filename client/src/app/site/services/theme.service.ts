@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { HtmlColor, Id } from '../../domain/definitions/key-types';
 import { ThemeGeneralColors, ThemeRequiredValues } from '../../domain/models/theme/theme';
 import { StorageService } from '../../gateways/storage.service';
-import { ViewTheme } from '../pages/organization/pages/designs';
+import { ViewTheme } from '../pages/organization/pages/designs/view-models/view-theme';
 import { OrganizationSettingsService } from '../pages/organization/services/organization-settings.service';
 import { ColorDefinition, ColorService } from './color.service';
 
