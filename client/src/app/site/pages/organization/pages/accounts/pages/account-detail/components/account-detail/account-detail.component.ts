@@ -376,7 +376,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             payload[`committee_management_ids`] = undefined;
             payload[`organization_management_level`] = undefined;
         }
-        if (this.operator.isAccountAdmin) {
+        if (this.operator.isAccountAdmin && !this.operator.isOrgaManager) {
             delete payload.home_committee_id;
         }
         if (payload.home_committee_id === 0) {
