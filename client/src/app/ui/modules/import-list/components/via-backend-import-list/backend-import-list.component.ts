@@ -26,6 +26,7 @@ import { ImportListHeaderDefinition } from '../../definitions/import-list-header
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';
+import { ParticipantImportCSVReloadService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-reload-file.service';
 
 export enum BackendImportPhase {
     LOADING_PREVIEW,
@@ -57,7 +58,7 @@ export class BackendImportListComponent implements OnInit {
     public importListStateTemplate: TemplateRef<any>;
 
     @ViewChild(`fileInput`)
-    private fileInput!: ElementRef<HTMLInputElement>;
+    public fileInput!: ElementRef<HTMLInputElement>;
 
     @Input()
     public modelName = ``;
@@ -126,6 +127,7 @@ export class BackendImportListComponent implements OnInit {
     protected selectedNewFile;
 
     private dialog = inject(MatDialog);
+    private CSVReloadService = inject(ParticipantImportCSVReloadService);
 
     public constructor(
         private cd: ChangeDetectorRef,
@@ -143,6 +145,10 @@ export class BackendImportListComponent implements OnInit {
                 this.fileInput.nativeElement.value = ``;
             }
             this._state = phase;
+        });
+        this.CSVReloadService.openFileInput$.subscribe(() => {
+            const target = this.fileInput.nativeElement.click();
+            this._importer.onSelectFile(target);
         });
         this.cd.detectChanges();
     }

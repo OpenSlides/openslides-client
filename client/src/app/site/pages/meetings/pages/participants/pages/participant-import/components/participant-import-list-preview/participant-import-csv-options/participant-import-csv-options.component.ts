@@ -15,13 +15,16 @@ import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
-import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatRadioButton, MatRadioChange, MatRadioGroup } from '@angular/material/radio';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ParticipantImportService } from '../../../services';
-import { sideNavCoordinationService } from '../../../services/participant-import-preview.service/participant-import-preview-csv-options.service';
+import { sideNavCoordinationService } from '../../../services/participant-import-preview.service/participant-import-preview-sidenav-coordination.service';
+import { BaseBackendImportService } from '@app/site/base/base-import.service/base-backend-import.service';
+import { BackendImportListComponent } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
+import { ParticipantImportCSVReloadService } from '../../../services/participant-import-preview.service/participant-import-preview-reload-file.service';
 
 @Component({
     selector: 'os-participant-import-csv-options',
@@ -39,12 +42,12 @@ import { sideNavCoordinationService } from '../../../services/participant-import
         FormsModule
     ],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: true
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class CSVOptions implements OnInit {
     public vp = inject(ViewPortService);
     private sideNavCoordinator = inject(sideNavCoordinationService);
+    private CSVReload = inject(ParticipantImportCSVReloadService);
 
     @Input()
     public csvConfiguration: boolean;
@@ -66,19 +69,21 @@ export class CSVOptions implements OnInit {
     public selectedTextSeparatorOption = "''";
 
     @Output()
-    public selectedEncodingOutput = new EventEmitter<void>();
+    public selectedEncodingOutput = new EventEmitter<MatRadioChange>();
 
     @Output()
-    public selectedColSepOutput = new EventEmitter<void>();
+    public selectedColSepOutput = new EventEmitter<MatRadioChange>();
 
     @Output()
-    public selectedTextSeparatorOutput = new EventEmitter<void>();
+    public selectedTextSeparatorOutput = new EventEmitter<MatRadioChange>();
 
-    @Output() // csvReload
-    public selectNewFile = new EventEmitter<Event>();
+    // csvReload
+    public selectNewFile(): void {
+        this.CSVReload.reload();
+    }
 
     @ViewChild(`fileInput`)
-    private fileInput!: ElementRef<HTMLInputElement>;
+    public fileInput!: ElementRef<HTMLInputElement>;
 
     public ngOnInit(): void {
         this.sideNavCoordinator.drawer$.subscribe(drawer => {
@@ -86,22 +91,6 @@ export class CSVOptions implements OnInit {
                 this.csvConfigMenu.close();
             }
         });
-    }
-
-    public sendSelectedEncoding($event): void {
-        this.selectedEncodingOutput.emit($event);
-    }
-
-    public sendSelectedColumnSeparator($event): void {
-        this.selectedColSepOutput.emit($event);
-    }
-
-    public sendSelectedTextSeparator($event): void {
-        this.selectedTextSeparatorOutput.emit($event);
-    }
-
-    public sendCsvReload(event: Event): void {
-        this.selectNewFile.emit(event);
     }
 
     public openCsvConfig(): void {

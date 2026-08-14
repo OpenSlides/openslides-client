@@ -16,7 +16,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Identifiable } from '@app/domain/interfaces';
 import { OsFilterIndicator } from '@app/site/base/base-filter.service';
 import { OsSortingOption } from '@app/site/base/base-sort.service';
-import { sideNavCoordinationService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-csv-options.service';
+import { sideNavCoordinationService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-sidenav-coordination.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { FilterListService } from '@app/ui/modules/list/definitions/filter-service';
 import { OsSortOption, SortListService } from '@app/ui/modules/list/definitions/sort-service';

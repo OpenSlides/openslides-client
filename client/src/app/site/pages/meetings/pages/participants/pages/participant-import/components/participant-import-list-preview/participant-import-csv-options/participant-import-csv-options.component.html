@@ -2,8 +2,7 @@
     <!-- CSV-Reload Button -->
     <div class="button-positions">
         <div>
-            <button mat-button [class.not-selected-option]="" (click)="fileInput.click()">
-                <input #fileInput class="fileInput" type="file" />
+            <button mat-button [class.not-selected-option]="" (click)="selectNewFile()">
                 <mat-icon>autorenew</mat-icon>
                 @if ((vp.isMobileSubject | async) === false) {
                     <span class="upper">
@@ -43,7 +42,7 @@
             class="radio-group"
             style="display: flex; flex-direction: column"
             [(ngModel)]="selectedEncodingOption"
-            (change)="sendSelectedEncoding($event)"
+            (change)="selectedEncodingOutput.emit($event)"
         >
             <mat-radio-button
                 value="utf-8"
@@ -75,7 +74,7 @@
         <mat-radio-group
             class="radio-group"
             [(ngModel)]="selectedColumnSeparatorOption"
-            (change)="sendSelectedColumnSeparator($event)"
+            (change)="selectedColSepOutput.emit($event)"
         >
             <mat-radio-button
                 value="Automatic"
@@ -107,7 +106,7 @@
         <mat-radio-group
             class="radio-group"
             [(ngModel)]="selectedTextSeparatorOption"
-            (change)="sendSelectedTextSeparator($event)"
+            (change)="selectedTextSeparatorOutput.emit($event)"
         >
             <mat-radio-button
                 value="''"
