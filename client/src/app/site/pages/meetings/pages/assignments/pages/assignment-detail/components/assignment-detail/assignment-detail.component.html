@@ -176,21 +176,21 @@
                                 ({{ assignment.candidateAmount }})
                             }
                         </h3>
-                        @if (assignment && assignmentCandidates.length > 1 && hasPerms('manage')) {
+                        @if (assignmentCandidates.length > 1 && hasPerms('manage')) {
                             <div class="buttons">
                                 <button
                                     mat-button
-                                    [color]="isSortByFirstName === false || isSortByFirstName ? 'accent' : ''"
+                                    [color]="sortBy === 'first_name' || sortBy === 'first_name' ? 'accent' : ''"
                                     [matMenuTriggerFor]="sortMenu"
                                 >
                                     <mat-icon>sort</mat-icon>
                                     {{ 'Sort' | translate }}
                                 </button>
                                 <mat-menu #sortMenu="matMenu">
-                                    <button mat-menu-item (click)="sortCandidates()">
+                                    <button mat-menu-item (click)="sortCandidates(`first_name`)">
                                         <mat-icon>
                                             {{
-                                                isSortByFirstName === true
+                                                sortBy === 'first_name'
                                                     ? sortAscending
                                                         ? 'arrow_upward'
                                                         : 'arrow_downward'
@@ -199,10 +199,10 @@
                                         </mat-icon>
                                         <span>{{ 'Given name' | translate }}</span>
                                     </button>
-                                    <button mat-menu-item (click)="sortCandidates(false)">
+                                    <button mat-menu-item (click)="sortCandidates(`last_name`)">
                                         <mat-icon>
                                             {{
-                                                isSortByFirstName === false
+                                                sortBy === `last_name`
                                                     ? sortAscending
                                                         ? 'arrow_upward'
                                                         : 'arrow_downward'
@@ -216,7 +216,7 @@
                         }
                     </div>
                     <div>
-                        @if (assignment?.candidates?.length) {
+                        @if (assignment.candidates?.length) {
                             <div class="candidates-list">
                                 <os-sorting-list
                                     [count]="assignment.number_poll_candidates"
