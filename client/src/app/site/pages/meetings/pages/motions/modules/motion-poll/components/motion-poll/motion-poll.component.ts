@@ -1,97 +1,63 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Id } from '@app/domain/definitions/key-types';
+import { Component, computed, inject, input, output } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
 import { Permission } from '@app/domain/definitions/permission';
-import { PollState, VOTE_MAJORITY } from '@app/domain/models/poll';
-import { BasePollComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ProjectorButtonModule } from '@app/site/pages/meetings/modules/meetings-component-collector/projector-button/projector-button.module';
+import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/poll/poll.component';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
-import { TranslateService } from '@ngx-translate/core';
-
-import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { ViewPoll } from '../../../../../polls/view-models/view-poll';
-import { MotionPollService } from '../../services/motion-poll.service/motion-poll.service';
-import { MotionPollPdfService } from '../../services/motion-poll-pdf.service/motion-poll-pdf.service';
+import { DirectivesModule } from '@app/ui/directives';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: `os-motion-poll`,
+    imports: [
+        PollComponent,
+        RouterModule,
+        TranslatePipe,
+        DirectivesModule,
+        MatButtonModule,
+        MatCardModule,
+        MatTooltipModule,
+        MatIconModule,
+        MatMenuModule,
+        MatDividerModule,
+        ProjectorButtonModule
+    ],
     templateUrl: `./motion-poll.component.html`,
-    styleUrls: [`./motion-poll.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    styleUrls: [`./motion-poll.component.scss`]
 })
-export class MotionPollComponent extends BasePollComponent {
-    @Input()
-    public set pollViewModel(poll: ViewPoll) {
-        this.poll = poll;
-    }
+export class MotionPollComponent extends BaseMeetingComponent {
+    public poll = input.required<ViewPoll>();
 
-    @Input()
-    public set pollId(id: Id) {
-        this.initializePoll(id);
-    }
+    public dialogOpened = output();
 
-    @Output()
-    public dialogOpened = new EventEmitter<void>();
-
-    public get showPoll(): boolean {
-        if (this.poll) {
+    public showPoll = computed<boolean>(() => {
+        if (this.poll()) {
             if (
-                this.operator.hasPerms(Permission.motionCanManagePolls) ||
-                this.poll.isPublished ||
-                (this.poll.isEVoting && !this.poll.isCreated)
+                this.operator.hasPerms(Permission.motionCanSeePolls) ||
+                this.poll().isPublished ||
+                (this.poll().isEVoting && !this.poll().isCreated)
             ) {
                 return true;
             }
         }
         return false;
-    }
+    });
 
-    public get isAnonymous(): boolean {
-        return this.operator.isAnonymousLoggedIn;
-    }
+    public isSameMeeting = computed<boolean>(() => {
+        return !this.poll().meeting_id || this.activeMeetingId === this.poll().meeting_id;
+    });
 
-    public get canSeeVotes(): boolean {
-        const option = this.poll.options[0];
-        return (
-            (this.poll.hasVotes && this.poll.stateHasVotes) ||
-            [option?.yes, option?.no, option?.abstain].some(value => value === VOTE_MAJORITY)
-        );
-    }
+    private operator = inject(OperatorService);
 
-    public get isEVotingEnabled(): boolean {
-        return this.pollService.isElectronicVotingEnabled;
-    }
-
-    public get isPublished(): boolean {
-        return this.poll.state === PollState.Published;
-    }
-
-    public get isSameMeeting(): boolean {
-        return !this.poll.meeting_id || this.activeMeetingId === this.poll.meeting_id;
-    }
-
-    public get canManagePoll(): boolean {
-        return this.operator.hasPerms(Permission.motionCanManagePolls);
-    }
-
-    public constructor(
-        protected override translate: TranslateService,
-        private pollService: MotionPollService,
-        private pdfService: MotionPollPdfService,
-        private operator: OperatorService,
-        private votingPrivacyDialog: VotingPrivacyWarningDialogService
-    ) {
-        super();
-    }
-
-    public openVotingWarning(): void {
-        this.votingPrivacyDialog.open();
-    }
-
-    public downloadPdf(): void {
-        this.pdfService.printBallots(this.poll);
-    }
-
-    public getDetailLink(): string {
-        return `/${this.activeMeetingId}/motions/polls/${this.poll.sequential_number}`;
-    }
+    public getDetailLink = computed<string>(() => {
+        return `/${this.activeMeetingId}/polls/${this.poll().sequential_number}`;
+    });
 }

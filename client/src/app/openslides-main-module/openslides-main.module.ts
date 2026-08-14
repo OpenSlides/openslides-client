@@ -4,7 +4,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { GlobalSpinnerModule } from '@app/site/modules/global-spinner';
-import { CustomMissingTranslationHandler } from '@app/site/modules/translations/missing-translation-handler';
 import {
     provideMissingTranslationHandler,
     provideTranslateService,
@@ -14,6 +13,7 @@ import {
 
 import { environment } from '../../environments/environment';
 import { CustomTranslationService } from '../site/modules/translations/custom-translation.service';
+import { CustomMissingTranslationHandler } from '../site/modules/translations/missing-translation-handler';
 import { CustomTranslationParser } from '../site/modules/translations/translation-parser';
 import { PruningTranslationLoader } from '../site/modules/translations/translation-pruning-loader';
 import { WaitForActionDialogService } from '../site/modules/wait-for-action-dialog/services/wait-for-action-dialog.service';

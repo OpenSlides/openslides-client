@@ -1,20 +1,32 @@
-import { Option } from '@app/domain/models/poll/option';
 import { Poll } from '@app/domain/models/poll/poll';
-import { Vote } from '@app/domain/models/poll/vote';
-import { PollCandidate } from '@app/domain/models/poll-candidate-lists/poll-candidate';
-import { PollCandidateList } from '@app/domain/models/poll-candidate-lists/poll-candidate-list';
-import { PollCandidateRepositoryService } from '@app/gateways/repositories/poll-candidate-lists/poll-candidate';
-import { PollCandidateListRepositoryService } from '@app/gateways/repositories/poll-candidate-lists/poll-candidate-list';
-import { OptionRepositoryService } from '@app/gateways/repositories/polls/option-repository.service';
+import { PollBallot } from '@app/domain/models/poll/poll-ballot';
+import { PollBallotUser } from '@app/domain/models/poll/poll-ballot-user';
+import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
+import { PollConfigRatingApproval } from '@app/domain/models/poll/poll-config-rating-approval';
+import { PollConfigRatingScore } from '@app/domain/models/poll/poll-config-rating-score';
+import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
+import { PollConfigStvScottish } from '@app/domain/models/poll/poll-config-stv-scottish';
+import { PollOption } from '@app/domain/models/poll/poll-option';
+import { PollBallotRepositoryService } from '@app/gateways/repositories/polls/poll-ballot-repository.service';
+import { PollBallotUserRepositoryService } from '@app/gateways/repositories/polls/poll-ballot-user-repository.service';
+import { PollConfigApprovalRepositoryService } from '@app/gateways/repositories/polls/poll-config-approval-repository.service';
+import { PollConfigRatingApprovalRepositoryService } from '@app/gateways/repositories/polls/poll-config-rating-approval-repository.service';
+import { PollConfigRatingScoreRepositoryService } from '@app/gateways/repositories/polls/poll-config-rating-score-repository.service';
+import { PollConfigSelectionRepositoryService } from '@app/gateways/repositories/polls/poll-config-selection-repository.service';
+import { PollConfigStvScottishRepositoryService } from '@app/gateways/repositories/polls/poll-config-stv-scottish-repository.service';
+import { PollOptionRepositoryService } from '@app/gateways/repositories/polls/poll-option-repository.service';
 import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
-import { VoteRepositoryService } from '@app/gateways/repositories/polls/vote-repository.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 import { AppConfig } from '../../../../../infrastructure/definitions/app-config';
-import { ViewOption } from './view-models/view-option';
-import { ViewPoll } from './view-models/view-poll';
-import { ViewPollCandidate } from './view-models/view-poll-candidate';
-import { ViewPollCandidateList } from './view-models/view-poll-candidate-list';
-import { ViewVote } from './view-models/view-vote';
+import { ViewPollBallot } from './view-models/poll-ballot';
+import { ViewPollBallotUser } from './view-models/poll-ballot-user';
+import { ViewPollConfigApproval } from './view-models/poll-config-approval';
+import { ViewPollConfigRatingApproval } from './view-models/poll-config-rating-approval';
+import { ViewPollConfigRatingScore } from './view-models/poll-config-rating-score';
+import { ViewPollConfigSelection } from './view-models/poll-config-selection';
+import { ViewPollConfigStvScottish } from './view-models/poll-config-stv-scottish';
+import { ViewPollOption } from './view-models/poll-option';
 
 export const PollsAppConfig: AppConfig = {
     name: `poll`,
@@ -25,24 +37,49 @@ export const PollsAppConfig: AppConfig = {
             repository: PollRepositoryService
         },
         {
-            model: Option,
-            viewModel: ViewOption,
-            repository: OptionRepositoryService
+            model: PollConfigApproval,
+            viewModel: ViewPollConfigApproval,
+            repository: PollConfigApprovalRepositoryService
         },
         {
-            model: Vote,
-            viewModel: ViewVote,
-            repository: VoteRepositoryService
+            model: PollConfigSelection,
+            viewModel: ViewPollConfigSelection,
+            repository: PollConfigSelectionRepositoryService
         },
         {
-            model: PollCandidate,
-            viewModel: ViewPollCandidate,
-            repository: PollCandidateRepositoryService
+            model: PollConfigRatingApproval,
+            viewModel: ViewPollConfigRatingApproval,
+            repository: PollConfigRatingApprovalRepositoryService
         },
         {
-            model: PollCandidateList,
-            viewModel: ViewPollCandidateList,
-            repository: PollCandidateListRepositoryService
+            model: PollConfigRatingScore,
+            viewModel: ViewPollConfigRatingScore,
+            repository: PollConfigRatingScoreRepositoryService
+        },
+        {
+            model: PollConfigSelection,
+            viewModel: ViewPollConfigSelection,
+            repository: PollConfigSelectionRepositoryService
+        },
+        {
+            model: PollConfigStvScottish,
+            viewModel: ViewPollConfigStvScottish,
+            repository: PollConfigStvScottishRepositoryService
+        },
+        {
+            model: PollOption,
+            viewModel: ViewPollOption,
+            repository: PollOptionRepositoryService
+        },
+        {
+            model: PollBallot,
+            viewModel: ViewPollBallot,
+            repository: PollBallotRepositoryService
+        },
+        {
+            model: PollBallotUser,
+            viewModel: ViewPollBallotUser,
+            repository: PollBallotUserRepositoryService
         }
     ]
 };

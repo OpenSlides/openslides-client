@@ -34,7 +34,7 @@ import { AutopilotSettingsComponent } from './components/autopilot-settings/auto
 import { PollCollectionComponent } from './components/poll-collection/poll-collection.component';
 
 @NgModule({
-    declarations: [AutopilotMainComponent, AutopilotSettingsComponent, AutopilotComponent, PollCollectionComponent],
+    declarations: [AutopilotMainComponent, AutopilotSettingsComponent, AutopilotComponent],
     imports: [
         CommonModule,
         RouterModule,
@@ -58,6 +58,7 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         CountdownTimeModule,
         OpenSlidesTranslationModule.forChild(),
         PollModule,
+        PollCollectionComponent,
         MotionPollModule,
         MatMenuModule,
         TopicPollModule,

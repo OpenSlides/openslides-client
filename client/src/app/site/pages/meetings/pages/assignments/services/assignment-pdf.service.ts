@@ -1,8 +1,9 @@
 import { inject, Service } from '@angular/core';
 import { AssignmentPhase } from '@app/domain/models/assignments/assignment-phase';
-import { PollMethod, PollTableData, VotingResult } from '@app/domain/models/poll/poll-constants';
+import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
+import { PollTableData, VotingResult } from '@app/domain/models/poll/poll-constants';
 import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentColumns, ContentText } from 'pdfmake/interfaces';
 
@@ -225,10 +226,8 @@ export class AssignmentPdfService {
      */
     private createNominationList(poll: ViewPoll): object {
         if (poll.isListPoll) {
-            const userList = poll.options[0]?.contentTitlesAsSortedArray?.map(candidate => ({
-                text:
-                    `${candidate.title}${candidate.subtitle ? ` (` + candidate.subtitle + `)` : ``}` ||
-                    UnknownUserLabel,
+            const userList = poll.options?.map(candidate => ({
+                text: candidate.meeting_user.getListTitle() || UnknownUserLabel,
                 margin: [0, 0, 0, 10]
             }));
             const listType = (poll.content_object as ViewAssignment).number_poll_candidates ? `ol` : `ul`;
@@ -248,9 +247,9 @@ export class AssignmentPdfService {
     private getPollResult(votingResult: PollTableData, poll: ViewPoll): string {
         const resultList = votingResult.value
             .filter((singleResult: VotingResult) => {
-                if (poll.pollmethod === PollMethod.Y) {
+                if (poll.config instanceof PollConfigSelection) {
                     return singleResult.vote !== `no` && singleResult.vote !== `abstain`;
-                } else if (poll.pollmethod === PollMethod.YN) {
+                } else if (!poll.config?.allow_abstain) {
                     return singleResult.vote !== `abstain`;
                 } else {
                     return true;

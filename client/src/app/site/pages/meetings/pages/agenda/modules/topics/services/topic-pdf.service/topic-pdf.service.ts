@@ -1,11 +1,12 @@
 import { inject, Service } from '@angular/core';
-import { PollMethod, PollTableData, VotingResult } from '@app/domain/models/poll';
+import { PollTableData, VotingResult } from '@app/domain/models/poll';
 import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText } from 'pdfmake/interfaces';
 
-import { ViewPoll } from '../../../../../polls/view-models/view-poll';
+import { ViewPollConfigSelection } from '../../../../../polls/view-models/poll-config-selection';
 import { TopicPollService } from '../../modules/topic-poll/services/topic-poll.service';
 import { ViewTopic } from '../../view-models/view-topic';
 
@@ -152,9 +153,9 @@ export class TopicPdfService {
     private getPollResult(votingResult: PollTableData, poll: ViewPoll): string {
         const resultList = votingResult.value
             .filter((singleResult: VotingResult) => {
-                if (poll.pollmethod === PollMethod.Y) {
+                if (poll.config instanceof ViewPollConfigSelection) {
                     return singleResult.vote !== `no` && singleResult.vote !== `abstain`;
-                } else if (poll.pollmethod === PollMethod.YN) {
+                } else if (!poll.config?.allow_abstain) {
                     return singleResult.vote !== `abstain`;
                 } else {
                     return true;

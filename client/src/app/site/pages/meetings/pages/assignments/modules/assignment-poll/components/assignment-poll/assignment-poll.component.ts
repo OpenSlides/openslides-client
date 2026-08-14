@@ -1,108 +1,48 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Component, computed, inject, input, output } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
-import { BasePollComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/poll/poll.component';
+import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
-import { TranslateService } from '@ngx-translate/core';
-
-import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { AssignmentPollPdfService } from '../../services/assignment-poll-pdf.service/assignment-poll-pdf.service';
+import { DirectivesModule } from '@app/ui/directives';
 
 @Component({
     selector: `os-assignment-poll`,
     templateUrl: `./assignment-poll.component.html`,
     styleUrls: [`./assignment-poll.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [PollComponent, DirectivesModule, MatCardModule, MatMenuModule, MatIconModule, MatDividerModule]
 })
-export class AssignmentPollComponent extends BasePollComponent implements OnInit {
-    @Input()
-    public set pollId(id: Id) {
-        this.initializePoll(id);
-    }
+export class AssignmentPollComponent extends BaseMeetingComponent {
+    public pollId = input.required<Id>();
 
-    @Output()
-    public readonly dialogOpened = new EventEmitter<void>();
+    public dialogOpened = output();
 
-    public candidatesLabels: string[] = [];
+    private operator = inject(OperatorService);
+    protected repo = inject(PollControllerService);
 
-    /**
-     * Form for updating the poll's description
-     */
-    public descriptionForm!: UntypedFormGroup;
+    public poll = rxResource<ViewPoll, Id>({
+        params: () => this.pollId(),
+        stream: ({ params }) => this.repo.getViewModelObservable(params)
+    });
 
-    /**
-     * @returns true if the description on the form differs from the poll's description
-     */
-    public get dirtyDescription(): boolean {
-        return this.descriptionForm.get(`description`)?.value !== this.poll.description;
-    }
-
-    public get showPoll(): boolean {
-        if (this.poll) {
+    public showPoll = computed<boolean>(() => {
+        if (this.poll.hasValue()) {
+            const poll = this.poll.value();
             if (
-                this.operator.hasPerms(Permission.assignmentCanManagePolls) ||
-                this.poll.isPublished ||
-                (this.poll.isEVoting && !this.poll.isCreated)
+                this.operator.hasPerms(Permission.assignmentCanSeePolls) ||
+                poll.isPublished ||
+                (poll.isEVoting && !poll.isCreated)
             ) {
                 return true;
             }
         }
         return false;
-    }
-
-    public get showMetaInfo(): boolean {
-        return !this.poll.stateHasVotes && this.operator.hasPerms(Permission.assignmentCanManagePolls);
-    }
-
-    public get showCandidatesInMetaInfo(): boolean {
-        return (!this.poll.stateHasVotes && !this.votingService.canVote(this.poll)) || this.poll.isListPoll;
-    }
-
-    public get canManagePoll(): boolean {
-        return this.operator.hasPerms(Permission.assignmentCanManagePolls);
-    }
-
-    public get isAnonymous(): boolean {
-        return this.operator.isAnonymousLoggedIn;
-    }
-
-    public constructor(
-        protected override translate: TranslateService,
-        private formBuilder: UntypedFormBuilder,
-        private pdfService: AssignmentPollPdfService,
-        private operator: OperatorService,
-        private votingService: VotingService,
-        private votingPrivacyDialog: VotingPrivacyWarningDialogService
-    ) {
-        super();
-    }
-
-    public ngOnInit(): void {
-        this.descriptionForm = this.formBuilder.group({
-            description: this.poll ? this.poll.description : ``
-        });
-    }
-
-    /**
-     * Print the PDF of this poll with the corresponding options and numbers
-     */
-    public printBallot(): void {
-        try {
-            this.pdfService.printBallots(this.poll);
-        } catch (e: any) {
-            console.error(e);
-            this.raiseError(e);
-        }
-    }
-
-    public openVotingWarning(): void {
-        this.votingPrivacyDialog.open();
-    }
-
-    public getDetailLink(): string {
-        return `/${this.poll.meeting_id}/assignments/polls/${this.poll.sequential_number}`;
-    }
+    });
 }

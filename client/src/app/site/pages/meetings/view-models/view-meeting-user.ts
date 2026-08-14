@@ -12,7 +12,9 @@ import { ViewMotionSupporter } from '../pages/motions/modules/supporters/view-mo
 import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers/view-models/view-motion-working-group-speaker';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models/view-structure-level';
-import { ViewVote } from '../pages/polls/view-models/view-vote';
+import { ViewPollBallot } from '../pages/polls/view-models/poll-ballot';
+import { ViewPollBallotUser } from '../pages/polls/view-models/poll-ballot-user';
+import { ViewPollOption } from '../pages/polls/view-models/poll-option';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
 
@@ -32,6 +34,7 @@ export class ViewMeetingUser extends BaseViewModel<MeetingUser> {
     }
 }
 interface IMeetingUserRelations {
+    ballots: ViewPollBallot;
     user: ViewUser;
     groups: ViewGroup[];
     meeting: ViewMeeting;
@@ -43,9 +46,11 @@ interface IMeetingUserRelations {
     submitted_motions: ViewMotionSubmitter[];
     motion_editors: ViewMotionEditor[];
     motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
+    acting_ballots: ViewPollBallotUser[];
+    represented_ballots: ViewPollBallotUser[];
     vote_delegated_to: ViewMeetingUser;
     vote_delegations_from: ViewMeetingUser[];
-    vote_delegated_votes: ViewVote[];
     structure_levels: ViewStructureLevel[];
+    poll_options: ViewPollOption[];
 }
 export interface ViewMeetingUser extends MeetingUser, ViewModelRelations<IMeetingUserRelations> {}

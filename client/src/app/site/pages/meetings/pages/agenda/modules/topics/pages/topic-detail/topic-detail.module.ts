@@ -14,6 +14,7 @@ import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 import { ListOfSpeakersContentModule } from '@app/site/pages/meetings/modules/list-of-speakers-content/list-of-speakers-content.module';
 import { MeetingsComponentCollectorModule } from '@app/site/pages/meetings/modules/meetings-component-collector';
 import { AttachmentControlModule } from '@app/site/pages/meetings/modules/meetings-component-collector/attachment-control';
+import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/poll/poll.component';
 import { DirectivesModule } from '@app/ui/directives';
 import { EditorModule } from '@app/ui/modules/editor';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
@@ -36,6 +37,7 @@ import { TopicDetailRoutingModule } from './topic-detail-routing.module';
         TopicCommonServiceModule,
         HeadBarModule,
         PipesModule,
+        PollComponent,
         DirectivesModule,
         AttachmentControlModule,
         MeetingsComponentCollectorModule,

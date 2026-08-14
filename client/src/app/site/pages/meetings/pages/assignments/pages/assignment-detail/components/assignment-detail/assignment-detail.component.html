@@ -93,11 +93,13 @@
                     }
                     <!-- New Ballot button -->
                     @if (assignment && assignment.candidatesAsUsers.length && hasPerms('createPoll')) {
-                        <div class="new-ballot-button">
-                            <button mat-stroked-button (click)="openDialog()">
-                                <mat-icon>add</mat-icon>
-                                <span>{{ 'New ballot' | translate }}</span>
-                            </button>
+                        <div class="new-ballot-button-container">
+                            <div class="new-ballot-button">
+                                <button mat-stroked-button (click)="openDialog()">
+                                    <mat-icon>add</mat-icon>
+                                    <span>{{ 'New ballot' | translate }}</span>
+                                </button>
+                            </div>
                         </div>
                     }
                     <!-- candidates list -->

@@ -1,104 +1,77 @@
-import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BaseModel } from '@app/domain/models/base/base-model';
-import {
-    GeneralValueVerbose,
-    GlobalOptionKey,
-    PollMethod,
-    PollPercentBaseVerbose,
-    PollPropertyVerbose,
-    VoteValue
-} from '@app/domain/models/poll';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
 import {
     BasePollDialogComponent,
-    OptionsObject
+    PollMethodPayload,
+    PollOptionsPayload
 } from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
+import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
 import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
-
-import { AssignmentPollMethodVerbose, AssignmentPollPercentBaseVerbose } from '../../definitions';
-import { AssignmentPollService, UnknownUserLabel } from '../../services/assignment-poll.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: `os-assignment-poll-dialog`,
     templateUrl: `./assignment-poll-dialog.component.html`,
     styleUrls: [`./assignment-poll-dialog.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [
+        PollEditResultComponent,
+        PollFormComponent,
+        MatDialogModule,
+        MatButtonModule,
+        MatTabsModule,
+        TranslatePipe
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class AssignmentPollDialogComponent extends BasePollDialogComponent {
-    public unknownUserLabel = UnknownUserLabel;
-
-    /**
-     * List of accepted special non-numerical values.
-     * See {@link PollService.specialPollVotes}
-     */
-    public specialValues: [number, string][] = [];
-
-    public generalValueVerbose = GeneralValueVerbose;
-    public PollPropertyVerbose = PollPropertyVerbose;
-
-    public AssignmentPollMethodVerbose = AssignmentPollMethodVerbose;
-    public get AssignmentPollPercentBaseVerbose(): Record<string, string> {
-        return this.pollData.isListPoll ? PollPercentBaseVerbose : AssignmentPollPercentBaseVerbose;
+    public get isEVotingEnabled(): boolean {
+        return this.pollService.isElectronicVotingEnabled;
     }
 
-    public readonly globalValues: GlobalOptionKey[] = [`global_yes`, `global_no`, `global_abstain`];
-
-    /**
-     * Constructor. Retrieves necessary metadata from the pollService,
-     * injects the poll itself
-     */
-    public constructor(
-        public readonly assignmentPollService: AssignmentPollService,
-        @Inject(MAT_DIALOG_DATA) pollData: ViewPoll
-    ) {
-        super(pollData);
+    public get hasMultipleOptions(): boolean {
+        const assignment = this.pollData?.content_object as ViewAssignment;
+        return assignment.candidates.length > 1;
     }
 
-    public override onBeforeInit(): void {
-        this.subscriptions.push(
-            this.pollForm!.contentForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
-                this.triggerUpdate();
-            })
-        );
+    public get optionAmount(): number {
+        const assignment = this.pollData?.content_object as ViewAssignment;
+        return assignment.candidates.length;
     }
 
-    public getOptionAmount(): number {
-        return this._options?.length;
+    private pollService = inject(PollService);
+
+    public override methodPayload(): PollMethodPayload {
+        return {
+            method: this.pollForm().selectedMethod(),
+            method_config: this.pollForm().methodConfig()
+        };
     }
 
-    public optionIsList(option: OptionsObject): boolean {
-        return !!option.poll_candidate_user_ids?.length;
+    public override optionsPayload(): PollOptionsPayload {
+        const assignment = this.pollData?.content_object as ViewAssignment;
+        const options = assignment.candidates.map(c => c.meeting_user_id);
+        return {
+            option_type: `meeting_user`,
+            options
+        };
     }
 
-    protected getContentObjectsForOptions(): BaseModel[] {
-        if (!this.pollData) {
-            return [];
-        }
-        const contentObject = this.pollData.content_object as ViewAssignment;
-        return contentObject.candidatesAsUsers;
-    }
+    public analogPollOptions(): { key: string; title: string }[] {
+        const assignment = this.pollData?.content_object as ViewAssignment;
 
-    protected getAnalogVoteFields(): VoteValue[] {
-        const pollmethod = this.pollForm!.contentForm.get(`pollmethod`)!.value;
-
-        const analogPollValues: VoteValue[] = [];
-
-        if (pollmethod === PollMethod.N) {
-            analogPollValues.push(`N`);
+        const options = [];
+        if (this.pollForm().selectedMethod() === `approval`) {
+            options.push([{ key: `approval`, title: null }]);
         } else {
-            analogPollValues.push(`Y`);
-
-            if (pollmethod !== PollMethod.Y) {
-                analogPollValues.push(`N`);
-            }
-            if ((pollmethod as string).toUpperCase() === PollMethod.YNA) {
-                analogPollValues.push(`A`);
+            for (const option of assignment.candidates) {
+                options.push({ key: `meeting_user-${option.meeting_user_id}`, title: option.getTitle() });
             }
         }
 
-        return analogPollValues;
+        return options;
     }
 }

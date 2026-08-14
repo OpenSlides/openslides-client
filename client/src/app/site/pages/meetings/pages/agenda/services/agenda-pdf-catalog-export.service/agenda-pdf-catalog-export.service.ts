@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { inject, Service } from '@angular/core';
 import { BorderType, PdfError, StyleType } from '@app/gateways/export/pdf-document.service';
 import { PdfImagesService } from '@app/gateways/export/pdf-document.service/pdf-images.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { DurationService } from '@app/site/services/duration.service';
 import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
@@ -11,7 +12,6 @@ import { Content, ContentText, TableCell } from 'pdfmake/interfaces';
 import { MeetingPdfExportService } from '../../../../services/export/meeting-pdf-export.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { MotionHtmlToPdfService } from '../../../motions/services/export/motion-html-to-pdf.service/motion-html-to-pdf.service';
-import { ViewPoll } from '../../../polls/view-models/view-poll';
 import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
 import { ViewTopic } from '../../modules/topics/view-models/view-topic';
 import { ViewAgendaItem } from '../../view-models/view-agenda-item';
@@ -447,11 +447,12 @@ export class AgendaPdfCatalogExportService {
                 // poll table rows
                 let optionIndex = 0;
                 for (const option of poll.options) {
-                    let votesForOption: string | number = ``;
-                    if (poll.stateHasVotes && useVoteWeight) {
-                        votesForOption = option.votes.map(v => parseFloat(`${v.weight}`)).reduce((a, b) => a + b, 0);
-                    } else if (poll.stateHasVotes) {
-                        votesForOption = option.votes.length;
+                    const votesForOption: string | number = ``;
+                    // TODO: Readd votes for option
+                    if (poll.isFinished && useVoteWeight) {
+                        // votesForOption = option.votes.map(v => parseFloat(`${v.weight}`)).reduce((a, b) => a + b, 0);
+                    } else if (poll.isFinished) {
+                        // votesForOption = option.votes.length;
                     }
                     const backgroundColor = optionIndex % 2 ? TABLEROW_GREY : undefined;
                     tableCells.push([
@@ -462,7 +463,8 @@ export class AgendaPdfCatalogExportService {
                     optionIndex++;
                 }
                 // poll table valid votes line
-                const amount: string = poll.votesvalid ? String(poll.votesvalid) : ``;
+                // TODO: Reenable
+                const amount = ``; // poll.votesvalid ? String(poll.votesvalid) : ``;
                 tableCells.push([{ text: `` }, { text: this.translate.instant(`Valid votes`) }, { text: amount }]);
 
                 // table configuration

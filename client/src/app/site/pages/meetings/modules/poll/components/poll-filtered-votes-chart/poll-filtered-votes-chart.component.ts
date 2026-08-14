@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
-import { PollPercentBase, VoteValue, VoteValueVerbose } from '@app/domain/models/poll';
+import { VoteValue, VoteValueVerbose } from '@app/domain/models/poll';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ThemeService } from '@app/site/services/theme.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
-import { ViewPoll } from '../../../../pages/polls/view-models/view-poll';
-import { ViewVote } from '../../../../pages/polls/view-models/view-vote';
+import { ViewPollBallot } from '../../../../pages/polls/view-models/poll-ballot';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VotesFilterService } from '../../services/votes-filter.service';
 
@@ -47,11 +47,11 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
         this.subscriptions.push(this.filterService.outputObservable.subscribe(votes => this.onVotesUpdated(votes)));
     }
 
-    private onVotesUpdated(votes: ViewVote[]): void {
+    private onVotesUpdated(votes: ViewPollBallot[]): void {
         this.voteAmounts = [];
-        const voteValues: VoteValue[] = this.poll.isMethodYN ? [`Y`, `N`] : [`Y`, `N`, `A`];
+        const voteValues: VoteValue[] = !this.poll.config?.allow_abstain ? [`Y`, `N`] : [`Y`, `N`, `A`];
         const baseVoteValues: VoteValue[] =
-            this.poll.onehundred_percent_base === PollPercentBase.YN ? [`Y`, `N`] : [`Y`, `N`, `A`];
+            this.poll.config?.onehundred_percent_base === `yes_no` ? [`Y`, `N`] : [`Y`, `N`, `A`];
         const countedVotes = votes.filter(v => baseVoteValues.indexOf(v.value) !== -1);
         for (const i in voteValues) {
             const voteValue = voteValues[i];

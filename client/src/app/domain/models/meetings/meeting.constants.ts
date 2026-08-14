@@ -3,16 +3,6 @@ import { PROJECTIONDEFAULTS, ProjectiondefaultValue } from '../projector/project
 
 export type ExportCsvEncoding = `utf-8` | `iso-8859-15`;
 
-/**
- * Server side ballot choice definitions.
- * Server-defined methods to determine the number of ballots to print
- * Options are:
- * - NUMBER_OF_DELEGATES Amount of users belonging to the predefined 'delegates' group (group id 2)
- * - NUMBER_OF_ALL_PARTICIPANTS The amount of all registered users
- * - CUSTOM_NUMBER a given number of ballots
- */
-export type BallotPaperSelection = `NUMBER_OF_DELEGATES` | `NUMBER_OF_ALL_PARTICIPANTS` | `CUSTOM_NUMBER`;
-
 export type ViewMeetingMediafileUsageKey = `logo_${LogoPlace}` | `font_${FontPlace}`;
 
 export type MeetingMediafileUsageIdKey = `${ViewMeetingMediafileUsageKey}_id`;
