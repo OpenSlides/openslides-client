@@ -371,16 +371,13 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             number: user.number(),
             structure_level_ids: user.structure_level_ids(),
             vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
-            vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
+            vote_delegated_to_ids: user.vote_delegated_to_meeting_user_ids()
         });
 
         dialogRef.afterClosed().subscribe(async result => {
             if (result) {
                 if (!result.group_ids?.length) {
                     result.group_ids = [this.activeMeeting!.default_group_id];
-                }
-                if (result.vote_delegated_to_id === 0) {
-                    result.vote_delegated_to_id = null;
                 }
                 if (
                     !(

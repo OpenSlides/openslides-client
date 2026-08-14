@@ -144,6 +144,7 @@ export class Settings {
     public users_enable_presence_view!: boolean;
     public users_enable_vote_weight!: boolean;
     public users_enable_vote_delegations!: boolean;
+    public users_vote_delegations_max_amount: boolean;
     public users_allow_self_set_present!: boolean;
     public users_pdf_welcometitle!: string;
     public users_pdf_welcometext!: string;
@@ -403,6 +404,7 @@ export class Meeting extends BaseModel<Meeting> {
         `users_email_subject`,
         `users_email_body`,
         `users_enable_vote_delegations`,
+        `users_vote_delegations_max_amount`,
         `users_forbid_delegator_in_list_of_speakers`,
         `users_forbid_delegator_as_submitter`,
         `users_forbid_delegator_as_supporter`,

@@ -315,16 +315,16 @@ export const RELATIONS: Relation[] = [
         OField: `users`
     }),
     // Vote delegations
-    // vote_delegated_to_id -> vote_delegations_from_ids
+    // vote_delegated_to_ids -> vote_delegations_from_ids
     {
         ownViewModels: [ViewMeetingUser],
         foreignViewModel: ViewMeetingUser,
         ownField: `vote_delegated_to`,
-        ownIdField: `vote_delegated_to_id`,
-        many: false,
+        ownIdField: `vote_delegated_to_ids`,
+        many: true,
         generic: false
     },
-    // vote_delegations_from_ids -> vote_delegated_to_id
+    // vote_delegations_from_ids -> vote_delegated_to_ids
     {
         ownViewModels: [ViewMeetingUser],
         foreignViewModel: ViewMeetingUser,

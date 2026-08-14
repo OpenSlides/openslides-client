@@ -16,7 +16,7 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
     public user_id!: Id;
     public meeting_id!: Id;
 
-    public vote_delegated_to_id!: Id; // meeting_user/vote_delegations_from_ids;
+    public vote_delegated_to_ids!: Id[]; // meeting_user/vote_delegations_from_ids;
 
     public group_ids!: Id[]; // (group/meeting_user_ids)[];
     public speaker_ids!: Id[]; // (speaker/meeting_user_id)[];
@@ -51,7 +51,7 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
         `speaker_ids`,
         `motion_supporter_ids`,
         `assignment_candidate_ids`,
-        `vote_delegated_to_id`,
+        `vote_delegated_to_ids`,
         `vote_delegations_from_ids`,
         `acting_ballot_ids`,
         `represented_ballot_ids`,

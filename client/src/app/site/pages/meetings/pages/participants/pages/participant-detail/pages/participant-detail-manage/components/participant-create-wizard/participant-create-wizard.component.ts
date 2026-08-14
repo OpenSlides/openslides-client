@@ -53,7 +53,7 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         comment: [``],
         group_ids: [``],
         vote_delegations_from_ids: [``],
-        vote_delegated_to_id: [``],
+        vote_delegated_to_ids: [``],
         is_present: [``],
         locked_out: [``],
         home_committee_id: [``],
@@ -270,9 +270,11 @@ export class ParticipantCreateWizardComponent extends BaseMeetingComponent imple
         return async () => {
             const payload = {
                 ...this.personalInfoFormValue,
-                vote_delegated_to_id: this.personalInfoFormValue.vote_delegated_to_id
-                    ? this.repo.getViewModel(this.personalInfoFormValue.vote_delegated_to_id).getMeetingUser().id
-                    : undefined,
+                vote_delegated_to_ids: this.personalInfoFormValue.vote_delegated_to_ids
+                    ? this.personalInfoFormValue.vote_delegated_to_ids
+                          .map((id: Id) => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter((id: Id) => !!id)
+                    : [],
                 vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
                     ? this.personalInfoFormValue.vote_delegations_from_ids
                           .map((id: Id) => this.repo.getViewModel(id).getMeetingUser().id)
