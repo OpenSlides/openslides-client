@@ -2,7 +2,6 @@ import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '
 import { inject, NgModule, provideAppInitializer } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { GlobalSpinnerModule } from '@app/site/modules/global-spinner';
 import { CustomMissingTranslationHandler } from '@app/site/modules/translations/missing-translation-handler';
@@ -48,7 +47,6 @@ if (isFirefox && `serviceWorker` in navigator) {
     imports: [
         BrowserModule,
         OpenSlidesMainRoutingModule,
-        BrowserAnimationsModule,
         ...NOT_LAZY_LOADED_MODULES,
         ServiceWorkerModule.register(`sw.js`, {
             enabled: environment.production && !isFirefox,
