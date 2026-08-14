@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy,
     Component,
-    ElementRef,
     EventEmitter,
     HostListener,
     inject,
@@ -17,7 +16,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Identifiable } from '@app/domain/interfaces';
 import { OsFilterIndicator } from '@app/site/base/base-filter.service';
 import { OsSortingOption } from '@app/site/base/base-sort.service';
-import { ParticipantImportService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services';
+import { sideNavCoordinationService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-csv-options.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { FilterListService } from '@app/ui/modules/list/definitions/filter-service';
 import { OsSortOption, SortListService } from '@app/ui/modules/list/definitions/sort-service';
@@ -27,7 +26,6 @@ import { Observable, Subscription } from 'rxjs';
 import { RoundedInputComponent } from '../../../input/components/rounded-input/rounded-input.component';
 import { SearchService } from '../../definitions/search-service';
 import { SortBottomSheetComponent } from '../sort-bottom-sheet/sort-bottom-sheet.component';
-import { sideNavCoordinationService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-csv-options.service';
 
 /**
  * Reusable bar for list views, offering sorting and filter options.

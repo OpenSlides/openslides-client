@@ -4,7 +4,7 @@
     </div>
     <ng-container class="menu-slot">
         <button mat-button [disabled]="uploadButton" (click)="importData(ImportDialog, ImportDialogSummary)">
-            <span class="upper">Import</span>
+            <span class="upper">{{ 'Import' | translate }}</span>
         </button>
     </ng-container>
 </os-head-bar>

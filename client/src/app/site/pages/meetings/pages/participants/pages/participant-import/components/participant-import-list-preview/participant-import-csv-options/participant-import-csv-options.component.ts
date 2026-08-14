@@ -6,23 +6,21 @@ import {
     EventEmitter,
     inject,
     Input,
-    OnDestroy,
     OnInit,
     Output,
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
-import { ViewPortService } from '@app/site/services/view-port.service';
-import { SortFilterBarComponent } from '@app/ui/modules/list/components/sort-filter-bar/sort-filter-bar.component';
-import { TranslatePipe } from '@ngx-translate/core';
-import { ParticipantImportService } from '../../../services';
-import { Identifiable } from '@app/domain/interfaces';
-import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import { MatDivider } from '@angular/material/divider';
-import { MatDrawer } from '@angular/material/sidenav';
 import { FormsModule } from '@angular/forms';
+import { MatButton } from '@angular/material/button';
+import { MatDivider } from '@angular/material/divider';
+import { MatIcon } from '@angular/material/icon';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatDrawer } from '@angular/material/sidenav';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { TranslatePipe } from '@ngx-translate/core';
+
+import { ParticipantImportService } from '../../../services';
 import { sideNavCoordinationService } from '../../../services/participant-import-preview.service/participant-import-preview-csv-options.service';
 
 @Component({
@@ -82,7 +80,7 @@ export class CSVOptions implements OnInit {
     @ViewChild(`fileInput`)
     private fileInput!: ElementRef<HTMLInputElement>;
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.sideNavCoordinator.drawer$.subscribe(drawer => {
             if (drawer === 'filterMenu' && this.csvConfigMenu.opened) {
                 this.csvConfigMenu.close();
