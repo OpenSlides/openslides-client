@@ -58,7 +58,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get orgaManagementLevelChangeDisabled(): boolean {
         return (
             this.user?.id === this.operator.operatorId &&
-            (this.operator.isSuperAdmin || this.operator.isOrgaManager || this.operator.isAccountAdmin)
+            this.operator.hasOrganizationPermissions(OML.superadmin, OML.can_manage_organization, OML.can_manage_users)
         );
     }
 
@@ -118,9 +118,11 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get canEdit(): boolean {
         const userOML = this.user?.organization_management_level;
         if (
-            this.operator.isSuperAdmin ||
-            (this.operator.isOrgaManager && userOML !== OML.superadmin) ||
-            (this.operator.isAccountAdmin && userOML !== OML.superadmin && userOML !== OML.can_manage_organization)
+            this.operator.hasOrganizationPermissions(OML.superadmin) ||
+            (this.operator.hasOrganizationPermissions(OML.can_manage_organization) && userOML !== OML.superadmin) ||
+            (this.operator.hasOrganizationPermissions(OML.can_manage_users) &&
+                userOML !== OML.superadmin &&
+                userOML !== OML.can_manage_organization)
         ) {
             return true;
         } else if (
@@ -376,7 +378,10 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
             payload[`committee_management_ids`] = undefined;
             payload[`organization_management_level`] = undefined;
         }
-        if (this.operator.isAccountAdmin && !this.operator.isOrgaManager) {
+        if (
+            this.operator.hasOrganizationPermissions(OML.can_manage_users) &&
+            !this.operator.hasOrganizationPermissions(OML.can_manage_organization)
+        ) {
             delete payload.home_committee_id;
         }
         if (payload.home_committee_id === 0) {
