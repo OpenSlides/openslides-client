@@ -155,8 +155,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     public sortAscending: boolean | undefined = undefined;
     public sortBy = ``;
 
-    private operator = inject(OperatorService);
     public assignmentRepo = inject(AssignmentControllerService);
+    private operator = inject(OperatorService);
     private assignmentCandidateRepo = inject(AssignmentCandidateControllerService);
     private itemRepo = inject(AgendaItemControllerService);
     private promptService = inject(PromptService);
