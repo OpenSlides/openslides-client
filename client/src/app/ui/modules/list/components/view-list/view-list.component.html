@@ -3,6 +3,7 @@
         @if (showFilterBar) {
             <os-sort-filter-bar
                 class="sort-filter-bar"
+                [csvConfiguration]="csvConfiguration"
                 [fakeFilters]="fakeFilters"
                 [filterCount]="currentCountObservable | async"
                 [filterService]="filterService!"
@@ -24,8 +25,11 @@
             [dataSource]="dataListObservable"
             [fullDataSource]="dataFullListObservable"
             [hiddenColumns]="hiddenColumns"
+            [horizontalScroll]="horizontalScroll"
             [rowHeight]="vScrollFixed"
             [selectionMode]="multiSelect"
+            [shortenedSummary]="shortenedSummary"
+            [showHeader]="showHeader"
             [tableHeight]="fullScreen ? undefined : '50vh'"
             (selectionChanged)="selectedRowsChange.emit($event.selectedRows)"
         >

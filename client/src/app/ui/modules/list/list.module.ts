@@ -12,9 +12,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatRadioButton, MatRadioModule } from '@angular/material/radio';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { CSVOptions } from '@app/site/pages/meetings/pages/participants/pages/participant-import/components/participant-import-list-preview/participant-import-csv-options/participant-import-csv-options.component';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
 import { InputModule } from '@app/ui/modules/input';
 import { ScrollingTableModule } from '@app/ui/modules/scrolling-table';
@@ -40,13 +42,23 @@ const MODULES = [
     MatTooltipModule,
     FormsModule,
     ScrollingModule,
-    ScrollingTableModule
+    ScrollingTableModule,
+    MatRadioModule
 ];
 const DECLARATIONS = [ListComponent, ViewListComponent];
 
 @NgModule({
     exports: [...DECLARATIONS, ScrollingTableModule],
     declarations: [...DECLARATIONS, SortFilterBarComponent, SortBottomSheetComponent, FilterMenuComponent],
-    imports: [CommonModule, OpenSlidesTranslationModule.forChild(), IconContainerComponent, InputModule, ...MODULES]
+    imports: [
+        CommonModule,
+        OpenSlidesTranslationModule.forChild(),
+        IconContainerComponent,
+        InputModule,
+        ...MODULES,
+        MatRadioButton,
+        MatRadioModule,
+        CSVOptions
+    ]
 })
 export class ListModule {}
