@@ -214,6 +214,7 @@ export class ActionWorkerWatchService {
         let hasReportedSlowness = false;
         let lastRefreshedInactivityReport = 0;
         let dataLoaded = false;
+        let lastTabInvisible = 0;
         const actionWorker = (
             await firstValueFrom(
                 combineLatest([this._workerObservable, timer(0, 2000)]).pipe(
@@ -221,9 +222,7 @@ export class ActionWorkerWatchService {
                     map(data => data[0]),
                     filter(data => {
                         const date = data.find(worker => worker.id === id);
-                        if (!this.visibilityService.visible()) {
-                            return false;
-                        } else if (date) {
+                        if (date) {
                             dataLoaded = true;
                             if (watchActivity && !date.hasPassedDeathThreshold) {
                                 let reason: WaitForActionReason;
@@ -250,7 +249,10 @@ export class ActionWorkerWatchService {
                                 }
                             }
 
-                            if (date.hasPassedDeathThreshold) {
+                            if (!this.visibilityService.visible()) {
+                                lastTabInvisible = Date.now();
+                                return false;
+                            } else if (date.hasPassedDeathThreshold && lastTabInvisible < Date.now() - 1000 * 30) {
                                 this.showClosingPrompt(date);
                                 throw new Error(`Process has been assumed to be dead`);
                             }
