@@ -2,10 +2,15 @@ import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '
 import { inject, NgModule, provideAppInitializer } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { GlobalSpinnerModule } from '@app/site/modules/global-spinner';
-import { provideTranslateService, TranslateLoader, TranslateParser } from '@ngx-translate/core';
+import { CustomMissingTranslationHandler } from '@app/site/modules/translations/missing-translation-handler';
+import {
+    provideMissingTranslationHandler,
+    provideTranslateService,
+    TranslateLoader,
+    TranslateParser
+} from '@ngx-translate/core';
 
 import { environment } from '../../environments/environment';
 import { CustomTranslationService } from '../site/modules/translations/custom-translation.service';
@@ -42,7 +47,6 @@ if (isFirefox && `serviceWorker` in navigator) {
     imports: [
         BrowserModule,
         OpenSlidesMainRoutingModule,
-        BrowserAnimationsModule,
         ...NOT_LAZY_LOADED_MODULES,
         ServiceWorkerModule.register(`sw.js`, {
             enabled: environment.production && !isFirefox,
@@ -66,6 +70,7 @@ if (isFirefox && `serviceWorker` in navigator) {
                 useClass: PruningTranslationLoader,
                 deps: [HttpClient]
             },
+            missingTranslationHandler: provideMissingTranslationHandler(CustomMissingTranslationHandler),
             parser: {
                 provide: TranslateParser,
                 useClass: CustomTranslationParser,

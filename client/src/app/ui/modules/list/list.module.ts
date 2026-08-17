@@ -47,6 +47,6 @@ const DECLARATIONS = [ListComponent, ViewListComponent];
 @NgModule({
     exports: [...DECLARATIONS, ScrollingTableModule],
     declarations: [...DECLARATIONS, SortFilterBarComponent, SortBottomSheetComponent, FilterMenuComponent],
-    imports: [CommonModule, OpenSlidesTranslationModule.forChild(), IconContainerComponent, InputModule, ...MODULES]
+    imports: [CommonModule, OpenSlidesTranslationModule, IconContainerComponent, InputModule, ...MODULES]
 })
 export class ListModule {}

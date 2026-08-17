@@ -35,7 +35,7 @@ import { MotionPollsRoutingModule } from './motion-polls-routing.module';
         HeadBarModule,
         ListModule,
         MeetingsComponentCollectorModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class MotionPollsModule {}

@@ -99,10 +99,12 @@
                 <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
                 <input formControlName="default_vote_weight" matInput type="number" />
                 @if (isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0) {
-                    <mat-error translate>Please select a vote weight greater than or equal to 0.000001</mat-error>
+                    <mat-error>
+                        {{ 'Please select a vote weight greater than or equal to 0.000001' | translate }}
+                    </mat-error>
                 }
                 @if (isDefaultVoteWeightError && form.controls['default_vote_weight'].value <= 0) {
-                    <mat-error translate>Please select a vote weight greater than zero.</mat-error>
+                    <mat-error>{{ 'Please select a vote weight greater than zero.' | translate }}</mat-error>
                 }
             </mat-form-field>
         </div>
@@ -170,17 +172,17 @@
                 <table class="participation-table">
                     <tr class="header-underline">
                         <th>
-                            <span translate>Committees</span>
+                            <span>{{ 'Committees' | translate }}</span>
                             ({{ numCommittees }})
                         </th>
                         @if (comitteeAdministrationAmount) {
                             <th class="admin-column">({{ comitteeAdministrationAmount }})</th>
                         }
                         <th>
-                            <span translate>Meetings</span>
+                            <span>{{ 'Meetings' | translate }}</span>
                             ({{ user.meetings?.length }})
                         </th>
-                        <th translate>Groups</th>
+                        <th>{{ 'Groups' | translate }}</th>
                     </tr>
                     @for (row of tableData | keyvalue: tableDataAscOrderCompare; track row; let lastLine = $last) {
                         <!-- Handle committees without meetings-->

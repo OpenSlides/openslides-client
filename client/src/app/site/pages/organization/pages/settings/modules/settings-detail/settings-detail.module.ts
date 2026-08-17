@@ -29,7 +29,7 @@ import { SettingsDetailRoutingModule } from './settings-detail-routing.module';
         MatCardModule,
         MatCheckboxModule,
         MatAutocompleteModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         DirectivesModule,
         SearchSelectorModule
     ]

@@ -22,7 +22,7 @@ import { OpenSlidesTranslationModule } from './app/site/modules/translations/ope
     imports: [
         OpenSlidesMainModule,
         CommonModule,
-        OpenSlidesTranslationModule.forRoot(),
+        OpenSlidesTranslationModule,
         BrowserAnimationsModule,
         OpenSlidesMainRoutingModule
     ],

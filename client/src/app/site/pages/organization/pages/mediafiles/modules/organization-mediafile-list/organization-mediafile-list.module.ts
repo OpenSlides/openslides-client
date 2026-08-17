@@ -23,7 +23,7 @@ import { OrganizationMediafileListRoutingModule } from './organization-mediafile
     imports: [
         CommonModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatMenuModule,
         FileListComponent,
