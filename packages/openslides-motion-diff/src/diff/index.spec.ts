@@ -637,6 +637,20 @@ describe(`MotionDiffService`, () => {
             }
         );
 
+        it(`does not mark the last line of a paragraph as change if a heading is appended`, () => {
+                const before = `<p><span class="os-line-number line-number-5" data-line-number="5" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>`,
+                    after =
+                        `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n` +
+                        `\n` +
+                        `<h2>Test heading</h2>`;
+                const diff = HtmlDiff.diff(before, after);
+                expect(diff).toBe(
+                    `<p><span class="line-number-5 os-line-number" contenteditable="false" data-line-number="5">&nbsp;</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n` +
+                    `<h2 class="insert">Test heading</h2>`
+                );
+            }
+        );
+
         it(`does not result in separate paragraphs when only the first word has changed`, () => {
                 const before = `<p class="os-split-after"><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor </p>`,
                     after = `<p class="os-split-after">Bla ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</p>`;
