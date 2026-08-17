@@ -240,8 +240,9 @@ export class LineNumbering {
             return lineNode;
         };
         const addLinebreakToPreviousNode = (lineNode: Element, offset: number): void => {
-            const firstText = lineNode.nodeValue!.substr(0, offset + 1);
-            const secondText = lineNode.nodeValue!.substr(offset + 1);
+            const nodeValue = lineNode.nodeValue!;
+            const firstText = nodeValue.substr(0, offset + 1);
+            const secondText = nodeValue.substr(offset + 1);
             const lineBreak = this.createLineBreak();
             const firstNode = document.createTextNode(firstText);
             lineNode.parentNode!.insertBefore(firstNode, lineNode);
@@ -252,7 +253,8 @@ export class LineNumbering {
             lineNode.nodeValue = secondText;
         };
 
-        if (node.nodeValue === `\n`) {
+        const nodeText = node.nodeValue!;
+        if (nodeText === `\n`) {
             out.push(node);
         } else {
             // This happens if a previous inline element exactly stretches to the end of the line
@@ -272,7 +274,7 @@ export class LineNumbering {
             }
             this.prependLineNumberToFirstText = false;
 
-            while (i < node.nodeValue!.length) {
+            while (i < nodeText.length) {
                 let lineBreakAt = null;
                 if ((this.currentInlineOffset as number) >= length) {
                     if (this.lastInlineBreakablePoint !== null) {
@@ -284,10 +286,10 @@ export class LineNumbering {
                         };
                     }
                 }
-                if (lineBreakAt !== null && node.nodeValue![i] !== ` ` && node.nodeValue![i] !== `\n`) {
+                if (lineBreakAt !== null && nodeText[i] !== ` ` && nodeText[i] !== `\n`) {
                     if (lineBreakAt.node === node) {
                         // The last possible breaking point is in this text node
-                        const currLine = node.nodeValue!.substring(currLineStart, lineBreakAt.offset + 1);
+                        const currLine = nodeText.substring(currLineStart, lineBreakAt.offset + 1);
                         addLine(currLine);
 
                         currLineStart = lineBreakAt.offset + 1;
@@ -303,7 +305,7 @@ export class LineNumbering {
                     }
                 }
 
-                if (node.nodeValue![i] === ` ` || node.nodeValue![i] === `-` || node.nodeValue![i] === `\n`) {
+                if (nodeText[i] === ` ` || nodeText[i] === `-` || nodeText[i] === `\n`) {
                     this.lastInlineBreakablePoint = {
                         node,
                         offset: i
@@ -313,7 +315,7 @@ export class LineNumbering {
                 (this.currentInlineOffset as number)++;
                 i++;
             }
-            const lastLine = addLine(node.nodeValue!.substring(currLineStart));
+            const lastLine = addLine(nodeText.substring(currLineStart));
             if (this.lastInlineBreakablePoint !== null) {
                 this.lastInlineBreakablePoint.node = lastLine;
             }
