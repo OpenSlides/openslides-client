@@ -163,7 +163,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
             }
         });
 
-        this.languageCollator = getIntlCollatorForLang(this.translate.getCurrentLang());
+        this.languageCollator = getIntlCollatorForLang(this.translate.getCurrentLang() ?? `en`);
     }
 
     public onAfterAppsLoaded(): void {

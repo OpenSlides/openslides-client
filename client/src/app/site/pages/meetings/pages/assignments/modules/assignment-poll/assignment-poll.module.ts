@@ -76,7 +76,7 @@ const COMPONENTS = [
         MeetingsComponentCollectorModule,
         ExpandableContentWrapperComponent,
         IconContainerComponent,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     providers: [{ provide: PollService, useClass: AssignmentPollService }]
 })

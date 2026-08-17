@@ -10,14 +10,7 @@ import { EasterEggContentPlatformDialogComponent } from './components/easter-egg
 
 @NgModule({
     declarations: [EasterEggContentPlatformDialogComponent],
-    imports: [
-        CommonModule,
-        PortalModule,
-        MatDialogModule,
-        GridModule,
-        DirectivesModule,
-        OpenSlidesTranslationModule.forChild()
-    ]
+    imports: [CommonModule, PortalModule, MatDialogModule, GridModule, DirectivesModule, OpenSlidesTranslationModule]
 })
 export class EasterEggModule {
     public static getContentPlatform(): typeof EasterEggContentPlatformDialogComponent {

@@ -36,7 +36,7 @@ import { ProjectorEditDialogComponent } from './components/projector-edit-dialog
         ReactiveFormsModule,
         ProjectorModule,
         ProjectorComponent,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ProjectorEditDialogModule {

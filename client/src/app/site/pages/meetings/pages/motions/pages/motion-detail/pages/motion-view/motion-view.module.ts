@@ -7,11 +7,6 @@ import { MotionViewRoutingModule } from './motion-view-routing.module';
 
 @NgModule({
     declarations: [],
-    imports: [
-        CommonModule,
-        MotionViewRoutingModule,
-        OpenSlidesTranslationModule.forChild(),
-        MotionManageSupportersComponent
-    ]
+    imports: [CommonModule, MotionViewRoutingModule, OpenSlidesTranslationModule, MotionManageSupportersComponent]
 })
 export class MotionViewModule {}

@@ -60,7 +60,7 @@ const DECLARATIONS = [GlobalHeadbarComponent];
     imports: [
         CommonModule,
         CommaSeparatedListingComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         UserComponentsModule,
         RouterModule,
         ScrollingModule,

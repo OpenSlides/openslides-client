@@ -49,7 +49,7 @@ import { MediafileListServiceModule } from './services/mediafile-list-service.mo
         IconContainerComponent,
         DirectivesModule,
         PipesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class MediafileListModule {}

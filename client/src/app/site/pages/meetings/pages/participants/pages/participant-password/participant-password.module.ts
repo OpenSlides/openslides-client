@@ -14,7 +14,7 @@ import { ParticipantPasswordRoutingModule } from './participant-password-routing
         ParticipantPasswordRoutingModule,
         HeadBarModule,
         UserComponentsModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ParticipantPasswordModule {}
