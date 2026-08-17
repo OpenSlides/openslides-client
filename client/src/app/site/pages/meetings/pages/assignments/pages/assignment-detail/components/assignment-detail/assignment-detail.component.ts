@@ -30,8 +30,8 @@ import { AssignmentControllerService } from '../../../../services/assignment-con
 import { AssignmentExportService } from '../../../../services/assignment-export.service';
 import { AssignmentCandidateControllerService } from '../../services/assignment-candidate-controller.service';
 
-export const SORT_OPTIONS = [`unsorted`, `first_name`, `last_name`];
-export type SortOption = (typeof SORT_OPTIONS)[number];
+const _SORT_OPTIONS = [`unsorted`, `first_name`, `last_name`];
+type SortOption = (typeof _SORT_OPTIONS)[number];
 
 @Component({
     selector: `os-assignment-detail`,
