@@ -5,6 +5,7 @@ import { isOsLineBreakNode, isOsLineNumberNode } from "./utils";
 
 export class LineNumbering {
     private root: HTMLDivElement = document.createElement(`div`);
+    private lineBreak: HTMLBRElement;
     private currentInlineOffset = 0;
     private lastInlineBreakablePoint: BreakablePoint | null = null;
     private currentLineNumber: number | null;
@@ -24,6 +25,9 @@ export class LineNumbering {
         if (html) {
             html = html.replace(/(<br[^>]*>)[\n\r]+/gi, `$1`);
         }
+
+        this.lineBreak = document.createElement(`br`);
+        this.lineBreak.className = `os-line-break`;
 
         this.root.innerHTML = html;
     }
@@ -454,10 +458,10 @@ export class LineNumbering {
 
     private getLineNumberElement(lineNumber: number): Element {
         const el = document.createElement(`span`);
-        el.appendChild(document.createTextNode(`\u00A0`)); // Prevent ckeditor from stripping out empty span's
-        el.setAttribute(`class`, `line-number-${lineNumber} os-line-number`);
+        el.textContent = `\u00A0`;
+        el.className = `line-number-${lineNumber} os-line-number`;
         el.setAttribute(`contenteditable`, `false`);
-        el.setAttribute(`data-line-number`, lineNumber + ``);
+        el.dataset.lineNumber = lineNumber.toString();
 
         return el;
     }
@@ -468,8 +472,6 @@ export class LineNumbering {
      * @returns {Element}
      */
     private createLineBreak(): Element {
-        const br = document.createElement(`br`);
-        br.setAttribute(`class`, `os-line-break`);
-        return br;
+        return this.lineBreak.cloneNode() as HTMLBRElement;
     }
 }
