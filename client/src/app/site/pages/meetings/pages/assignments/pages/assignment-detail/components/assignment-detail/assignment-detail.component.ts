@@ -330,7 +330,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     public async sortCandidates(sortType: SortOption): Promise<void> {
-        if (this.sortBy === `undefined`) {
+        if (this.sortBy === `unsorted`) {
             this.sortBy = sortType;
             this.sortAscending = true;
         } else if (this.sortBy === sortType) {
