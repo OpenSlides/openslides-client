@@ -341,8 +341,10 @@
                         }
                     </div>
                     <div class="flex-center">
-                        @if (!last) {
+                        @if (!last && !!origin.origin_id) {
                             <mat-icon>north</mat-icon>
+                        } @else if (!origin.origin_id) {
+                            <br />
                         }
                     </div>
                 }
@@ -382,10 +384,18 @@
             <a [routerLink]="getUrl(motion)">
                 {{ getMeetingName(motion) }}
             </a>
+            <span>{{ motion.state }}</span>
+            @if (motion.state_extension) {
+                {{ motion.state_extension }}
+            }
         </span>
     } @else {
         <span>
             {{ getMeetingName(motion) }}
         </span>
+        <span>{{ motion.state }}</span>
+        @if (motion.state_extension) {
+            {{ motion.state_extension }}
+        }
     }
 </ng-template>

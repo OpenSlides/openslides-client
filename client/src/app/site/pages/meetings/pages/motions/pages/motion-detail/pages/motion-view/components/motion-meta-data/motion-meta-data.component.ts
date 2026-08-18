@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output
+} from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
 import { Selectable } from '@app/domain/interfaces';
@@ -7,11 +16,11 @@ import { Motion } from '@app/domain/models/motions';
 import { MotionBlock } from '@app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
 import { GetForwardingCommitteesPresenterService } from '@app/gateways/presenter/get-forwarding-committees-presenter.service';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from '@app/site/pages/meetings/pages/motions';
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from '@app/site/services/operator.service';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
@@ -68,6 +77,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         .get(`motions_enable_origin_motion_display`)
         .pipe(map(v => !!v));
 
+    private motionRepo = inject(MotionRepositoryService);
+
     /**
      * @returns the current recommendation label (with extension)
      */
@@ -99,19 +110,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      */
     public recommender: string | null = null;
 
-    public searchLists: SearchListDefinition[] = [
-        {
-            observable: this.repo.getViewModelListObservable(),
-            label: `Motions`
-        },
-        {
-            observable: this.motionForwardingService.forwardingCommitteesObservable,
-            label: `Committees`,
-            keepOpen: true,
-            wider: true
-        }
-    ];
-
     public motionTransformFn = (value: ViewMotion): string => `[${value.fqid}]`;
 
     public get referencingMotions$(): Observable<ViewMotion[]> {
@@ -126,33 +124,43 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         );
     }
 
-    public get originMotions$(): Observable<ViewMotion[] | ViewMeeting[]> {
+    public get originMotions$(): Observable<ViewMotion[]> {
         let futureForward = false;
         this.displayFutureForward$.subscribe(bool => {
             futureForward = bool;
         });
         futureForward = true; // TODO: remove this line
 
-        // TODO: Fix splitting paths
+        // TODO: split into paths of there was splitting going on
         if (futureForward) {
             const list = this.motion.all_derived_motions ?? [];
-            // console.log(this.motion.origin_id);
-            // console.log(this.motion.origin_meeting_id);
+            list.push(this.motion);
+            const origin_ids = [];
+            for (const motion of list) {
+                if (motion.origin_id && origin_ids.includes(motion.origin_id)) {
+                    list.push(this.motionRepo.getViewModel(motion.origin_id));
+                }
+                origin_ids.push(motion.origin_id);
+            }
+
+            console.log(this.createForwardTree(list, this.motion.all_origins));
+            console.log(this.motion.origin_meeting_id);
+            console.log(this.motion.origin_id);
+
             if (this.motion.origin_id) {
-                return this.motion.all_origins$.pipe(
-                    map(origins => [...list.reverse(), this.motion, ...origins.reverse()])
-                );
+                return this.motion.all_origins$.pipe(map(origins => [...list.reverse(), ...origins.reverse()]));
             } else if (this.motion.origin_meeting_id) {
-                return this.motion.origin_meeting$.pipe(map(origin => [origin]));
+                // TODO: Check if this case is needed
+                // return this.motion.origin_meeting$.pipe(map(origin => [origin]));
             } else {
-                return new BehaviorSubject([...list.reverse(), this.motion]);
+                return new BehaviorSubject(this.createForwardTree(list, this.motion.all_origins));
             }
         }
 
         if (this.motion.origin_id) {
             return this.motion.all_origins$.pipe(map(origins => origins?.reverse()));
         } else if (this.motion.origin_meeting_id) {
-            return this.motion.origin_meeting$.pipe(map(origin => [origin]));
+            // return this.motion.origin_meeting$.pipe(map(origin => [origin]));
         }
         return null;
     }
@@ -175,20 +183,32 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      */
     private recommenderSubscription: Subscription | null = null;
 
-    public constructor(
-        protected override translate: TranslateService,
-        public perms: MotionPermissionService,
-        private operator: OperatorService,
-        private motionForwardingService: MotionForwardDialogService,
-        private meetingController: MeetingControllerService,
-        public motionSubmitterRepo: MotionSubmitterControllerService,
-        public motionEditorRepo: MotionEditorControllerService,
-        public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService,
-        private presenter: GetForwardingCommitteesPresenterService
-    ) {
+    public perms = inject(MotionPermissionService);
+    public motionSubmitterRepo = inject(MotionSubmitterControllerService);
+    public motionEditorRepo = inject(MotionEditorControllerService);
+    public motionWorkingGroupSpeakerRepo = inject(MotionWorkingGroupSpeakerControllerService);
+    private operator = inject(OperatorService);
+    private motionForwardingService = inject(MotionForwardDialogService);
+    private meetingController = inject(MeetingControllerService);
+    private presenter = inject(GetForwardingCommitteesPresenterService);
+
+    public searchLists: SearchListDefinition[] = [
+        {
+            observable: this.repo.getViewModelListObservable(),
+            label: `Motions`
+        },
+        {
+            observable: this.motionForwardingService.forwardingCommitteesObservable,
+            label: `Committees`,
+            keepOpen: true,
+            wider: true
+        }
+    ];
+
+    public constructor() {
         super();
 
-        if (operator.hasPerms(Permission.motionCanManageMetadata)) {
+        if (this.operator.hasPerms(Permission.motionCanManageMetadata)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(_forwardingAvailable => {
                 this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
                     return (await this.checkPresenter()) as Selectable[];
@@ -394,5 +414,25 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         return forwardingCommittees;
+    }
+
+    private createForwardTree(list: ViewMotion[], origins: ViewMotion[]): ViewMotion[] {
+        const childrenIds = new Set(list.filter(motion => !!motion.origin_id).map(motion => motion.origin_id));
+        const leaves = list.filter(motion => !childrenIds.has(motion.id));
+        const tree: ViewMotion[] = [];
+
+        for (const leaf of leaves) {
+            let currentId: number | null = leaf.id;
+
+            while (currentId !== null) {
+                const motion = list.find(m => m.id === currentId);
+                if (!motion) break;
+
+                tree.push(motion);
+                currentId = motion.origin_id;
+            }
+            tree.push(...origins.reverse());
+        }
+        return tree;
     }
 }
