@@ -44,7 +44,7 @@
     "@angular/router": "^22.1.1",
     "@angular/service-worker": "^22.1.1",
     "@cantoo/pdf-lib": "^2.8.1",
-    "@coreui/angular-chartjs": "~5.7.15",
+    "@coreui/angular-chartjs": "~5.7.18",
     "@coreui/chartjs": "^4.1.0",
     "@date-fns/tz": "^1.5.0",
     "@intevation/tiptap-extension-office-paste": "^0.1.2",
