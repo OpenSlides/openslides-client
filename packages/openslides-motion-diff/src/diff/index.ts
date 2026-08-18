@@ -614,7 +614,7 @@ export function diff(
         (whole: string, insDel: string): string => {
             const modificationClass = insDel.toLowerCase() === `ins` ? `insert` : `delete`;
             return whole.replace(
-                /(<(p|div|blockquote|ul|ol|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
+                /(<(p|div|blockquote|ul|ol|li|h[1-6])[^>]*>)([\s\S]*?)(<\/\2>)/gi,
                 (_whole2: string, opening: string, _blockTag: string, content: string, closing: string): string => {
                     const modifiedTag = addClassToHtmlTag(opening, modificationClass);
                     return `</` + insDel + `>` + modifiedTag + content + closing + `<` + insDel + `>`;
