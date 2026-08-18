@@ -209,7 +209,7 @@ export class MotionManageSupportersComponent extends BaseComponent implements On
         return (
             supporter.meeting_user?.groups?.filter(g => g.hasPermission(Permission.motionCanSupport)).length > 0 &&
             !(
-                supporter.meeting_user?.vote_delegated_to_id &&
+                supporter.meeting_user?.vote_delegated_to_ids?.length &&
                 this.activeMeetingService.meeting.users_forbid_delegator_as_supporter &&
                 this.activeMeetingService.meeting.users_enable_vote_delegations
             )

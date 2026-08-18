@@ -37,7 +37,7 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
             follow: [
                 {
                     idField: `meeting_user_id`,
-                    fieldset: [...MeetingUserFieldsets.FullNameSubscription.fieldset, `vote_delegated_to_id`],
+                    fieldset: [...MeetingUserFieldsets.FullNameSubscription.fieldset, `vote_delegated_to_ids`],
                     follow: MeetingUserFieldsets.FullNameSubscription.follow
                 }
             ]

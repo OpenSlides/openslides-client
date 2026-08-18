@@ -236,12 +236,12 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.getMeetingUser(meetingId)?.chat_message_ids;
     }
 
-    public vote_delegated_to_id(meetingId?: Id): Id {
+    public vote_delegated_to_ids(meetingId?: Id): Id {
         return this.getMeetingUser(meetingId)?.vote_delegated_to?.user_id;
     }
 
-    public vote_delegated_to_meeting_user_id(meetingId?: Id): Id {
-        return this.getMeetingUser(meetingId)?.vote_delegated_to_id;
+    public vote_delegated_to_meeting_user_ids(meetingId?: Id): Id[] {
+        return this.getMeetingUser(meetingId)?.vote_delegated_to_ids;
     }
 
     public vote_delegations_from_ids(meetingId?: Id): Id[] {
@@ -303,7 +303,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get isVoteRightDelegated(): boolean {
-        return !!this.vote_delegated_to_id(this.getEnsuredActiveMeetingId());
+        return !!this.vote_delegated_to_ids(this.getEnsuredActiveMeetingId());
     }
 
     public get voteWeight(): number {
