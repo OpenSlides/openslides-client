@@ -318,16 +318,33 @@
     @if (originMotions.length) {
         <div>
             @if (displayFutureForward$ | async) {
-                <h4>{{ 'Sequence of deliberation' | translate }}
-                <mat-icon (click)="toogleExpansion(0, true)">expand_more</mat-icon>
-                <mat-icon (click)="toogleExpansion(0, true)">expand_less</mat-icon>
+                <h4>
+                    {{ 'Sequence of deliberation' | translate }}
+                    @if (canShrink(0, true)) {
+                        <mat-icon
+                            matTooltipPosition="right"
+                            [matTooltip]="'Hide all forwarded motions but endpints' | translate"
+                            (click)="toogleExpansion(0, true)"
+                        >
+                            expand_less
+                        </mat-icon>
+                    } @else {
+                        <mat-icon
+                            matTooltipPosition="right"
+                            [matTooltip]="'Show all forwarded motions' | translate"
+                            (click)="toogleExpansion(0, true)"
+                        >
+                            expand_more
+                        </mat-icon>
+                    }
                 </h4>
             } @else {
                 <h4>{{ 'Origin' | translate }}</h4>
             }
             <div class="origin-view">
+                @let expandedList = expandedMotions | async;
                 @for (origin of originMotions; track origin.id; let i = $index; let last = $last) {
-                    @if (expandedMotions[i][1]) {
+                    @if (expandedList[i][1]) {
                         <div>
                             <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
                             @if (
@@ -343,13 +360,28 @@
                                     (change)="toggleOriginMotion($event, origin.id)"
                                 ></mat-slide-toggle>
                             }
-                            @if (origin.all_derived_motions.length === 0) {
-                                <mat-icon (click)="toogleExpansion(i)">expand_more</mat-icon>
-                                <mat-icon (click)="toogleExpansion(i)">expand_less</mat-icon>
+                            @if (expandedList[i][0]) {
+                                @if (canShrink(i)) {
+                                    <mat-icon
+                                        matTooltipPosition="right"
+                                        [matTooltip]="'Hide this forward path' | translate"
+                                        (click)="toogleExpansion(i)"
+                                    >
+                                        expand_less
+                                    </mat-icon>
+                                } @else {
+                                    <mat-icon
+                                        matTooltipPosition="right"
+                                        [matTooltip]="'Show this forward path' | translate"
+                                        (click)="toogleExpansion(i)"
+                                    >
+                                        expand_more
+                                    </mat-icon>
                                 }
+                            }
                         </div>
                         <div class="flex-center">
-                            @if (!last && !!origin.origin_id) {
+                            @if (!last && !!origin.origin_id && expandedList[i + 1][1]) {
                                 <mat-icon>north</mat-icon>
                             } @else if (!origin.origin_id) {
                                 <br />

@@ -77,7 +77,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         .get(`motions_enable_origin_motion_display`)
         .pipe(map(v => !!v));
 
-    public expandedMotions: [end: boolean, expand: boolean][] = [];
+    public expandedMotions = new BehaviorSubject<[boolean, boolean][]>([]);
 
     /**
      * @returns the current recommendation label (with extension)
@@ -142,15 +142,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 origin_ids.push(motion.origin_id);
             }
 
-            // console.log(this.createForwardTree(list, this.motion.all_origins));
-            // console.log(this.motion.origin_meeting_id);
-            // console.log(this.motion.origin_id);
-
             if (this.motion.origin_id) {
                 return this.motion.all_origins$.pipe(map(origins => [...list.reverse(), ...origins.reverse()]));
-            } else if (this.motion.origin_meeting_id) {
-                // TODO: Check if this case is needed
-                // return this.motion.origin_meeting$.pipe(map(origin => [origin]));
             } else {
                 return new BehaviorSubject(this.createForwardTree(list, this.motion.all_origins));
             }
@@ -158,8 +151,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
         if (this.motion.origin_id) {
             return this.motion.all_origins$.pipe(map(origins => origins?.reverse()));
-        } else if (this.motion.origin_meeting_id) {
-            // return this.motion.origin_meeting$.pipe(map(origin => [origin]));
         }
         return null;
     }
@@ -377,6 +368,33 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return origin?.canAccess();
     }
 
+    public toogleExpansion(index: number, all = false): void {
+        this.expandedMotions.subscribe(list => {
+            for (let i = index; i < list.length; i++) {
+                if (i !== index && !all && list[i][0]) {
+                    break;
+                } else if (list[i][0]) {
+                    continue;
+                }
+                list[i][1] = !list[i][1];
+            }
+        });
+    }
+
+    public canShrink(index: number, all = false): boolean {
+        let canShri = true;
+        this.expandedMotions.subscribe(list => {
+            for (let i = index; i < list.length; i++) {
+                if (i !== index && !all && list[i][0]) {
+                    break;
+                } else if (!list[i][1]) {
+                    canShri = false;
+                }
+            }
+        });
+        return canShri;
+    }
+
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
         return toTest.COLLECTION === Motion.COLLECTION;
     }
@@ -420,7 +438,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         const childrenIds = new Set(list.filter(motion => !!motion.origin_id).map(motion => motion.origin_id));
         const leaves = list.filter(motion => !childrenIds.has(motion.id));
         const tree: ViewMotion[] = [];
-        this.expandedMotions = []
+        const newList: [boolean, boolean][] = [];
 
         for (const leaf of leaves) {
             let currentId: number | null = leaf.id;
@@ -430,25 +448,16 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 if (!motion) break;
 
                 tree.push(motion);
-                this.expandedMotions.push([
-                    motion.all_derived_motion_ids === undefined,
-                    motion.all_derived_motion_ids === undefined
-                ]);
                 currentId = motion.origin_id;
-            }
-            tree.push(...origins.reverse());
-            origins.forEach(_ => this.expandedMotions.push([false, false]));
-        }
-        return tree;
-    }
 
-    public toogleExpansion(index: number, all = false): void {
-        for (let i = index; i < this.expandedMotions.length; i++) {
-            this.expandedMotions[i][1] = !this.expandedMotions[i][1];
-            if (!all && this.expandedMotions[i][0]) {
-                break;
+                const amount_derived_motions = motion.all_derived_motion_ids?.length ?? 0;
+                newList.push([amount_derived_motions === 0, amount_derived_motions === 0]);
             }
+
+            tree.push(...origins.reverse());
+            origins.forEach(_ => newList.push([false, false]));
         }
-        console.log(`ah`)
+        this.expandedMotions.next(newList);
+        return tree;
     }
 }
