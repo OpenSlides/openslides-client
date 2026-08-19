@@ -22,11 +22,13 @@
     </div>
 
     <!-- Menu -->
-    <ng-container *osOmlPerms="userOML" class="menu-slot">
-        <button mat-icon-button type="button" [matMenuTriggerFor]="userExtraMenu">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-    </ng-container>
+    @if (canEdit) {
+        <ng-container class="menu-slot">
+            <button mat-icon-button type="button" [matMenuTriggerFor]="userExtraMenu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </ng-container>
+    }
 </os-head-bar>
 
 <os-user-detail-view
@@ -44,7 +46,7 @@
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
             <!-- Home committee -->
-            <div class="home-committee-area">
+            <div *osOmlPerms="OML.can_manage_organization" class="home-committee-area">
                 <mat-form-field class="form50 force-min-width">
                     <mat-label>{{ 'Home committee' | translate }}</mat-label>
                     <os-repo-search-selector
