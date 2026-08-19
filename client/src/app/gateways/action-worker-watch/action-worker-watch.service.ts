@@ -224,35 +224,39 @@ export class ActionWorkerWatchService {
                         const date = data.find(worker => worker.id === id);
                         if (date) {
                             dataLoaded = true;
+                            if (!this.visibilityService.visible()) {
+                                lastTabInvisible = Date.now();
+                                return false;
+                            }
+
                             if (watchActivity && !date.hasPassedDeathThreshold) {
                                 let reason: WaitForActionReason;
-                                if (!hasReportedSlowness && date.isSlow) {
-                                    hasReportedSlowness = true;
-                                    reason = waitForActionReason.slow;
-                                }
-                                if (
-                                    hasReportedInactivity &&
-                                    this._confirmationToWaitTimestamps[date.id] &&
-                                    this._confirmationToWaitTimestamps[date.id] > lastRefreshedInactivityReport &&
-                                    this._confirmationToWaitTimestamps[date.id] < Date.now() - 1000 * 60 * 5
-                                ) {
-                                    // Resend inactivity dialog at least 5 minutes after last confirmation
-                                    hasReportedInactivity = false;
-                                    lastRefreshedInactivityReport = Date.now();
-                                }
-                                if (!hasReportedInactivity && date.hasPassedInactivityThreshold) {
-                                    hasReportedInactivity = true;
-                                    reason = waitForActionReason.inactive;
+                                if (lastTabInvisible < Date.now() - 1000 * 30) {
+                                    if (!hasReportedSlowness && date.isSlow) {
+                                        hasReportedSlowness = true;
+                                        reason = waitForActionReason.slow;
+                                    }
+                                    if (
+                                        hasReportedInactivity &&
+                                        this._confirmationToWaitTimestamps[date.id] &&
+                                        this._confirmationToWaitTimestamps[date.id] > lastRefreshedInactivityReport &&
+                                        this._confirmationToWaitTimestamps[date.id] < Date.now() - 1000 * 60 * 5
+                                    ) {
+                                        // Resend inactivity dialog at least 5 minutes after last confirmation
+                                        hasReportedInactivity = false;
+                                        lastRefreshedInactivityReport = Date.now();
+                                    }
+                                    if (!hasReportedInactivity && date.hasPassedInactivityThreshold) {
+                                        hasReportedInactivity = true;
+                                        reason = waitForActionReason.inactive;
+                                    }
                                 }
                                 if (reason) {
                                     this.openWaitingPrompt(id, reason, date.name);
                                 }
                             }
 
-                            if (!this.visibilityService.visible()) {
-                                lastTabInvisible = Date.now();
-                                return false;
-                            } else if (date.hasPassedDeathThreshold && lastTabInvisible < Date.now() - 1000 * 30) {
+                            if (date.hasPassedDeathThreshold && lastTabInvisible < Date.now() - 1000 * 30) {
                                 this.showClosingPrompt(date);
                                 throw new Error(`Process has been assumed to be dead`);
                             }
