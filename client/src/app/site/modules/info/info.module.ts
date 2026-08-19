@@ -32,7 +32,7 @@ const DECLARATIONS = [LegalNoticeContentComponent, PrivacyPolicyContentComponent
         IconContainerComponent,
         DirectivesModule,
         PipesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatTooltipModule
     ]
 })

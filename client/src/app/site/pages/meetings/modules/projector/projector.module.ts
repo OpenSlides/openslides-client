@@ -20,7 +20,7 @@ const EXPORTED_MODULES = [CountdownTimeModule];
         AssignmentPollServiceModule,
         MotionPollServiceModule,
         TopicPollServiceModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ProjectorModule {}

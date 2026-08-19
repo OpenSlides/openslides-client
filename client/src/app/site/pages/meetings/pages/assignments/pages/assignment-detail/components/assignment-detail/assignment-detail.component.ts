@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Id } from '@app/domain/definitions/key-types';
@@ -20,7 +20,6 @@ import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
-import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
@@ -30,6 +29,8 @@ import { AssignmentPollDialogService } from '../../../../modules/assignment-poll
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
 import { AssignmentExportService } from '../../../../services/assignment-export.service';
 import { AssignmentCandidateControllerService } from '../../services/assignment-candidate-controller.service';
+
+type SortOption = `unsorted` | `first_name` | `last_name`;
 
 @Component({
     selector: `os-assignment-detail`,
@@ -54,6 +55,11 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     public isEditing = false;
 
     /**
+     * Array containing the currently selected candidates
+     */
+    public candidateUserIds: number[] = [];
+
+    /**
      * The different phases of an assignment. Info is fetched from server
      */
     public phaseOptions = AssignmentPhases;
@@ -67,11 +73,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      * Used in the search Value selector to assign tags
      */
     public tagsObserver = new BehaviorSubject<ViewTag[]>([]);
-
-    /**
-     * Array containing the currently selected candidates
-     */
-    public candidateUserIds: number[] = [];
 
     /**
      * Used for the search value selector
@@ -93,6 +94,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this._assignment = assignment;
         this._assignmentCandidates = assignment.candidates;
         this.updateCandidatesArray();
+        this.checkSortOrder();
     }
 
     /**
@@ -149,24 +151,25 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
      */
     private _navigationSubscription: Subscription | null = null;
 
+    public sortAscending: boolean | undefined = undefined;
+    public sortBy = ``;
+
+    public assignmentRepo = inject(AssignmentControllerService);
+    private operator = inject(OperatorService);
+    private assignmentCandidateRepo = inject(AssignmentCandidateControllerService);
+    private itemRepo = inject(AgendaItemControllerService);
+    private promptService = inject(PromptService);
+    private pdfService = inject(AssignmentExportService);
+    private pollDialog = inject(AssignmentPollDialogService);
+    private assignmentPollService = inject(AssignmentPollService);
+    private pollController = inject(PollControllerService);
+    private userRepo = inject(UserControllerService);
+    private snackBar = inject(MatSnackBar);
+
     /**
      * Constructor. Build forms and subscribe to needed configs and updates
      */
-    public constructor(
-        protected override translate: TranslateService,
-        private operator: OperatorService,
-        formBuilder: UntypedFormBuilder,
-        public assignmentRepo: AssignmentControllerService,
-        private assignmentCandidateRepo: AssignmentCandidateControllerService,
-        private itemRepo: AgendaItemControllerService,
-        private promptService: PromptService,
-        private pdfService: AssignmentExportService,
-        private pollDialog: AssignmentPollDialogService,
-        private assignmentPollService: AssignmentPollService,
-        private pollController: PollControllerService,
-        private userRepo: UserControllerService,
-        private snackBar: MatSnackBar
-    ) {
+    public constructor(formBuilder: UntypedFormBuilder) {
         super();
         this.assignmentForm = formBuilder.group({
             phase: null,
@@ -183,6 +186,13 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         });
     }
 
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+        if (this._navigationSubscription) {
+            this._navigationSubscription.unsubscribe();
+        }
+    }
+
     public onIdFound(id: Id | null): void {
         if (id) {
             this.loadAssignmentById(id);
@@ -190,32 +200,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
             this.initAssignmentCreation();
         }
         this.hasLoaded.resolve(true);
-    }
-
-    private initAssignmentCreation(): void {
-        super.setTitle(`New election`);
-        this.isCreating = true;
-        this.isEditing = true;
-    }
-
-    private loadAssignmentById(assignmentId: number): void {
-        if (assignmentId === this._assignmentId) {
-            return;
-        }
-        this._assignmentId = assignmentId;
-        this.updateSubscription(
-            `assignment`,
-            this.assignmentRepo.getViewModelObservable(assignmentId).subscribe(assignment => {
-                if (assignment) {
-                    const title = assignment.getTitle();
-                    super.setTitle(title, true);
-                    this.assignment = assignment;
-                    if (!this.isEditing) {
-                        this.patchForm(this.assignment);
-                    }
-                }
-            })
-        );
     }
 
     /**
@@ -283,37 +267,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
-    /**
-     * Changes/updates the assignment form values
-     *
-     * @param assignment
-     */
-    private patchForm(assignment: ViewAssignment): void {
-        const contentPatch: Record<string, any> = {};
-        Object.keys(this.assignmentForm.controls).forEach(control => {
-            contentPatch[control] = assignment[control as keyof ViewAssignment];
-        });
-        if (this.assignmentForm.controls[`attachment_mediafile_ids`]) {
-            contentPatch[`attachment_mediafile_ids`] = assignment.attachment_meeting_mediafiles?.map(
-                file => file.mediafile_id
-            );
-        }
-        this.assignmentForm.patchValue(contentPatch);
-    }
-
     public getSaveAction(): () => Promise<void> {
         return () => this.saveAssignment();
-    }
-
-    /**
-     * Save the current state of the assignment
-     */
-    private async saveAssignment(): Promise<void> {
-        if (this.isCreating) {
-            this.createAssignment();
-        } else {
-            await this.updateAssignmentFromForm();
-        }
     }
 
     /**
@@ -350,10 +305,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this.updateCandidatesArray();
     }
 
-    private updateCandidatesArray(): void {
-        this.candidateUserIds = this._assignment.candidatesAsUsers.map(user => user.id);
-    }
-
     /**
      * Adds the operator to list of candidates
      */
@@ -363,6 +314,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
             this.snackBar.open(infoMessage, this.translate.instant(`Ok`));
         } else {
             await this.addCandidate({ userId: this.operator.operatorId! });
+            this.checkSortOrder();
         }
     }
 
@@ -376,10 +328,27 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
+    public async sortCandidates(sortType: SortOption): Promise<void> {
+        if (this.sortBy === sortType) {
+            this.sortAscending = !this.sortAscending;
+        } else {
+            this.sortBy = sortType;
+            this.sortAscending = true;
+        }
+
+        const sorted = this.sortList();
+        this._assignmentCandidates = sorted;
+        await this.onSortingChange(sorted, false);
+    }
+
     /**
      * Triggers an update of the sorting.
      */
-    public async onSortingChange(candidates: Selectable[]): Promise<void> {
+    public async onSortingChange(candidates: Selectable[], manual = true): Promise<void> {
+        if (manual) {
+            this.sortBy = `unsorted`;
+            this.sortAscending = undefined;
+        }
         await this.assignmentCandidateRepo.sort(this.assignment, candidates);
     }
 
@@ -411,6 +380,55 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         this.pdfService.exportSingleAssignment(this.assignment);
     }
 
+    public addToAgenda(): void {
+        this.itemRepo.addToAgenda({}, this.assignment).resolve();
+    }
+
+    public removeFromAgenda(): void {
+        this.itemRepo.removeFromAgenda(this.assignment.agenda_item_id!);
+    }
+
+    public goToHistory(): void {
+        this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.assignment.fqid } });
+    }
+
+    private initAssignmentCreation(): void {
+        super.setTitle(`New election`);
+        this.isCreating = true;
+        this.isEditing = true;
+    }
+
+    private loadAssignmentById(assignmentId: number): void {
+        if (assignmentId === this._assignmentId) {
+            return;
+        }
+        this._assignmentId = assignmentId;
+        this.updateSubscription(
+            `assignment`,
+            this.assignmentRepo.getViewModelObservable(assignmentId).subscribe(assignment => {
+                if (assignment) {
+                    const title = assignment.getTitle();
+                    super.setTitle(title, true);
+                    this.assignment = assignment;
+                    if (!this.isEditing) {
+                        this.patchForm(this.assignment);
+                    }
+                }
+            })
+        );
+    }
+
+    /**
+     * Save the current state of the assignment
+     */
+    private async saveAssignment(): Promise<void> {
+        if (this.isCreating) {
+            this.createAssignment();
+        } else {
+            await this.updateAssignmentFromForm();
+        }
+    }
+
     /**
      * Creates an assignment. Calls the "patchValues" function
      */
@@ -423,27 +441,30 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
+    /**
+     * Changes/updates the assignment form values
+     *
+     * @param assignment
+     */
+    private patchForm(assignment: ViewAssignment): void {
+        const contentPatch: Record<string, any> = {};
+        Object.keys(this.assignmentForm.controls).forEach(control => {
+            contentPatch[control] = assignment[control as keyof ViewAssignment];
+        });
+        if (this.assignmentForm.controls[`attachment_mediafile_ids`]) {
+            contentPatch[`attachment_mediafile_ids`] = assignment.attachment_meeting_mediafiles?.map(
+                file => file.mediafile_id
+            );
+        }
+        this.assignmentForm.patchValue(contentPatch);
+    }
+
     private async updateAssignmentFromForm(): Promise<void> {
         try {
             await this.assignmentRepo.update(this.assignmentForm.value, this.assignment);
             this.isEditing = false;
         } catch (e) {
             this.raiseError(e);
-        }
-    }
-
-    public addToAgenda(): void {
-        this.itemRepo.addToAgenda({}, this.assignment).resolve();
-    }
-
-    public removeFromAgenda(): void {
-        this.itemRepo.removeFromAgenda(this.assignment.agenda_item_id!);
-    }
-
-    public override ngOnDestroy(): void {
-        super.ngOnDestroy();
-        if (this._navigationSubscription) {
-            this._navigationSubscription.unsubscribe();
         }
     }
 
@@ -464,7 +485,51 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
         }
     }
 
-    public goToHistory(): void {
-        this.router.navigate([this.activeMeetingId!, `history`], { queryParams: { fqid: this.assignment.fqid } });
+    private checkSortOrder(): void {
+        if (this._assignmentCandidates.length < 2) {
+            this.sortBy = `unsorted`;
+            this.sortAscending = undefined;
+        } else {
+            if (this._assignmentCandidates.equals(this.sortList(`first_name`, true))) {
+                this.sortBy = `first_name`;
+                this.sortAscending = true;
+            } else if (this._assignmentCandidates.equals(this.sortList(`first_name`, false))) {
+                this.sortBy = `first_name`;
+                this.sortAscending = false;
+            } else if (this._assignmentCandidates.equals(this.sortList(`last_name`, true))) {
+                this.sortBy = `last_name`;
+                this.sortAscending = true;
+            } else if (this._assignmentCandidates.equals(this.sortList(`last_name`, false))) {
+                this.sortBy = `last_name`;
+                this.sortAscending = false;
+            } else {
+                this.sortBy = `unsorted`;
+                this.sortAscending = undefined;
+            }
+        }
+    }
+
+    private updateCandidatesArray(): void {
+        this.candidateUserIds = this._assignment.candidatesAsUsers.map(user => user.id);
+        this.checkSortOrder();
+    }
+
+    private sortList(sortBy?: SortOption, ascent?: boolean): ViewAssignmentCandidate[] {
+        const sort = sortBy ?? this.sortBy;
+        const ascend = ascent ?? this.sortAscending;
+
+        return [...this.assignmentCandidates].sort((a, b) => {
+            const nameA = sort === `first_name` ? (a.user?.first_name ?? '') : (a.user?.last_name ?? '');
+            const nameB = sort === `first_name` ? (b.user?.first_name ?? '') : (b.user?.last_name ?? '');
+            const comparison = this.compareNames(nameA, nameB);
+            return ascend ? comparison : -comparison;
+        });
+    }
+
+    private compareNames(nameA: string, nameB: string): number {
+        if (nameA === `` && nameB === ``) return 0;
+        else if (nameA === ``) return 1;
+        else if (nameB === ``) return -1;
+        else return nameA.localeCompare(nameB);
     }
 }

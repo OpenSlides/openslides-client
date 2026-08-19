@@ -22,7 +22,7 @@ const DECLARATIONS = [ProjectableListComponent];
         ProjectorButtonModule,
         SpeakerButtonModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatTooltipModule
     ],

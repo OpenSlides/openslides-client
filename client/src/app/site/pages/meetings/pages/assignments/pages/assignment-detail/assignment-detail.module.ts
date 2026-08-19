@@ -58,7 +58,7 @@ import { AssignmentDetailServiceModule } from './services/assignment-detail-serv
         EditorModule,
         SearchSelectorModule,
         SortingListModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         ParticipantSearchSelectorModule,
         AgendaItemCommonServiceModule,
         ChipSelectModule,

@@ -70,7 +70,7 @@ const MODULES = [MotionPollServiceModule];
         DirectivesModule,
         PollModule,
         MeetingsComponentCollectorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         IconContainerComponent
     ],
     exports: [...MODULES, ...DECLARATIONS, PollModule],
