@@ -6,8 +6,10 @@ import {
     EventEmitter,
     inject,
     Input,
+    input,
     Output,
-    ViewChild,
+    signal,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -39,6 +41,13 @@ import { ViewMotionAmendedParagraph } from '../../../../../../view-models/view-m
 import { MotionContentChangeRecommendationDialogComponentData } from '../../../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionTitleChangeRecommendationDialogComponentData } from '../../../../modules/motion-change-recommendation-dialog/components/motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';
+
+interface WorkingTextChangingObject extends ViewUnifiedChange {
+    hasCollisions: boolean;
+    textBeforeChange: string;
+    submitterList: string[];
+    diff: string;
+}
 
 /**
  * This component displays the original motion text with the change blocks inside.
@@ -77,8 +86,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      */
     public getRecommendationTypeName = getRecommendationTypeName;
 
-    @ViewChild(MatMenuTrigger)
-    private changeRecommendationMenu: MatMenuTrigger;
+    private readonly changeRecommendationMenu = viewChild(MatMenuTrigger);
 
     private _motion!: ViewMotion;
 
@@ -107,20 +115,12 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         return this._changes;
     }
 
-    @Input()
-    public scrollToChange: ViewUnifiedChange | null = null;
+    public readonly scrollToChange = input<ViewUnifiedChange | null>(null);
 
-    @Input()
-    public highlightedLine!: number;
-
-    @Input()
-    public lineNumberingMode!: LineNumberingMode;
-
-    @Input()
-    public showAllAmendments = false;
-
-    @Input()
-    public showSummary = true;
+    public readonly highlightedLine = input<number>();
+    public readonly lineNumberingMode = input.required<LineNumberingMode>();
+    public readonly showAllAmendments = input(false);
+    public readonly showSummary = input(true);
 
     public position = new FormControl(`above` as TooltipPosition);
 
@@ -140,11 +140,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         return undefined;
     }
 
-    @Input()
-    public lineRange: LineRange | null = null;
+    public readonly lineRange = input<LineRange | null>(null);
 
-    @Input()
-    public noEditMode = false;
+    public readonly noEditMode = input(false);
 
     private _originMotionsLoaded: Id[] = [];
     public get originMotionsLoaded(): Id[] {
@@ -211,18 +209,18 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public getTextBetweenChanges(change1: ViewUnifiedChange, change2: ViewUnifiedChange): string {
         // @TODO Highlighting
         const lineRange: LineRange = {
-            from: change1 ? change1.getLineTo() + 1 : (this.lineRange?.from ?? this.motion.firstLine),
+            from: change1 ? change1.getLineTo() + 1 : (this.lineRange()?.from ?? this.motion.firstLine),
             to: change2
                 ? change2.getLineFrom() <= this.lastLineNr
                     ? change2.getLineFrom() - 1
                     : this.lastLineNr - 1
-                : (this.lineRange?.to ?? null)
+                : (this.lineRange()?.to ?? null)
         };
 
         // Ensures the return of the last line if an amendment has no working but broken change recommendations
         if (
             this.motion.isAmendment() &&
-            this.workingTextChangingObjects.length === 0 &&
+            this.workingTextChangingObjects().length === 0 &&
             this.brokenTextChangingObjects.length > 0
         ) {
             lineRange.to = this.lastLineNr;
@@ -251,7 +249,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             });
         }
         try {
-            return this.diff.extractMotionLineRange(baseText, lineRange, true, this.lineLength, this.highlightedLine);
+            return this.diff.extractMotionLineRange(baseText, lineRange, true, this.lineLength, this.highlightedLine());
         } catch (e) {
             return ``;
         }
@@ -283,7 +281,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
             lineLength: this.lineLength,
             firstLine: this.motion.lead_motion?.firstLine ?? this.motion.firstLine
         });
-        return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine);
+        return this.diff.getChangeDiff(baseHtml, change, this.lineLength, this.highlightedLine());
     }
 
     /**
@@ -313,10 +311,10 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
         return this.diff.getTextRemainderAfterLastChange(
             baseText,
-            this.workingTextChangingObjects,
+            this.workingTextChangingObjects(),
             this.lineLength,
-            this.highlightedLine,
-            this.lineRange
+            this.highlightedLine(),
+            this.lineRange()
         );
     }
 
@@ -349,7 +347,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      * @returns whether there are line numbers at all
      */
     public isLineNumberingNone(): boolean {
-        return this.lineNumberingMode === LineNumberingMode.None;
+        return this.lineNumberingMode() === LineNumberingMode.None;
     }
 
     /**
@@ -358,7 +356,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      * @returns whether the line numberings are inside
      */
     public isLineNumberingInline(): boolean {
-        return this.lineNumberingMode === LineNumberingMode.Inside;
+        return this.lineNumberingMode() === LineNumberingMode.Inside;
     }
 
     /**
@@ -367,7 +365,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
      * @returns whether the line numberings are outside
      */
     public isLineNumberingOutside(): boolean {
-        return this.lineNumberingMode === LineNumberingMode.Outside;
+        return this.lineNumberingMode() === LineNumberingMode.Outside;
     }
 
     /**
@@ -390,22 +388,33 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
 
     private updateAllTextChangingObjects(): void {
         const inRange = (from: number, to: number): boolean => {
-            if (!this.lineRange) {
+            const lineRange = this.lineRange();
+            if (!lineRange) {
                 return true;
             }
 
-            return (
-                (this.lineRange.from <= from && this.lineRange.to >= from) ||
-                (this.lineRange.from <= to && this.lineRange.to >= to)
-            );
+            return (lineRange.from <= from && lineRange.to >= from) || (lineRange.from <= to && lineRange.to >= to);
         };
 
-        this._workingTextChangingObjects = this.changes.filter(
-            (obj: ViewUnifiedChange) =>
-                !obj.isTitleChange() &&
-                inRange(obj.getLineFrom(), obj.getLineTo()) &&
-                obj.getLineFrom() <= this.lastLineNr &&
-                obj.getLineTo() <= this.lastLineNr
+        this.workingTextChangingObjects.set(
+            this.changes
+                .filter(
+                    (obj: ViewUnifiedChange) =>
+                        !obj.isTitleChange() &&
+                        inRange(obj.getLineFrom(), obj.getLineTo()) &&
+                        obj.getLineFrom() <= this.lastLineNr &&
+                        obj.getLineTo() <= this.lastLineNr
+                )
+                .map((obj: ViewUnifiedChange, i, changes) => {
+                    const change = obj as WorkingTextChangingObject;
+                    change.textBeforeChange = this.getTextBetweenChanges(changes[i - 1], change);
+                    change.hasCollisions = this.hasCollissions(change, changes);
+                    if (this.isAmendment(change)) {
+                        change.submitterList = this.getSubmitterListWithDeletedUsers(change.amendment.submitterNames);
+                    }
+                    change.diff = this.getDiff(change);
+                    return change;
+                })
         );
 
         this._brokenTextChangingObjects = this.changes.filter(
@@ -414,10 +423,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
         );
     }
 
-    private _workingTextChangingObjects: ViewUnifiedChange[] = [];
-    public get workingTextChangingObjects(): ViewUnifiedChange[] {
-        return this._workingTextChangingObjects;
-    }
+    public workingTextChangingObjects = signal<WorkingTextChangingObject[]>([]);
 
     private _brokenTextChangingObjects: ViewUnifiedChange[] = [];
     public get brokenTextChangingObjects(): ViewUnifiedChange[] {
@@ -489,7 +495,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public editChangeRecommendation(reco: ViewMotionChangeRecommendation, $event: MouseEvent): void {
         $event.stopPropagation();
         $event.preventDefault();
-        this.changeRecommendationMenu.closeMenu();
+        this.changeRecommendationMenu().closeMenu();
 
         if (this.motion.text) {
             const recoModel = reco.getModel();
@@ -526,7 +532,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     public editTitleChangeRecommendation(reco: ViewMotionChangeRecommendation, $event: MouseEvent): void {
         $event.stopPropagation();
         $event.preventDefault();
-        this.changeRecommendationMenu.closeMenu();
+        this.changeRecommendationMenu().closeMenu();
 
         const data: MotionTitleChangeRecommendationDialogComponentData = {
             editChangeRecommendation: true,
@@ -566,9 +572,9 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
     }
 
     public ngAfterViewInit(): void {
-        if (this.scrollToChange) {
+        if (this.scrollToChange()) {
             window.setTimeout(() => {
-                this.scrollToChangeElement(this.scrollToChange!);
+                this.scrollToChangeElement(this.scrollToChange()!);
             }, 50);
         }
     }
