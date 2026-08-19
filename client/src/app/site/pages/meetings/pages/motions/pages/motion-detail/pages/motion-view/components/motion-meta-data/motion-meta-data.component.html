@@ -318,7 +318,10 @@
     @if (originMotions.length) {
         <div>
             @if (displayFutureForward$ | async) {
-                <h4>{{ 'Sequence of deliberation' | translate }}</h4>
+                <h4>{{ 'Sequence of deliberation' | translate }}
+                <mat-icon>expand_more</mat-icon>
+                <mat-icon>expand_less</mat-icon>
+                </h4>
             } @else {
                 <h4>{{ 'Origin' | translate }}</h4>
             }
