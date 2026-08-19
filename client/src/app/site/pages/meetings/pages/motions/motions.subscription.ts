@@ -204,9 +204,25 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                     { idField: `meeting_id`, fieldset: [`id`, `locked_from_inside`, `name`] },
                     { idField: `state_id`, fieldset: [`id`, `name`] }
                 ]
-                // follow: [{ idField: `meeting_id`, fieldset: FULL_FIELDSET }]
             },
-            // { idField: `all_derived_motion_ids`, fieldset: FULL_FIELDSET },
+            {
+                idField: `all_origin_ids`,
+                fieldset: [
+                    `all_derived_motion_ids`,
+                    `all_origin_ids`,
+                    `id`,
+                    `title`,
+                    `meeting_id`,
+                    `origin_id`,
+                    `sequential_number`,
+                    `state_extension`,
+                    `state_id`
+                ],
+                follow: [
+                    { idField: `meeting_id`, fieldset: [`id`, `locked_from_inside`, `name`] },
+                    { idField: `state_id`, fieldset: [`id`, `name`] }
+                ]
+            },
             { idField: `lead_motion_id`, fieldset: [`diff_version`, `text`] },
             {
                 idField: `amendment_ids`,
