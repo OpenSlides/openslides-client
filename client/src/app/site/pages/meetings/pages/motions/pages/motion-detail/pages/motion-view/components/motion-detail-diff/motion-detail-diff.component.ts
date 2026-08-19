@@ -405,6 +405,7 @@ export class MotionDetailDiffComponent extends BaseMeetingComponent implements A
                         obj.getLineFrom() <= this.lastLineNr &&
                         obj.getLineTo() <= this.lastLineNr
                 )
+                .sort((a, b) => a.getLineFrom() - b.getLineFrom())
                 .map((obj: ViewUnifiedChange, i, changes) => {
                     const change = obj as WorkingTextChangingObject;
                     change.textBeforeChange = this.getTextBetweenChanges(changes[i - 1], change);
