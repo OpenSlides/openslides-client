@@ -77,7 +77,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         .get(`motions_enable_origin_motion_display`)
         .pipe(map(v => !!v));
 
-    private motionRepo = inject(MotionRepositoryService);
+    public expandedMotions: [end: boolean, expand: boolean][] = [];
 
     /**
      * @returns the current recommendation label (with extension)
@@ -131,7 +131,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         });
         futureForward = true; // TODO: remove this line
 
-        // TODO: split into paths of there was splitting going on
         if (futureForward) {
             const list = this.motion.all_derived_motions ?? [];
             list.push(this.motion);
@@ -187,6 +186,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public motionSubmitterRepo = inject(MotionSubmitterControllerService);
     public motionEditorRepo = inject(MotionEditorControllerService);
     public motionWorkingGroupSpeakerRepo = inject(MotionWorkingGroupSpeakerControllerService);
+    private motionRepo = inject(MotionRepositoryService);
     private operator = inject(OperatorService);
     private motionForwardingService = inject(MotionForwardDialogService);
     private meetingController = inject(MeetingControllerService);
@@ -420,6 +420,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         const childrenIds = new Set(list.filter(motion => !!motion.origin_id).map(motion => motion.origin_id));
         const leaves = list.filter(motion => !childrenIds.has(motion.id));
         const tree: ViewMotion[] = [];
+        this.expandedMotions = []
 
         for (const leaf of leaves) {
             let currentId: number | null = leaf.id;
@@ -429,10 +430,25 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 if (!motion) break;
 
                 tree.push(motion);
+                this.expandedMotions.push([
+                    motion.all_derived_motion_ids === undefined,
+                    motion.all_derived_motion_ids === undefined
+                ]);
                 currentId = motion.origin_id;
             }
             tree.push(...origins.reverse());
+            origins.forEach(_ => this.expandedMotions.push([false, false]));
         }
         return tree;
+    }
+
+    public toogleExpansion(index: number, all = false): void {
+        for (let i = index; i < this.expandedMotions.length; i++) {
+            this.expandedMotions[i][1] = !this.expandedMotions[i][1];
+            if (!all && this.expandedMotions[i][0]) {
+                break;
+            }
+        }
+        console.log(`ah`)
     }
 }
