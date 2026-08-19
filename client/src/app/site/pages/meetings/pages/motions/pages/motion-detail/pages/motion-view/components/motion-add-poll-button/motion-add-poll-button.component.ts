@@ -5,7 +5,7 @@ import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { map, Observable } from 'rxjs';
 
 import { MotionPollService } from '../../../../../../modules/motion-poll/services/motion-poll.service/motion-poll.service';
-import { MotionPollDialogService } from '../../../../../../modules/motion-poll/services/motion-poll-dialog.service';
+import { MotionPollDialogService } from '../../../../../../modules/motion-poll/services/motion-poll-dialog.service/motion-poll-dialog.service';
 
 @Component({
     selector: `os-motion-add-poll-button`,

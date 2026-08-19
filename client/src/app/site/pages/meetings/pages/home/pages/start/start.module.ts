@@ -24,7 +24,7 @@ import { StartRoutingModule } from './start-routing.module';
         MatInputModule,
         MatFormFieldModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class StartModule {}

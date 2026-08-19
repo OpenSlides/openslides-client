@@ -26,7 +26,7 @@ import { ProjectionDialogComponent } from './components/projection-dialog/projec
         MatRadioModule,
         MatButtonModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ProjectionDialogModule {

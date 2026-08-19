@@ -12,9 +12,9 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 
 import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
-import { MotionEditorControllerService } from '../../../../../../modules/editors/services';
-import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services';
-import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services';
+import { MotionEditorControllerService } from '../../../../../../modules/editors/services/motion-editor-controller/motion-editor-controller.service';
+import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services/motion-submitter-controller/motion-submitter-controller.service';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services/motion-working-group-speaker-controller/motion-working-group-speaker-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
@@ -75,13 +75,15 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
 
     public get referencingMotions$(): Observable<ViewMotion[]> {
         return this.motion?.referenced_in_motion_recommendation_extensions$.pipe(
-            map(motions => motions.naturalSort(this.translate.getCurrentLang(), [`number`, `title`]))
+            map(motions => motions.naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`]))
         );
     }
 
     public get referencedMotions$(): Observable<ViewMotion[]> {
         return this.motion?.recommendation_extension_references$.pipe(
-            map(motions => (motions as ViewMotion[]).naturalSort(this.translate.getCurrentLang(), [`number`, `title`]))
+            map(motions =>
+                (motions as ViewMotion[]).naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`])
+            )
         );
     }
 

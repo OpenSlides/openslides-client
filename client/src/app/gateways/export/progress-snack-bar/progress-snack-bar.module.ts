@@ -20,7 +20,7 @@ import { ProgressSnackBarServiceModule } from './services/progress-snack-bar-ser
         MatButtonModule,
         MatTooltipModule,
         MatIconModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     exports: [ProgressSnackBarServiceModule]
 })

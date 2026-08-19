@@ -25,7 +25,7 @@ import { GenderListRoutingModule } from './gender-list-routing.module';
         HeadBarModule,
         ListModule,
         ChipComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatMenuModule,
         MatButtonModule,

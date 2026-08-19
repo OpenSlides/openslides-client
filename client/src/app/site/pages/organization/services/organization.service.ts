@@ -3,7 +3,7 @@ import { ModelRequestService } from '@app/site/services/model-request.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { OrganizationRepositoryService } from '../../../../gateways/repositories/organization-repository.service';
-import { ModelSubscription } from '../../../services/autoupdate';
+import { ModelSubscription } from '../../../services/autoupdate/autoupdate.service';
 import { LifecycleService } from '../../../services/lifecycle.service';
 import { getOrganizationSubscriptionConfig } from '../organization.subscription';
 import { ViewOrganization } from '../view-models/view-organization';

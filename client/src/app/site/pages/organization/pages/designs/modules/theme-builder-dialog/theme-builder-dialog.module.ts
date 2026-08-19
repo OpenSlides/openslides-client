@@ -22,7 +22,7 @@ import { ThemeBuilderDialogComponent } from './components/theme-builder-dialog.c
         ReactiveFormsModule,
         MatInputModule,
         ColorFormFieldComponent,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ThemeBuilderDialogModule {

@@ -8,8 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
 import { OrganizationTagDialogService } from '../../../../modules/organization-tag-dialog/services/organization-tag-dialog.service';
-import { OrganizationTagControllerService } from '../../../../services/organization-tag-controller.service';
-import { ViewOrganizationTag } from '../../../../view-models';
+import { OrganizationTagControllerService } from '../../../../services/organization-tag-controller.service/organization-tag-controller.service';
+import { ViewOrganizationTag } from '../../../../view-models/view-organization-tag';
 
 @Component({
     selector: `os-organization-tag-list`,

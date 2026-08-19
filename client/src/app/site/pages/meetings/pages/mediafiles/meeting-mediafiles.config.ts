@@ -2,7 +2,7 @@ import { MeetingMediafile } from '@app/domain/models/meeting-mediafile/meeting-m
 import { MeetingMediafileRepositoryService } from '@app/gateways/repositories/meeting-mediafile/meeting-mediafile-repository.service';
 import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
-import { ViewMeetingMediafile } from './view-models';
+import { ViewMeetingMediafile } from './view-models/view-meeting-mediafile';
 
 export const MeetingMediafileAppConfig: AppConfig = {
     name: `meeting_mediafiles`,

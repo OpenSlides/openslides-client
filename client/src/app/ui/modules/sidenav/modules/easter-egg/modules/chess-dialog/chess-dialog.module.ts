@@ -10,7 +10,7 @@ import { ChessDialogComponent } from './components/chess-dialog/chess-dialog.com
 
 @NgModule({
     declarations: [ChessDialogComponent],
-    imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogModule, OpenSlidesTranslationModule.forChild()],
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogModule, OpenSlidesTranslationModule],
     providers: [PromptService]
 })
 export class ChessDialogModule {

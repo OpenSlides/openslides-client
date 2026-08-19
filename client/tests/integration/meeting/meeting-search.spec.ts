@@ -45,11 +45,11 @@ test.describe('Testing meeting search', () => {
 
     test('search for agenda topic in meeting', async ({ context, page }) => {
         await login(context);
-        await page.goto(`/${meeting.id}/home`);
+        await page.goto(`/${meeting.id}`);
         await page.locator('button[aria-label="Global search"]').click();
         await page.getByPlaceholder('Search').fill('AgendaTest');
         await page.locator('input[value="current"]').click();
-        await page.locator('.filter-section').locator('div', { hasText: 'Agenda' }).click();
+        await page.locator('.filter-section').locator('.mdc-label', { hasText: 'Agenda' }).click();
         await page.getByPlaceholder('Search').press('Enter');
         await expect(page.locator('.search-results-category')).toContainText('AgendaTestTopic');
         await logout(context);
@@ -57,11 +57,11 @@ test.describe('Testing meeting search', () => {
 
     test('search for blup in meeting and find nothing', async ({ context, page }) => {
         await login(context);
-        await page.goto(`/${meeting.id}/home`);
+        await page.goto(`/${meeting.id}`);
         await page.locator('button[aria-label="Global search"]').click();
         await page.getByPlaceholder('Search').fill('blup');
         await page.locator('input[value="current"]').click();
-        await page.locator('.filter-section').locator('div', { hasText: 'Agenda' }).click();
+        await page.locator('.filter-section').locator('.mdc-label', { hasText: 'Agenda' }).click();
         await page.getByPlaceholder('Search').press('Enter');
         await expect(page.locator('h3.search-no-results')).toContainText('No results found');
         await logout(context);

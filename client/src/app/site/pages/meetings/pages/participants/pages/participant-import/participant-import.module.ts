@@ -9,7 +9,7 @@ import { ImportListModule } from '@app/ui/modules/import-list';
 
 import { ParticipantImportListComponent } from './components/participant-import-list/participant-import-list.component';
 import { ParticipantImportRoutingModule } from './participant-import-routing.module';
-import { ParticipantImportServiceModule } from './services';
+import { ParticipantImportServiceModule } from './services/participant-import-service.module';
 
 @NgModule({
     declarations: [ParticipantImportListComponent],
@@ -20,7 +20,7 @@ import { ParticipantImportServiceModule } from './services';
         ParticipantImportServiceModule,
         ImportListModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatTooltipModule
     ]

@@ -15,18 +15,18 @@ import { OrganizationSettingsService } from '@app/site/pages/organization/servic
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
 
-import { getRecommendationTypeName } from '../../../definitions';
+import { getRecommendationTypeName } from '../../../definitions/recommendation-type-names';
 import { ViewUnifiedChangeType } from '../../../modules';
-import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
-import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
-import { MotionPollService } from '../../../modules/motion-poll/services';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
+import { MotionCommentSectionControllerService } from '../../../modules/comments/services/motion-comment-section-controller.service';
+import { MotionPollService } from '../../../modules/motion-poll/services/motion-poll.service/motion-poll.service';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
-import { MotionControllerService } from '../../common/motion-controller.service';
-import { MotionFormatService } from '../../common/motion-format.service';
-import { MotionLineNumberingService } from '../../common/motion-line-numbering.service';
+import { MotionControllerService } from '../../common/motion-controller.service/motion-controller.service';
+import { MotionFormatService } from '../../common/motion-format.service/motion-format.service';
+import { MotionLineNumberingService } from '../../common/motion-line-numbering.service/motion-line-numbering.service';
 import { InfoToExport } from '../definitions';
-import { MotionExportInfo } from '../motion-export.service';
-import { MotionHtmlToPdfService } from '../motion-html-to-pdf.service';
+import { MotionExportInfo } from '../motion-export.service/motion-export.service';
+import { MotionHtmlToPdfService } from '../motion-html-to-pdf.service/motion-html-to-pdf.service';
 
 interface CreateTextData {
     motion: ViewMotion;
@@ -272,7 +272,7 @@ export class MotionPdfService {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
             if (minSupporters && motion.supporters.length > 0) {
                 const supporters = motion.supporterUsers
-                    .naturalSort(this.translate.getCurrentLang(), [`first_name`, `last_name`])
+                    .naturalSort(this.translate.getCurrentLang() ?? `en`, [`first_name`, `last_name`])
                     .map(supporter => supporter.getTitle())
                     .join(`, `);
 
@@ -364,7 +364,7 @@ export class MotionPdfService {
         ) {
             if (motion.referenced_in_motion_recommendation_extensions.length) {
                 const referringMotions = motion.referenced_in_motion_recommendation_extensions
-                    .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
+                    .naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`])
                     .map(motion => motion.getNumberOrTitle())
                     .join(`, `);
 

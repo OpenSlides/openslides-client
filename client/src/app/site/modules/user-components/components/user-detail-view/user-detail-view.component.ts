@@ -31,7 +31,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, OperatorFunction, Subscription } from 'rxjs';
 
 import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
-import { OneOfValidator } from '../../validators';
+import { OneOfValidator } from '../../validators/one-of.validator';
 
 @Component({
     selector: `os-user-detail-view`,

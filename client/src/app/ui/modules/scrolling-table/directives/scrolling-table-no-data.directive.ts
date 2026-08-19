@@ -1,7 +1,7 @@
 import { CdkPortal } from '@angular/cdk/portal';
 import { Directive, inject, OnInit } from '@angular/core';
 
-import { ScrollingTableManageService } from '../services';
+import { ScrollingTableManageService } from '../services/scrolling-table-manage.service';
 
 @Directive({
     selector: `[osScrollingTableNoData]`,
