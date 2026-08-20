@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { BaseComponent } from '@app/site/base/base.component';
 import { EntitledUsersListFilterService } from '@app/site/pages/meetings/modules/poll/services/entitled-user-filter.service';
@@ -17,7 +18,7 @@ import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { ListModule } from '@app/ui/modules/list';
 import { PipesModule } from '@app/ui/pipes';
 import { TranslatePipe } from '@ngx-translate/core';
-import { map, Observable, switchMap, tap } from 'rxjs';
+import { combineLatest, map, Observable, startWith, switchMap, tap } from 'rxjs';
 
 import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
 
@@ -57,16 +58,22 @@ export class PollEntitledUserComponent extends BaseComponent {
     public filterProps = [`user.getFullName`];
 
     public entitledUsers$: Observable<EntitledUserData[]> = toObservable(this.poll).pipe(
-        switchMap(poll => poll.entitled_meeting_users$),
-        map((users: ViewMeetingUser[]) =>
-            users.map(user => {
-                return {
-                    meetingUser: user,
-                    isPresent: false,
-                    hasVoted: false
-                } as EntitledUserData;
-            })
-        ),
+        switchMap(poll => combineLatest([poll.entitled_meeting_users$, poll.ballot_users$.pipe(startWith([]))])),
+        map(([users, voted]) => {
+            const votedSet = new Set<Id>();
+            for (const user of voted) {
+                votedSet.add(user.represented_meeting_user_id);
+            }
+
+            return users.map(
+                user =>
+                    ({
+                        meetingUser: user,
+                        isPresent: false, // TODO: Implement
+                        hasVoted: votedSet.has(user.id)
+                    }) as EntitledUserData
+            );
+        }),
         tap(users => (this.totalCount = users.length))
     );
 
