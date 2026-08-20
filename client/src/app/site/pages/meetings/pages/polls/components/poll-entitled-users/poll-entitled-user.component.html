@@ -1,1 +1,76 @@
-<!-- TODO: Implement-->
+<div *osPerms="permission.userCanSee">
+    <os-list
+        [filterProps]="filterProps"
+        [filterService]="filter"
+        [fullScreen]="false"
+        [listObservable]="entitledUsers$"
+        [totalCount]="totalCount"
+    >
+        <!-- Content -->
+        <div *osScrollingTableCell="'user'; row as entry">
+            <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
+            @if (entry.meetingUser) {
+                <div>
+                    {{ entry.meetingUser.user.getShortName() }}
+                    <div class="user-subtitle">
+                        <!-- Level and number -->
+                        @if (entry.meetingUser.user.getLevelAndNumber()) {
+                            <div>
+                                {{ entry.meetingUser.user.getLevelAndNumber() }}
+                            </div>
+                        }
+
+                        <!-- TODO: Vote weight
+                            @if (displayVoteWeight) {
+                                <div>{{ 'Vote weight' | translate }}: {{ entry.user.vote_weight() }}</div>
+                            }
+                        -->
+
+                        <!-- TODO:Delegation
+                            @if (
+                                displayDelegation &&
+                                entry.vote_delegated_to_user_id &&
+                                !entry.delegation_user_merged_into_id
+                            ) {
+                                <div>
+                                    <span>
+                                        ({{ 'represented by' | translate }}
+                                        {{ entry.vote_delegated_to?.getShortName() }})
+                                    </span>
+                                </div>
+                            }
+                            @if (entry.vote_delegated_to_user_id && entry.delegation_user_merged_into_id) {
+                                <div>
+                                    <span>
+                                        {{ entry.delegation_user_merged_into }}
+                                    </span>
+                                </div>
+                            }
+                        -->
+                    </div>
+                </div>
+                <!-- TODO: Merged into handling(?): https://github.com/OpenSlides/openslides-client/blob/main/client/src/app/site/pages/meetings/modules/poll/components/entitled-users-table/entitled-users-table.component.html#L50 -->
+            } @else {
+                <div>
+                    <i>{{ 'Unknown user' | translate }}</i>
+                </div>
+            }
+        </div>
+
+        <div *osScrollingTableCell="'present'; row as entry; config: { width: 24 }">
+            <div *osScrollingTableCellLabel>{{ 'Is present' | translate }}</div>
+            @if (entry.isPresent) {
+                <mat-icon [matTooltip]="'Is present' | translate">how_to_reg</mat-icon>
+            }
+        </div>
+        <div *osScrollingTableCell="'voted'; row as entry; config: { width: 24 }">
+            <div *osScrollingTableCellLabel>{{ 'Voted' | translate }}</div>
+            @if (entry.hasVoted) {
+                <mat-icon [matTooltip]="'Vote submitted' | translate">how_to_vote</mat-icon>
+            }
+        </div>
+    </os-list>
+</div>
+<div *osPerms="permission.userCanSee; complement: true" class="no-can-see-users">
+    <i>{{ 'You are not allowed to see all entitled users.' | translate }}</i>
+</div>

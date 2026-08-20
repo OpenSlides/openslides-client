@@ -16,6 +16,7 @@ import { _ } from '@ngx-translate/core';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { SlideOptions } from '../../../view-models/slide-options';
+import { ViewMeetingUser } from '../../../view-models/view-meeting-user';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
 import { ViewPollBallotUser } from './poll-ballot-user';
 
@@ -172,6 +173,7 @@ interface IPollRelations<C extends PollContentObject = any, D extends BasePollCo
     ballots: ViewPollBallot[];
     ballot_users: ViewPollBallotUser[];
     entitled_groups: ViewGroup[];
+    entitled_meeting_users: ViewMeetingUser[];
     options: ViewPollOption[];
 }
 export interface ViewPoll<C extends PollContentObject = any, D extends BasePollConfigViewModel = any>

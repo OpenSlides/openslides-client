@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { rxResource, toObservable } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -70,8 +70,6 @@ export class PollSingleVotesComponent extends BaseComponent {
     });
 
     public filterProps = [`user.getFullName`];
-
-    public selectedTab = signal(0);
 
     public votesData$: Observable<BaseVoteData[]> = toObservable(this.poll).pipe(
         switchMap(poll => (poll.state === PollState.Finished ? poll.ballots$ : of([]))),
