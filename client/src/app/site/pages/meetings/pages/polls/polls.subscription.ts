@@ -99,7 +99,7 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
                 follow: [
                     {
                         idField: `meeting_user_id`,
-                        ...MeetingUserFieldsets.FullNameSubscription.follow
+                        ...MeetingUserFieldsets.FullNameSubscription
                     }
                 ]
             },
