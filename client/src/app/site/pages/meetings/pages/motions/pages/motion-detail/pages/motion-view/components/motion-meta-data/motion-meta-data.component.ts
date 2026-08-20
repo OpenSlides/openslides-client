@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    inject,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output
+} from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
 import { Selectable } from '@app/domain/interfaces';
@@ -7,12 +16,12 @@ import { Motion } from '@app/domain/models/motions';
 import { MotionBlock } from '@app/domain/models/motions/motion-block';
 import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
 import { GetForwardingCommitteesPresenterService } from '@app/gateways/presenter/get-forwarding-committees-presenter.service';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from '@app/site/pages/meetings/pages/motions';
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from '@app/site/services/operator.service';
-import { TranslateService } from '@ngx-translate/core';
-import { map, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
 
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionEditorControllerService } from '../../../../../../modules/editors/services/motion-editor-controller/motion-editor-controller.service';
@@ -63,6 +72,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         .get(`motions_enable_origin_motion_display`)
         .pipe(map(v => !!v));
 
+    // TODO: Use actual setting
+    public displayFutureForward$ = this.meetingSettingsService
+        .get(`motions_enable_origin_motion_display`)
+        .pipe(map(v => !!v));
+
+    public expandedMotions = new BehaviorSubject<[boolean, boolean][]>([]);
+
     /**
      * @returns the current recommendation label (with extension)
      */
@@ -94,19 +110,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      */
     public recommender: string | null = null;
 
-    public searchLists: SearchListDefinition[] = [
-        {
-            observable: this.repo.getViewModelListObservable(),
-            label: `Motions`
-        },
-        {
-            observable: this.motionForwardingService.forwardingCommitteesObservable,
-            label: `Committees`,
-            keepOpen: true,
-            wider: true
-        }
-    ];
-
     public motionTransformFn = (value: ViewMotion): string => `[${value.fqid}]`;
 
     public get referencingMotions$(): Observable<ViewMotion[]> {
@@ -123,11 +126,33 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         );
     }
 
-    public get originMotions$(): Observable<ViewMotion[] | ViewMeeting[]> {
+    public get originMotions$(): Observable<ViewMotion[]> {
+        let futureForward = false;
+        this.displayFutureForward$.subscribe(bool => {
+            futureForward = bool;
+        });
+        futureForward = true; // TODO: remove this line
+
+        if (futureForward) {
+            const list = this.motion.all_derived_motions ?? [];
+            list.push(this.motion);
+            const origin_ids = [];
+            for (const motion of list) {
+                if (motion.origin_id && origin_ids.includes(motion.origin_id)) {
+                    list.push(this.motionRepo.getViewModel(motion.origin_id));
+                }
+                origin_ids.push(motion.origin_id);
+            }
+
+            if (this.motion.origin_id) {
+                return this.motion.all_origins$.pipe(map(origins => [...list.reverse(), ...origins.reverse()]));
+            } else {
+                return new BehaviorSubject(this.createForwardTree(list, this.motion.all_origins));
+            }
+        }
+
         if (this.motion.origin_id) {
             return this.motion.all_origins$.pipe(map(origins => origins?.reverse()));
-        } else if (this.motion.origin_meeting_id) {
-            return this.motion.origin_meeting$.pipe(map(origin => [origin]));
         }
         return null;
     }
@@ -150,20 +175,33 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      */
     private recommenderSubscription: Subscription | null = null;
 
-    public constructor(
-        protected override translate: TranslateService,
-        public perms: MotionPermissionService,
-        private operator: OperatorService,
-        private motionForwardingService: MotionForwardDialogService,
-        private meetingController: MeetingControllerService,
-        public motionSubmitterRepo: MotionSubmitterControllerService,
-        public motionEditorRepo: MotionEditorControllerService,
-        public motionWorkingGroupSpeakerRepo: MotionWorkingGroupSpeakerControllerService,
-        private presenter: GetForwardingCommitteesPresenterService
-    ) {
+    public perms = inject(MotionPermissionService);
+    public motionSubmitterRepo = inject(MotionSubmitterControllerService);
+    public motionEditorRepo = inject(MotionEditorControllerService);
+    public motionWorkingGroupSpeakerRepo = inject(MotionWorkingGroupSpeakerControllerService);
+    private motionRepo = inject(MotionRepositoryService);
+    private operator = inject(OperatorService);
+    private motionForwardingService = inject(MotionForwardDialogService);
+    private meetingController = inject(MeetingControllerService);
+    private presenter = inject(GetForwardingCommitteesPresenterService);
+
+    public searchLists: SearchListDefinition[] = [
+        {
+            observable: this.repo.getViewModelListObservable(),
+            label: `Motions`
+        },
+        {
+            observable: this.motionForwardingService.forwardingCommitteesObservable,
+            label: `Committees`,
+            keepOpen: true,
+            wider: true
+        }
+    ];
+
+    public constructor() {
         super();
 
-        if (operator.hasPerms(Permission.motionCanManageMetadata)) {
+        if (this.operator.hasPerms(Permission.motionCanManageMetadata)) {
             this.motionForwardingService.forwardingMeetingsAvailable().then(_forwardingAvailable => {
                 this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
                     return (await this.checkPresenter()) as Selectable[];
@@ -332,6 +370,33 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return origin?.canAccess();
     }
 
+    public toogleExpansion(index: number, all = false): void {
+        this.expandedMotions.subscribe(list => {
+            for (let i = index; i < list.length; i++) {
+                if (i !== index && !all && list[i][0]) {
+                    break;
+                } else if (list[i][0]) {
+                    continue;
+                }
+                list[i][1] = !list[i][1];
+            }
+        });
+    }
+
+    public canShrink(index: number, all = false): boolean {
+        let canShri = true;
+        this.expandedMotions.subscribe(list => {
+            for (let i = index; i < list.length; i++) {
+                if (i !== index && !all && list[i][0]) {
+                    break;
+                } else if (!list[i][1]) {
+                    canShri = false;
+                }
+            }
+        });
+        return canShri;
+    }
+
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
         return toTest.COLLECTION === Motion.COLLECTION;
     }
@@ -369,5 +434,32 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         return forwardingCommittees;
+    }
+
+    private createForwardTree(list: ViewMotion[], origins: ViewMotion[]): ViewMotion[] {
+        const childrenIds = new Set(list.filter(motion => !!motion.origin_id).map(motion => motion.origin_id));
+        const leaves = list.filter(motion => !childrenIds.has(motion.id));
+        const tree: ViewMotion[] = [];
+        const newList: [boolean, boolean][] = [];
+
+        for (const leaf of leaves) {
+            let currentId: number | null = leaf.id;
+
+            while (currentId !== null) {
+                const motion = list.find(m => m.id === currentId);
+                if (!motion) break;
+
+                tree.push(motion);
+                currentId = motion.origin_id;
+
+                const amount_derived_motions = motion.all_derived_motion_ids?.length ?? 0;
+                newList.push([amount_derived_motions === 0, amount_derived_motions === 0]);
+            }
+
+            tree.push(...origins.reverse());
+            origins.forEach(_ => newList.push([false, false]));
+        }
+        this.expandedMotions.next(newList);
+        return tree;
     }
 }

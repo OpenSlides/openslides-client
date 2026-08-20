@@ -317,30 +317,77 @@
 @if (originMotions$ | async; as originMotions) {
     @if (originMotions.length) {
         <div>
-            <h4>{{ 'Origin' | translate }}</h4>
+            @if (displayFutureForward$ | async) {
+                <h4>
+                    {{ 'Sequence of deliberation' | translate }}
+                    @if (canShrink(0, true)) {
+                        <mat-icon
+                            matTooltipPosition="right"
+                            [matTooltip]="'Hide all forwarded motions but endpints' | translate"
+                            (click)="toogleExpansion(0, true)"
+                        >
+                            expand_less
+                        </mat-icon>
+                    } @else {
+                        <mat-icon
+                            matTooltipPosition="right"
+                            [matTooltip]="'Show all forwarded motions' | translate"
+                            (click)="toogleExpansion(0, true)"
+                        >
+                            expand_more
+                        </mat-icon>
+                    }
+                </h4>
+            } @else {
+                <h4>{{ 'Origin' | translate }}</h4>
+            }
             <div class="origin-view">
-                @for (origin of originMotions; track origin.id; let last = $last) {
-                    <div>
-                        <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
-                        @if (
-                            (displayOriginEnabled$ | async) &&
-                            (originToggleDefault$ | async) === false &&
-                            !motion.isAmendment()
-                        ) {
-                            <mat-slide-toggle
-                                *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
-                                [aria-label]="'Activate backtracking' | translate"
-                                [checked]="originMotionStatus[origin.id]"
-                                [matTooltip]="'Activate backtracking' | translate"
-                                (change)="toggleOriginMotion($event, origin.id)"
-                            ></mat-slide-toggle>
-                        }
-                    </div>
-                    <div class="flex-center">
-                        @if (!last) {
-                            <mat-icon>north</mat-icon>
-                        }
-                    </div>
+                @let expandedList = expandedMotions | async;
+                @for (origin of originMotions; track origin.id; let i = $index; let last = $last) {
+                    @if (expandedList[i][1]) {
+                        <div>
+                            <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
+                            @if (
+                                (displayOriginEnabled$ | async) &&
+                                (originToggleDefault$ | async) === false &&
+                                !motion.isAmendment()
+                            ) {
+                                <mat-slide-toggle
+                                    *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
+                                    [aria-label]="'Activate backtracking' | translate"
+                                    [checked]="originMotionStatus[origin.id]"
+                                    [matTooltip]="'Activate backtracking' | translate"
+                                    (change)="toggleOriginMotion($event, origin.id)"
+                                ></mat-slide-toggle>
+                            }
+                            @if (expandedList[i][0]) {
+                                @if (canShrink(i)) {
+                                    <mat-icon
+                                        matTooltipPosition="right"
+                                        [matTooltip]="'Hide this forward path' | translate"
+                                        (click)="toogleExpansion(i)"
+                                    >
+                                        expand_less
+                                    </mat-icon>
+                                } @else {
+                                    <mat-icon
+                                        matTooltipPosition="right"
+                                        [matTooltip]="'Show this forward path' | translate"
+                                        (click)="toogleExpansion(i)"
+                                    >
+                                        expand_more
+                                    </mat-icon>
+                                }
+                            }
+                        </div>
+                        <div class="flex-center">
+                            @if (!last && !!origin.origin_id && expandedList[i + 1][1]) {
+                                <mat-icon>north</mat-icon>
+                            } @else if (!origin.origin_id) {
+                                <br />
+                            }
+                        </div>
+                    }
                 }
             </div>
         </div>
@@ -378,10 +425,18 @@
             <a [routerLink]="getUrl(motion)">
                 {{ getMeetingName(motion) }}
             </a>
+            <span>{{ motion.state }}</span>
+            @if (motion.state_extension) {
+                {{ motion.state_extension }}
+            }
         </span>
     } @else {
         <span>
             {{ getMeetingName(motion) }}
         </span>
+        <span>{{ motion.state }}</span>
+        @if (motion.state_extension) {
+            {{ motion.state_extension }}
+        }
     }
 </ng-template>

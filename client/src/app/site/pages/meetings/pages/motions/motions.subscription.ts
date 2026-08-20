@@ -187,6 +187,41 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
             },
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
+            {
+                idField: `all_derived_motion_ids`,
+                fieldset: [
+                    `all_derived_motion_ids`,
+                    `all_origin_ids`,
+                    `id`,
+                    `title`,
+                    `meeting_id`,
+                    `origin_id`,
+                    `sequential_number`,
+                    `state_extension`,
+                    `state_id`
+                ],
+                follow: [
+                    { idField: `meeting_id`, fieldset: [`id`, `locked_from_inside`, `name`] },
+                    { idField: `state_id`, fieldset: [`id`, `name`] }
+                ]
+            },
+            {
+                idField: `all_origin_ids`,
+                fieldset: [
+                    `all_derived_motion_ids`,
+                    `all_origin_ids`,
+                    `id`,
+                    `meeting_id`,
+                    `origin_id`,
+                    `sequential_number`,
+                    `state_extension`,
+                    `state_id`
+                ],
+                follow: [
+                    { idField: `meeting_id`, fieldset: [`id`, `locked_from_inside`, `name`] },
+                    { idField: `state_id`, fieldset: [`id`, `name`] }
+                ]
+            },
             { idField: `lead_motion_id`, fieldset: [`diff_version`, `text`] },
             {
                 idField: `amendment_ids`,
