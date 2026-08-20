@@ -996,6 +996,12 @@ export const RELATIONS: Relation[] = [
         AField: `entitled_groups`,
         BField: `polls`
     }),
+    ...makeM2M({
+        AViewModel: ViewPoll,
+        BViewModel: ViewMeetingUser,
+        AField: `entitled_meeting_users`,
+        BField: `entitled_at_polls`
+    }),
     ...makeGenericO2O<ViewPoll, HasPoll>({
         viewModel: ViewPoll,
         possibleViewModels: [

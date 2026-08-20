@@ -104,6 +104,10 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
                 ]
             },
             {
+                idField: `entitled_meeting_user_ids`,
+                ...MeetingUserFieldsets.FullNameSubscription
+            },
+            {
                 idField: `meeting_id`,
                 fieldset: [`name`],
                 follow: [

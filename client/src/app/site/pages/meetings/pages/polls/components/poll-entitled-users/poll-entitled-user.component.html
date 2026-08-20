@@ -1,1 +1,34 @@
-<!-- TODO: Implement-->
+<div *osPerms="permission.userCanSee">
+    <os-list
+        [filterProps]="filterProps"
+        [filterService]="filter"
+        [fullScreen]="false"
+        [listObservable]="entitledUsers$"
+        [totalCount]="totalCount"
+    >
+        <!-- Content -->
+        <div *osScrollingTableCell="'user'; row as entry">
+            <div *osScrollingTableCellLabel>{{ 'Participant' | translate }}</div>
+            @if (entry.meetingUser) {
+                <div>
+                    {{ entry.meetingUser.user.getShortName() }}
+                    <div class="user-subtitle">
+                        <!-- Level and number -->
+                        @if (entry.meetingUser.user.getLevelAndNumber()) {
+                            <div>
+                                {{ entry.meetingUser.user.getLevelAndNumber() }}
+                            </div>
+                        }
+                    </div>
+                </div>
+            } @else {
+                <div>
+                    <i>{{ 'Unknown user' | translate }}</i>
+                </div>
+            }
+        </div>
+    </os-list>
+</div>
+<div *osPerms="permission.userCanSee; complement: true" class="no-can-see-users">
+    <i>{{ 'You are not allowed to see all entitled users.' | translate }}</i>
+</div>
