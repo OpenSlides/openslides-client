@@ -212,9 +212,11 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
 
         if (to) {
             return (to.offsetHeight + to.offsetTop - from.offsetTop).toString() + `px`;
-        } else {
+        } else if (from) {
             return from.offsetHeight.toString() + `px`;
         }
+
+        return `0px`;
     }
 
     /**
