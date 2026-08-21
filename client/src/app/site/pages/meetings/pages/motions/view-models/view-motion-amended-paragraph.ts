@@ -1,5 +1,5 @@
-import { MergeAmendment } from 'src/app/domain/models/motions/motion-state';
-import { ModificationType } from 'src/app/domain/models/motions/motions.constants';
+import { MergeAmendment } from '@app/domain/models/motions/motion-state';
+import { ModificationType } from '@app/domain/models/motions/motions.constants';
 
 import { LineRange } from '../definitions';
 import { ViewUnifiedChange, ViewUnifiedChangeType } from '../modules';

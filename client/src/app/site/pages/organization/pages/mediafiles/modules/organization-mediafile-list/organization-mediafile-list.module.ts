@@ -8,12 +8,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { MediafileListServiceModule } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-service.module';
-import { MediafileCommonServiceModule } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common-service.module';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { FileListComponent } from 'src/app/ui/modules/file-list/file-list.component';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { MediafileListServiceModule } from '@app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-service.module';
+import { MediafileCommonServiceModule } from '@app/site/pages/meetings/pages/mediafiles/services/mediafile-common-service.module';
+import { DirectivesModule } from '@app/ui/directives';
+import { FileListComponent } from '@app/ui/modules/file-list/file-list.component';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
 
 import { OrganizationMediafileListComponent } from './components/organization-mediafile-list/organization-mediafile-list.component';
 import { OrganizationMediafileListRoutingModule } from './organization-mediafile-list-routing.module';

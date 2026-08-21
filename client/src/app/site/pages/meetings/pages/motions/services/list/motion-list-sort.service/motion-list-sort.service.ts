@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 import { MotionListBaseSortService } from '../motion-list-base-sort.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionListSortService extends MotionListBaseSortService {
     /**
      * Constructor.

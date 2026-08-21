@@ -1,7 +1,7 @@
-import { Identifiable } from 'src/app/domain/interfaces';
-import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { Action } from 'src/app/gateways/actions';
-import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { Identifiable } from '@app/domain/interfaces';
+import { BaseModel, ModelConstructor } from '@app/domain/models/base/base-model';
+import { Action } from '@app/gateways/actions';
+import { BaseHasMeetingUserViewModel } from '@app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';

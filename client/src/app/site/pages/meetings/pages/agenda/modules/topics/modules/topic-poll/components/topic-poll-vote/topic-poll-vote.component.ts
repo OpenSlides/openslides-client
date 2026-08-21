@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { _ } from '@ngx-translate/core';
-import { VoteValue } from 'src/app/domain/models/poll';
+import { VoteValue } from '@app/domain/models/poll';
 import {
     BasePollVoteComponent,
     PollVoteViewSettings,
     VoteOption
-} from 'src/app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component';
-import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+} from '@app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component';
+import { ViewOption } from '@app/site/pages/meetings/pages/polls';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { _ } from '@ngx-translate/core';
 
 import { ViewTopic } from '../../../../view-models';
 

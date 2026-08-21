@@ -1,10 +1,10 @@
 import { Directive, Input, OnDestroy } from '@angular/core';
+import { Fqid } from '@app/domain/definitions/key-types';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { NotifyService } from '@app/gateways/notify.service';
+import { BaseComponent } from '@app/site/base/base.component';
+import { OperatorService } from '@app/site/services/operator.service';
 import { Subscription } from 'rxjs';
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { NotifyService } from 'src/app/gateways/notify.service';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 /**
  * Enum to define different types of notifications.

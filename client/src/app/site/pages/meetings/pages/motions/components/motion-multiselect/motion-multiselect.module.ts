@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { DirectivesModule } from '@app/ui/directives';
+import { ChoiceDialogComponent } from '@app/ui/modules/choice-dialog';
 
 import { ProjectableListModule } from '../../../../modules/meetings-component-collector/projectable-list/projectable-list.module';
 import { ProjectorButtonModule } from '../../../../modules/meetings-component-collector/projector-button/projector-button.module';

@@ -1,26 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { AgendaItemType, ItemTypeChoices } from '@app/domain/models/agenda/agenda-item';
+import { SpeakerState } from '@app/domain/models/speakers/speaker-state';
+import { Topic } from '@app/domain/models/topics/topic';
+import { Deferred } from '@app/infrastructure/utils/promises';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { PollDialogData } from '@app/site/pages/meetings/modules/poll/definitions';
+import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewTopic } from '@app/site/pages/meetings/pages/agenda';
+import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda/view-models';
+import { ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { AgendaItemType, ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { SpeakerState } from 'src/app/domain/models/speakers/speaker-state';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { PollDialogData } from 'src/app/site/pages/meetings/modules/poll/definitions';
-import { PollControllerService } from 'src/app/site/pages/meetings/modules/poll/services/poll-controller.service';
-import { ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { AgendaForwardDialogService } from '../../../../../../components/agenda-forward-dialog/services/agenda-forward-dialog.service';
 import { AgendaItemControllerService } from '../../../../../../services';
@@ -33,6 +33,7 @@ import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pd
     selector: `os-topic-detail`,
     templateUrl: `./topic-detail.component.html`,
     styleUrls: [`./topic-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TopicDetailComponent extends BaseMeetingComponent implements OnInit {

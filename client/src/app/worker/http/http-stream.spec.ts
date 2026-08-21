@@ -1,4 +1,4 @@
-import { HttpMethod } from 'src/app/infrastructure/definitions/http';
+import { HttpMethod } from '@app/infrastructure/definitions/http';
 
 import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
 import { HttpStream } from './http-stream';

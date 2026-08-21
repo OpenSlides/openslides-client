@@ -1,5 +1,5 @@
+import { SubscriptionMap } from '@app/infrastructure/utils/subscription-map';
 import { Observable, Subscription } from 'rxjs';
-import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
 
 describe(`utils: subscription-map`, () => {
     let sub: SubscriptionMap;

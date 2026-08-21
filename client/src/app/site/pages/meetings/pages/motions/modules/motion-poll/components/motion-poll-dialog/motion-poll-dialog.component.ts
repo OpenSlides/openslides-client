@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, Inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { PollPercentBaseVerbose, VoteValue } from '@app/domain/models/poll';
+import { BasePollDialogComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { _ } from '@ngx-translate/core';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { PollPercentBaseVerbose, VoteValue } from 'src/app/domain/models/poll';
-import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
 
 import { MotionPollService } from '../../services';
 
@@ -18,6 +18,7 @@ export const MotionPollMethodsVerbose = {
     selector: `os-motion-poll-dialog`,
     templateUrl: `./motion-poll-dialog.component.html`,
     styleUrls: [`./motion-poll-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {

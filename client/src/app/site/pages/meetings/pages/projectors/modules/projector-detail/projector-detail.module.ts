@@ -8,12 +8,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { GridModule } from 'src/app/ui/modules/grid';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { MeetingsComponentCollectorModule } from '@app/site/pages/meetings/modules/meetings-component-collector';
+import { DirectivesModule } from '@app/ui/directives';
+import { GridModule } from '@app/ui/modules/grid';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
 
 import { ProjectionDialogModule } from '../../../../modules/meetings-component-collector/projection-dialog/projection-dialog.module';
 import { ProjectorComponent } from '../../../../modules/projector/components/projector/projector.component';

@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
-import { format, fromUnixTime } from 'date-fns';
-import { DateFnsConfigurationService } from 'ngx-date-fns';
+import { inject, Service } from '@angular/core';
 import {
     CsvColumnDefinitionMap,
     CsvColumnDefinitionProperty,
     CsvColumnsDefinition
-} from 'src/app/gateways/export/csv-export.service';
-import { DurationService } from 'src/app/site/services/duration.service';
+} from '@app/gateways/export/csv-export.service';
+import { DurationService } from '@app/site/services/duration.service';
+import { _ } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { format, fromUnixTime } from 'date-fns';
+import { DateFnsConfigurationService } from 'ngx-date-fns';
 
 import { MeetingCsvExportForBackendService } from '../../../../services/export/meeting-csv-export-for-backend.service';
 import { ViewSpeaker } from '../../../agenda';
@@ -25,16 +25,12 @@ export const speakerHeadersAndVerboseNames = {
     topic: _(`Element`)
 };
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class SpeakerCsvExportService {
-    public constructor(
-        private csvExport: MeetingCsvExportForBackendService,
-        private translate: TranslateService,
-        private durationService: DurationService,
-        private dfnsConfig: DateFnsConfigurationService
-    ) {}
+    private csvExport = inject(MeetingCsvExportForBackendService);
+    private translate = inject(TranslateService);
+    private durationService = inject(DurationService);
+    private dfnsConfig = inject(DateFnsConfigurationService);
 
     private columnMappings = {
         begin_time: (speaker: ViewSpeaker): string =>

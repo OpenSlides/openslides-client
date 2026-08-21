@@ -1,4 +1,4 @@
-import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
+import { UnsafeHtml } from '@app/domain/definitions/key-types';
 
 import { Id } from '../../definitions/key-types';
 import { BaseModel } from '../base/base-model';

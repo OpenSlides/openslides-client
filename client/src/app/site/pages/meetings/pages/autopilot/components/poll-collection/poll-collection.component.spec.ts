@@ -1,5 +1,5 @@
 // import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { BaseViewModel } from 'src/app/site/base/base-view-model';
+// import { BaseViewModel } from '@app/site/base/base-view-model';
 // import { E2EImportsModule } from 'src/e2e-imports.module';
 
 // import { PollModule } from '../../../../modules/poll';

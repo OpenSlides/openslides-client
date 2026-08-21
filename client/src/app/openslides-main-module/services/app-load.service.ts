@@ -1,26 +1,26 @@
-import { Injectable, Injector, Type } from '@angular/core';
-import { ActionWorkerAppConfig } from 'src/app/gateways/repositories/action-worker/action-worker.config';
-import { BaseRepository } from 'src/app/gateways/repositories/base-repository';
-import { MeetingUserAppConfig } from 'src/app/gateways/repositories/meeting_user/meeting-user-config';
-import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
-import { OnAfterAppsLoaded } from 'src/app/infrastructure/definitions/hooks/after-apps-loaded';
-import { OpenSlidesInjector } from 'src/app/infrastructure/utils/di/openslides-injector';
-import { AgendaAppConfig } from 'src/app/site/pages/meetings/pages/agenda/agenda.config';
-import { AssignmentsAppConfig } from 'src/app/site/pages/meetings/pages/assignments/assignments.config';
-import { ChatAppConfig } from 'src/app/site/pages/meetings/pages/chat/chat.config';
-import { HistoryAppConfig } from 'src/app/site/pages/meetings/pages/history/history.config';
-import { HomeAppConfig } from 'src/app/site/pages/meetings/pages/home/home.config';
-import { MediafileAppConfig } from 'src/app/site/pages/meetings/pages/mediafiles/mediafiles.config';
-import { MeetingMediafileAppConfig } from 'src/app/site/pages/meetings/pages/mediafiles/meeting-mediafiles.config';
-import { MeetingSettingsAppConfig } from 'src/app/site/pages/meetings/pages/meeting-settings/meeting-settings.config';
-import { MotionsAppConfig } from 'src/app/site/pages/meetings/pages/motions';
-import { PollsAppConfig } from 'src/app/site/pages/meetings/pages/polls/polls.config';
-import { ProjectorAppConfig } from 'src/app/site/pages/meetings/pages/projectors/projector.config';
-import { MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
-import { GendersAppConfig } from 'src/app/site/pages/organization/pages/accounts/pages/gender/genders.config';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { FallbackRoutesService } from 'src/app/site/services/fallback-routes.service';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
+import { inject, Injector, Service, Type } from '@angular/core';
+import { ActionWorkerAppConfig } from '@app/gateways/repositories/action-worker/action-worker.config';
+import { BaseRepository } from '@app/gateways/repositories/base-repository';
+import { MeetingUserAppConfig } from '@app/gateways/repositories/meeting_user/meeting-user-config';
+import { AppConfig } from '@app/infrastructure/definitions/app-config';
+import { OnAfterAppsLoaded } from '@app/infrastructure/definitions/hooks/after-apps-loaded';
+import { OpenSlidesInjector } from '@app/infrastructure/utils/di/openslides-injector';
+import { AgendaAppConfig } from '@app/site/pages/meetings/pages/agenda/agenda.config';
+import { AssignmentsAppConfig } from '@app/site/pages/meetings/pages/assignments/assignments.config';
+import { ChatAppConfig } from '@app/site/pages/meetings/pages/chat/chat.config';
+import { HistoryAppConfig } from '@app/site/pages/meetings/pages/history/history.config';
+import { HomeAppConfig } from '@app/site/pages/meetings/pages/home/home.config';
+import { MediafileAppConfig } from '@app/site/pages/meetings/pages/mediafiles/mediafiles.config';
+import { MeetingMediafileAppConfig } from '@app/site/pages/meetings/pages/mediafiles/meeting-mediafiles.config';
+import { MeetingSettingsAppConfig } from '@app/site/pages/meetings/pages/meeting-settings/meeting-settings.config';
+import { MotionsAppConfig } from '@app/site/pages/meetings/pages/motions';
+import { PollsAppConfig } from '@app/site/pages/meetings/pages/polls/polls.config';
+import { ProjectorAppConfig } from '@app/site/pages/meetings/pages/projectors/projector.config';
+import { MainMenuService } from '@app/site/pages/meetings/services/main-menu.service';
+import { GendersAppConfig } from '@app/site/pages/organization/pages/accounts/pages/gender/genders.config';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { FallbackRoutesService } from '@app/site/services/fallback-routes.service';
+import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
 
 import { HasOnAfterAppsLoaded } from '../../infrastructure/definitions/hooks/after-apps-loaded';
 import { MeetingsAppConfig } from '../../site/pages/meetings/meetings.config';
@@ -60,17 +60,15 @@ const appConfigs: AppConfig[] = [
     GendersAppConfig
 ];
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AppLoadService {
-    public constructor(
-        private injector: Injector,
-        private modelMapper: CollectionMapperService,
-        private mainMenuService: MainMenuService,
-        private fallbackRoutesService: FallbackRoutesService
-    ) {
-        OpenSlidesInjector.setInjector(injector);
+    private injector = inject(Injector);
+    private modelMapper = inject(CollectionMapperService);
+    private mainMenuService = inject(MainMenuService);
+    private fallbackRoutesService = inject(FallbackRoutesService);
+
+    public constructor() {
+        OpenSlidesInjector.setInjector(this.injector);
     }
 
     public async loadApps(): Promise<void> {

@@ -84,15 +84,21 @@
                                             {{ entry.genderEntryMap.get(gender.id)?.present }}
                                             {{
                                                 displayPercent(
-                                                    entry.genderEntryMap.get(gender.id)?.present /
-                                                        entry.presentUserIds.length
+                                                    $safeNavigationMigration(
+                                                        entry.genderEntryMap.get(gender.id)?.present
+                                                    ) / entry.presentUserIds.length
                                                 )
                                             }}
                                         </div>
                                     }
                                 </div>
                                 <div class="justify-center bold">
-                                    <div>{{ entry.genderEntryMap.get(gender.id)?.label | translate }}</div>
+                                    <div>
+                                        {{
+                                            $safeNavigationMigration(entry.genderEntryMap.get(gender.id)?.label)
+                                                | translate
+                                        }}
+                                    </div>
                                 </div>
                                 <div class="text align-left">
                                     @if (entry.getTotalCount(gender.id)) {

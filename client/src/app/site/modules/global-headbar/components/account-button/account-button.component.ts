@@ -1,24 +1,24 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { allAvailableTranslations, availableTranslations } from '@app/domain/definitions/languages';
+import { getOmlVerboseName } from '@app/domain/definitions/organization-permission';
+import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { AuthService } from '@app/site/services/auth.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ThemeService } from '@app/site/services/theme.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { ChessDialogComponent } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
+import { ChessChallengeService } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { allAvailableTranslations, availableTranslations } from 'src/app/domain/definitions/languages';
-import { getOmlVerboseName } from 'src/app/domain/definitions/organization-permission';
-import { largeDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { AuthService } from 'src/app/site/services/auth.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { ChessDialogComponent } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
-import { ChessChallengeService } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 
 import { AccountDialogMainComponent } from '../account-dialog-main/account-dialog-main.component';
 
@@ -26,6 +26,7 @@ import { AccountDialogMainComponent } from '../account-dialog-main/account-dialo
     selector: `os-account-button`,
     templateUrl: `./account-button.component.html`,
     styleUrls: [`./account-button.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountButtonComponent extends BaseUiComponent implements OnInit {
@@ -82,18 +83,17 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private clickCounter = 0;
     private clickTimeout: number | null = null;
 
-    public constructor(
-        private translate: TranslateService,
-        private operator: OperatorService,
-        private userRepo: UserControllerService,
-        private authService: AuthService,
-        private dialog: MatDialog,
-        private router: Router,
-        private theme: ThemeService,
-        private meetingSettingsService: MeetingSettingsService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        chessChallengeService: ChessChallengeService
-    ) {
+    private translate = inject(TranslateService);
+    private operator = inject(OperatorService);
+    private userRepo = inject(UserControllerService);
+    private authService = inject(AuthService);
+    private theme = inject(ThemeService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private dialog = inject(MatDialog);
+    private router = inject(Router);
+
+    public constructor(chessChallengeService: ChessChallengeService) {
         super();
         chessChallengeService.startListening();
     }

@@ -1,8 +1,8 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, inject, Service } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SharedWorkerService } from '@app/openslides-main-module/services/shared-worker.service';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { SharedWorkerService } from 'src/app/openslides-main-module/services/shared-worker.service';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
@@ -11,9 +11,7 @@ import { AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AuthService {
     public get authTokenObservable(): Observable<AuthToken | null> {
         return this._authTokenSubject;
@@ -21,6 +19,14 @@ export class AuthService {
 
     public get authToken(): AuthToken | null {
         return this._authTokenSubject.getValue();
+    }
+
+    public get userIdObservable(): Observable<number | null> {
+        return this._userIdSubject;
+    }
+
+    public get userId(): number | null {
+        return this._userIdSubject.getValue();
     }
 
     /**
@@ -44,28 +50,27 @@ export class AuthService {
     private readonly _logoutEvent = new EventEmitter<void>();
     private readonly _loginEvent = new EventEmitter<void>();
 
-    public constructor(
-        private lifecycleService: LifecycleService,
-        private router: Router,
-        private activatedRoute: ActivatedRoute,
-        private authAdapter: AuthAdapterService,
-        private authTokenService: AuthTokenService,
-        private sharedWorker: SharedWorkerService,
-        private cookie: CookieService,
-        private DS: DataStoreService
-    ) {
-        this.authTokenService.accessTokenObservable.subscribe(token => {
-            this._authTokenSubject.next(token);
+    private readonly _userIdSubject = new BehaviorSubject<number | null>(null);
+
+    private lifecycleService = inject(LifecycleService);
+    private router = inject(Router);
+    private activatedRoute = inject(ActivatedRoute);
+    private authAdapter = inject(AuthAdapterService);
+    private authTokenService = inject(AuthTokenService);
+    private sharedWorker = inject(SharedWorkerService);
+    private cookie = inject(CookieService);
+    private DS = inject(DataStoreService);
+
+    public constructor() {
+        this.authTokenService.userIdObservable.subscribe(userId => {
+            this._userIdSubject.next(userId);
         });
 
         this.sharedWorker.listenTo(`auth`).subscribe(msg => {
             switch (msg?.action) {
                 case `new-user`:
-                    this.authTokenService.setRawAccessToken(msg.content?.token);
+                    this.authTokenService.setUserId(msg.content?.user);
                     this.updateUser(msg.content?.user);
-                    break;
-                case `new-token`:
-                    this.authTokenService.setRawAccessToken(msg.content?.token);
                     break;
             }
         });
@@ -115,7 +120,7 @@ export class AuthService {
             this.router.navigate([`/`]);
         } else {
             this.lifecycleService.shutdown();
-            this.authTokenService.setRawAccessToken(null);
+            this.authTokenService.setUserId(null);
             this._logoutEvent.emit();
             await this.DS.clear();
             this.lifecycleService.bootup();
@@ -127,7 +132,7 @@ export class AuthService {
             const response = await callback();
             if (response?.success) {
                 this.lifecycleService.shutdown();
-                this.authTokenService.setRawAccessToken(null);
+                this.authTokenService.setUserId(null);
                 this._logoutEvent.emit();
                 this.sharedWorker.sendMessage(`auth`, { action: `update` });
                 this.DS.deleteCollections(...this.DS.getCollections());
@@ -141,22 +146,7 @@ export class AuthService {
     }
 
     public async logout(): Promise<void> {
-        this.lifecycleService.shutdown();
-        const response = await this.authAdapter.logout();
-        if (response?.success) {
-            this.authTokenService.setRawAccessToken(null);
-        }
-        this._logoutEvent.emit();
-        this.sharedWorker.sendMessage(`auth`, { action: `update` });
-        this.DS.deleteCollections(...this.DS.getCollections());
-        await this.DS.clear();
-        this.lifecycleService.bootup();
-        // In case SAML is enabled, we need to redirect the user to the IDP
-        // to complete the logout-flow. Maybe there is a better way to check
-        // for activated SAML than checking if the response is a URL.
-        if (response?.message && URL.parse(response.message)) {
-            location.replace(response.message);
-        }
+        location.replace(`/system/logout`);
     }
 
     public async logoutAnonymous(): Promise<void> {
@@ -164,7 +154,7 @@ export class AuthService {
     }
 
     public isAuthenticated(): boolean {
-        return !!this.authTokenService.accessToken || this.cookie.check(`anonymous-auth`);
+        return !!this.authTokenService.userId || this.cookie.check(`anonymous-auth`);
     }
 
     /**
@@ -185,7 +175,7 @@ export class AuthService {
                 online = false;
             }
         }
-        console.log(`auth: WhoAmI done, online:`, online, `authenticated:`, !!this.authTokenService.accessToken);
+        console.log(`auth: WhoAmI done, online:`, online, `authenticated:`, !!this.authTokenService.userId);
         return online;
     }
 }

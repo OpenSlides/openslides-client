@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 
 import { Identifiable } from '../../../domain/interfaces';
 import { OrganizationTag } from '../../../domain/models/organization-tags/organization-tag';

@@ -1,25 +1,23 @@
-import { Injectable } from '@angular/core';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { AgendaItem, AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { AgendaListTitle, HasAgendaItem, ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
+import { inject, Service } from '@angular/core';
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { AgendaItem, AgendaItemType } from '@app/domain/models/agenda/agenda-item';
+import { TreeIdNode } from '@app/infrastructure/definitions/tree';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { AgendaListTitle, HasAgendaItem, ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
+import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 
 import { Action } from '../../actions';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
 import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { AgendaItemAction } from './agenda-item.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<ViewAgendaItem, AgendaItem> {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        private treeService: TreeService
-    ) {
+    private treeService = inject(TreeService);
+
+    public constructor() {
+        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
         super(repositoryServiceCollector, AgendaItem);
 
         this.setSortFunction((a, b) => a.tree_weight - b.tree_weight); // leave the sorting as it is

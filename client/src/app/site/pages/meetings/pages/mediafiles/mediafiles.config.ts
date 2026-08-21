@@ -1,7 +1,7 @@
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { MediafileRepositoryService } from 'src/app/gateways/repositories/mediafiles/mediafile-repository.service';
-import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+import { Permission } from '@app/domain/definitions/permission';
+import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
+import { MediafileRepositoryService } from '@app/gateways/repositories/mediafiles/mediafile-repository.service';
+import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
 import { ViewMediafile } from './view-models';
 

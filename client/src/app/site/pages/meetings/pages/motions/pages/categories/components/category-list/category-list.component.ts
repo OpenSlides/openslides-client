@@ -1,12 +1,12 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Permission } from '@app/domain/definitions/permission';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ViewMotionCategory } from '../../../../modules';
 import { MotionCategoryControllerService } from '../../../../modules/categories/services';
@@ -17,6 +17,7 @@ const CATEGORY_LIST_STORAGE_INDEX = `category_list`;
     selector: `os-category-list`,
     templateUrl: `./category-list.component.html`,
     styleUrls: [`./category-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CategoryListComponent extends BaseMeetingListViewComponent<ViewMotionCategory> implements OnInit {

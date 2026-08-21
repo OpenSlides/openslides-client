@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { InfoModule } from 'src/app/site/modules/info';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { InfoModule } from '@app/site/modules/info';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 
 import { LegalNoticeComponent } from './components/legal-notice/legal-notice.component';
 import { LegalNoticeRoutingModule } from './legal-notice-routing.module';

@@ -1,5 +1,5 @@
 import { KeyValue } from '@angular/common';
-import { KeyValueDiffer, KeyValueDiffers, Pipe, PipeTransform } from '@angular/core';
+import { inject, KeyValueDiffer, KeyValueDiffers, Pipe, PipeTransform } from '@angular/core';
 
 interface IterableMap<K, V> {
     [Symbol.iterator](): IterableIterator<[K, V]>;
@@ -14,7 +14,7 @@ export class EntriesPipe implements PipeTransform {
     private keyValues: KeyValue<any, any>[] = [];
     private compareFn: (a: KeyValue<any, any>, b: KeyValue<any, any>) => number = DefaultCompareFn;
 
-    public constructor(private readonly differs: KeyValueDiffers) {}
+    private readonly differs = inject(KeyValueDiffers);
 
     public transform<K, V>(
         instance: IterableMap<K, V> | any,

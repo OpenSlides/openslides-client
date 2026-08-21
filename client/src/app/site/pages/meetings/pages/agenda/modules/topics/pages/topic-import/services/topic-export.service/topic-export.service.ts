@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { CsvExportForBackendService } from '@app/gateways/export/csv-export.service/csv-export-for-backend.service';
 import { TranslateService } from '@ngx-translate/core';
-import { CsvExportForBackendService } from 'src/app/gateways/export/csv-export.service/csv-export-for-backend.service';
 
 import { topicHeadersAndVerboseNames } from '../../../../definitions';
 
@@ -12,14 +12,10 @@ interface TopicExport {
     agenda_type?: string;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class TopicExportService {
-    public constructor(
-        private csvExportService: CsvExportForBackendService,
-        private translate: TranslateService
-    ) {}
+    private csvExportService = inject(CsvExportForBackendService);
+    private translate = inject(TranslateService);
 
     public downloadCsvImportExample(): void {
         const rows: TopicExport[] = [

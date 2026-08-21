@@ -1,7 +1,6 @@
-import { inject, Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { OptionData, PollData } from 'src/app/domain/models/poll/generic-poll';
-import { OptionDataKey } from 'src/app/domain/models/poll/generic-poll';
+import { inject, Service } from '@angular/core';
+import { OptionData, PollData } from '@app/domain/models/poll/generic-poll';
+import { OptionDataKey } from '@app/domain/models/poll/generic-poll';
 import {
     ABSTAIN_KEY,
     CalculablePollKey,
@@ -22,11 +21,12 @@ import {
     VOTE_UNDOCUMENTED,
     VotingResult,
     YES_KEY
-} from 'src/app/domain/models/poll/poll-constants';
-import { compareNumber } from 'src/app/infrastructure/utils';
-import { ChartData, ChartDate } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
+} from '@app/domain/models/poll/poll-constants';
+import { compareNumber } from '@app/infrastructure/utils';
+import { ChartData, ChartDate } from '@app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { ThemeService } from '@app/site/services/theme.service';
+import { TranslateService } from '@ngx-translate/core';
 
 import { isSortedList } from '../../../../pages/polls/view-models/sorted-list';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
@@ -34,7 +34,7 @@ import { ActiveMeetingService } from '../../../../services/active-meeting.servic
 const PollChartBarThickness = 20;
 const PERCENT_DECIMAL_PLACES = 3;
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export abstract class PollService {
     protected sortByVote = false;
     protected enableMaxVotesPerOption = false;

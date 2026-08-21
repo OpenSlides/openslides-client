@@ -1,4 +1,4 @@
-import { ComponentRef, DOCUMENT, EmbeddedViewRef, Inject, Injectable, Type, ViewContainerRef } from '@angular/core';
+import { ComponentRef, DOCUMENT, EmbeddedViewRef, inject, Service, Type, ViewContainerRef } from '@angular/core';
 
 interface BodyPortalConstructConfig {
     /**
@@ -61,9 +61,7 @@ export class BodyPortal {
     }
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class DomService {
     private get hostElement(): HTMLElement {
         return this.document.body;
@@ -72,7 +70,9 @@ export class DomService {
     private _viewContainer: ViewContainerRef | null = null;
     private _pane: HTMLElement | null = null;
 
-    public constructor(@Inject(DOCUMENT) private document: Document) {
+    private document = inject(DOCUMENT);
+
+    public constructor() {
         this._pane = this.createPane();
         this.hostElement.appendChild(this._pane);
     }

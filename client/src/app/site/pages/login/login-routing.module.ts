@@ -10,7 +10,11 @@ const routes: Routes = [
         children: [
             {
                 path: ``,
-                loadChildren: () => import(`./pages/login-mask/login-mask.module`).then(m => m.LoginMaskModule)
+                pathMatch: 'full',
+                redirectTo: (): null => {
+                    window.location.href = '/system/login';
+                    return null;
+                }
             },
             {
                 path: `legalnotice`,

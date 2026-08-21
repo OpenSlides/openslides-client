@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { viewModelListEqual } from '@app/infrastructure/utils';
+import { VoteControllerService } from '@app/site/pages/meetings/modules/poll/services/vote-controller.service';
+import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ActivePollsService } from '@app/site/pages/meetings/services/active-polls.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, distinctUntilChanged, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { viewModelListEqual } from 'src/app/infrastructure/utils';
-import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
-import { VotingService } from 'src/app/site/pages/meetings/modules/poll/services/voting.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ActivePollsService } from 'src/app/site/pages/meetings/services/active-polls.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BannerDefinition, BannerService } from './banner.service';
 
@@ -20,9 +20,7 @@ interface BannerCreationData {
     link: string;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class VotingBannerService {
     private currentBanner: BannerDefinition;
 
@@ -31,16 +29,16 @@ export class VotingBannerService {
     private pollsToVote: ViewPoll[] = [];
     private pollsToVoteSubscription: Subscription;
 
-    public constructor(
-        private banner: BannerService,
-        private translate: TranslateService,
-        private votingService: VotingService,
-        private activeMeeting: ActiveMeetingService,
-        private sendVotesService: VoteControllerService,
-        private operator: OperatorService,
-        private activePolls: ActivePollsService,
-        private meetingSettingsService: MeetingSettingsService
-    ) {
+    private banner = inject(BannerService);
+    private translate = inject(TranslateService);
+    private votingService = inject(VotingService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private sendVotesService = inject(VoteControllerService);
+    private operator = inject(OperatorService);
+    private activePolls = inject(ActivePollsService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+
+    public constructor() {
         combineLatest([
             this.activeMeeting.meetingIdObservable.pipe(distinctUntilChanged()),
             this.activePolls.activePollsObservable.pipe(

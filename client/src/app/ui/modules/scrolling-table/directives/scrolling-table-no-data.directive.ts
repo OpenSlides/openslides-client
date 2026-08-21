@@ -1,5 +1,5 @@
 import { CdkPortal } from '@angular/cdk/portal';
-import { Directive, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive, inject, OnInit } from '@angular/core';
 
 import { ScrollingTableManageService } from '../services';
 
@@ -8,13 +8,7 @@ import { ScrollingTableManageService } from '../services';
     standalone: false
 })
 export class ScrollingTableNoDataDirective extends CdkPortal implements OnInit {
-    public constructor(
-        template: TemplateRef<HTMLElement>,
-        viewContainer: ViewContainerRef,
-        private manageService: ScrollingTableManageService
-    ) {
-        super(template, viewContainer);
-    }
+    private manageService = inject(ScrollingTableManageService);
 
     public ngOnInit(): void {
         this.manageService.noDataTemplateSubject.next(this);

@@ -1,4 +1,4 @@
-import { FieldDescriptor, Fields, ModelRequest } from 'src/app/domain/interfaces/model-request';
+import { FieldDescriptor, Fields, ModelRequest } from '@app/domain/interfaces/model-request';
 
 import { Collection, Id } from '../../../domain/definitions/key-types';
 import { BaseSimplifiedModelRequest } from './model-request-builder.service';

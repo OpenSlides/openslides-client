@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ThemePalette } from '@angular/material/core';
+import { ThemeRepositoryService } from '@app/gateways/repositories/themes/theme-repository.service';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
 
 import { HtmlColor, Id } from '../../domain/definitions/key-types';
 import { ThemeGeneralColors, ThemeRequiredValues } from '../../domain/models/theme/theme';
@@ -21,9 +21,7 @@ export const GENERAL_DEFAULT_COLORS: Partial<ThemeGeneralColors> = {
 };
 export type GeneralDefaultColorName = keyof typeof GENERAL_DEFAULT_COLORS;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ThemeService {
     public static readonly DEFAULT_PRIMARY_COLOR = `#317796`;
     public static readonly DEFAULT_ACCENT_COLOR = `#2196f3`;
@@ -72,18 +70,18 @@ export class ThemeService {
      *
      * @param orgaSettings must be injected to get the theme.
      */
-    public constructor(
-        orgaSettings: OrganizationSettingsService,
-        private colorService: ColorService,
-        private themeRepo: ThemeRepositoryService,
-        private storage: StorageService
-    ) {
-        orgaSettings.get(`theme_id`).subscribe(themeId => {
+    private orgaSettings = inject(OrganizationSettingsService);
+    private colorService = inject(ColorService);
+    private themeRepo = inject(ThemeRepositoryService);
+    private storage = inject(StorageService);
+
+    public constructor() {
+        this.orgaSettings.get(`theme_id`).subscribe(themeId => {
             if (themeId) {
                 this.changeThemeById(themeId);
             }
         });
-        storage.get<boolean>(DARK_MODE_STORAGE_KEY).then(useDarkMode => this.setInitialTheme(useDarkMode));
+        this.storage.get<boolean>(DARK_MODE_STORAGE_KEY).then(useDarkMode => this.setInitialTheme(useDarkMode));
         // The observable above will not fire. Do it by hand
         this.changeThemePalettes();
     }

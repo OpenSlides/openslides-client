@@ -1,6 +1,6 @@
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { BaseViewModel } from '@app/site/base/base-view-model';
 import { Observable } from 'rxjs';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
 
 import { ViewMeetingUser } from '../view-models/view-meeting-user';
 import { ViewUser } from '../view-models/view-user';

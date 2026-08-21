@@ -50,7 +50,6 @@
                     <os-repo-search-selector
                         formControlName="home_committee_id"
                         [includeNone]="true"
-                        [multiple]="false"
                         [repo]="committeeController"
                         [sortService]="committeeSortService"
                         [subscriptionConfig]="committeeSubscriptionConfig"
@@ -302,7 +301,7 @@
         </button>
     }
     <ng-container *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true">
-        <button mat-menu-item [routerLink]="['/', 'accounts', user?.id, 'meetings']">
+        <button mat-menu-item [routerLink]="['/', 'accounts', $safeNavigationMigration(user?.id), 'meetings']">
             <mat-icon>event_available</mat-icon>
             <span>{{ 'Add to meetings' | translate }}</span>
         </button>

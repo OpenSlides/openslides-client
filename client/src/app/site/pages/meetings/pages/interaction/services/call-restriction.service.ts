@@ -1,18 +1,21 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { OperatorService } from '@app/site/services/operator.service';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, map, Observable, Subject } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { SpeakerStateOnList } from '../../agenda';
 import { CurrentListOfSpeakersService } from '../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
 import { RTC_LOGGED_STORAGE_KEY } from './rtc.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class CallRestrictionService {
+    private settingService = inject(MeetingSettingsService);
+    private operator = inject(OperatorService);
+    private closService = inject(CurrentListOfSpeakersService);
+    private storageMap = inject(StorageMap);
+
     public isAccessRestricted: Observable<boolean> = this.settingService.get(`conference_los_restriction`);
     public isJitsiActiveInAnotherTab: Observable<boolean> = this.storageMap
         .watch(RTC_LOGGED_STORAGE_KEY, { type: `boolean` })
@@ -36,17 +39,12 @@ export class CallRestrictionService {
     private canEnterCallSubject = new BehaviorSubject<boolean>(false);
     public canEnterCallObservable = this.canEnterCallSubject as Observable<boolean>;
 
-    public constructor(
-        private settingService: MeetingSettingsService,
-        private operator: OperatorService,
-        private closService: CurrentListOfSpeakersService,
-        private storageMap: StorageMap
-    ) {
+    public constructor() {
         combineLatest([
             this.isAccessRestricted,
             this.userClosPosition,
             this.amountNextSpeakerAutoConnect,
-            operator.userObservable,
+            this.operator.userObservable,
             this.isJitsiActiveInAnotherTab
         ])
             .pipe(

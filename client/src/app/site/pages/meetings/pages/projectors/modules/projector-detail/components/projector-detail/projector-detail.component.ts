@@ -1,23 +1,23 @@
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { MeetingProjectionType } from '@app/gateways/repositories/meeting-repository.service';
+import { ScrollScaleDirection } from '@app/gateways/repositories/projectors/projector.action';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewProjection } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { MeetingCollectionMapperService } from '@app/site/pages/meetings/services/meeting-collection-mapper.service';
+import { Projectable, ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
+import { DurationService } from '@app/site/services/duration.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { GridTileDimension } from '@app/ui/modules/grid';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
-import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewProjection } from 'src/app/site/pages/meetings/pages/projectors';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { MeetingCollectionMapperService } from 'src/app/site/pages/meetings/services/meeting-collection-mapper.service';
-import { Projectable, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
-import { DurationService } from 'src/app/site/services/duration.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { GridTileDimension } from 'src/app/ui/modules/grid';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { hasListOfSpeakers, ViewListOfSpeakers } from '../../../../../agenda';
 import { CurrentListOfSpeakersSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-list-of-speakers-slide.service';
@@ -39,6 +39,7 @@ import { ProjectorMessageControllerService } from '../../services/projector-mess
     selector: `os-projector-detail`,
     templateUrl: `./projector-detail.component.html`,
     styleUrls: [`./projector-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectorDetailComponent extends BaseMeetingComponent implements OnInit {

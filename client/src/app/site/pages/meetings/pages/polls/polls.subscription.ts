@@ -1,8 +1,8 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
-import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
-import { BaseSimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
+import { Id } from '@app/domain/definitions/key-types';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from '@app/domain/fieldsets/misc';
+import { MeetingUserFieldsets, UserFieldsets } from '@app/domain/fieldsets/user';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
+import { BaseSimplifiedModelRequest } from '@app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../../view-models/view-meeting';
 import { ViewPoll } from './view-models';

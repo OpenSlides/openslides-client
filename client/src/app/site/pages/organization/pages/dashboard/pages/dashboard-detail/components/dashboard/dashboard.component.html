@@ -152,12 +152,12 @@
 </ng-template>
 
 <ng-template #meetingTemplate let-context="context" let-meeting="meeting">
-    <div class="meeting-box" [ngClass]="context?.wrapperCssClass">
+    <div class="meeting-box" [ngClass]="$safeNavigationMigration(context?.wrapperCssClass)">
         @if (meeting.canBeEnteredBy(operator.user)) {
             <a
                 class="meeting-box-left flex-vertical-center"
                 matRipple
-                [ngClass]="context?.cssClass"
+                [ngClass]="$safeNavigationMigration(context?.cssClass)"
                 [routerLink]="meeting.id"
             >
                 <ng-container
@@ -166,7 +166,10 @@
                 ></ng-container>
             </a>
         } @else {
-            <div class="meeting-box-left meeting-box-readonly flex-vertical-center" [ngClass]="context?.cssClass">
+            <div
+                class="meeting-box-left meeting-box-readonly flex-vertical-center"
+                [ngClass]="$safeNavigationMigration(context?.cssClass)"
+            >
                 <ng-container
                     [ngTemplateOutlet]="meetingEntry"
                     [ngTemplateOutletContext]="{ meeting, context }"
@@ -207,14 +210,17 @@
             }"
         >
             @if (meeting.location) {
-                <span [ngClass]="context?.subtitleCssClass">{{ meeting.location }}</span>
+                <span [ngClass]="$safeNavigationMigration(context?.subtitleCssClass)">{{ meeting.location }}</span>
             }
             @if (meeting.location && (meeting.start_time || meeting.end_time)) {
-                <span [ngClass]="context?.subtitleCssClass">&nbsp;&middot;&nbsp;</span>
+                <span [ngClass]="$safeNavigationMigration(context?.subtitleCssClass)">&nbsp;&middot;&nbsp;</span>
             }
             @if (meeting.start_time || meeting.end_time) {
                 <span>
-                    <os-meeting-time [cssClass]="context?.subtitleCssClass" [meeting]="meeting"></os-meeting-time>
+                    <os-meeting-time
+                        [cssClass]="$safeNavigationMigration(context?.subtitleCssClass)"
+                        [meeting]="meeting"
+                    ></os-meeting-time>
                 </span>
             }
         </div>

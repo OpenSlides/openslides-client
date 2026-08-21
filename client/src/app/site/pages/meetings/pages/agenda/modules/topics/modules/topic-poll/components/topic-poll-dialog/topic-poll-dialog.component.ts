@@ -1,10 +1,16 @@
-import { AfterViewInit, Component, ElementRef, Inject, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ElementRef,
+    Inject,
+    QueryList,
+    ViewChild,
+    ViewChildren
+} from '@angular/core';
 import { Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { _ } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-import { Selectable } from 'src/app/domain/interfaces';
+import { Selectable } from '@app/domain/interfaces';
 import {
     GeneralValueVerbose,
     LOWEST_VOTE_VALUE,
@@ -13,9 +19,12 @@ import {
     PollPropertyVerbose,
     PollTypeVerbose,
     VoteValue
-} from 'src/app/domain/models/poll';
-import { BasePollDialogComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+} from '@app/domain/models/poll';
+import { BasePollDialogComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { _ } from '@ngx-translate/core';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { ViewTopic } from '../../../../view-models';
 import { TopicPollMethodVerbose } from '../../definitions';
@@ -40,6 +49,7 @@ export class TextOptionSelectable implements Selectable {
     selector: `os-topic-poll-dialog`,
     templateUrl: `./topic-poll-dialog.component.html`,
     styleUrls: [`./topic-poll-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TopicPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {

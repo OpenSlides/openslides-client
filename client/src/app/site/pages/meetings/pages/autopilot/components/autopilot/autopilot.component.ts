@@ -1,15 +1,15 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { HasProjectorTitle } from '@app/domain/interfaces';
+import { DetailNavigable, isDetailNavigable } from '@app/domain/interfaces/detail-navigable';
+import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
+import { MeetingMediafile } from '@app/domain/models/meeting-mediafile/meeting-mediafile';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
-import { HasProjectorTitle } from 'src/app/domain/interfaces';
-import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { MeetingMediafile } from 'src/app/domain/models/meeting-mediafile/meeting-mediafile';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
 import { ViewListOfSpeakers } from '../../../agenda';
@@ -25,6 +25,7 @@ import { AutopilotSettingsComponent } from '../autopilot-settings/autopilot-sett
     selector: `os-autopilot`,
     templateUrl: `./autopilot.component.html`,
     styleUrls: [`./autopilot.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AutopilotComponent extends BaseMeetingComponent implements OnInit {

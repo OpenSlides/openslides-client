@@ -1,7 +1,7 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { HasProperties } from 'src/app/domain/interfaces/has-properties';
-import { ViewMediafileMeetingUsageKey } from 'src/app/domain/models/mediafiles/mediafile.constants';
-import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
+import { Id } from '@app/domain/definitions/key-types';
+import { HasProperties } from '@app/domain/interfaces/has-properties';
+import { ViewMediafileMeetingUsageKey } from '@app/domain/models/mediafiles/mediafile.constants';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
 
 import { MeetingMediafile } from '../../../../../../domain/models/meeting-mediafile/meeting-mediafile';
 import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';

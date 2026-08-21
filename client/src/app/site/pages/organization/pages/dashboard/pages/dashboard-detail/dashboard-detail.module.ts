@@ -7,9 +7,9 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { MeetingTimeComponent } from 'src/app/ui/modules/meeting-time/meeting-time.component';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { MeetingTimeComponent } from '@app/ui/modules/meeting-time/meeting-time.component';
 
 import { IconContainerComponent } from '../../../../../../../ui/modules/icon-container';
 import { DashboardComponent } from './components/dashboard/dashboard.component';

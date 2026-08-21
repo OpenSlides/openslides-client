@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
+import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
 import { ViewPoll } from '../../../../../polls';
@@ -11,6 +11,7 @@ import { getPollDetailSubscriptionConfig } from '../../../../../polls/polls.subs
     selector: `os-assignment-poll-main`,
     templateUrl: `./assignment-poll-main.component.html`,
     styleUrls: [`./assignment-poll-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AssignmentPollMainComponent extends BaseModelRequestHandlerComponent {

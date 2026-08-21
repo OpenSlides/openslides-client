@@ -7,9 +7,9 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { SpinnerModule } from 'src/app/ui/modules/spinner';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { DirectivesModule } from '@app/ui/directives';
+import { SpinnerModule } from '@app/ui/modules/spinner';
 
 import { LoginMaskComponent } from './components/login-mask/login-mask.component';
 import { LoginMaskRoutingModule } from './login-mask-routing.module';

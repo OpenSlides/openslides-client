@@ -12,16 +12,16 @@ import {
     ViewChild
 } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
+import { UnsafeHtml } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewChatGroup, ViewChatMessage } from '@app/site/pages/meetings/pages/chat';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, of } from 'rxjs';
-import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewChatGroup, ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import {
     ChatGroupDialogData,

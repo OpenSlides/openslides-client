@@ -124,43 +124,6 @@
                         </div>
                     }
 
-                    <!-- date / datetime -->
-                    @if (setting.type === 'datetime' || setting.type === 'date') {
-                        <div>
-                            <os-datepicker
-                                formControlName="date"
-                                [error]="error"
-                                [hintText]="setting.helpText"
-                                [showUpdateSuccessIcon]="updateSuccessIcon"
-                                [title]="setting.label"
-                            ></os-datepicker>
-                            <div class="datetimepicker-container">
-                                @if (setting.type === 'datetime') {
-                                    <mat-form-field>
-                                        <input
-                                            formControlName="time"
-                                            matInput
-                                            [format]="24"
-                                            [ngxTimepicker]="timepicker"
-                                        />
-                                        <div class="suffix-wrapper" matSuffix>
-                                            @if (updateSuccessIcon) {
-                                                <mat-icon class="red-warning-text">error</mat-icon>
-                                            }
-                                            <ngx-material-timepicker-toggle [for]="timepicker">
-                                                <mat-icon ngxMaterialTimepickerToggleIcon>access_time</mat-icon>
-                                            </ngx-material-timepicker-toggle>
-                                        </div>
-                                        @if (error) {
-                                            <mat-error>{{ error }}</mat-error>
-                                        }
-                                        <ngx-material-timepicker #timepicker></ngx-material-timepicker>
-                                    </mat-form-field>
-                                }
-                            </div>
-                        </div>
-                    }
-
                     <!-- daterange -->
                     @if (setting.type === 'daterange') {
                         <div>

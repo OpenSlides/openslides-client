@@ -1,16 +1,16 @@
-import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { Id } from '@app/domain/definitions/key-types';
+import { MergeAmendment, MotionState, Restriction } from '@app/domain/models/motions/motion-state';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotionState, ViewMotionWorkflow } from '@app/site/pages/meetings/pages/motions';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MergeAmendment, MotionState, Restriction } from 'src/app/domain/models/motions/motion-state';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotionState, ViewMotionWorkflow } from 'src/app/site/pages/meetings/pages/motions';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { MotionStateControllerService } from '../../../../modules/states/services';
 import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
@@ -69,6 +69,7 @@ interface RestrictionShape {
     selector: `os-workflow-detail`,
     templateUrl: `./workflow-detail.component.html`,
     styleUrls: [`./workflow-detail.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class WorkflowDetailComponent extends BaseMeetingComponent {
