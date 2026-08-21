@@ -41,6 +41,9 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
         },
         {
             name: MenuItems.SHOW_MEETINGS
+        },
+        {
+            name: MenuItems.CHANGE_PASSWORD
         }
     ];
 
@@ -82,21 +85,6 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
 
     public get isEditing(): boolean {
         return this._isEditing;
-    }
-
-    public get keycloakPasswordResetLink(): string {
-        const instance_url = 'http://localhost:8080';
-        const openslides_realm = 'openslides';
-        const redirect_uri = 'https://localhost:8000/';
-
-        return (
-            instance_url +
-            '/realms/' +
-            openslides_realm +
-            '/protocol/openid-connect/auth?client_id=proxy-client&redirect_uri=' +
-            redirect_uri +
-            '&response_type=code&scope=openid&kc_action=UPDATE_PASSWORD'
-        );
     }
 
     public isUserFormValid = false;
@@ -156,6 +144,27 @@ export class AccountDialogComponent extends BaseUiComponent implements OnInit {
 
     public getGroupsForMeeting(meeting: ViewMeeting): ViewGroup[] {
         return this.self!.groups(meeting.id);
+    }
+
+    public async changePassword(): Promise<void> {
+        const { oldPassword, newPassword }: PasswordForm = this.userPasswordForm;
+
+        this.authService
+            .invalidateSessionAfter(() => this.repo.setPasswordSelf(this.self!, oldPassword, newPassword))
+            .then(() => {
+                this.snackbar.open(this.translate.instant(`Password changed successfully!`), `Ok`);
+                this.changePasswordComponent.reset();
+                this.dialogRef.close();
+            })
+            .catch(e => {
+                if (e?.message) {
+                    this.snackbar.open(this.translate.instant(e.message), this.translate.instant(`OK`), {
+                        duration: 0
+                    });
+                }
+
+                console.log(e);
+            });
     }
 
     public async saveUserChanges(): Promise<void> {

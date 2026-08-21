@@ -14,10 +14,6 @@
                 </mat-list-item>
                 <mat-divider></mat-divider>
             }
-
-            <a mat-list-item [href]="[keycloakPasswordResetLink]">
-               {{ "Change Password" | translate }}
-            </a>
             <mat-divider></mat-divider>
         </mat-nav-list>
     </div>
@@ -30,6 +26,9 @@
                 }
                 @case (menuItemsRef.SHOW_MEETINGS) {
                     <ng-container [ngTemplateOutlet]="showMeetingsView"></ng-container>
+                }
+                @case (menuItemsRef.CHANGE_PASSWORD) {
+                    <ng-container [ngTemplateOutlet]="changePasswordView"></ng-container>
                 }
             }
         </div>
@@ -79,5 +78,19 @@
                 </div>
             </ng-container>
         </cdk-virtual-scroll-viewport>
+    </div>
+</ng-template>
+
+<ng-template #changePasswordView>
+    <h2>{{ 'Change password' | translate }}</h2>
+    <os-password-form
+        #changePasswordComponent
+        (changeEvent)="userPasswordForm = $event"
+        (validEvent)="isUserPasswordValid = $event"
+    />
+    <div>
+        <button mat-button [disabled]="!isUserPasswordValid" (click)="changePassword()">
+            {{ 'Save' | translate }}
+        </button>
     </div>
 </ng-template>
