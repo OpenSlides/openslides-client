@@ -1,11 +1,11 @@
-import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { MotionBlock } from '../../../../../../../../domain/models/motions/motion-block';
 import { BaseProjectableViewModel } from '../../../../../view-models/base-projectable-model';
 import { HasMeeting } from '../../../../../view-models/has-meeting';
-import { HasAgendaItem } from '../../../../agenda';
-import { HasListOfSpeakers } from '../../../../agenda/modules/list-of-speakers';
+import { HasListOfSpeakers } from '../../../../agenda/modules/list-of-speakers/view-models/has-list-of-speakers';
+import { HasAgendaItem } from '../../../../agenda/view-models/has-agenda-item';
 import { ViewMotion } from '../../../view-models/view-motion';
 
 export class ViewMotionBlock extends BaseProjectableViewModel<MotionBlock> {

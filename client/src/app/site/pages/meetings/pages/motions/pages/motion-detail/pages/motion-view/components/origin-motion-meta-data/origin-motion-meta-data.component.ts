@@ -1,20 +1,20 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Selectable } from '@app/domain/interfaces';
+import { Motion } from '@app/domain/models/motions';
+import { MotionBlock } from '@app/domain/models/motions/motion-block';
+import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
+import { ViewMotion, ViewMotionCategory, ViewTag } from '@app/site/pages/meetings/pages/motions';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable } from 'rxjs';
-import { Selectable } from 'src/app/domain/interfaces';
-import { Motion } from 'src/app/domain/models/motions';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { ViewMotion, ViewMotionCategory, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
-import { MotionEditorControllerService } from '../../../../../../modules/editors/services';
-import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services';
-import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services';
+import { MotionEditorControllerService } from '../../../../../../modules/editors/services/motion-editor-controller/motion-editor-controller.service';
+import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services/motion-submitter-controller/motion-submitter-controller.service';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services/motion-working-group-speaker-controller/motion-working-group-speaker-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
@@ -75,13 +75,15 @@ export class OriginMotionMetaDataComponent extends BaseMotionDetailChildComponen
 
     public get referencingMotions$(): Observable<ViewMotion[]> {
         return this.motion?.referenced_in_motion_recommendation_extensions$.pipe(
-            map(motions => motions.naturalSort(this.translate.getCurrentLang(), [`number`, `title`]))
+            map(motions => motions.naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`]))
         );
     }
 
     public get referencedMotions$(): Observable<ViewMotion[]> {
         return this.motion?.recommendation_extension_references$.pipe(
-            map(motions => (motions as ViewMotion[]).naturalSort(this.translate.getCurrentLang(), [`number`, `title`]))
+            map(motions =>
+                (motions as ViewMotion[]).naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`])
+            )
         );
     }
 

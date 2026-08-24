@@ -1,16 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Displayable, Identifiable } from 'src/app/domain/interfaces';
-import { FlatNode } from 'src/app/infrastructure/definitions/tree';
-import { BaseSortService, OsSortProperty } from 'src/app/site/base/base-sort.service';
+import { Service } from '@angular/core';
+import { Displayable, Identifiable } from '@app/domain/interfaces';
+import { FlatNode } from '@app/infrastructure/definitions/tree';
+import { BaseSortService, OsSortProperty } from '@app/site/base/base-sort.service';
 
 /**
  * Sorting service for trees.
  *
  * Contains base functions to sort a tree by different properties.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class TreeSortService<T extends Identifiable & Displayable> extends BaseSortService<T> {
     /**
      * Function to sort the passed source of a tree

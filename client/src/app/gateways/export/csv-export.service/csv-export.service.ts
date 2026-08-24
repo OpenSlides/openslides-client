@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { BaseViewModel } from '../../../site/base/base-view-model';
@@ -13,9 +13,7 @@ import {
     isPropertyDefinition
 } from './csv-export-utils';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class CsvExportService {
     private exporter = inject(FileExportService);
     private translate = inject(TranslateService);

@@ -1,31 +1,31 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, signal, viewChild } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { availableTranslations } from 'src/app/domain/definitions/languages';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { Identifiable, Selectable } from 'src/app/domain/interfaces';
-import { BaseComponent } from 'src/app/site/base/base.component';
+import { Id } from '@app/domain/definitions/key-types';
+import { availableTranslations } from '@app/domain/definitions/languages';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { Identifiable, Selectable } from '@app/domain/interfaces';
+import { BaseComponent } from '@app/site/base/base.component';
 import {
     MeetingControllerService,
     MeetingUserModifiedFields
-} from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OrganizationTagControllerService } from 'src/app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
-import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { OpenSlidesRouterService } from 'src/app/site/services/openslides-router.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { TimeZoneService } from 'src/app/site/services/time-zone.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { RoutingStateService } from 'src/app/ui/modules/head-bar/services/routing-state.service';
+} from '@app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OrganizationTagControllerService } from '@app/site/pages/organization/pages/organization-tags/services/organization-tag-controller.service';
+import { OrganizationService } from '@app/site/pages/organization/services/organization.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { OpenSlidesRouterService } from '@app/site/services/openslides-router.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { TimeZoneService } from '@app/site/services/time-zone.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { RoutingStateService } from '@app/ui/modules/head-bar/services/routing-state.service';
+import { _ } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
-import { ViewCommittee } from '../../../../../../view-models';
+import { ViewCommittee } from '../../../../../../view-models/view-committee';
 
 const ADD_MEETING_LABEL = _(`New meeting`);
 const EDIT_MEETING_LABEL = _(`Edit meeting`);
@@ -41,11 +41,17 @@ const SUPERADMIN_CLOSED_MEETING_ALLOWED_CONTROLNAMES = [`jitsi_domain`, `jitsi_r
     standalone: false
 })
 export class MeetingEditComponent extends BaseComponent implements OnInit {
+    public timeZoneInput = viewChild<ElementRef<HTMLInputElement>>('timeZoneInput');
+
     public readonly availableUsers: Observable<ViewUser[]>;
     public readonly translations = availableTranslations;
     public time_zones = new BehaviorSubject([]);
 
     public availableMeetingsObservable: Observable<Selectable[]> | null = null;
+
+    public get isCommitteeManagerAndRequireDuplicateFrom(): boolean {
+        return this.requireDuplicateFrom && !this.operator.isOrgaManager;
+    }
 
     public get isValid(): boolean {
         if (this.isCommitteeManagerAndRequireDuplicateFrom) {
@@ -102,6 +108,9 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     private cameFromList = false;
     private requireDuplicateFrom = false;
 
+    private timeZones = this.timeZone.getAvailableTimeZones();
+    public filteredTimeZones = signal<string[]>(this.timeZones.slice());
+
     /**
      * The operating user received from the OperatorService
      */
@@ -130,7 +139,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         super();
         this.checkCreateView();
         this.createForm();
-        this.initTimezones();
         this.init();
 
         if (this.isCreateView) {
@@ -169,18 +177,12 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         this.availableAdmins = this.filterAccountsForCommitteeAdmins(this.userRepo.getViewModelList());
     }
 
-    private async initTimezones(): Promise<void> {
-        this.timeZone.getTZForSearchSelector().then(values => {
-            this.time_zones.next(values);
-            this.patchTimezoneInForm();
-        });
-    }
-
-    private patchTimezoneInForm(): void {
-        if (!this.meetingForm?.get('time_zone').value) {
-            this.meetingForm
-                .get('time_zone')
-                .setValue(this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone()));
+    public filterTimezones(): void {
+        const filterValue = this.timeZoneInput()?.nativeElement.value ?? ``;
+        if (filterValue !== this.meetingForm.get(`time_zone`).getRawValue()) {
+            this.filteredTimeZones.set(this.timeZones.filter(o => o.toLowerCase().includes(filterValue.toLowerCase())));
+        } else {
+            this.filteredTimeZones.set(this.timeZones);
         }
     }
 
@@ -289,7 +291,7 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         };
 
         rawForm[`language`] = [this.orgaSettings.instant(`default_language`)];
-        rawForm[`time_zone`] = [this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone())];
+        rawForm[`time_zone`] = [this.timeZone.getOrganizationTimeZone()];
 
         if (this.isJitsiManipulationAllowed) {
             rawForm[`jitsi_domain`] = [``, Validators.pattern(/^(?!https:\/\/).*[^/]$/)];
@@ -332,7 +334,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         const {
             start_time: start,
             end_time: end,
-            time_zone,
             ...patchMeeting
         }: any = meeting.getUpdatedModelData({
             start_time: start_time,
@@ -344,9 +345,10 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
             end
         };
         this.meetingForm.patchValue(patchMeeting);
-        this.meetingForm.get(`time_zone`).patchValue(this.timeZone.getTimezoneIdByName(time_zone));
         this.daterangeControl?.patchValue(patchDaterange);
         this.onAfterCreateForm();
+
+        this.meetingForm.markAsPristine();
     }
 
     private updateFormByCommittee(): void {
@@ -393,19 +395,13 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
     }
 
     private getPayload(): any {
-        const {
-            daterange: { start: start_time, end: end_time } = { start: null, end: null },
-            time_zone,
-            ...rawPayload
-        } = {
+        const { daterange: { start: start_time, end: end_time } = { start: null, end: null }, ...rawPayload } = {
             ...this.meetingForm.value
         };
-        const time_zone_string = this.timeZone.getTimezoneNameById(time_zone);
         if (!this.meetingForm.get(`daterange`).disabled) {
             return {
                 start_time: this.timeZone.transformFromDate(start_time, rawPayload.time_zone),
                 end_time: this.timeZone.transformFromDate(end_time, rawPayload.time_zone),
-                time_zone: time_zone_string,
                 ...rawPayload
             };
         }
@@ -454,17 +450,6 @@ export class MeetingEditComponent extends BaseComponent implements OnInit {
         } else {
             this.router.navigate([`committees`, this.committeeId]);
         }
-    }
-
-    private makeDatesValid(endDateChanged: boolean): void {
-        if (!this.isTimeValid) {
-            const patchValue = endDateChanged ? this.daterangeControl?.value.end : this.daterangeControl?.value.start;
-            this.daterangeControl?.patchValue({ start: patchValue, end: patchValue });
-        }
-    }
-
-    public get isCommitteeManagerAndRequireDuplicateFrom(): boolean {
-        return this.requireDuplicateFrom && !this.operator.isOrgaManager;
     }
 
     private filterAccountsForCommitteeAdmins(accounts: ViewUser[]): ViewUser[] {

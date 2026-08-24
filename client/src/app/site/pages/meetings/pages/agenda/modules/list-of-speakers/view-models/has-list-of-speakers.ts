@@ -1,5 +1,5 @@
-import { DetailNavigable, HasListOfSpeakersId } from 'src/app/domain/interfaces';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { DetailNavigable, HasListOfSpeakersId } from '@app/domain/interfaces';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { ViewListOfSpeakers } from './view-list-of-speakers';
 

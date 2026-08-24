@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { BaseComponent } from '@app/site/base/base.component';
+import { OrganizationService } from '@app/site/pages/organization/services/organization.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
 import { _ } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
 
 @Component({
     selector: `os-organization-statistics`,
     templateUrl: `./organization-statistics.component.html`,
     styleUrls: [`./organization-statistics.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class OrganizationStatisticsComponent extends BaseComponent implements OnInit {

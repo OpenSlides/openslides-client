@@ -1,9 +1,9 @@
 import { Directive, inject, OnDestroy, OnInit } from '@angular/core';
+import { NotifyResponse, NotifyService } from '@app/gateways/notify.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { NotifyResponse, NotifyService } from 'src/app/gateways/notify.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 /**
  * All states for the statemachine

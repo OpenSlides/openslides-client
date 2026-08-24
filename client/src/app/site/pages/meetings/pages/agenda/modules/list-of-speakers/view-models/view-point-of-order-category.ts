@@ -1,6 +1,6 @@
-import { PointOfOrderCategory } from 'src/app/domain/models/point-of-order-category/point-of-order-category';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
+import { PointOfOrderCategory } from '@app/domain/models/point-of-order-category/point-of-order-category';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
+import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
 
 import { ViewSpeaker } from './view-speaker';
 

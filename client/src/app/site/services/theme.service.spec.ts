@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
+import { ThemeRepositoryService } from '@app/gateways/repositories/themes/theme-repository.service';
+import { StorageService } from '@app/gateways/storage.service';
 import { Observable } from 'rxjs';
-import { ThemeRepositoryService } from 'src/app/gateways/repositories/themes/theme-repository.service';
-import { StorageService } from 'src/app/gateways/storage.service';
 
 import { OrganizationSettingsService } from '../pages/organization/services/organization-settings.service';
 import { ColorService } from './color.service';

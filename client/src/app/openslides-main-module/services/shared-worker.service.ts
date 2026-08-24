@@ -1,4 +1,5 @@
-import { Injectable, NgZone } from '@angular/core';
+import { inject, NgZone, Service } from '@angular/core';
+import { SW_BROADCAST_CHANNEL_NAME, WorkerMessage, WorkerMessageContent, WorkerResponse } from '@app/worker/interfaces';
 import {
     defer,
     filter,
@@ -17,13 +18,8 @@ import {
     timeout,
     timer
 } from 'rxjs';
-import {
-    SW_BROADCAST_CHANNEL_NAME,
-    WorkerMessage,
-    WorkerMessageContent,
-    WorkerResponse
-} from 'src/app/worker/interfaces';
-import { environment } from 'src/environments/environment';
+
+import { environment } from '../../../environments/environment';
 
 const SHARED_WORKER_MESSAGE_ACK_TIMEOUT = 4000;
 const SHARED_WORKER_READY_TIMEOUT = 10000;
@@ -33,9 +29,7 @@ const SHARED_WORKER_HEALTHCHECK_INTERVAL = 5000;
 const SHARED_WORKER_HEALTH_RESPONSE_TIMEOUT = 8000;
 const SHARED_WORKER_HEALTH_RETRIES = 2;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class SharedWorkerService {
     public messages = new Subject<WorkerResponse>();
 
@@ -51,7 +45,9 @@ export class SharedWorkerService {
     private messageEventSubscription: Subscription;
     private windowMode = false;
 
-    public constructor(private zone: NgZone) {
+    private zone = inject(NgZone);
+
+    public constructor() {
         this.connectWorker(true);
     }
 

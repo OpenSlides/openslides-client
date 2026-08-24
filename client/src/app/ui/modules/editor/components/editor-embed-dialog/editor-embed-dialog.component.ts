@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 interface EditorEmbedData {
@@ -19,6 +19,7 @@ export interface EditorEmbedDialogOutput {
     selector: `os-editor-image-dialog`,
     templateUrl: `./editor-embed-dialog.component.html`,
     styleUrls: [`editor-embed-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EditorEmbedDialogComponent {

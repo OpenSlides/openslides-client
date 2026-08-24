@@ -6,7 +6,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Motions</h1>
+        <h1 class="mock-h2">{{ 'Motions' | translate }}</h1>
     </div>
 
     <!-- Menu -->
@@ -60,6 +60,10 @@
                             <div class="flex-center background-selected">
                                 <span
                                     class="tile-content-prefix"
+                                    [attr.aria-hidden]="false"
+                                    [attr.aria-label]="
+                                        ('Amount of motions in category' | translate) + ': ' + tile.amountOfMotions
+                                    "
                                     [matBadge]="tile.amountOfMotions"
                                     [matBadgeColor]="'accent'"
                                 >
@@ -219,7 +223,15 @@
                     <!-- Category -->
                     @if (motion.category) {
                         <div class="ellipsis-overflow">
-                            <os-icon-container icon="category">
+                            <os-icon-container
+                                icon="category"
+                                [attr.aria-label]="
+                                    ('Category' | translate) +
+                                    ' ' +
+                                    (motion.category.parent ? motion.category.parent.toString() + ' ' : '') +
+                                    motion.category.toString()
+                                "
+                            >
                                 @if (motion.category.parent) {
                                     <div class="ellipsis-overflow">
                                         {{ motion.category.parent.toString() }}
@@ -232,13 +244,21 @@
                     <!-- Motion Block -->
                     @if (motion.block) {
                         <div class="ellipsis-overflow spacer-top-5">
-                            <os-icon-container icon="widgets">{{ motion.block.title }}</os-icon-container>
+                            <os-icon-container
+                                icon="widgets"
+                                [attr.aria-label]="('Motion block' | translate) + ' ' + motion.block.title"
+                            >
+                                {{ motion.block.title }}
+                            </os-icon-container>
                         </div>
                     }
                     <!-- Tags -->
                     @if (motion.tags && motion.tags.length) {
                         <div class="ellipsis-overflow spacer-top-5">
-                            <os-icon-container icon="local_offer">
+                            <os-icon-container
+                                icon="local_offer"
+                                [attr.aria-label]="('Tags' | translate) + ' ' + motion.tags"
+                            >
                                 <os-comma-separated-listing [list]="motion.tags">
                                     <ng-template let-tag>{{ tag.getTitle() }}</ng-template>
                                 </os-comma-separated-listing>

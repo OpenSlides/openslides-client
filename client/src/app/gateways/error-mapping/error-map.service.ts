@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 import { DefaultErrorMap, ErrorMap, isMapError, UrlFragmentToHttpErrorMap } from './error-map-utils';
@@ -13,18 +13,20 @@ interface GetHttpErrorMapOptions {
     data?: any;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ErrorMapService {
-    public constructor(private translate: TranslateService) {}
+    private translate = inject(TranslateService);
 
     /**
      * Takes an error message and tries to match it to a cleaner version in the corresponding ErrorMap.
      * @param errorMessage the error message that should be mapped and translated.
      * @returns A translated and (if possible) mapped "Error: <errorMsg>", or, if the ErrorMap contains an Error-object, said Error-object.
      */
-    public getCleanErrorMessage(errorMessage: string, options: GetHttpErrorMapOptions): string | Error {
+    public getCleanErrorMessage(
+        errorMessage: string,
+        options: GetHttpErrorMapOptions,
+        translationArgs: Record<string, any>
+    ): string | Error {
         let errorMsg = errorMessage;
         const errorMap = options ? this.getHttpErrorMap(options) : DefaultErrorMap;
         const fittingExpressions = errorMap ? Array.from(errorMap.keys()).filter(exp => exp.test(errorMessage)) : [];
@@ -39,11 +41,11 @@ export class ErrorMapService {
             if (isMapError(mappedValue)) {
                 return mappedValue.getError();
             }
-            errorMsg = this.translate.instant(mappedValue);
+            errorMsg = this.translate.instant(mappedValue, translationArgs ?? {});
         } else {
             console.warn(`ErrorMapService has found no matches for "${errorMessage}"`);
         }
-        return `${this.translate.instant(`Error`)}: ${this.translate.instant(errorMsg)}`;
+        return `${this.translate.instant(`Error`)}: ${this.translate.instant(errorMsg, translationArgs)}`;
     }
 
     private getHttpErrorMap(options: GetHttpErrorMapOptions): ErrorMap | null {

@@ -1,14 +1,12 @@
 import { ComponentType } from '@angular/cdk/portal';
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { firstValueFrom } from 'rxjs';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class PollDialogService {
-    public constructor(private dialog: MatDialog) {}
+    private dialog = inject(MatDialog);
 
     public async open<T = any, R = any, C = any>(
         dialogComponent: ComponentType<C> | Promise<ComponentType<C>>,

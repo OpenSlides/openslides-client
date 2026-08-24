@@ -1,6 +1,6 @@
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { Selectable } from '@app/domain/interfaces/selectable';
 import { Observable } from 'rxjs';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
 
 interface ChoiceDialogResult<R extends Selectable = Selectable> {
     /**

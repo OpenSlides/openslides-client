@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { _ } from '@ngx-translate/core';
-import { PollMethod } from 'src/app/domain/models/poll/poll-constants';
-import { VoteValue } from 'src/app/domain/models/poll/vote-constants';
+import { PollMethod } from '@app/domain/models/poll/poll-constants';
+import { VoteValue } from '@app/domain/models/poll/vote-constants';
 import {
     BasePollVoteComponent,
     VoteOption
-} from 'src/app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+} from '@app/site/pages/meetings/modules/poll/components/base-poll-vote/base-poll-vote.component';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { ViewOption } from '@app/site/pages/meetings/pages/polls';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { _ } from '@ngx-translate/core';
 
 import { UnknownUserLabel } from '../../services/assignment-poll.service';
 

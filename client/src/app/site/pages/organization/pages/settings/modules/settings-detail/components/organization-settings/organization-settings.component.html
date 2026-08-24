@@ -1,12 +1,12 @@
 <os-head-bar
     [editMode]="hasEdits"
-    [isSaveButtonEnabled]="orgaSettingsForm?.valid"
+    [isSaveButtonEnabled]="$safeNavigationMigration(orgaSettingsForm?.valid)"
     (cancelEditEvent)="revertChanges()"
     (saveEvent)="onSubmit()"
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>{{ pageTitle }}</h1>
+        <h1 class="mock-h2">{{ pageTitle | translate }}</h1>
     </div>
 </os-head-bar>
 
@@ -40,11 +40,21 @@
                     </mat-form-field>
                     <mat-form-field>
                         <mat-label>{{ 'Time zone' | translate }}</mat-label>
-                        <os-list-search-selector
+                        <input
+                            #timeZoneInput
                             formControlName="time_zone"
-                            [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
-                            [inputListValues]="time_zones()"
-                        ></os-list-search-selector>
+                            matInput
+                            type="text"
+                            [matAutocomplete]="timeZoneAuto"
+                            (focus)="filterTimezones()"
+                            (input)="filterTimezones()"
+                        />
+
+                        <mat-autocomplete #timeZoneAuto="matAutocomplete" requireSelection>
+                            @for (option of filteredTimeZones(); track option) {
+                                <mat-option [value]="option">{{ option | translate }}</mat-option>
+                            }
+                        </mat-autocomplete>
                     </mat-form-field>
                 </div>
             </mat-card-content>

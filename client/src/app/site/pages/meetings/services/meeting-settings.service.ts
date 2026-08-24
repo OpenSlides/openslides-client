@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { Settings } from '../../../../domain/models/meetings/meeting';
@@ -6,22 +6,19 @@ import { CustomTranslationService } from '../../../modules/translations/custom-t
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ActiveMeetingService } from './active-meeting.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingSettingsService {
     /**
      * Stores a subject per key. Values are published, if the DataStore gets an update.
      */
     private settingSubjects: Record<string, BehaviorSubject<any>> = {};
 
+    private activeMeetingService = inject(ActiveMeetingService);
     /**
      * Listen for changes of setting variables.
      */
-    public constructor(
-        private activeMeetingService: ActiveMeetingService,
-        customTranslationService: CustomTranslationService
-    ) {
+    public constructor() {
+        const customTranslationService = inject(CustomTranslationService);
         this.activeMeetingService.meetingObservable.subscribe(meeting => {
             if (meeting) {
                 for (const key of Object.keys(this.settingSubjects)) {

@@ -1,8 +1,8 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { User } from 'src/app/domain/models/users/user';
-import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { CreateUserNameInformation } from 'src/app/site/services/user-controller.service';
+import { Id } from '@app/domain/definitions/key-types';
+import { User } from '@app/domain/models/users/user';
+import { ImportModel } from '@app/infrastructure/utils/import/import-model';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { CreateUserNameInformation } from '@app/site/services/user-controller.service';
 
 import { BaseBeforeImportHandler } from '../base-before-import-handler';
 import { BeforeFindAction, CsvMapping, ImportResolveInformation } from '../import-utils';

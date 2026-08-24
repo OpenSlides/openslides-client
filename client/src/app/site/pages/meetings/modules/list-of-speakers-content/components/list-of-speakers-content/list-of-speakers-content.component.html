@@ -136,7 +136,7 @@
 
         <div *osPerms="permission.listOfSpeakersCanBeSpeaker" class="centered-text">
             @if (!canAddDueToPresence) {
-                <span translate>You have to be present to add yourself.</span>
+                <span>{{ 'You have to be present to add yourself.' | translate }}</span>
             }
         </div>
         <div class="add-self-buttons">
@@ -182,7 +182,7 @@
                     (click)="removePointOfOrder()"
                 >
                     <mat-icon>remove</mat-icon>
-                    <span translate>Withdraw point of order</span>
+                    <span>{{ 'Withdraw point of order' | translate }}</span>
                 </button>
             }
             @if (addSelf) {

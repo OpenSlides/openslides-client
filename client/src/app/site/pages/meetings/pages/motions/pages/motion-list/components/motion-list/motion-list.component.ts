@@ -1,24 +1,24 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { OsFilterOptionCondition } from '@app/site/base/base-filter.service';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { ViewMotionCategory, ViewMotionState } from '@app/site/pages/meetings/pages/motions';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { GridBlockTileType } from '@app/ui/modules/grid';
 import { firstValueFrom, map } from 'rxjs';
-import { OsFilterOptionCondition } from 'src/app/site/base/base-filter.service';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ViewMotionCategory, ViewMotionState } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { GridBlockTileType } from 'src/app/ui/modules/grid';
 
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
+import { MotionCategoryControllerService } from '../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
-import { TagControllerService } from '../../../../modules/tags/services';
-import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service';
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service';
-import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
+import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
+import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { ViewMotion } from '../../../../view-models';
-import { MotionListInfoDialogService } from '../../modules/motion-list-info-dialog';
+import { ViewMotion } from '../../../../view-models/view-motion';
+import { MotionListInfoDialogService } from '../../modules/motion-list-info-dialog/services/motion-list-info-dialog.service';
 
 /**
  * Determine the types of the motionList
@@ -41,6 +41,7 @@ interface TileCategoryInformation {
     selector: `os-motion-list`,
     templateUrl: `./motion-list.component.html`,
     styleUrls: [`./motion-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {

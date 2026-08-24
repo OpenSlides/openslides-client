@@ -1,23 +1,23 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { Selectable } from '@app/domain/interfaces';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { Motion } from '@app/domain/models/motions';
+import { MotionBlock } from '@app/domain/models/motions/motion-block';
+import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
+import { GetForwardingCommitteesPresenterService } from '@app/gateways/presenter/get-forwarding-committees-presenter.service';
+import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from '@app/site/pages/meetings/pages/motions';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Selectable } from 'src/app/domain/interfaces';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { Motion } from 'src/app/domain/models/motions';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
-import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
-import { MotionEditorControllerService } from '../../../../../../modules/editors/services';
-import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services';
-import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services';
+import { MotionEditorControllerService } from '../../../../../../modules/editors/services/motion-editor-controller/motion-editor-controller.service';
+import { MotionSubmitterControllerService } from '../../../../../../modules/submitters/services/motion-submitter-controller/motion-submitter-controller.service';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../modules/working-group-speakers/services/motion-working-group-speaker-controller/motion-working-group-speaker-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
@@ -111,13 +111,15 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public get referencingMotions$(): Observable<ViewMotion[]> {
         return this.motion?.referenced_in_motion_recommendation_extensions$.pipe(
-            map(motions => motions.naturalSort(this.translate.getCurrentLang(), [`number`, `title`]))
+            map(motions => motions.naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`]))
         );
     }
 
     public get referencedMotions$(): Observable<ViewMotion[]> {
         return this.motion?.recommendation_extension_references$.pipe(
-            map(motions => (motions as ViewMotion[]).naturalSort(this.translate.getCurrentLang(), [`number`, `title`]))
+            map(motions =>
+                (motions as ViewMotion[]).naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`])
+            )
         );
     }
 
@@ -291,6 +293,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public getPossibleRecommendations(): ViewMotionState[] {
         const allStates = this.motion.state?.workflow?.states || [];
         return allStates.filter(state => state.recommendation_label).sort((a, b) => a.weight - b.weight);
+    }
+
+    public getSortedNextStates(states: ViewMotionState[]): ViewMotionState[] {
+        return states.sort((a, b) => a.weight - b.weight);
     }
 
     public getMeetingName(origin: ViewMotion | ViewMeeting): string {

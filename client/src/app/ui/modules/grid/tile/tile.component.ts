@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 
 import { GridTileClickEvent, GridTileDimension } from '../definitions';
 
@@ -6,6 +15,7 @@ import { GridTileClickEvent, GridTileDimension } from '../definitions';
     selector: `os-tile`,
     templateUrl: `./tile.component.html`,
     styleUrls: [`./tile.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class TileComponent implements OnInit {

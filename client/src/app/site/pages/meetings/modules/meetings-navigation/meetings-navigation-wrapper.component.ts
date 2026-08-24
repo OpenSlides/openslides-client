@@ -1,26 +1,26 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, viewChild } from '@angular/core';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { NavigationEnd, RouterModule } from '@angular/router';
+import { NotifyService } from '@app/gateways/notify.service';
+import { getCustomStyleForEntry } from '@app/site/base/base-menu-entry';
+import { GlobalHeadbarModule } from '@app/site/modules/global-headbar';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { MainMenuEntry, MainMenuService } from '@app/site/pages/meetings/services/main-menu.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { DirectivesModule } from '@app/ui/directives';
+import { SidenavModule } from '@app/ui/modules/sidenav';
+import { SidenavComponent } from '@app/ui/modules/sidenav/components/sidenav/sidenav.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { NotifyService } from 'src/app/gateways/notify.service';
-import { navItemAnim } from 'src/app/infrastructure/animations';
-import { getCustomStyleForEntry } from 'src/app/site/base/base-menu-entry';
-import { GlobalHeadbarModule } from 'src/app/site/modules/global-headbar';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MainMenuEntry, MainMenuService } from 'src/app/site/pages/meetings/services/main-menu.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { SidenavModule } from 'src/app/ui/modules/sidenav';
-import { SidenavComponent } from 'src/app/ui/modules/sidenav/components/sidenav/sidenav.component';
 
-import { ChatNotificationService, ChatService } from '../../pages/chat';
+import { ChatService } from '../../pages/chat/services/chat.service';
+import { ChatNotificationService } from '../../pages/chat/services/chat-notification.service';
 import { InteractionModule } from '../../pages/interaction/interaction.module';
 import { LoadFontService } from '../../services/load-font.service';
 
@@ -28,7 +28,7 @@ import { LoadFontService } from '../../services/load-font.service';
     selector: `os-meetings-navigation-wrapper`,
     templateUrl: `./meetings-navigation-wrapper.component.html`,
     styleUrls: [`./meetings-navigation-wrapper.component.scss`],
-    animations: [navItemAnim],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CommonModule,
         SidenavModule,
@@ -44,11 +44,7 @@ import { LoadFontService } from '../../services/load-font.service';
     ]
 })
 export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent implements OnInit {
-    /**
-     * HTML element of the side panel
-     */
-    @ViewChild(`sideNav`, { static: true, read: SidenavComponent })
-    public sideNav: SidenavComponent | null = null;
+    public sideNav = viewChild.required<SidenavComponent>('sideNav');
 
     /**
      * is the user logged in, or the anonymous is active.
@@ -75,24 +71,14 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
         return this.chatNotificationService.allChatGroupsNotificationsObservable;
     }
 
-    /**
-     * Constructor
-     */
-    public constructor(
-        _loadFontService: LoadFontService, // just to initialize this service
-        _notifyService: NotifyService, // just to initialize this service
-        private vp: ViewPortService,
-        private mainMenuService: MainMenuService,
-        private chatNotificationService: ChatNotificationService,
-        private chatService: ChatService,
-        private operator: OperatorService
-    ) {
-        super();
-    }
+    private _loadFontService = inject(LoadFontService); // just to initialize this service
+    private _notifyService = inject(NotifyService); // just to initialize this service
+    private vp = inject(ViewPortService);
+    private mainMenuService = inject(MainMenuService);
+    private chatNotificationService = inject(ChatNotificationService);
+    private chatService = inject(ChatService);
+    private operator = inject(OperatorService);
 
-    /**
-     * Initialize the site component
-     */
     public ngOnInit(): void {
         this.subscriptions.push(...this.getRouterSubscriptions());
         // observe the mainMenuService to receive toggle-requests
@@ -107,7 +93,7 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
      * Toggles the side nav
      */
     public toggleSideNav(): void {
-        this.sideNav?.toggle();
+        this.sideNav()?.toggle();
     }
 
     /**
@@ -115,7 +101,7 @@ export class MeetingsNavigationWrapperComponent extends BaseMeetingComponent imp
      */
     public mobileAutoCloseNav(): void {
         if (this.vp.isMobile) {
-            this.sideNav?.close();
+            this.sideNav()?.close();
         }
     }
 

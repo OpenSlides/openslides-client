@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { pollChartColors, PollData, PollState, PollTableData } from 'src/app/domain/models/poll';
-import { ChartData } from 'src/app/site/pages/meetings/modules/poll/components/chart/chart.component';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { Permission } from '@app/domain/definitions/permission';
+import { pollChartColors, PollData, PollState, PollTableData } from '@app/domain/models/poll';
+import { ChartData } from '@app/site/pages/meetings/modules/poll/components/chart/chart.component';
+import { OperatorService } from '@app/site/services/operator.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
 import { TopicPollService } from '../../services/topic-poll.service';
 
