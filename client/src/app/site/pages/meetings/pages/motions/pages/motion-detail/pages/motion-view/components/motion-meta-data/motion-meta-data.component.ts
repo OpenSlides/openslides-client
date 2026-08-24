@@ -144,15 +144,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 origin_ids.push(motion.origin_id);
             }
 
-            if (this.motion.origin_id) {
-                return this.motion.all_origins$.pipe(map(origins => [...list.reverse(), ...origins.reverse()]));
-            } else {
-                return new BehaviorSubject(this.createForwardTree(list, this.motion.all_origins));
-            }
+            return new BehaviorSubject(this.createForwardTree(list, this.motion.all_origins));
         }
 
         if (this.motion.origin_id) {
-            return this.motion.all_origins$.pipe(map(origins => origins?.reverse()));
+            return new BehaviorSubject(this.createForwardTree([], this.motion.all_origins));
         }
         return null;
     }
