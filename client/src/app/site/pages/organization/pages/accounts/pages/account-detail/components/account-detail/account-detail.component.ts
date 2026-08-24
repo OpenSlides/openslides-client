@@ -374,7 +374,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     private getPartialUserPayload(isCreate: boolean): any {
         const payload = this.personalInfoFormValue;
-        if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
             payload[`committee_management_ids`] = undefined;
             payload[`organization_management_level`] = undefined;
         }
