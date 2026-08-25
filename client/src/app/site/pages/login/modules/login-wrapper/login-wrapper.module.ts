@@ -8,6 +8,6 @@ import { LoginWrapperComponent } from './components/login-wrapper/login-wrapper.
 
 @NgModule({
     declarations: [LoginWrapperComponent],
-    imports: [CommonModule, MatToolbarModule, RouterModule, OpenSlidesTranslationModule.forChild()]
+    imports: [CommonModule, MatToolbarModule, RouterModule, OpenSlidesTranslationModule]
 })
 export class LoginWrapperModule {}

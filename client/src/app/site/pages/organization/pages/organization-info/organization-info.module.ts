@@ -19,7 +19,7 @@ import { OrganizationInfoRoutingModule } from './organization-info-routing.modul
         InfoModule,
         HeadBarModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatCardModule,
         MatProgressBarModule
     ]

@@ -39,7 +39,7 @@ const MODULES = [MatInputModule, MatMenuModule];
     imports: [
         CommonModule,
         IconContainerComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         ScrollingModule,
         FormsModule,
         ReactiveFormsModule,

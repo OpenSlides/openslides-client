@@ -41,7 +41,7 @@ import { TopicDetailRoutingModule } from './topic-detail-routing.module';
         MeetingsComponentCollectorModule,
         SearchSelectorModule,
         EditorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         ReactiveFormsModule,
         MatSelectModule,
         MatInputModule,

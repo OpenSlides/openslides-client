@@ -8,6 +8,6 @@ import { GlobalSpinnerComponent } from './components/global-spinner/global-spinn
 
 @NgModule({
     declarations: [GlobalSpinnerComponent],
-    imports: [CommonModule, SpinnerModule, OpenSlidesTranslationModule.forChild(), OverlayComponent]
+    imports: [CommonModule, SpinnerModule, OpenSlidesTranslationModule, OverlayComponent]
 })
 export class GlobalSpinnerModule {}

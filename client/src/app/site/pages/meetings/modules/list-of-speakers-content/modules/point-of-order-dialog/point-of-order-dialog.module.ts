@@ -20,7 +20,7 @@ import { PointOfOrderDialogComponent } from './components/point-of-order-dialog/
         MatInputModule,
         MatSelectModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class PointOfOrderDialogModule {

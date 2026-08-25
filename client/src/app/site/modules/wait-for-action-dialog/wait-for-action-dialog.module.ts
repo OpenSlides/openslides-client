@@ -10,7 +10,7 @@ import { WaitForActionBannerComponent } from './components/wait-for-action-banne
 
 @NgModule({
     declarations: [StoppedWaitingForActionDialogComponent, WaitForActionBannerComponent],
-    imports: [CommonModule, MatDialogModule, OpenSlidesTranslationModule.forChild(), MatButtonModule, MatIconModule]
+    imports: [CommonModule, MatDialogModule, OpenSlidesTranslationModule, MatButtonModule, MatIconModule]
 })
 export class WaitForActionDialogModule {
     public static getComponent(): typeof StoppedWaitingForActionDialogComponent {

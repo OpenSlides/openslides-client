@@ -19,12 +19,14 @@
   "scripts": {
     "build": "vite build",
     "test": "vitest",
+    "bench": "vitest bench",
     "coverage": "vitest run --coverage"
   },
   "devDependencies": {
     "@types/node": "^24.1.0",
     "@vitest/coverage-v8": "^4.1.8",
     "jsdom": "^29.0.2",
+    "lorem-ipsum": "^3.0.0",
     "typescript": "^5.8.3",
     "vite": "^8.0.16",
     "vite-plugin-dts": "^5.0.3",

@@ -15,7 +15,7 @@ import { ChatGroupDialogComponent } from './components/chat-group-dialog/chat-gr
     imports: [
         CommonModule,
         SearchSelectorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatDialogModule,
         MatInputModule,
         MatButtonModule,

@@ -20,7 +20,7 @@ import { ParticipantImportServiceModule } from './services/participant-import-se
         ParticipantImportServiceModule,
         ImportListModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatTooltipModule
     ]

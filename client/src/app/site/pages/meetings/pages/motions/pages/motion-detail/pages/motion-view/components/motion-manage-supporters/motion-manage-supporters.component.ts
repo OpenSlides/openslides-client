@@ -26,7 +26,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { MotionSupporterControllerService } from '../../../../../../modules/supporters/services/motion-supporter-controller/motion-supporter-controller.service';
 import { ViewMotionSupporter } from '../../../../../../modules/supporters/view-models/view-motion-supporter';
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { ViewMotion } from '../../../../../../view-models/view-motion';
 
@@ -138,7 +137,6 @@ export class MotionManageSupportersComponent extends BaseComponent implements On
     public constructor(
         private userRepository: ParticipantControllerService,
         public perms: MotionPermissionService,
-        private motionController: MotionControllerService,
         private actionService: ActionService,
         public repo: MotionSupporterControllerService,
         private operator: OperatorService,
@@ -150,7 +148,7 @@ export class MotionManageSupportersComponent extends BaseComponent implements On
 
         this.editObservable = this.editSubject as Observable<Selectable[]>;
 
-        this.intl = getIntlCollatorForLang(this.translate.getCurrentLang(), {
+        this.intl = getIntlCollatorForLang(this.translate.getCurrentLang() ?? `en`, {
             numeric: true,
             ignorePunctuation: true,
             sensitivity: `base`

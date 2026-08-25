@@ -66,7 +66,7 @@ const COMPONENTS = [
         SearchSelectorModule,
         MatProgressSpinnerModule,
         ...PIPES,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     exports: [...PIPES, ...MODULES, ...COMPONENTS, ChartComponent],
     providers: [...PIPES]

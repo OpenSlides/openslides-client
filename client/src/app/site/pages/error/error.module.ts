@@ -8,6 +8,6 @@ import { ErrorRoutingModule } from './error-routing.module';
 
 @NgModule({
     declarations: [ErrorMainComponent],
-    imports: [CommonModule, ErrorRoutingModule, OpenSlidesTranslationModule.forChild(), MatButtonModule]
+    imports: [CommonModule, ErrorRoutingModule, OpenSlidesTranslationModule, MatButtonModule]
 })
 export class ErrorModule {}

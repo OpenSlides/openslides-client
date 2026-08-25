@@ -50,7 +50,7 @@ import { CategoryListSortComponent } from './components/category-list-sort/categ
         HeadBarModule,
         DirectivesModule,
         ChoiceDialogComponent,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class CategoriesModule {}

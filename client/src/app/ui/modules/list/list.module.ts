@@ -52,7 +52,7 @@ const DECLARATIONS = [ListComponent, ViewListComponent];
     declarations: [...DECLARATIONS, SortFilterBarComponent, SortBottomSheetComponent, FilterMenuComponent],
     imports: [
         CommonModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         IconContainerComponent,
         InputModule,
         ...MODULES,
