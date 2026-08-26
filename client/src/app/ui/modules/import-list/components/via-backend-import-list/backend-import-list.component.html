@@ -2,8 +2,8 @@
     <mat-card-content>
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; width: auto">
             <div style="display: flex; flex-direction: column">
-                <h3 class="instructions" translate>{{ 'Import template' | translate }}</h3>
-                <div (selectedNewFile)="sendCsvReload($event)">
+                <h3 class="instructions">{{ 'Import template' | translate }}</h3>
+                <div>
                     <input
                         #fileInput
                         accept="text"
@@ -31,16 +31,16 @@
                 </div>
             </div>
             <div style="display: flex; flex-direction: column">
-                <h3 class="instructions" translate>{{ 'Description of columns' | translate }}</h3>
+                <h3 class="instructions">{{ 'Description of columns' | translate }}</h3>
                 <div>
-                    <button class="outlined-border" matButton outlined translate (click)="openDialog(fieldsInfoDialog)">
+                    <button class="outlined-border" matButton outlined (click)="openDialog(fieldsInfoDialog)">
                         <mat-icon color="accent">info</mat-icon>
                         <mat-label>{{ 'INFO' | translate }}</mat-label>
                     </button>
                 </div>
             </div>
             <div style="display: flex; flex-direction: column">
-                <h3 class="instructions" translate>{{ 'Instructions for import file' | translate }}</h3>
+                <h3 class="instructions">{{ 'Instructions for import file' | translate }}</h3>
                 <span [innerHTML]="additionalInfo | trust: 'html'"></span>
             </div>
         </div>
@@ -60,7 +60,7 @@
             (keydown.enter)="fileInput.click()"
             (keydown.space)="fileInput.click(); $event.preventDefault()"
         >
-            <mat-label class="dropdiv-label" for="fileInput" translate>
+            <mat-label class="dropdiv-label" for="fileInput">
                 {{ 'Drag files to this area OR click here to select files' | translate }}
             </mat-label>
         </div>
@@ -68,7 +68,7 @@
         @if (!finishedSuccessfully && (rawFileObservable | async); as file) {
             <div class="import-file-handle">
                 {{ file.name }}
-                <button mat-icon-button translate (click)="removeSelectedFile()">
+                <button mat-icon-button (click)="removeSelectedFile()">
                     <mat-icon>close</mat-icon>
                 </button>
             </div>
@@ -81,7 +81,6 @@
                 outlined
                 routerLink="/participants/import/preview"
                 routerLinkActive="active"
-                translate
                 [disabled]="uploadButton"
                 (click)="showPreview()"
             >

@@ -17,6 +17,7 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ParticipantImportCSVReloadService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-reload-file.service';
 import { BackendImportService } from '@app/ui/base/import-service';
 import { firstValueFrom, Observable, of } from 'rxjs';
 
@@ -26,7 +27,6 @@ import { ImportListHeaderDefinition } from '../../definitions/import-list-header
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';
-import { ParticipantImportCSVReloadService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-reload-file.service';
 
 export enum BackendImportPhase {
     LOADING_PREVIEW,
@@ -146,9 +146,8 @@ export class BackendImportListComponent implements OnInit {
             }
             this._state = phase;
         });
-        this.CSVReloadService.openFileInput$.subscribe(() => {
-            const target = this.fileInput.nativeElement.click();
-            this._importer.onSelectFile(target);
+        this.CSVReloadService.openFileInput$.subscribe(async (newFile: Event) => {
+            this.importer.onSelectFile(newFile);
         });
         this.cd.detectChanges();
     }
@@ -157,8 +156,10 @@ export class BackendImportListComponent implements OnInit {
      * triggers the importer's onSelectFile after a file has been chosen
      */
     public onSelectedFile(event: Event): void {
-        this.uploadButton = false;
         this._importer.onSelectFile(event);
+        if (this.fileInput.nativeElement.value) {
+            this.uploadButton = false;
+        }
     }
 
     /**
@@ -230,15 +231,7 @@ export class BackendImportListComponent implements OnInit {
         }
     }
 
-    public onChange(event: Event): void {
-        this._importer.onSelectFile(event);
-    }
-
     protected showPreview(): void {
         this.router.navigateByUrl(this.router.url.concat('/preview'));
-    }
-
-    protected sendCsvReload(event: Event): void {
-        this._importer.onSelectFile(event);
     }
 }

@@ -21,10 +21,8 @@ import { ViewPortService } from '@app/site/services/view-port.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ParticipantImportService } from '../../../services';
-import { sideNavCoordinationService } from '../../../services/participant-import-preview.service/participant-import-preview-sidenav-coordination.service';
-import { BaseBackendImportService } from '@app/site/base/base-import.service/base-backend-import.service';
-import { BackendImportListComponent } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 import { ParticipantImportCSVReloadService } from '../../../services/participant-import-preview.service/participant-import-preview-reload-file.service';
+import { sideNavCoordinationService } from '../../../services/participant-import-preview.service/participant-import-preview-sidenav-coordination.service';
 
 @Component({
     selector: 'os-participant-import-csv-options',
@@ -78,12 +76,12 @@ export class CSVOptions implements OnInit {
     public selectedTextSeparatorOutput = new EventEmitter<MatRadioChange>();
 
     // csvReload
-    public selectNewFile(): void {
-        this.CSVReload.reload();
+    public selectNewFile(event: Event): void {
+        this.CSVReload.reload(event);
     }
 
-    @ViewChild(`fileInput`)
-    public fileInput!: ElementRef<HTMLInputElement>;
+    @ViewChild(`reloadFileInput`)
+    public reloadFileInput?: ElementRef<HTMLInputElement>;
 
     public ngOnInit(): void {
         this.sideNavCoordinator.drawer$.subscribe(drawer => {

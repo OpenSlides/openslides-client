@@ -35,7 +35,7 @@ import { ListModule } from '@app/ui/modules/list';
 import { ScrollingTableCellDefConfig } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import { START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { fromEvent, map, Observable, of, Subscription } from 'rxjs';
+import { map, Observable, of, Subscription } from 'rxjs';
 
 import { ViewGroup } from '../../../../modules';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
@@ -43,7 +43,6 @@ import { ParticipantImportService } from '../../services/participant-import.serv
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
 import { ViewImportedParticipant } from '../../view-models/view-participant-import';
-import { CSVOptions } from './participant-import-csv-options/participant-import-csv-options.component';
 
 @Component({
     selector: `os-participant-import-list-preview`,
@@ -407,12 +406,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             default:
                 return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
         }
-    }
-
-    public getCsvReload(file: File): void {
-        this.importer.clearFile();
-        this.importer.onSelectFile(file);
-        this.importer.refreshFile();
     }
 
     /**
