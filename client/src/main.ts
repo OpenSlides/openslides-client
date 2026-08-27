@@ -8,6 +8,7 @@ import {
     provideZoneChangeDetection
 } from '@angular/core';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { PreloadAllModules, provideRouter, withDisabledInitialNavigation, withPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { OpenSlidesMainComponent } from '@app/openslides-main-module/components/openslides-main/openslides-main.component';
 import { httpInterceptorProviders } from '@app/openslides-main-module/interceptors';
@@ -47,6 +48,16 @@ if (isFirefox && `serviceWorker` in navigator) {
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        provideRouter(
+            [
+                {
+                    path: ``,
+                    loadChildren: () => import(`./app/site/site.module`).then(m => m.SiteModule)
+                }
+            ],
+            withDisabledInitialNavigation(),
+            withPreloading(PreloadAllModules)
+        ),
         provideZoneChangeDetection(),
         WaitForActionDialogService,
         httpInterceptorProviders,

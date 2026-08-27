@@ -1,16 +1,14 @@
-import { ApplicationRef, Component, DOCUMENT, inject, OnInit } from '@angular/core';
+import { ApplicationRef, ChangeDetectionStrategy, Component, DOCUMENT, inject, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { BrowserModule } from '@angular/platform-browser';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { allAvailableTranslations } from '@app/domain/definitions/languages';
 import { HasSequentialNumber } from '@app/domain/interfaces';
 import { StorageService } from '@app/gateways/storage.service';
 import { langToTimeLocale } from '@app/infrastructure/utils';
 import { overloadJsFunctions } from '@app/infrastructure/utils/overload-js-functions';
 import { Deferred } from '@app/infrastructure/utils/promises';
-import { OpenSlidesMainRoutingModule } from '@app/openslides-main-module/openslides-main-routing.module';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { GlobalSpinnerModule } from '@app/site/modules/global-spinner';
 import { UpdateService } from '@app/site/modules/site-wrapper/services/update.service';
@@ -33,13 +31,13 @@ const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
     templateUrl: `./openslides-main.component.html`,
     styleUrls: [`./openslides-main.component.scss`],
     imports: [
-        BrowserModule,
-        OpenSlidesMainRoutingModule,
+        RouterOutlet,
         OpenSlidesOverlayContainerComponent,
         MatSnackBarModule,
         GlobalSpinnerModule,
         WaitForActionDialogModule
-    ]
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class OpenSlidesMainComponent implements OnInit {
     private onInitDone = new Deferred();
