@@ -64,24 +64,6 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Input()
     public searchService: SearchService<V> | undefined;
 
-    @Input()
-    public csvConfiguration: boolean;
-
-    @Output()
-    public selectedEncodingOutput = new EventEmitter<V>();
-
-    @Output()
-    public selectedColSepOutput = new EventEmitter<V>();
-
-    @Output()
-    public selectedTextSeparatorOutput = new EventEmitter<V>();
-
-    @Output()
-    public selectNewFile = new EventEmitter<Event>();
-
-    @Input()
-    public csvReloadButton: boolean;
-
     /**
      * Current state of the multi select mode.
      */
@@ -306,21 +288,5 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
 
     public clearSearchField(): void {
         this._sortFilterBarComponent?.clearSearchField();
-    }
-
-    public sendSelectedEncoding($event): void {
-        this.selectedEncodingOutput.emit($event.value);
-    }
-
-    public sendSelectedColSep($event): void {
-        this.selectedColSepOutput.emit($event.value);
-    }
-
-    public sendSelectedTextSeparator($event): void {
-        this.selectedTextSeparatorOutput.emit($event.value);
-    }
-
-    public sendCsvReload(event: Event): void {
-        this.selectNewFile.emit(event);
     }
 }

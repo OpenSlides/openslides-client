@@ -42,27 +42,27 @@
         <mat-radio-group
             class="radio-group"
             style="display: flex; flex-direction: column"
-            [(ngModel)]="selectedEncodingOption"
-            (change)="selectedEncodingOutput.emit($event)"
+            [(ngModel)]="selectedEncoding"
+            (ngModelChange)="onEncodingChange($event)"
         >
             <mat-radio-button
                 value="utf-8"
-                [class.not-selected-button]="selectedEncodingOption !== 'utf-8'"
-                [class.selected-button]="selectedEncodingOption === 'utf-8'"
+                [class.not-selected-button]="selectedEncoding !== 'utf-8'"
+                [class.selected-button]="selectedEncoding === 'utf-8'"
             >
                 {{ 'UTF 8 - UNICODE' | translate }}
             </mat-radio-button>
             <mat-radio-button
                 value="iso-8859-1"
-                [class.not-selected-button]="selectedEncodingOption !== 'iso-8859-1'"
-                [class.selected-button]="selectedEncodingOption === 'iso-8859-1'"
+                [class.not-selected-button]="selectedEncoding !== 'iso-8859-1'"
+                [class.selected-button]="selectedEncoding === 'iso-8859-1'"
             >
                 {{ 'ISO 8859-1 - West European' | translate }}
             </mat-radio-button>
             <mat-radio-button
                 value="iso-8859-15"
-                [class.not-selected-button]="selectedEncodingOption !== 'iso-8859-15'"
-                [class.selected-button]="selectedEncodingOption === 'iso-8859-15'"
+                [class.not-selected-button]="selectedEncoding !== 'iso-8859-15'"
+                [class.selected-button]="selectedEncoding === 'iso-8859-15'"
             >
                 {{ 'ISO 8859-15 West European (with €)' | translate }}
             </mat-radio-button>
@@ -74,27 +74,27 @@
         <h2>{{ 'Column separator' | translate }}</h2>
         <mat-radio-group
             class="radio-group"
-            [(ngModel)]="selectedColumnSeparatorOption"
-            (change)="selectedColSepOutput.emit($event)"
+            [(ngModel)]="selectedColumnSeparator"
+            (ngModelChange)="onColumnSeparatorChange($event)"
         >
             <mat-radio-button
-                value="Automatic"
-                [class.not-selected-button]="selectedColumnSeparatorOption !== 'Automatic'"
-                [class.selected-button]="selectedColumnSeparatorOption === 'Automatic'"
+                value=""
+                [class.not-selected-button]="selectedColumnSeparator !== ''"
+                [class.selected-button]="selectedColumnSeparator === ''"
             >
                 {{ 'Automatic' | translate }}
             </mat-radio-button>
             <mat-radio-button
-                value="Comma"
-                [class.not-selected-button]="selectedColumnSeparatorOption !== 'Comma'"
-                [class.selected-button]="selectedColumnSeparatorOption === 'Comma'"
+                value=","
+                [class.not-selected-button]="selectedColumnSeparator !== ','"
+                [class.selected-button]="selectedColumnSeparator === ','"
             >
                 {{ 'Comma' | translate }}
             </mat-radio-button>
             <mat-radio-button
-                value="Semicolon"
-                [class.not-selected-button]="selectedColumnSeparatorOption !== 'Semicolon'"
-                [class.selected-button]="selectedColumnSeparatorOption === 'Semicolon'"
+                value=";"
+                [class.not-selected-button]="selectedColumnSeparator !== ';'"
+                [class.selected-button]="selectedColumnSeparator === ';'"
             >
                 {{ 'Semicolon' | translate }}
             </mat-radio-button>
@@ -106,27 +106,27 @@
         <h2>{{ 'Text separator' | translate }}</h2>
         <mat-radio-group
             class="radio-group"
-            [(ngModel)]="selectedTextSeparatorOption"
-            (change)="selectedTextSeparatorOutput.emit($event)"
+            [(ngModel)]="selectedTextSeparator"
+            (ngModelChange)="onTextSeparatorChange($event)"
         >
             <mat-radio-button
-                value="''"
-                [class.not-selected-button]="selectedTextSeparatorOption !== `''`"
-                [class.selected-button]="selectedTextSeparatorOption === `''`"
+                value='"'
+                [class.not-selected-button]="selectedTextSeparator !== `&quot;`"
+                [class.selected-button]="selectedTextSeparator === `&quot;`"
             >
-                {{ "Double quotes ('')" | translate }}
+                {{ 'Double quotes (")' | translate }}
             </mat-radio-button>
             <mat-radio-button
                 value="'"
-                [class.not-selected-button]="selectedTextSeparatorOption !== `'`"
-                [class.selected-button]="selectedTextSeparatorOption === `'`"
+                [class.not-selected-button]="selectedTextSeparator !== `'`"
+                [class.selected-button]="selectedTextSeparator === `'`"
             >
                 {{ "Single quotes (')" | translate }}
             </mat-radio-button>
             <mat-radio-button
                 value="`"
-                [class.not-selected-button]="selectedTextSeparatorOption !== '`'"
-                [class.selected-button]="selectedTextSeparatorOption === '`'"
+                [class.not-selected-button]="selectedTextSeparator !== '`'"
+                [class.selected-button]="selectedTextSeparator === '`'"
             >
                 {{ 'Gravis (`)' | translate }}
             </mat-radio-button>

@@ -16,7 +16,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Identifiable } from '@app/domain/interfaces';
 import { OsFilterIndicator } from '@app/site/base/base-filter.service';
 import { OsSortingOption } from '@app/site/base/base-sort.service';
-import { sideNavCoordinationService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-sidenav-coordination.service';
+import { CSVEncodingOptionsService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { FilterListService } from '@app/ui/modules/list/definitions/filter-service';
 import { OsSortOption, SortListService } from '@app/ui/modules/list/definitions/sort-service';
@@ -68,12 +68,6 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
 
     @Input()
     public searchService: SearchService<V> | undefined;
-
-    /**
-     * CSV options
-     */
-    @Input()
-    public csvConfiguration: boolean;
 
     /**
      * Optional string to tell the verbose name of the filtered items. This string is displayed,
@@ -213,7 +207,7 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
     public vp = inject(ViewPortService);
     protected translate = inject(TranslateService);
     private bottomSheet = inject(MatBottomSheet);
-    private sideNavCoordinator = inject(sideNavCoordinationService);
+    protected csvEncodingOptions = inject(CSVEncodingOptionsService);
 
     public ngOnInit(): void {
         this.mobileSubscription = this.vp.isMobileSubject.subscribe(v => {
@@ -221,7 +215,7 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
                 this.searchEdit = false;
             }
         });
-        this.sideNavCoordinator.drawer$.subscribe(drawer => {
+        this.csvEncodingOptions.drawer$.subscribe(drawer => {
             if (drawer === 'csvConfigMenu' && this.filterMenu.opened) {
                 this.filterMenu.close();
             }
@@ -319,11 +313,11 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
 
     public openFilterMenu(): void {
         if (this.filterMenu.opened) {
-            this.sideNavCoordinator.open('csvConfigMenu');
+            this.csvEncodingOptions.open('csvConfigMenu');
             this.filterMenu.close();
             return;
         } else {
-            this.sideNavCoordinator.open('filterMenu');
+            this.csvEncodingOptions.open('filterMenu');
             this.filterMenu.open();
         }
     }

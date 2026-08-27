@@ -3,7 +3,6 @@
         @if (showFilterBar) {
             <os-sort-filter-bar
                 class="sort-filter-bar"
-                [csvConfiguration]="csvConfiguration"
                 [fakeFilters]="fakeFilters"
                 [filterCount]="currentCountObservable | async"
                 [filterService]="filterService!"

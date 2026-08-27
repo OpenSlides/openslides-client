@@ -41,6 +41,7 @@ import { ViewGroup } from '../../../../modules';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
+import { CSVEncodingOptionsService } from '../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
 import { ViewImportedParticipant } from '../../view-models/view-participant-import';
 
@@ -75,6 +76,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
 
     public filterService = inject(ParticipantImportFilterService);
     public searchService = inject(ParticipantImportPreviewSearchService);
+    private CSVEncodingOptions = inject(CSVEncodingOptionsService);
 
     @Input()
     public searchFieldInput = ``;
@@ -98,16 +100,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Whether or not to show the header
      */
     public showHeader = true;
-
-    /**
-     * Whether or not to show the CSV-Encoding button
-     */
-    protected csvConfiguration = true;
-
-    /**
-     * Whether or not to show the CSV-Reload button
-     */
-    protected csvReloadButton = true; // Reload CSV file
 
     private userAccounts = this.accountsControllerService.getViewModelList();
 
@@ -192,6 +184,21 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this.importer.currentImportPhaseObservable.subscribe(phase => {
             this._state = phase;
         });
+        this.CSVEncodingOptions.toggleCSVOptions = true;
+        let previousConfig = this.CSVEncodingOptions?.SelectedConfig$.value;
+        this.CSVEncodingOptions?.SelectedConfig$.subscribe(options => {
+            if (
+                options.columnSeparator !== previousConfig?.columnSeparator ||
+                options.encoding !== previousConfig?.encoding ||
+                options.textSeparator !== previousConfig?.textSeparator
+            ) {
+                this.importer.columnSeparator = options.columnSeparator;
+                this.importer.encoding = options.encoding;
+                this.importer.textSeparator = options.textSeparator;
+                this.importer.refreshFile();
+                previousConfig = options;
+            }
+        });
         this.tempPreviewsObservable = this.importer.previewsObservable.subscribe(previews => {
             this._rows = this.calculateRows(previews);
             this.uploadButton = previews?.some(preview => preview.state === 'error') ? true : false;
@@ -205,6 +212,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Resets the importer when leaving the view
      */
     public ngOnDestroy(): void {
+        this.CSVEncodingOptions.toggleCSVOptions = false;
         this.importer.clearPreview();
         this.importer.clearFile();
         this.importer.clearAll();

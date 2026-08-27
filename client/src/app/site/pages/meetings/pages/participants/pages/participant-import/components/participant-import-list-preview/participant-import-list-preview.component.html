@@ -10,8 +10,6 @@
 </os-head-bar>
 <div class="static-sort-filter-bar">
     <os-view-list
-        [csvConfiguration]="csvConfiguration"
-        [csvReloadButton]="csvReloadButton"
         [filterService]="filterService"
         [horizontalScroll]="horizontalScroll"
         [listObservable]="dataSource"
@@ -23,9 +21,6 @@
         [totalCount]="_totalCountObservable | async"
         [vScrollFixed]="50"
         (searchFilterUpdated)="searchFilterUpdated.emit($event)"
-        (selectedColSepOutput)="onColSepChanged($event)"
-        (selectedEncodingOutput)="onEncodingChanged($event)"
-        (selectedTextSeparatorOutput)="onTextSeparatorChanged($event)"
     >
         @if (dataSource | async) {
             @for (column of previewColumns; track column) {
