@@ -30,6 +30,7 @@ import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../mo
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
     selector: `os-motion-meta-data`,
@@ -73,11 +74,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         .pipe(map(v => !!v));
 
     // TODO: Use actual setting
+    private displayFutureForward = false;
     public displayFutureForward$ = this.meetingSettingsService
         .get(`motions_enable_origin_motion_display`)
         .pipe(map(v => !!v));
-
-    public expandedMotions = new BehaviorSubject<[boolean, boolean][]>([]);
 
     /**
      * @returns the current recommendation label (with extension)
@@ -126,31 +126,32 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         );
     }
 
-    public get originMotions$(): Observable<ViewMotion[]> {
-        let futureForward = false;
-        this.displayFutureForward$.subscribe(bool => {
-            futureForward = bool;
-        });
-        futureForward = true; // TODO: remove this line
+    public currentOriginPage = new BehaviorSubject<ViewMotion[]>([]);
+    private originTreeData: ViewMotion[][] = [];
 
-        if (futureForward) {
-            const list = this.motion.all_derived_motions ?? [];
-            list.push(this.motion);
-            const origin_ids = [];
-            for (const motion of list) {
+    public get originMotions$(): Observable<ViewMotion[][]> {
+        let tree: ViewMotion[][] = [];
+        const futureList = this.motion.all_derived_motions ?? [];
+        this.displayFutureForward = true; // TODO: remove this line
+
+        if (this.displayFutureForward) {
+            futureList.push(this.motion);
+            const origin_ids: number[] = [];
+
+            for (const motion of futureList) {
                 if (motion.origin_id && origin_ids.includes(motion.origin_id)) {
-                    list.push(this.motionRepo.getViewModel(motion.origin_id));
+                    futureList.push(this.motionRepo.getViewModel(motion.origin_id));
                 }
                 origin_ids.push(motion.origin_id);
             }
-
-            return new BehaviorSubject(this.createForwardTree(list, this.motion.all_origins));
         }
 
-        if (this.motion.origin_id) {
-            return new BehaviorSubject(this.createForwardTree([], this.motion.all_origins));
+        tree = this.createForwardTree(futureList, this.motion.all_origins);
+        if (tree.length > 0) {
+            this.currentOriginPage.next(tree[0]);
         }
-        return null;
+        this.originTreeData = tree;
+        return new BehaviorSubject<ViewMotion[][]>(tree);
     }
 
     public set showAllAmendments(is: boolean) {
@@ -210,6 +211,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         for (const motion of this.activeOriginMotions) {
             this.originMotionStatus[motion.id] = true;
         }
+
+        this.displayFutureForward$.subscribe((v: boolean) => {
+            this.displayFutureForward = v;
+        });
     }
 
     protected override onAfterInit(): void {
@@ -300,6 +305,14 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
     }
 
+    public onPageChange(event: PageEvent): void {
+        const page = this.originTreeData[event.pageIndex];
+        console.log(page)
+        if (page) {
+            this.currentOriginPage.next(page);
+        }
+    }
+
     public getCategorySelectionMarginLeft(category: ViewMotionCategory): string {
         return (
             (!this.motion.category_id || this.motion.category_id === category.id ? 0 : 32) + category.level * 5 + `px`
@@ -366,33 +379,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return origin?.canAccess();
     }
 
-    public toogleExpansion(index: number, all = false): void {
-        this.expandedMotions.subscribe(list => {
-            for (let i = index; i < list.length; i++) {
-                if (i !== index && !all && list[i][0]) {
-                    break;
-                } else if (list[i][0]) {
-                    continue;
-                }
-                list[i][1] = !list[i][1];
-            }
-        });
-    }
-
-    public canShrink(index: number, all = false): boolean {
-        let canShri = true;
-        this.expandedMotions.subscribe(list => {
-            for (let i = index; i < list.length; i++) {
-                if (i !== index && !all && list[i][0]) {
-                    break;
-                } else if (!list[i][1]) {
-                    canShri = false;
-                }
-            }
-        });
-        return canShri;
-    }
-
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
         return toTest.COLLECTION === Motion.COLLECTION;
     }
@@ -432,30 +418,26 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return forwardingCommittees;
     }
 
-    private createForwardTree(list: ViewMotion[], origins: ViewMotion[]): ViewMotion[] {
+    private createForwardTree(list: ViewMotion[], origins: ViewMotion[]): ViewMotion[][] {
         const childrenIds = new Set(list.filter(motion => !!motion.origin_id).map(motion => motion.origin_id));
         const leaves = list.filter(motion => !childrenIds.has(motion.id));
-        const tree: ViewMotion[] = [];
-        const newList: [boolean, boolean][] = [];
+        const tree: ViewMotion[][] = [];
 
         for (const leaf of leaves) {
+            const branch: ViewMotion[] = [];
             let currentId: number | null = leaf.id;
 
             while (currentId !== null) {
                 const motion = list.find(m => m.id === currentId);
                 if (!motion) break;
 
-                tree.push(motion);
+                branch.push(motion);
                 currentId = motion.origin_id;
-
-                const amount_derived_motions = motion.all_derived_motion_ids?.length ?? 0;
-                newList.push([amount_derived_motions === 0, amount_derived_motions === 0]);
             }
 
-            tree.push(...origins.reverse());
-            origins.forEach(_ => newList.push([false, false]));
+            branch.push(...origins.reverse());
+            tree.push(branch);
         }
-        this.expandedMotions.next(newList);
         return tree;
     }
 }
