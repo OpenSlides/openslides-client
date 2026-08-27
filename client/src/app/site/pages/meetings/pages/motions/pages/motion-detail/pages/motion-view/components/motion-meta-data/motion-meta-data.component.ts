@@ -8,6 +8,7 @@ import {
     OnInit,
     Output
 } from '@angular/core';
+import { PageEvent } from '@angular/material/paginator';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
 import { Selectable } from '@app/domain/interfaces';
@@ -21,7 +22,7 @@ import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from '@app/s
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from '@app/site/services/operator.service';
-import { BehaviorSubject, map, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, Subscription } from 'rxjs';
 
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionEditorControllerService } from '../../../../../../modules/editors/services/motion-editor-controller/motion-editor-controller.service';
@@ -30,7 +31,6 @@ import { MotionWorkingGroupSpeakerControllerService } from '../../../../../../mo
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 import { SearchListDefinition } from '../motion-extension-field/motion-extension-field.component';
-import { PageEvent } from '@angular/material/paginator';
 
 @Component({
     selector: `os-motion-meta-data`,
@@ -128,30 +128,43 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public currentOriginPage = new BehaviorSubject<ViewMotion[]>([]);
     private originTreeData: ViewMotion[][] = [];
+    private originSubject = new BehaviorSubject<ViewMotion[][]>([]);
 
     public get originMotions$(): Observable<ViewMotion[][]> {
-        let tree: ViewMotion[][] = [];
-        const futureList = this.motion.all_derived_motions ?? [];
+        return of(this.originTreeData);
+    }
+
+    public refreshOriginMotions(): void {
         this.displayFutureForward = true; // TODO: remove this line
+        const futureList: ViewMotion[] =
+            this.displayFutureForward && this.motion.all_derived_motions ? this.motion.all_derived_motions : [];
+        const pastList: ViewMotion[] =
+            this.displayFutureForward || this.motion.origin_id ? this.motion.all_origins : [];
 
         if (this.displayFutureForward) {
             futureList.push(this.motion);
             const origin_ids: number[] = [];
 
             for (const motion of futureList) {
-                if (motion.origin_id && origin_ids.includes(motion.origin_id)) {
-                    futureList.push(this.motionRepo.getViewModel(motion.origin_id));
+                // check needed to guarantee that past meetings are only added as often as they are needed
+                if (motion.origin_id && !origin_ids.includes(motion.origin_id)) {
+                    const originMotion = this.motionRepo.getViewModel(motion.origin_id);
+                    if (originMotion) {
+                        futureList.push(originMotion);
+                    }
                 }
-                origin_ids.push(motion.origin_id);
+                if (motion.origin_id) {
+                    origin_ids.push(motion.origin_id);
+                }
             }
         }
-
-        tree = this.createForwardTree(futureList, this.motion.all_origins);
-        if (tree.length > 0) {
-            this.currentOriginPage.next(tree[0]);
-        }
+        const tree = this.createForwardTree(futureList, pastList);
         this.originTreeData = tree;
-        return new BehaviorSubject<ViewMotion[][]>(tree);
+        this.originSubject.next(tree);
+
+        if (this.originTreeData.length > 0) {
+            this.currentOriginPage.next(this.originTreeData[0]);
+        }
     }
 
     public set showAllAmendments(is: boolean) {
@@ -211,6 +224,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         for (const motion of this.activeOriginMotions) {
             this.originMotionStatus[motion.id] = true;
         }
+
+        this.refreshOriginMotions();
 
         this.displayFutureForward$.subscribe((v: boolean) => {
             this.displayFutureForward = v;
@@ -307,7 +322,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public onPageChange(event: PageEvent): void {
         const page = this.originTreeData[event.pageIndex];
-        console.log(page)
         if (page) {
             this.currentOriginPage.next(page);
         }

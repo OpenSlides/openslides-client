@@ -325,11 +325,15 @@
                 <h4>{{ 'Origin' | translate }}</h4>
             }
             <div class="origin-view">
-                <mat-paginator [length]="(originMotions$ | async)?.length || 0" [pageSize]="1" [hidePageSize]=true (page)="onPageChange($event)">
-                </mat-paginator>
+                <mat-paginator
+                    [hidePageSize]="true"
+                    [length]="(originMotions$ | async)?.length || 0"
+                    [pageSize]="1"
+                    (page)="onPageChange($event)"
+                ></mat-paginator>
                 <br />
                 @let curPage = currentOriginPage | async;
-                @for (origin of curPage; track origin.id; let last = $last){
+                @for (origin of curPage; track origin.id; let last = $last) {
                     <div>
                         <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
                         @if (
