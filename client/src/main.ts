@@ -1,4 +1,4 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {
     ApplicationConfig,
     enableProdMode,
@@ -65,7 +65,7 @@ export const appConfig: ApplicationConfig = {
             const initializerFn = AppLoaderFactory(inject(AppLoadService));
             return initializerFn();
         }),
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClient(withInterceptorsFromDi()),
         provideTranslateService({
             fallbackLang: `en`,
             loader: {
