@@ -3,7 +3,7 @@ import { BaseModel } from '../../../../domain/models/base/base-model';
 import { Projection } from '../../../../domain/models/projector/projection';
 import { ProjectiondefaultValue } from '../../../../domain/models/projector/projection-default';
 import { BaseViewModel } from '../../../base/base-view-model';
-import { MeetingSettingsService } from '../services/meeting-settings.service';
+import type { MeetingSettingsService } from '../services/meeting-settings.service';
 import { Projectable } from './projectable';
 import { ProjectionBuildDescriptor } from './projection-build-descriptor';
 /**

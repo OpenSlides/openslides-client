@@ -3,8 +3,8 @@ import { Observable } from 'rxjs';
 import { Displayable } from '../../../../domain/interfaces/displayable';
 import { HasProjectionIds } from '../../../../domain/interfaces/has-projectable-ids';
 import { HasProjectorTitle } from '../../../../domain/interfaces/has-projector-title';
-import { ViewProjection } from '../pages/projectors/view-models/view-projection';
-import { MeetingSettingsService } from '../services/meeting-settings.service';
+import type { ViewProjection } from '../pages/projectors/view-models/view-projection';
+import type { MeetingSettingsService } from '../services/meeting-settings.service';
 import { ProjectionBuildDescriptor } from './projection-build-descriptor';
 
 export function isProjectable(obj: any): obj is Projectable {
