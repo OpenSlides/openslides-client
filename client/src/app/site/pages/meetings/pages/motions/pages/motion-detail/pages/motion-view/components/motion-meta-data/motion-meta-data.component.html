@@ -325,7 +325,7 @@
                 <h4>{{ 'Origin' | translate }}</h4>
             }
             <div class="origin-view">
-                @if (originMotions.length > 1 ) {
+                @if (originMotions.length > 1) {
                     <mat-paginator
                         [hidePageSize]="true"
                         [length]="originMotions.length"
@@ -358,10 +358,11 @@
                     <div class="parent">
                         @if (!last && !!origin.origin_id) {
                             <mat-icon>north</mat-icon>
-                            } @else {
+                        } @else {
                             <mat-icon></mat-icon>
-                            }
-                        <span class="user-subtitle text-small">{{ motion.state }}
+                        }
+                        <span class="user-subtitle text-small">
+                            {{ motion.state }}
                             @if (motion.state_extension) {
                                 {{ motion.state_extension }}
                             }
