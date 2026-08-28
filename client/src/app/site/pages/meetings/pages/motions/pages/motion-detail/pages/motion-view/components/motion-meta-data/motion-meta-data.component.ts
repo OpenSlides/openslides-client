@@ -146,8 +146,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
             const origin_ids: number[] = [];
 
             for (const motion of futureList) {
-                // check needed to guarantee that past meetings are only added as often as they are needed
-                if (motion.origin_id && !origin_ids.includes(motion.origin_id)) {
+                if (motion.origin_id && !origin_ids.includes(motion.origin_id) && this.motion !== motion) {
                     const originMotion = this.motionRepo.getViewModel(motion.origin_id);
                     if (originMotion) {
                         futureList.push(originMotion);
@@ -224,6 +223,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         for (const motion of this.activeOriginMotions) {
             this.originMotionStatus[motion.id] = true;
         }
+
 
         this.refreshOriginMotions();
 
