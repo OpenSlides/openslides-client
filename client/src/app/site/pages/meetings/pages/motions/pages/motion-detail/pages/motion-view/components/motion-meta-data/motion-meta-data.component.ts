@@ -219,21 +219,31 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
     }
 
+    private derivedMotionSubscriptions: Subscription[] = [];
+
     public ngOnInit(): void {
         for (const motion of this.activeOriginMotions) {
             this.originMotionStatus[motion.id] = true;
         }
 
-
-        this.refreshOriginMotions();
-
-        this.displayFutureForward$.subscribe((v: boolean) => {
-            this.displayFutureForward = v;
-        });
+        this.derivedMotionSubscriptions.push(
+            this.motion.derived_motions$.subscribe(_ => this.refreshOriginMotions()),
+            this.displayFutureForward$.subscribe((v: boolean) => {
+                this.displayFutureForward = v;
+            })
+        );
     }
 
     protected override onAfterInit(): void {
         this.setupRecommender();
+    }
+
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+
+        for (const subscription of this.derivedMotionSubscriptions) {
+            subscription.unsubscribe();
+        }
     }
 
     /**
