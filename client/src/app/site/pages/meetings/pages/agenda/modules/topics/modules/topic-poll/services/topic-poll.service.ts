@@ -24,7 +24,7 @@ import { MeetingSettingsService } from '@app/site/pages/meetings/services/meetin
 import { merge, Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { ViewTopic } from '../../../view-models';
+import { ViewTopic } from '../../../view-models/view-topic';
 
 interface TopicPollTableEntry {
     label: string;

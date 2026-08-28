@@ -159,10 +159,10 @@
                         </button>
                     }
                     @if (personalInfoForm.controls['username'].errors?.['required']) {
-                        <mat-error translate>You have to enter at least one character</mat-error>
+                        <mat-error>{{ 'You have to enter at least one character' | translate }}</mat-error>
                     }
                     @if (personalInfoForm.controls['username'].errors?.['noSpace']) {
-                        <mat-error translate>Username may not contain spaces</mat-error>
+                        <mat-error>{{ 'Username may not contain spaces' | translate }}</mat-error>
                     }
                 </mat-form-field>
             }

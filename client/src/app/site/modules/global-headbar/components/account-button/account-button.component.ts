@@ -127,7 +127,7 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public getCurrentLanguageName(): string {
-        return this.getLanguageName(this.translate.getCurrentLang());
+        return this.getLanguageName(this.translate.getCurrentLang() ?? `en`);
     }
 
     /**

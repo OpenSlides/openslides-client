@@ -24,7 +24,7 @@ import { ThemeListRoutingModule } from './theme-list-routing.module';
         ThemeBuilderDialogModule,
         HeadBarModule,
         ListModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatMenuModule,
         MatTooltipModule,

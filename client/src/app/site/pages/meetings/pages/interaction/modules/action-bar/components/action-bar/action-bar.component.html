@@ -4,19 +4,14 @@
             @if ((isJoined | async) && (showCallDialog | async) === false) {
                 <!-- show dialog -->
                 <button
-                    @fadeIn
+                    animate.enter="fade-in"
+                    animate.leave="fade-out"
                     class="action-bar-shadow background-default"
                     mat-mini-fab
                     matTooltip="{{ 'Show conference room' | translate }}"
                     (click)="maximizeCallDialog()"
                 >
-                    <mat-icon
-                        color="primary"
-                        [@fadeInOut]="meetingActiveAnimHelper"
-                        (@fadeInOut.done)="triggerCallHiddenAnimation()"
-                    >
-                        fullscreen
-                    </mat-icon>
+                    <mat-icon class="icon-pulse" color="primary">fullscreen</mat-icon>
                 </button>
             }
         }
@@ -45,7 +40,8 @@
         <!-- Call support button -->
         @if (showHelpDesk | async) {
             <button
-                @fadeIn
+                animate.enter="fade-in"
+                animate.leave="fade-out"
                 class="action-bar-shadow background-default"
                 mat-mini-fab
                 matTooltip="{{ 'Help desk' | translate }}"
@@ -57,7 +53,8 @@
         <!-- applause button -->
         @if (showApplause | async) {
             <button
-                @fadeIn
+                animate.enter="fade-in"
+                animate.leave="fade-out"
                 class="action-bar-shadow background-default"
                 mat-mini-fab
                 matTooltip="{{ 'Give applause' | translate }}"

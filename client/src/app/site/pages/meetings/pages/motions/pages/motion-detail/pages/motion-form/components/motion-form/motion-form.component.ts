@@ -39,8 +39,8 @@ import {
 
 import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../../../participants/participants.subscription';
-import { MotionCategoryControllerService } from '../../../../../../modules/categories/services';
-import { MotionWorkflowControllerService } from '../../../../../../modules/workflows/services';
+import { MotionCategoryControllerService } from '../../../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionWorkflowControllerService } from '../../../../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
 import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';

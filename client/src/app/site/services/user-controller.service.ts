@@ -14,12 +14,11 @@ import {
 import { OperatorService } from '@app/site/services/operator.service';
 import { Observable } from 'rxjs';
 
-import { Identifiable } from '../../domain/interfaces';
+import { Identifiable } from '../../domain/interfaces/identifiable';
 import { User } from '../../domain/models/users/user';
-import { Action } from '../../gateways/actions';
+import { Action } from '../../gateways/actions/action';
 import { BaseController } from '../base/base-controller';
 import { ViewUser } from '../pages/meetings/view-models/view-user';
-import { ControllerServiceCollectorService } from './controller-service-collector.service';
 
 /**
  * type for determining the user name from a string during import.
@@ -37,15 +36,11 @@ export interface CreateUserNameInformation {
 
 @Service()
 export class UserControllerService extends BaseController<ViewUser, User> {
-    protected override repo: UserRepositoryService;
+    protected repo: UserRepositoryService = inject(UserRepositoryService);
     private presenter = inject(GetActiveUsersAmountPresenterService);
     private operator = inject(OperatorService);
 
-    public constructor() {
-        const controllerServiceCollector = inject(ControllerServiceCollectorService);
-        const repo = inject(UserRepositoryService);
-        super(controllerServiceCollector, User, repo);
-    }
+    public baseModelCtor = User;
 
     ///////////////////
     /// //////////////// TODO: Remove, because participants and accounts have their dedicated "controller"

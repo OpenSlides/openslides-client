@@ -31,7 +31,7 @@ import { CommitteeDetailViewComponent } from './components/committee-detail-view
         DirectivesModule,
         HeadBarModule,
         HeadToolbarComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatCardModule,
         MatMenuModule,

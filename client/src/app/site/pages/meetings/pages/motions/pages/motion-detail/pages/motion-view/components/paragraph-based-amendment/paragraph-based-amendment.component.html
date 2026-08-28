@@ -124,7 +124,11 @@
 @if (changeRecoMode === ChangeRecoMode.Original || changeRecoMode === ChangeRecoMode.Changed) {
     <div>
         @if (motion && motion.isParagraphBasedAmendment() && motion.lead_motion) {
-            <mat-checkbox class="show-entire-text-check" (change)="showAmendmentContext = !showAmendmentContext">
+            <mat-checkbox
+                class="show-entire-text-check"
+                [checked]="showAmendmentContext"
+                (change)="showAmendmentContext = !showAmendmentContext"
+            >
                 <span>{{ 'Show entire motion text' | translate }}</span>
             </mat-checkbox>
         }

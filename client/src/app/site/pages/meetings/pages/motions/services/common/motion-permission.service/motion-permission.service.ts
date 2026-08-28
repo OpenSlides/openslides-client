@@ -3,7 +3,7 @@ import { Permission } from '@app/domain/definitions/permission';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from '@app/site/services/operator.service';
 
-import { ViewMotion } from '../../../view-models';
+import { ViewMotion } from '../../../view-models/view-motion';
 
 @Service()
 export class MotionPermissionService {

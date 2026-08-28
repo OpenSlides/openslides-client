@@ -21,7 +21,7 @@ import {
     getParticipantListSubscriptionConfig,
     getStructureLevelListSubscriptionConfig
 } from '../../../../../../participants.subscription';
-import { ViewStructureLevel } from '../../../../../structure-levels/view-models';
+import { ViewStructureLevel } from '../../../../../structure-levels/view-models/view-structure-level';
 import { ParticipantListSortService } from '../../../../services/participant-list-sort/participant-list-sort.service';
 import { InfoDialog } from '../../services/participant-list-info-dialog.service';
 
