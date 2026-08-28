@@ -1,3 +1,13 @@
+@use '@angular/material' as mat;
+
+.origin-view {
+    @include mat.paginator-overrides(
+        (
+            container-background-color: transparent
+        )
+    );
+}
+
 div.remove-top-margin {
     margin-top: -1.33em;
 }
@@ -22,7 +32,6 @@ span.referencelist {
 
 .status-text {
     font-size: 85%;
-    color: rgba(0, 0, 0, 0.54);
     margin-top: -10px;
     margin-left: 1px;
 }
