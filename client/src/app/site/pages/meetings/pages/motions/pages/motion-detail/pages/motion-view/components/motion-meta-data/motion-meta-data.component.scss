@@ -10,12 +10,19 @@ span.referencelist {
     display: inline-block;
 }
 
-.parent {
+.basic-flex-container {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
 }
 
-.text-small {
+.align-start {
+    align-items: flex-start;
+}
+
+.status-text {
     font-size: 85%;
+    color: rgba(0, 0, 0, 0.54);
+    margin-top: -10px;
+    margin-left: 1px;
 }

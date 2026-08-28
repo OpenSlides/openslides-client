@@ -302,17 +302,6 @@
     }
 }
 
-<!-- Workflow timestamp -->
-<os-motion-manage-timestamp field="workflow_timestamp" title="{{ 'Submission date' | translate }}" [motion]="motion" />
-
-<!-- Created timestamp -->
-@if (motion?.created && perms.isAllowed('change_metadata', motion)) {
-    <div>
-        <h4>{{ 'Creation date' | translate }}</h4>
-        <div>{{ motion.created | localizedDate }}</div>
-    </div>
-}
-
 <!-- Origins - display only -->
 @if (originMotions$ | async; as originMotions) {
     @if (originMotions.length) {
@@ -325,19 +314,14 @@
                 <h4>{{ 'Origin' | translate }}</h4>
             }
             <div class="origin-view">
-                @if (originMotions.length > 1) {
-                    <mat-paginator
-                        [hidePageSize]="true"
-                        [length]="originMotions.length"
-                        [pageSize]="1"
-                        (page)="onPageChange($event)"
-                    ></mat-paginator>
-                    <br />
-                }
                 @let curPage = currentOriginPage | async;
                 @for (origin of curPage; track origin.id; let last = $last) {
-                    <div class="parent">
-                        <mat-icon>adjust</mat-icon>
+                    <div class="basic-flex-container">
+                        @if (origin === motion) {
+                            <mat-icon color="accent">radio_button_checked</mat-icon>
+                        } @else {
+                            <mat-icon>adjust</mat-icon>
+                        }
                         &nbsp;
                         <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
                         @if (
@@ -355,19 +339,27 @@
                             ></mat-slide-toggle>
                         }
                     </div>
-                    <div class="parent">
+                    <div class="basic-flex-container align-start">
                         @if (!last && !!origin.origin_id) {
                             <mat-icon>north</mat-icon>
                         } @else {
                             <mat-icon></mat-icon>
                         }
-                        <span class="user-subtitle text-small">
+                        <span class="status-text">
                             {{ motion.state }}
                             @if (motion.state_extension) {
                                 {{ motion.state_extension }}
                             }
                         </span>
                     </div>
+                }
+                @if (originMotions.length > 1) {
+                    <mat-paginator
+                        [hidePageSize]="true"
+                        [length]="originMotions.length"
+                        [pageSize]="1"
+                        (page)="onPageChange($event)"
+                    ></mat-paginator>
                 }
             </div>
         </div>
@@ -392,6 +384,17 @@
                 {{ 'Show all changes' | translate }}
             </mat-checkbox>
         }
+    </div>
+}
+
+<!-- Workflow timestamp -->
+<os-motion-manage-timestamp field="workflow_timestamp" title="{{ 'Submission date' | translate }}" [motion]="motion" />
+
+<!-- Created timestamp -->
+@if (motion?.created && perms.isAllowed('change_metadata', motion)) {
+    <div>
+        <h4>{{ 'Creation date' | translate }}</h4>
+        <div>{{ motion.created | localizedDate }}</div>
     </div>
 }
 
