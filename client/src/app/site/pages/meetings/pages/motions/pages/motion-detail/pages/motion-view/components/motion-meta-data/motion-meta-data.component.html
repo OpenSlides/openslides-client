@@ -325,22 +325,27 @@
                 <h4>{{ 'Origin' | translate }}</h4>
             }
             <div class="origin-view">
-                <mat-paginator
-                    [hidePageSize]="true"
-                    [length]="(originMotions$ | async)?.length || 0"
-                    [pageSize]="1"
-                    (page)="onPageChange($event)"
-                ></mat-paginator>
-                <br />
+                @if (originMotions.length > 1 ) {
+                    <mat-paginator
+                        [hidePageSize]="true"
+                        [length]="originMotions.length"
+                        [pageSize]="1"
+                        (page)="onPageChange($event)"
+                    ></mat-paginator>
+                    <br />
+                }
                 @let curPage = currentOriginPage | async;
                 @for (origin of curPage; track origin.id; let last = $last) {
-                    <div>
+                    <div class="parent">
+                        <mat-icon>adjust</mat-icon>
+                        &nbsp;
                         <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
                         @if (
                             (displayOriginEnabled$ | async) &&
                             (originToggleDefault$ | async) === false &&
                             !motion.isAmendment()
                         ) {
+                            &nbsp;
                             <mat-slide-toggle
                                 *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
                                 [aria-label]="'Activate backtracking' | translate"
@@ -350,10 +355,17 @@
                             ></mat-slide-toggle>
                         }
                     </div>
-                    <div class="flex-center">
+                    <div class="parent">
                         @if (!last && !!origin.origin_id) {
                             <mat-icon>north</mat-icon>
-                        }
+                            } @else {
+                            <mat-icon></mat-icon>
+                            }
+                        <span class="user-subtitle text-small">{{ motion.state }}
+                            @if (motion.state_extension) {
+                                {{ motion.state_extension }}
+                            }
+                        </span>
                     </div>
                 }
             </div>
@@ -386,24 +398,15 @@
 <os-motion-manage-polls [hideAdd]="true" [motion]="motion" />
 
 <ng-template #meetingLink let-motion="motion">
-    »
     @if (canAccess(motion)) {
         <span>
             <a [routerLink]="getUrl(motion)">
                 {{ getMeetingName(motion) }}
             </a>
-            <span>{{ motion.state }}</span>
-            @if (motion.state_extension) {
-                {{ motion.state_extension }}
-            }
         </span>
     } @else {
         <span>
             {{ getMeetingName(motion) }}
         </span>
-        <span>{{ motion.state }}</span>
-        @if (motion.state_extension) {
-            {{ motion.state_extension }}
-        }
     }
 </ng-template>

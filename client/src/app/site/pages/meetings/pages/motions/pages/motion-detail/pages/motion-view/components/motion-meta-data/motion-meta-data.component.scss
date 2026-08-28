@@ -9,3 +9,12 @@ div.origin-view {
 span.referencelist {
     display: inline-block;
 }
+
+.parent {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.text-small {
+font-size: 85%;}
