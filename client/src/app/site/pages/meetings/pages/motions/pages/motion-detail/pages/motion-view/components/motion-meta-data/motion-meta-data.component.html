@@ -327,11 +327,18 @@
                             <mat-icon>lock</mat-icon>
                         }
                         <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
+                        @if (getToolTip(origin)) {
+                            &nbsp;
+                            <mat-icon class="pointer-icon" color="primary" inline [matTooltip]="getToolTip(origin)">
+                                info
+                            </mat-icon>
+                        }
                         @if (
                             (displayOriginEnabled$ | async) &&
                             (originToggleDefault$ | async) === false &&
                             !motion.isAmendment()
                         ) {
+                            &nbsp;
                             &nbsp;
                             <mat-slide-toggle
                                 *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
@@ -340,11 +347,6 @@
                                 [matTooltip]="'Activate backtracking' | translate"
                                 (change)="toggleOriginMotion($event, origin.id)"
                             ></mat-slide-toggle>
-                        }
-                        @if (getToolTip(origin)) {
-                            <mat-icon class="pointer-icon" color="primary" inline [matTooltip]="getToolTip(origin)">
-                                info
-                            </mat-icon>
                         }
                     </div>
                     <div class="basic-flex-container align-start">
