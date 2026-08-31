@@ -17,7 +17,7 @@ export default {
     'poll_state_change_action.published': _(`Publish`),
     'poll_percent_base.no_general': _(`Sum of votes without general options`),
     'poll_percent_base.yes_no': _(`Yes/No`),
-    'poll_percent_base.YNA': _(`Yes/No/Abstain`), // TODO: Key incorrect
+    'poll_percent_base.yes_no_abstain': _(`Yes/No/Abstain`),
     'poll_percent_base.valid': _(`All valid ballots`),
     'poll_percent_base.cast': _(`All casted ballots`),
     'poll_percent_base.entitled': _(`All entitled users`),
