@@ -5,8 +5,12 @@ import { Router } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
 import { allAvailableTranslations, availableTranslations } from '@app/domain/definitions/languages';
 import { getOmlVerboseName } from '@app/domain/definitions/organization-permission';
+import { Permission } from '@app/domain/definitions/permission';
 import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ParticipantListInfoDialogService } from '@app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
@@ -15,9 +19,10 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { ThemeService } from '@app/site/services/theme.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { PromptService } from '@app/ui/modules/prompt-dialog/services/prompt.service';
 import { ChessDialogComponent } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
 import { ChessChallengeService } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
-import { TranslateService } from '@ngx-translate/core';
+import { _, TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { AccountDialogMainComponent } from '../account-dialog-main/account-dialog-main.component';
@@ -71,11 +76,16 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     public username = ``;
     public isLoggedIn = false;
+    private _voteDelegationEnabled = false;
 
     public show1337 = -20;
 
     private get activeMeetingId(): Id | null {
         return this.activeMeetingIdService.meetingId;
+    }
+
+    protected get isVoteDelegationEnabled(): boolean {
+        return this._voteDelegationEnabled;
     }
 
     private _isAllowedSelfSetPresent = false;
@@ -86,16 +96,24 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private translate = inject(TranslateService);
     private operator = inject(OperatorService);
     private userRepo = inject(UserControllerService);
+    private participantRepo = inject(ParticipantControllerService);
     private authService = inject(AuthService);
     private theme = inject(ThemeService);
+    private activeMeeting = inject(ActiveMeetingService);
     private meetingSettingsService = inject(MeetingSettingsService);
     private activeMeetingIdService = inject(ActiveMeetingIdService);
     private dialog = inject(MatDialog);
     private router = inject(Router);
+    protected participantListDialog = inject(ParticipantListInfoDialogService);
+    private infoDialog = inject(ParticipantListInfoDialogService);
+    private prompt = inject(PromptService);
 
     public constructor(chessChallengeService: ChessChallengeService) {
         super();
         chessChallengeService.startListening();
+        this.meetingSettingsService
+            .get(`users_enable_vote_delegations`)
+            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
     }
 
     public ngOnInit(): void {
@@ -225,5 +243,58 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             stringForUserPresent = this.translate.instant(`Your account is not in this meeting.`);
         }
         return this.user.short_name + ': ' + stringForUserPresent;
+    }
+
+    public canEditOwnDelegation(): boolean {
+        return this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+            this.activeMeeting.meeting.user_ids.includes(this.operator.operatorId)
+            ? true
+            : false;
+    }
+
+    public async openEditInfo(user: ViewUser): Promise<void> {
+        const dialogRef = await this.infoDialog.open({
+            id: user.id,
+            name: user.getName(),
+            number: user.number(),
+            group_ids: user.group_ids(),
+            structure_level_ids: user.structure_level_ids(),
+            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids() || [],
+            vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
+        });
+        const selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
+        const selfGroupRemovalDialogContent = _(
+            `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
+        );
+
+        dialogRef.afterClosed().subscribe(async result => {
+            if (result) {
+                if (!result.group_ids?.length) {
+                    result.group_ids = [this.activeMeeting.meeting!.default_group_id];
+                }
+                if (
+                    !(
+                        user.id === this.operator.operatorId &&
+                        this.infoDialog.areGroupsDiminished(
+                            this.operator.user.group_ids(),
+                            result.group_ids,
+                            this.activeMeeting.meeting
+                        )
+                    ) ||
+                    (await this.prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
+                ) {
+                    if (
+                        this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+                        !this.operator.hasPerms(Permission.userCanManage) &&
+                        !this.operator.hasPerms(Permission.userCanUpdate) &&
+                        user.id === this.operator.operatorId
+                    ) {
+                        this.participantRepo.updateSelfDelegation(result, user);
+                    } else {
+                        this.participantRepo.update(result, user).resolve();
+                    }
+                }
+            }
+        });
     }
 }
