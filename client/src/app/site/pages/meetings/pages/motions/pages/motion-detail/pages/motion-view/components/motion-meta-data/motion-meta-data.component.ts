@@ -405,6 +405,28 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         return origin?.canAccess();
     }
 
+    public getToolTip(motion: ViewMotion): string {
+        let toolTip = ``;
+        if (motion.meeting?.location) {
+            toolTip = this.translate.instant(`Meeting location`) + `: ` + motion.meeting.location + ` `;
+        }
+        if (motion.meeting?.start_time) {
+            toolTip +=
+                this.translate.instant(`Meeting start time`) +
+                `: ` +
+                this.meetingController.parseUnixToMeetingTime(motion.meeting?.start_time * 1000) +
+                ` `;
+        }
+        if (motion.meeting?.end_time) {
+            toolTip +=
+                this.translate.instant(`Meeting end time`) +
+                `: ` +
+                this.meetingController.parseUnixToMeetingTime(motion.meeting?.end_time * 1000) +
+                ` `;
+        }
+        return toolTip;
+    }
+
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {
         return toTest.COLLECTION === Motion.COLLECTION;
     }
