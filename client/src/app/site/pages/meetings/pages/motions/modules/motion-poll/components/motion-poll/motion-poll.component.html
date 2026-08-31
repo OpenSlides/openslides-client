@@ -91,7 +91,7 @@
             <!-- Detail link -->
             @if (poll.isPublished && isSameMeeting) {
                 <div class="poll-detail-button-wrapper">
-                    <a mat-icon-button matTooltip="{{ 'More' | translate }}" [routerLink]="getDetailLink()">
+                    <a mat-icon-button [matTooltip]="'More' | translate" [routerLink]="getDetailLink()">
                         <mat-icon class="icon-18">visibility</mat-icon>
                     </a>
                 </div>
@@ -110,7 +110,7 @@
 
 <ng-template #emptyTemplate>
     <span *osPerms="permission.motionCanManagePolls; and: poll.type === 'analog'">
-        <button mat-stroked-button matTooltip="{{ 'Edit' | translate }}" (click)="dialogOpened.emit()">
+        <button mat-stroked-button [matTooltip]="'Edit' | translate" (click)="dialogOpened.emit()">
             <mat-icon>edit</mat-icon>
         </button>
         <div>

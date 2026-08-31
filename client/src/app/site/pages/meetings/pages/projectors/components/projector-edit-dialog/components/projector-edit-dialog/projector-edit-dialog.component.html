@@ -117,8 +117,8 @@
                             <button
                                 mat-icon-button
                                 matSuffix
-                                matTooltip="{{ 'Reset' | translate }}"
                                 type="button"
+                                [matTooltip]="'Reset' | translate"
                                 (click)="resetField(form)"
                             >
                                 <mat-icon>replay</mat-icon>
