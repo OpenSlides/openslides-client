@@ -109,5 +109,9 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
     }
 
     public excludeCurrentUserFn: any = observable$ =>
-        observable$.pipe(map((users: ViewUser[]) => users.filter(user => user.id !== this._currentUser?.id)));
+        observable$.pipe(
+            map((users: ViewUser[]) =>
+                users.filter(user => user.id !== this._currentUser?.id).map(user => user.getMeetingUser())
+            )
+        );
 }
