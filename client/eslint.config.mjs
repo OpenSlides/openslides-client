@@ -141,7 +141,9 @@ export default tseslint.config({
         "@angular-eslint/template/attributes-order": ["error", {
             alphabetical: true,
         }],
-        "@angular-eslint/template/no-interpolation-in-attributes": ["error"],
+        "@angular-eslint/template/no-interpolation-in-attributes": ["error", {
+            allowSubstringInterpolation: true,
+        }],
         "@angular-eslint/template/prefer-control-flow": ["error"],
     },
 }, {
