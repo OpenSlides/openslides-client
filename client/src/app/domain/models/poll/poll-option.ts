@@ -1,4 +1,4 @@
-import { Id } from '../../definitions/key-types';
+import { Fqid, Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { BaseModel } from '../base/base-model';
 
@@ -9,7 +9,7 @@ export class PollOption extends BaseModel<PollOption> {
 
     public weight: number;
     public text: string;
-    public meeting_user_id: Id;
+    public content_object_id: Fqid;
 
     public constructor(input?: Partial<PollOption>) {
         super(PollOption.COLLECTION, input);
@@ -20,7 +20,7 @@ export class PollOption extends BaseModel<PollOption> {
         `poll_id`,
         `weight`,
         `text`,
-        `meeting_user_id`
+        `content_object_id`
     ];
 }
 

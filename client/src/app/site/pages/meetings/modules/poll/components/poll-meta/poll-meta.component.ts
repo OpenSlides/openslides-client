@@ -2,6 +2,8 @@ import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
+import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-listing';
 import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -56,7 +58,7 @@ export class PollMetaComponent {
     });
 
     public isPersonPoll = computed<boolean>(() => {
-        return !!this.poll().options?.length && !!this.poll().options[0].meeting_user_id;
+        return !!this.poll().options?.length && !!this.poll().options[0].content_object_id;
     });
 
     public enumerateOptions = computed<boolean>(() => {
@@ -66,9 +68,14 @@ export class PollMetaComponent {
     });
 
     public getOptionTitle(option: ViewPollOption): string {
-        if (option.meeting_user && option.meeting_user.user) {
-            return option.meeting_user.user.getFullName();
+        if (option.content_object && option.content_object.user) {
+            if (option.content_object instanceof ViewMeetingUser) {
+                return option.content_object.user.getFullName();
+            } else if (option.content_object instanceof ViewUser) {
+                return option.content_object.getFullName();
+            }
         }
+
         return option.getOptionTitle().title;
     }
 }

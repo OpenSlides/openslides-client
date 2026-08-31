@@ -29,7 +29,7 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
     public represented_ballot_ids: Id[];
     public chat_message_ids!: Id[]; // (chat_message/meeting_user_id)[];
     public structure_level_ids!: Id[]; // structure_level/meeting_user_ids
-    public entitled_at_poll_ids: Id[];
+    public poll_entitled_user_ids: Id[];
 
     public constructor(input?: Partial<MeetingUser>) {
         super(MeetingUser.COLLECTION, input);
@@ -56,7 +56,7 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
         `vote_delegations_from_ids`,
         `acting_ballot_ids`,
         `represented_ballot_ids`,
-        `entitled_at_poll_ids`,
+        `poll_entitled_user_ids`,
         `chat_message_ids`,
         `group_ids`,
         `structure_level_ids`

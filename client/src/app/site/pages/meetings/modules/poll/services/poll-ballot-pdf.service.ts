@@ -144,7 +144,7 @@ export class PollBallotPdfService {
         const content = [];
         const poll = config.poll;
         for (const option of poll.options) {
-            content.push(this.createBallotOption(option.text || option.meeting_user?.getTitle()));
+            content.push(this.createBallotOption(option.getOptionTitleShort()));
         }
 
         content.push(this.getMeta(config.poll));
@@ -187,7 +187,7 @@ export class PollBallotPdfService {
                 columns: [
                     {
                         width: `70%`,
-                        text: option.text || option.meeting_user?.getTitle(),
+                        text: option.getOptionTitleShort(),
                         style: `poll_option_score`
                     },
                     {
@@ -227,7 +227,7 @@ export class PollBallotPdfService {
                 columns: [
                     {
                         width: `70%`,
-                        text: option.text || option.meeting_user?.getTitle(),
+                        text: option.getOptionTitleShort(),
                         style: `poll_option_score`
                     },
                     {

@@ -58,7 +58,7 @@ export class PollEntitledUserComponent extends BaseComponent {
     public filterProps = [`user.getFullName`];
 
     public entitledUsers$: Observable<EntitledUserData[]> = toObservable(this.poll).pipe(
-        switchMap(poll => combineLatest([poll.entitled_meeting_users$, poll.ballot_users$.pipe(startWith([]))])),
+        switchMap(poll => combineLatest([poll.entitled_users$, poll.ballot_users$.pipe(startWith([]))])),
         map(([users, voted]) => {
             const votedSet = new Set<Id>();
             for (const user of voted) {
@@ -66,11 +66,11 @@ export class PollEntitledUserComponent extends BaseComponent {
             }
 
             return users.map(
-                user =>
+                eUser =>
                     ({
-                        meetingUser: user,
-                        isPresent: false, // TODO: Implement
-                        hasVoted: votedSet.has(user.id)
+                        meetingUser: eUser.meeting_user,
+                        isPresent: false, // TODO: Implement or remove
+                        hasVoted: votedSet.has(eUser.meeting_user_id)
                     }) as EntitledUserData
             );
         }),

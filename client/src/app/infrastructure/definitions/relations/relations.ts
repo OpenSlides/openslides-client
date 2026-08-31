@@ -23,6 +23,7 @@ import {
 } from '@app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ViewPollBallotUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-ballot-user';
+import { ViewPollEntitledUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-entitled-user';
 import { ViewMeetingPollDefault } from '@app/site/pages/meetings/view-models/view-meeting-poll-default';
 import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewGender } from '@app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
@@ -996,12 +997,6 @@ export const RELATIONS: Relation[] = [
         AField: `entitled_groups`,
         BField: `polls`
     }),
-    ...makeM2M({
-        AViewModel: ViewPoll,
-        BViewModel: ViewMeetingUser,
-        AField: `entitled_meeting_users`,
-        BField: `entitled_at_polls`
-    }),
     ...makeGenericO2O<ViewPoll, HasPoll>({
         viewModel: ViewPoll,
         possibleViewModels: [
@@ -1025,6 +1020,18 @@ export const RELATIONS: Relation[] = [
         ],
         viewModelField: `config`,
         possibleViewModelsField: `poll`
+    }),
+    ...makeM2O({
+        OViewModel: ViewPoll,
+        MViewModel: ViewPollEntitledUser,
+        OField: `entitled_users`,
+        MField: `poll`
+    }),
+    ...makeM2O({
+        OViewModel: ViewMeetingUser,
+        MViewModel: ViewPollEntitledUser,
+        OField: `poll_entitled_users`,
+        MField: `meeting_user`
     }),
     ...makeM2O({
         OViewModel: ViewPoll,
@@ -1044,23 +1051,17 @@ export const RELATIONS: Relation[] = [
         MField: `poll`,
         OField: `options`
     }),
-    ...makeM2O({
-        MViewModel: ViewPollOption,
-        OViewModel: ViewMeetingUser,
-        MField: `meeting_user`,
-        OField: `poll_options`
+    ...makeGenericO2M({
+        OViewModel: ViewPollOption,
+        MPossibleViewModels: [ViewMeetingUser, ViewUser],
+        OViewModelField: `content_object`,
+        MPossibleViewModelsField: `poll_options`
     }),
     ...makeM2O({
         OViewModel: ViewPoll,
         MViewModel: ViewPollBallot,
         OField: `ballots`,
         MField: `poll`
-    }),
-    ...makeM2O({
-        MViewModel: ViewPollOption,
-        OViewModel: ViewMeetingUser,
-        MField: `poll`,
-        OField: `meeting_user`
     }),
     // ########## Assignments
     ...makeM2O({

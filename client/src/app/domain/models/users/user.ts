@@ -43,6 +43,7 @@ export class User extends BaseDecimalModel<User> {
     public is_present_in_meeting_ids!: Id[]; // (meeting/present_user_ids)[];
     public committee_ids!: Id[]; // (committee/user_ids)[];
     public meeting_user_ids!: Id[]; // (meeting_user/user_id);
+    public poll_option_ids!: Id[]; // (poll_option/content_object_id);
 
     public organization_id!: Id; // organization/committee_ids;
 
@@ -88,6 +89,7 @@ export class User extends BaseDecimalModel<User> {
         `committee_management_ids`,
         `meeting_user_ids`,
         `home_committee_id`,
+        `poll_option_ids`,
         `history_position_ids`,
         `history_entry_ids`,
         `meeting_ids`,

@@ -79,9 +79,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
         const rows: Results = [];
         for (const i in this.options()) {
             const option = this.options()[i];
-            const optionText = option.text
-                ? option.text
-                : (option.meeting_user?.user?.getName() ?? this.translate.instant(UnknownUserLabel));
+            const optionText = option.getOptionTitle()?.title ?? this.translate.instant(UnknownUserLabel);
             rows.push({
                 key: option.fqid,
                 option: option,
@@ -105,9 +103,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
         const colors = this.generateChartColors(this.options()?.length ?? 0);
         return this.poll()
             .options.map((option, i) => {
-                const optionText = option.text
-                    ? option.text
-                    : (option.meeting_user?.user?.getName() ?? this.translate.instant(UnknownUserLabel));
+                const optionText = option.getOptionTitle()?.title ?? this.translate.instant(UnknownUserLabel);
                 return {
                     data: [+results[option.id]],
                     label: optionText,
