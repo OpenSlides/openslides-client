@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
 import { rxResource, toObservable } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -89,10 +89,10 @@ export class PollSingleVotesComponent extends BaseComponent {
                 };
             })
         ),
-        tap(ballots => (this.totalCount = ballots.length))
+        tap(ballots => this.totalCount.set(ballots.length))
     );
 
-    public totalCount = 0;
+    public totalCount = signal(0);
 
     public votingService = inject(VotingService);
     public filter = inject(VotesFilterService);

@@ -1,4 +1,4 @@
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -74,10 +74,10 @@ export class PollEntitledUserComponent extends BaseComponent {
                     }) as EntitledUserData
             );
         }),
-        tap(users => (this.totalCount = users.length))
+        tap(users => this.totalCount.set(users.length))
     );
 
-    public totalCount = 0;
+    public totalCount = signal(0);
 
     public filter = inject(EntitledUsersListFilterService);
 }

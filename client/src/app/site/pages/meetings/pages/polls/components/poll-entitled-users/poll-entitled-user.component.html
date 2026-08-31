@@ -4,7 +4,7 @@
         [filterService]="filter"
         [fullScreen]="false"
         [listObservable]="entitledUsers$"
-        [totalCount]="totalCount"
+        [totalCount]="totalCount()"
     >
         <!-- Content -->
         <div *osScrollingTableCell="'user'; row as entry">
