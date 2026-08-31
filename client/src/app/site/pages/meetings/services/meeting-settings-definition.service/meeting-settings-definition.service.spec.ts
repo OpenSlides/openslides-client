@@ -138,7 +138,7 @@ const fakeBrokenSettingsDefaults: Record<string, any> = {
 };
 
 const typeToDefault: Record<SettingsType, any> = {
-    integer: 0,
+    integer: null,
     boolean: false,
     groups: [],
     translations: {},
