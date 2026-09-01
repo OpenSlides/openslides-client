@@ -333,6 +333,8 @@
                             </mat-icon>
                         }
                         @if (
+                            canAccess(origin) &&
+                            motion !== origin &&
                             (displayOriginEnabled$ | async) &&
                             (originToggleDefault$ | async) === false &&
                             !motion.isAmendment()
