@@ -317,11 +317,13 @@
                 @let curPage = currentOriginPage | async;
                 @for (origin of curPage; track origin.id; let last = $last) {
                     <div class="basic-flex-container">
-                        @if (origin === motion) {
-                            <mat-icon color="accent">radio_button_checked</mat-icon>
-                        } @else {
-                            <mat-icon>adjust</mat-icon>
-                        }
+                        <span class="margin-right-small">
+                            @if (origin === motion) {
+                                <mat-icon color="accent">radio_button_checked</mat-icon>
+                            } @else {
+                                <mat-icon>adjust</mat-icon>
+                            }
+                        </span>
                         @if (origin.meeting?.locked_from_inside) {
                             <mat-icon class="margin-left-small">lock</mat-icon>
                         }
@@ -349,7 +351,7 @@
                             ></mat-slide-toggle>
                         }
                     </div>
-                    <div class="basic-flex-container align-start">
+                    <div class="basic-flex-container align-start" [class]="last ? 'margin-minus' : ''">
                         @if (!last && !!origin.origin_id) {
                             <mat-icon>north</mat-icon>
                         } @else {
@@ -413,7 +415,7 @@
 
 <ng-template #meetingLink let-motion="motion">
     @if (canAccess(motion)) {
-        <span>
+        <span class="max-length">
             <a [routerLink]="getUrl(motion)">
                 {{ getMeetingName(motion) }}
             </a>
