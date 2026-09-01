@@ -22,7 +22,7 @@ export class CurrentSpeakingStructureLevelSlideService {
         }
         return {
             content_object_id: `meeting/${meetingId}`,
-            type: MeetingProjectionType.CurrentSpeakingStructureLevel,
+            type: MeetingProjectionType.CurrentSpeaker,
             stable: overlay,
             projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
             getDialogTitle: () => `Current speaker`

@@ -91,7 +91,7 @@
                     <div class="status-row">
                         <div class="collission-hint">
                             @if (hasCollissions(change, workingTextChangingObjects)) {
-                                <mat-icon matTooltip="{{ 'This change collides with another one.' | translate }}">
+                                <mat-icon [matTooltip]="'This change collides with another one.' | translate">
                                     warning
                                 </mat-icon>
                             }
@@ -152,7 +152,7 @@
                         isAmendment(change) && showAllAmendments && change.amendment.change_recommendation_ids?.length
                     ) {
                         <div class="amendment-cr-hint">
-                            <mat-icon matTooltip="{{ 'This amendment has change recommendations.' | translate }}">
+                            <mat-icon [matTooltip]="'This amendment has change recommendations.' | translate">
                                 info
                             </mat-icon>
                         </div>

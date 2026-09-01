@@ -19,7 +19,7 @@ import { UserAction } from './users/user-action';
 export enum MeetingProjectionType {
     CurrentListOfSpeakers = `current_los`,
     CurrentSpeakerChyron = `current_speaker_chyron`,
-    CurrentSpeakingStructureLevel = `current_speaking_structure_level`,
+    CurrentSpeaker = `current_speaker`,
     CurrentStructureLevelList = `current_structure_level_list`,
     AgendaItemList = `agenda_item_list`,
     Home = `home`,
@@ -113,7 +113,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             case MeetingProjectionType.CurrentStructureLevelList:
                 title = this.translate.instant(`All structure levels`);
                 break;
-            case MeetingProjectionType.CurrentSpeakingStructureLevel:
+            case MeetingProjectionType.CurrentSpeaker:
                 title = this.translate.instant(`Current speaker`);
                 break;
             case MeetingProjectionType.AgendaItemList:

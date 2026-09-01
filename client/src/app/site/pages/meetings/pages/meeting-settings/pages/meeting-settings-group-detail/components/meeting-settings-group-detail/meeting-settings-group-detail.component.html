@@ -2,7 +2,7 @@
     <!-- Title -->
     <div class="title-slot">
         @if (settingsGroup) {
-            <h1 class="mock-h2">{{ '{{ settingsGroup.label }}' | translate }}</h1>
+            <h1 class="mock-h2">{{ settingsGroup.label | translate }}</h1>
         }
     </div>
 
@@ -10,8 +10,8 @@
     <ng-container class="menu-slot">
         <button
             mat-button
-            matTooltip="{{ 'Save all changes' | translate }}"
             [disabled]="!hasChanges() || hasErrors()"
+            [matTooltip]="'Save all changes' | translate"
             (click)="saveAll()"
         >
             <strong class="upper">{{ 'Save' | translate }}</strong>

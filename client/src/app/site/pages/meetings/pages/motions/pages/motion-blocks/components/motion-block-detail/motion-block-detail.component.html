@@ -144,8 +144,8 @@
             <button
                 color="warn"
                 mat-icon-button
-                matTooltip="{{ 'Remove from motion block' | translate }}"
                 type="button"
+                [matTooltip]="'Remove from motion block' | translate"
                 (click)="onRemoveMotionButton(motion)"
             >
                 <mat-icon>close</mat-icon>
