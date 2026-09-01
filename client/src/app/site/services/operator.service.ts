@@ -3,10 +3,10 @@ import { DelegationSetting, delegationSettings } from '@app/domain/definitions/d
 import { UserFieldsets } from '@app/domain/fieldsets/user';
 import { Settings } from '@app/domain/models/meetings/meeting';
 import { User } from '@app/domain/models/users/user';
-import { MeetingUserRepositoryService } from '@app/gateways/repositories/meeting_user';
-import { UserRepositoryService } from '@app/gateways/repositories/users';
+import { MeetingUserRepositoryService } from '@app/gateways/repositories/meeting_user/meeting-user-repository.service';
+import { UserRepositoryService } from '@app/gateways/repositories/users/user-repository.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
-import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
+import { ModelRequestBuilderService } from '@app/site/services/model-request-builder/model-request-builder.service';
 import {
     BehaviorSubject,
     combineLatest,

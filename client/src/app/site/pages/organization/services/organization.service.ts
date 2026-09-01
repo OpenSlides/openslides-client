@@ -1,4 +1,5 @@
 import { inject, Service } from '@angular/core';
+import { ORGANIZATION_ID } from '@app/domain/definitions/organization-id';
 import { ModelRequestService } from '@app/site/services/model-request.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -8,10 +9,7 @@ import { LifecycleService } from '../../../services/lifecycle.service';
 import { getOrganizationSubscriptionConfig } from '../organization.subscription';
 import { ViewOrganization } from '../view-models/view-organization';
 
-/**
- * The organization_id is always the 1.
- */
-export const ORGANIZATION_ID = 1;
+export { ORGANIZATION_ID };
 
 @Service()
 export class OrganizationService {

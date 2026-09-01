@@ -1,9 +1,8 @@
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
-import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { provideTranslateService } from '@ngx-translate/core';
 
-import { OpenSlidesMainModule } from './app/openslides-main-module/openslides-main.module';
-import { OpenSlidesMainRoutingModule } from './app/openslides-main-module/openslides-main-routing.module';
 import { OpenSlidesTranslationModule } from './app/site/modules/translations/openslides-translation.module';
 
 /**
@@ -17,8 +16,12 @@ import { OpenSlidesTranslationModule } from './app/site/modules/translations/ope
  */
 
 @NgModule({
-    exports: [CommonModule, OpenSlidesTranslationModule, OpenSlidesMainRoutingModule],
-    imports: [OpenSlidesMainModule, CommonModule, OpenSlidesTranslationModule, OpenSlidesMainRoutingModule],
-    providers: [{ provide: APP_BASE_HREF, useValue: `/` }, provideHttpClient(withXhr(), withInterceptorsFromDi())]
+    exports: [CommonModule, OpenSlidesTranslationModule],
+    imports: [CommonModule, OpenSlidesTranslationModule],
+    providers: [
+        { provide: APP_BASE_HREF, useValue: `/` },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideTranslateService()
+    ]
 })
 export class E2EImportsModule {}

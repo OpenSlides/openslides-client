@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { Collection, Id, Ids } from '@app/domain/definitions/key-types';
 import { BaseModel, BaseModelTemplate } from '@app/domain/models/base/base-model';
-import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service/collection-mapper.service';
 import { DataStoreService } from '@app/site/services/data-store.service';
 import { DataStoreUpdateManagerService } from '@app/site/services/data-store-update-manager.service';
 

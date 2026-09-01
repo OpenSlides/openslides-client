@@ -1,13 +1,10 @@
 import { inject, Service } from '@angular/core';
 import { Fqid } from '@app/domain/definitions/key-types';
-import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
+import type { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
 import { BaseViewModel } from '@app/site/base/base-view-model';
-import {
-    CollectionMappedTypes,
-    CollectionMapperService,
-    CollectionType
-} from '@app/site/services/collection-mapper.service';
 import { CollectionMapper } from '@app/site/services/collection-mapper.service/collection-mapper';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service/collection-mapper.service';
+import { CollectionMappedTypes, CollectionType } from '@app/site/services/collection-mapper.service/definitions';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Service()
@@ -33,7 +30,7 @@ export class MeetingCollectionMapperService extends CollectionMapperService impl
         if (!repo) {
             return false;
         }
-        return repo instanceof BaseMeetingRelatedRepository && repo.resetOnMeetingChange;
+        return Boolean((repo as any)?.resetOnMeetingChange);
     }
 
     public getViewModelByFqid(fqid: Fqid): BaseViewModel<any> | null {

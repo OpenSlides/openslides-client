@@ -1,6 +1,5 @@
-import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
-
 import { Id } from '../../definitions/key-types';
+import { ORGANIZATION_ID } from '../../definitions/organization-id';
 import { HasOwnerId } from '../../interfaces/has-owner-id';
 import { BaseModel } from '../base/base-model';
 

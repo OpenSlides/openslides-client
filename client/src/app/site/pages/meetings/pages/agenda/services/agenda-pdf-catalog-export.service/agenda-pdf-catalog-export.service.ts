@@ -339,7 +339,7 @@ export class AgendaPdfCatalogExportService {
                 },
                 {
                     border: extraBorder,
-                    text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang() ?? `en`),
+                    text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.getCurrentLang() ?? `en`),
                     fillColor: backgroundColor
                 }
             ]);
