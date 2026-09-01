@@ -142,8 +142,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         const pastList: ViewMotion[] =
             this.displayFutureForward || this.motion.origin_id ? this.motion.all_origins : [];
 
+
         if (this.displayFutureForward) {
-            if (futureList.length > 0 && pastList.length > 0) {
+            if (futureList.length > 0 || pastList.length > 0) {
                 futureList.push(this.motion);
             }
             const origin_ids: number[] = [];
