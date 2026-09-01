@@ -6,7 +6,8 @@ import {
     Input,
     OnDestroy,
     OnInit,
-    Output
+    Output,
+    signal
 } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
 import { Id } from '@app/domain/definitions/key-types';
@@ -74,11 +75,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         .get(`motions_enable_origin_motion_display`)
         .pipe(map(v => !!v));
 
-    // TODO: Use actual setting
-    private displayFutureForward = false;
-    public displayFutureForward$ = this.meetingSettingsService
-        .get(`motions_enable_origin_motion_display`)
-        .pipe(map(v => !!v));
+    public displayFutureForward = signal<boolean>(false);
 
     /**
      * @returns the current recommendation label (with extension)
@@ -136,13 +133,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     public refreshOriginMotions(): void {
-        this.displayFutureForward = true; // TODO: remove this line
+        this.displayFutureForward.set(true); // TODO: remove this line
         const futureList: ViewMotion[] =
-            this.displayFutureForward && this.motion.all_derived_motions ? this.motion.all_derived_motions : [];
+            this.displayFutureForward() && this.motion.all_derived_motions ? this.motion.all_derived_motions : [];
         const pastList: ViewMotion[] =
-            this.displayFutureForward || this.motion.origin_id ? this.motion.all_origins : [];
+            this.displayFutureForward() || this.motion.origin_id ? this.motion.all_origins : [];
 
-        if (this.displayFutureForward) {
+        if (this.displayFutureForward()) {
             if (futureList.length > 0 || pastList.length > 0) {
                 futureList.push(this.motion);
             }
@@ -230,9 +227,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
         this.derivedMotionSubscriptions.push(
             this.motion.all_derived_motions$.subscribe(_ => this.refreshOriginMotions()),
-            this.displayFutureForward$.subscribe((v: boolean) => {
-                this.displayFutureForward = v;
-            })
+            // TODO: Use actual setting
+            this.meetingSettingsService
+                .get(`motions_enable_origin_motion_display`)
+                .pipe(map(v => !!v))
+                .subscribe((v: boolean) => this.displayFutureForward.set(v))
         );
     }
 

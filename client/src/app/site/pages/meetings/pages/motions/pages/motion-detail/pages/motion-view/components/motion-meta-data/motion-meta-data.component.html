@@ -306,7 +306,7 @@
 @if (originMotions$ | async; as originMotions) {
     @if (originMotions.length) {
         <div>
-            @if (displayFutureForward$ | async) {
+            @if (displayFutureForward()) {
                 <h4>
                     {{ 'Consultation sequence' | translate }}
                 </h4>
