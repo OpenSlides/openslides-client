@@ -22,6 +22,7 @@ import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from '@app/s
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from '@app/site/services/operator.service';
+import { _ } from '@ngx-translate/core';
 import { BehaviorSubject, map, Observable, of, Subscription } from 'rxjs';
 
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
@@ -199,11 +200,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public searchLists: SearchListDefinition[] = [
         {
             observable: this.repo.getViewModelListObservable(),
-            label: `Motions`
+            label: _(`Motions`)
         },
         {
             observable: this.motionForwardingService.forwardingCommitteesObservable,
-            label: `Committees`,
+            label: _(`Committees`),
             keepOpen: true,
             wider: true
         }
@@ -229,7 +230,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         this.derivedMotionSubscriptions.push(
-            this.motion.derived_motions$.subscribe(_ => this.refreshOriginMotions()),
+            this.motion.all_derived_motions$.subscribe(_ => this.refreshOriginMotions()),
             this.displayFutureForward$.subscribe((v: boolean) => {
                 this.displayFutureForward = v;
             })

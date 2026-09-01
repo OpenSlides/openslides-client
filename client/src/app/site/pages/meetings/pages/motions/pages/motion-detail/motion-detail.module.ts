@@ -70,7 +70,7 @@ import { MotionViewComponent } from './pages/motion-view/components/motion-view/
 import { OriginMotionMetaDataComponent } from './pages/motion-view/components/origin-motion-meta-data/origin-motion-meta-data.component';
 import { ParagraphBasedAmendmentComponent } from './pages/motion-view/components/paragraph-based-amendment/paragraph-based-amendment.component';
 import { MotionDetailServiceModule } from './services/motion-detail-service.module';
-import { CustomPaginatorIntl } from './services/paginatorIntl/paginatoIntl.service';
+import { CustomPaginatorIntl } from './services/paginator-intl/paginato-intl.service';
 
 @NgModule({
     declarations: [
