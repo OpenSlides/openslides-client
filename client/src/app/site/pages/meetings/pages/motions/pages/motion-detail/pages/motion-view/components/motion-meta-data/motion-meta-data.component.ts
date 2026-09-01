@@ -142,7 +142,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         const pastList: ViewMotion[] =
             this.displayFutureForward || this.motion.origin_id ? this.motion.all_origins : [];
 
-
         if (this.displayFutureForward) {
             if (futureList.length > 0 || pastList.length > 0) {
                 futureList.push(this.motion);
@@ -164,8 +163,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         const tree = this.createForwardTree(futureList, pastList);
         this.originTreeData = tree;
         this.originSubject.next(tree);
-
-        if (this.originTreeData.length > 0) {
+        if (this.originTreeData.length > 0 && this.currentOriginPage.getValue().length === 0) {
             this.currentOriginPage.next(this.originTreeData[0]);
         }
     }
