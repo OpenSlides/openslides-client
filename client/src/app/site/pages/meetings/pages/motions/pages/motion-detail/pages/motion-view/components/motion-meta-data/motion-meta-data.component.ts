@@ -187,13 +187,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     private recommenderSubscription: Subscription | null = null;
 
     public perms = inject(MotionPermissionService);
+    public meetingController = inject(MeetingControllerService);
     public motionSubmitterRepo = inject(MotionSubmitterControllerService);
     public motionEditorRepo = inject(MotionEditorControllerService);
     public motionWorkingGroupSpeakerRepo = inject(MotionWorkingGroupSpeakerControllerService);
     private motionRepo = inject(MotionRepositoryService);
     private operator = inject(OperatorService);
     private motionForwardingService = inject(MotionForwardDialogService);
-    private meetingController = inject(MeetingControllerService);
     private presenter = inject(GetForwardingCommitteesPresenterService);
 
     public searchLists: SearchListDefinition[] = [
@@ -403,28 +403,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         return origin?.canAccess();
-    }
-
-    public getToolTip(motion: ViewMotion): string {
-        let toolTip = ``;
-        if (motion.meeting?.location) {
-            toolTip = this.translate.instant(`Meeting location`) + `: ` + motion.meeting.location + ` `;
-        }
-        if (motion.meeting?.start_time) {
-            toolTip +=
-                this.translate.instant(`Meeting start time`) +
-                `: ` +
-                this.meetingController.parseUnixToMeetingTime(motion.meeting?.start_time * 1000) +
-                ` `;
-        }
-        if (motion.meeting?.end_time) {
-            toolTip +=
-                this.translate.instant(`Meeting end time`) +
-                `: ` +
-                this.meetingController.parseUnixToMeetingTime(motion.meeting?.end_time * 1000) +
-                ` `;
-        }
-        return toolTip;
     }
 
     private isViewMotion(toTest: ViewMotion | ViewMeeting): boolean {

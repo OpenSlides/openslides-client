@@ -328,9 +328,19 @@
                             <mat-icon class="margin-left-small">lock</mat-icon>
                         }
                         <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
-                        @if (getToolTip(origin)) {
+                        @if (canAccess(origin)) {
                             &nbsp;
-                            <mat-icon class="pointer-icon" color="primary" inline [matTooltip]="getToolTip(origin)">
+                            <mat-icon
+                                class="pointer-icon"
+                                color="primary"
+                                inline
+                                [matTooltip]="
+                                    (origin.meeting.location ? origin.meeting.location + ' · ' : '') +
+                                    meetingController.parseUnixToMeetingTime(origin.meeting?.start_time * 1000) +
+                                    ' - ' +
+                                    meetingController.parseUnixToMeetingTime(origin.meeting?.end_time * 1000)
+                                "
+                            >
                                 info
                             </mat-icon>
                         }
