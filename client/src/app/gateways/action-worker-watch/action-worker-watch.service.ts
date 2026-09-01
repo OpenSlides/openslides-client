@@ -280,7 +280,7 @@ export class ActionWorkerWatchService {
             state: worker.state,
             created: worker.created,
             timestamp: worker.timestamp,
-            closed: Date.now()
+            closed: Math.floor(Date.now() / 1000)
         };
         this.dialogService.removeAllDates(snapshot.id);
         this.dialogService.openClosingPrompt(snapshot);
