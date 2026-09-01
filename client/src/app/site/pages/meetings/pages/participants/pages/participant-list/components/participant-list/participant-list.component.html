@@ -108,10 +108,10 @@
             </div>
             <div class="icon-group">
                 @if (!user.is_physical_person) {
-                    <mat-icon matTooltip="{{ 'Is no natural person' | translate }}">account_balance</mat-icon>
+                    <mat-icon [matTooltip]="'Is no natural person' | translate">account_balance</mat-icon>
                 }
                 @if (user.hasSamlId && canSeeSensitiveData) {
-                    <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}">fingerprint</mat-icon>
+                    <mat-icon [matTooltip]="'Has SSO identification' | translate">fingerprint</mat-icon>
                 }
             </div>
         </div>
@@ -163,8 +163,8 @@
             @if (user.vote_delegated_to() && voteDelegationEnabled) {
                 <div
                     class="spacer-top-5"
-                    matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"
                     matTooltipPosition="left"
+                    [matTooltip]="'Voting right delegated to (proxy)' | translate"
                 >
                     <os-icon-container
                         icon="forward"
@@ -180,8 +180,8 @@
             @if (user.vote_delegations_from_ids()?.length && voteDelegationEnabled) {
                 <div
                     class="spacer-top-5"
-                    matTooltip="{{ 'Voting right received from (principals)' | translate }}"
                     matTooltipPosition="left"
+                    [matTooltip]="'Voting right received from (principals)' | translate"
                 >
                     <os-icon-container
                         icon="work"
@@ -215,7 +215,7 @@
             <!-- Has comment indicator -->
             <div *osPerms="permission.userCanUpdate">
                 @if (!!user.comment()) {
-                    <mat-icon inline matTooltip="{{ user.comment() }}">comment</mat-icon>
+                    <mat-icon inline [matTooltip]="user.comment()">comment</mat-icon>
                 }
             </div>
         </div>
