@@ -322,9 +322,8 @@
                         } @else {
                             <mat-icon>adjust</mat-icon>
                         }
-                        &nbsp;
                         @if (origin.meeting?.locked_from_inside) {
-                            <mat-icon>lock</mat-icon>
+                            <mat-icon class="margin-left-small">lock</mat-icon>
                         }
                         <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
                         @if (getToolTip(origin)) {
@@ -338,9 +337,9 @@
                             (originToggleDefault$ | async) === false &&
                             !motion.isAmendment()
                         ) {
-                            &nbsp; &nbsp;
                             <mat-slide-toggle
                                 *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
+                                class="margin-left"
                                 [aria-label]="'Activate backtracking' | translate"
                                 [checked]="originMotionStatus[origin.id]"
                                 [matTooltip]="'Activate backtracking' | translate"
