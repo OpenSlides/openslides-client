@@ -409,9 +409,13 @@
                 [matTooltip]="
                     showTooltip
                         ? (motion.meeting.location ? motion.meeting.location + ' · ' : '') +
-                          meetingController.parseUnixToMeetingTime(motion.meeting?.start_time * 1000) +
-                          ' - ' +
-                          meetingController.parseUnixToMeetingTime(motion.meeting?.end_time * 1000)
+                          ({
+                              start: meetingController.parseUnixToMeetingTime(motion.meeting?.start_time * 1000),
+                              end: meetingController.parseUnixToMeetingTime(motion.meeting?.end_time * 1000)
+                          }
+                              | localizedDateRange
+                                  : 'PP'
+                                  : motion.meeting?.time_zone ?? timeZoneService.getActiveMeetingTZ())
                         : ''
                 "
                 [routerLink]="getUrl(motion)"

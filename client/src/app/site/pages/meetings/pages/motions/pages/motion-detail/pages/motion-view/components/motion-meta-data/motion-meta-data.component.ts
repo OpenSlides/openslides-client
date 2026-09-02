@@ -23,6 +23,7 @@ import { ViewMotion, ViewMotionCategory, ViewMotionState, ViewTag } from '@app/s
 import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from '@app/site/services/operator.service';
+import { TimeZoneService } from '@app/site/services/time-zone.service';
 import { _ } from '@ngx-translate/core';
 import { map, Observable, Subscription } from 'rxjs';
 
@@ -183,6 +184,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public motionSubmitterRepo = inject(MotionSubmitterControllerService);
     public motionEditorRepo = inject(MotionEditorControllerService);
     public motionWorkingGroupSpeakerRepo = inject(MotionWorkingGroupSpeakerControllerService);
+    public timeZoneService = inject(TimeZoneService);
     private motionRepo = inject(MotionRepositoryService);
     private operator = inject(OperatorService);
     private motionForwardingService = inject(MotionForwardDialogService);
