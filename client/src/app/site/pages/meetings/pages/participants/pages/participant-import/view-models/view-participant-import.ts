@@ -58,11 +58,9 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow {
         this.messages = preview.messages ?? [];
         this.state = preview.state;
 
-        for (let [key, entry] of Object.entries(preview.data)) {
-            ((key = key === 'locked_out' ? 'is_'.concat(key) : key),
-                ((this as Record<string, unknown>)[key] = Array.isArray(entry)
-                    ? entry.map(e => e['value'])
-                    : entry['value']));
+        for (const [originalKey, entry] of Object.entries(preview.data)) {
+            const key = originalKey === 'locked_out' ? 'is_'.concat(originalKey) : originalKey;
+            (this as Record<string, unknown>)[key] = Array.isArray(entry) ? entry.map(e => e['value']) : entry['value'];
         }
     }
 

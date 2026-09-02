@@ -114,6 +114,7 @@ os-sort-filter-bar {
 }
 mat-drawer {
     margin-top: 41px;
+    max-height: calc(100% - 91px);
 }
 
 .fileInput {
