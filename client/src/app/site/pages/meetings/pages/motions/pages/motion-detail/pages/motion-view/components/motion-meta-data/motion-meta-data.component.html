@@ -303,89 +303,86 @@
 }
 
 <!-- Origins - display only -->
-@if (originMotions$ | async; as originMotions) {
-    @if (originMotions.length) {
-        <div>
-            @if (displayFutureForward()) {
-                <h4>
-                    {{ 'Consultation sequence' | translate }}
-                </h4>
-            } @else {
-                <h4>{{ 'Origin' | translate }}</h4>
-            }
-            <div class="origin-view">
-                @let curPage = currentOriginPage | async;
-                @for (origin of curPage; track origin.id; let last = $last) {
-                    <div class="basic-flex-container">
-                        <span class="margin-right-small">
-                            @if (origin === motion) {
-                                <mat-icon color="accent">radio_button_checked</mat-icon>
-                            } @else {
-                                <mat-icon>adjust</mat-icon>
-                            }
-                        </span>
-                        @if (origin.meeting?.locked_from_inside) {
-                            <mat-icon class="margin-left-small">lock</mat-icon>
-                        }
-                        <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
-                        @if (canAccess(origin)) {
-                            &nbsp;
-                            <mat-icon
-                                class="pointer-icon"
-                                color="primary"
-                                inline
-                                [matTooltip]="
-                                    (origin.meeting.location ? origin.meeting.location + ' · ' : '') +
-                                    meetingController.parseUnixToMeetingTime(origin.meeting?.start_time * 1000) +
-                                    ' - ' +
-                                    meetingController.parseUnixToMeetingTime(origin.meeting?.end_time * 1000)
-                                "
-                            >
-                                info
-                            </mat-icon>
-                        }
-                        @if (
-                            canAccess(origin) &&
-                            motion !== origin &&
-                            (displayOriginEnabled$ | async) &&
-                            (originToggleDefault$ | async) === false &&
-                            !motion.isAmendment()
-                        ) {
-                            <mat-slide-toggle
-                                *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
-                                class="margin-left"
-                                [aria-label]="'Activate backtracking' | translate"
-                                [checked]="originMotionStatus[origin.id]"
-                                [matTooltip]="'Activate backtracking' | translate"
-                                (change)="toggleOriginMotion($event, origin.id)"
-                            ></mat-slide-toggle>
-                        }
-                    </div>
-                    <div class="basic-flex-container align-start" [class]="last ? 'margin-minus' : ''">
-                        @if (!last && !!origin.origin_id) {
-                            <mat-icon>north</mat-icon>
+@if (originTreeData.length) {
+    <div>
+        @if (displayFutureForward()) {
+            <h4>
+                {{ 'Consultation sequence' | translate }}
+            </h4>
+        } @else {
+            <h4>{{ 'Origin' | translate }}</h4>
+        }
+        <div class="origin-view">
+            @for (origin of currentOriginPage(); track origin.id; let last = $last) {
+                <div class="basic-flex-container">
+                    <span class="margin-right-small">
+                        @if (origin.id === motion.id) {
+                            <mat-icon color="accent">radio_button_checked</mat-icon>
                         } @else {
-                            <mat-icon></mat-icon>
+                            <mat-icon>adjust</mat-icon>
                         }
-                        <span class="status-text">
-                            {{ origin.state }}
-                            @if (origin.state_extension) {
-                                {{ origin.state_extension }}
-                            }
-                        </span>
-                    </div>
-                }
-                @if (originMotions.length > 1) {
-                    <mat-paginator
-                        [hidePageSize]="true"
-                        [length]="originMotions.length"
-                        [pageSize]="1"
-                        (page)="onPageChange($event)"
-                    ></mat-paginator>
-                }
-            </div>
+                    </span>
+                    @if (origin.meeting?.locked_from_inside) {
+                        <mat-icon class="margin-left-small">lock</mat-icon>
+                    }
+                    <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
+                    @if (canAccess(origin)) {
+                        &nbsp;
+                        <mat-icon
+                            class="pointer-icon"
+                            color="primary"
+                            inline
+                            [matTooltip]="
+                                (origin.meeting.location ? origin.meeting.location + ' · ' : '') +
+                                meetingController.parseUnixToMeetingTime(origin.meeting?.start_time * 1000) +
+                                ' - ' +
+                                meetingController.parseUnixToMeetingTime(origin.meeting?.end_time * 1000)
+                            "
+                        >
+                            info
+                        </mat-icon>
+                    }
+                    @if (
+                        canAccess(origin) &&
+                        motion !== origin &&
+                        (displayOriginEnabled$ | async) &&
+                        (originToggleDefault$ | async) === false &&
+                        !motion.isAmendment()
+                    ) {
+                        <mat-slide-toggle
+                            *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
+                            class="margin-left"
+                            [aria-label]="'Activate backtracking' | translate"
+                            [checked]="originMotionStatus[origin.id]"
+                            [matTooltip]="'Activate backtracking' | translate"
+                            (change)="toggleOriginMotion($event, origin.id)"
+                        ></mat-slide-toggle>
+                    }
+                </div>
+                <div class="basic-flex-container align-start" [class]="last ? 'margin-minus' : ''">
+                    @if (!last && !!origin.origin_id) {
+                        <mat-icon>north</mat-icon>
+                    } @else {
+                        <mat-icon></mat-icon>
+                    }
+                    <span class="status-text">
+                        {{ origin.state }}
+                        @if (origin.state_extension) {
+                            {{ origin.state_extension }}
+                        }
+                    </span>
+                </div>
+            }
+            @if (originTreeData.length > 1) {
+                <mat-paginator
+                    [hidePageSize]="true"
+                    [length]="originTreeData.length"
+                    [pageSize]="1"
+                    (page)="onPageChange($event)"
+                ></mat-paginator>
+            }
         </div>
-    }
+    </div>
 }
 
 <!-- Amendments -->

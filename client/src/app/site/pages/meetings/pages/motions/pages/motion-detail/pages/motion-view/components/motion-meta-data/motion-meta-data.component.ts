@@ -24,7 +24,7 @@ import { MeetingControllerService } from '@app/site/pages/meetings/services/meet
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
-import { BehaviorSubject, map, Observable, of, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionEditorControllerService } from '../../../../../../modules/editors/services/motion-editor-controller/motion-editor-controller.service';
@@ -124,13 +124,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         );
     }
 
-    public currentOriginPage = new BehaviorSubject<ViewMotion[]>([]);
-    private originTreeData: ViewMotion[][] = [];
-    private originSubject = new BehaviorSubject<ViewMotion[][]>([]);
-
-    public get originMotions$(): Observable<ViewMotion[][]> {
-        return of(this.originTreeData);
-    }
+    public currentOriginPage = signal<ViewMotion[]>([]);
+    private currentPageIndex = 0;
+    public originTreeData: ViewMotion[][] = [];
 
     public refreshOriginMotions(): void {
         this.displayFutureForward.set(true); // TODO: remove this line
@@ -159,9 +155,8 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
         const tree = this.createForwardTree(futureList, pastList);
         this.originTreeData = tree;
-        this.originSubject.next(tree);
-        if (this.originTreeData.length > 0 && this.currentOriginPage.getValue().length === 0) {
-            this.currentOriginPage.next(this.originTreeData[0]);
+        if (this.originTreeData.length > 0) {
+            this.currentOriginPage.set(this.originTreeData[this.currentPageIndex]);
         }
     }
 
@@ -332,9 +327,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     public onPageChange(event: PageEvent): void {
+        this.currentPageIndex = event.pageIndex
         const page = this.originTreeData[event.pageIndex];
         if (page) {
-            this.currentOriginPage.next(page);
+            this.currentOriginPage.set(page);
         }
     }
 
