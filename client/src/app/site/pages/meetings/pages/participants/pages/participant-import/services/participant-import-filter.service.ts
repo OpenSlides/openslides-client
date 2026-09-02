@@ -32,7 +32,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `is_active`,
+                property: `isActive`,
                 label: _(`Active`),
                 options: [
                     { condition: true, label: _(`Is active`) },
@@ -40,7 +40,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `is_physical_person`,
+                property: `isPhysicalPerson`,
                 label: _(`Committee`),
                 options: [
                     { condition: true, label: _(`Is not a committee`) },
@@ -48,7 +48,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `is_present`,
+                property: `isPresent`,
                 label: _(`Presence`),
                 options: [
                     { condition: true, label: _(`Is present`) },
@@ -64,7 +64,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `is_locked_out`,
+                property: `isLockedOut`,
                 label: `Locked out`,
                 options: [
                     { condition: true, label: `Is locked out` },

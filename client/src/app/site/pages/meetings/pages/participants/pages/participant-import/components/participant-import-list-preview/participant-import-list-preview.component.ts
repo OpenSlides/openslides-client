@@ -213,6 +213,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      */
     public ngOnDestroy(): void {
         this.CSVEncodingOptions.toggleCSVOptions = false;
+        this.tempPreviewsObservable.unsubscribe();
         this.importer.clearPreview();
         this.importer.clearFile();
         this.importer.clearAll();
@@ -615,16 +616,16 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             };
                         }
                     }
-                    if (item.is_locked_out !== user.is_locked_out && user.is_locked_out !== undefined) {
+                    if (item.isLockedOut !== user.is_locked_out && user.is_locked_out !== undefined) {
                         changes['locked_out'] = {
                             old: user.is_locked_out,
-                            new: item.is_locked_out
+                            new: item.isLockedOut
                         };
                     }
-                    if (item.is_present !== user.isPresentInMeeting() && user.isPresentInMeeting() !== undefined) {
+                    if (item.isPresent !== user.isPresentInMeeting() && user.isPresentInMeeting() !== undefined) {
                         changes['is_present'] = {
                             old: user.isPresentInMeeting(),
-                            new: item.is_present
+                            new: item.isPresent
                         };
                     }
                     if (item.saml_id !== user.saml_id) {
@@ -633,7 +634,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             new: item.saml_id
                         };
                     }
-                    if (item.number !== user.number()) {
+                    if (item.number !== user.number() && user.number() !== '') {
                         changes['number'] = {
                             old: user.number(),
                             new: item.number
@@ -645,7 +646,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             new: item.comment
                         };
                     }
-                    if (item.gender !== user.gender_name) {
+                    if (item.gender !== user.gender_name && user.gender_name !== '') {
                         changes['gender'] = {
                             old: user.gender_name,
                             new: item.gender
@@ -660,7 +661,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             new: item.voteWeight
                         };
                     }
-                    if (item.external !== user.external && user.external !== undefined) {
+                    if (item.isExternal !== user.external && user.external !== undefined) {
                         changes['external'] = {
                             old: user.external,
                             new: item.external
@@ -698,6 +699,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         new: BackendImportEntry[];
     } {
         const oldItemIds = oldItems.map((oldItem: ViewGroup | ViewStructureLevel) => oldItem.id).sort();
+        if (addedItems.every(item => oldItemIds.includes(item['id']))) {
+            return { new: null };
+        }
         const diffItemNames = addedItems
             .filter(addedItem => !oldItems.includes(addedItem['id']) && addedItem['id'])
             .sort();

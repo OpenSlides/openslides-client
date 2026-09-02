@@ -58,8 +58,11 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow {
         this.messages = preview.messages ?? [];
         this.state = preview.state;
 
-        for (const [key, entry] of Object.entries(preview.data)) {
-            (this as Record<string, unknown>)[key] = Array.isArray(entry) ? entry.map(e => e['value']) : entry['value'];
+        for (let [key, entry] of Object.entries(preview.data)) {
+            ((key = key === 'locked_out' ? 'is_'.concat(key) : key),
+                ((this as Record<string, unknown>)[key] = Array.isArray(entry)
+                    ? entry.map(e => e['value'])
+                    : entry['value']));
         }
     }
 
@@ -109,6 +112,26 @@ export class ViewImportedParticipant implements Identifiable, BackendImportRow {
 
     public get hasGroups(): boolean {
         return this.getGroups.length > 0 ? true : false;
+    }
+
+    public get isLockedOut(): boolean {
+        return this.is_locked_out ?? false;
+    }
+
+    public get isPresent(): boolean {
+        return this.is_present ?? false;
+    }
+
+    public get isActive(): boolean {
+        return this.is_active ?? false;
+    }
+
+    public get isPhysicalPerson(): boolean {
+        return this.is_physical_person ?? false;
+    }
+
+    public get isExternal(): boolean {
+        return this.external ?? false;
     }
 
     public set setState(value: BackendImportState) {
