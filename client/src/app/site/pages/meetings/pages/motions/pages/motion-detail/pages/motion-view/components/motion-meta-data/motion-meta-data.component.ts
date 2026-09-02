@@ -327,7 +327,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     public onPageChange(event: PageEvent): void {
-        this.currentPageIndex = event.pageIndex
+        this.currentPageIndex = event.pageIndex;
         const page = this.originTreeData[event.pageIndex];
         if (page) {
             this.currentOriginPage.set(page);

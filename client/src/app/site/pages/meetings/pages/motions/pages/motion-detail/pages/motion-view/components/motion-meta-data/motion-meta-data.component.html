@@ -316,32 +316,14 @@
             @for (origin of currentOriginPage(); track origin.id; let last = $last) {
                 <div class="basic-flex-container">
                     <span class="margin-right-small">
-                        @if (origin.id === motion.id) {
-                            <mat-icon color="accent">radio_button_checked</mat-icon>
-                        } @else {
-                            <mat-icon>adjust</mat-icon>
-                        }
+                        <mat-icon [color]="origin.id === motion.id ? 'accent' : ''">fiber_manual_record</mat-icon>
                     </span>
                     @if (origin.meeting?.locked_from_inside) {
                         <mat-icon class="margin-left-small">lock</mat-icon>
                     }
-                    <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
-                    @if (canAccess(origin)) {
-                        &nbsp;
-                        <mat-icon
-                            class="pointer-icon"
-                            color="primary"
-                            inline
-                            [matTooltip]="
-                                (origin.meeting.location ? origin.meeting.location + ' · ' : '') +
-                                meetingController.parseUnixToMeetingTime(origin.meeting?.start_time * 1000) +
-                                ' - ' +
-                                meetingController.parseUnixToMeetingTime(origin.meeting?.end_time * 1000)
-                            "
-                        >
-                            info
-                        </mat-icon>
-                    }
+                    <ng-container
+                        *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
+                    ></ng-container>
                     @if (
                         canAccess(origin) &&
                         motion !== origin &&
@@ -420,10 +402,20 @@
 <!-- motion polls -->
 <os-motion-manage-polls [hideAdd]="true" [motion]="motion" />
 
-<ng-template #meetingLink let-motion="motion">
+<ng-template #meetingLink let-motion="motion" let-showTooltip="showTooltip || false">
     @if (canAccess(motion)) {
         <span class="max-length">
-            <a [routerLink]="getUrl(motion)">
+            <a
+                [matTooltip]="
+                    showTooltip
+                        ? (motion.meeting.location ? motion.meeting.location + ' · ' : '') +
+                          meetingController.parseUnixToMeetingTime(motion.meeting?.start_time * 1000) +
+                          ' - ' +
+                          meetingController.parseUnixToMeetingTime(motion.meeting?.end_time * 1000)
+                        : ''
+                "
+                [routerLink]="getUrl(motion)"
+            >
                 {{ getMeetingName(motion) }}
             </a>
         </span>
