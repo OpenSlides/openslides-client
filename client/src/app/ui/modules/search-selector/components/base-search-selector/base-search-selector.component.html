@@ -27,8 +27,8 @@
             <input
                 class="background-card"
                 osAutofocus
-                placeholder="{{ 'Search' | translate }}"
                 [formControl]="searchValueForm"
+                [placeholder]="'Search' | translate"
                 (keydown)="onSearchKeydown($event)"
             />
         </div>

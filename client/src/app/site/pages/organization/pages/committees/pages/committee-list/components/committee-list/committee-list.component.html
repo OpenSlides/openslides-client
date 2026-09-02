@@ -65,8 +65,8 @@
                 <div>
                     <os-icon-container
                         icon="file_upload"
-                        iconTooltip="{{ 'Can forward motions to committee' | translate }}"
                         iconTooltipPosition="left"
+                        [iconTooltip]="'Can forward motions to committee' | translate"
                         [noWrap]="true"
                     >
                         <span>
@@ -82,8 +82,8 @@
                 <div>
                     <os-icon-container
                         icon="file_download"
-                        iconTooltip="{{ 'Can receive motions from committee' | translate }}"
                         iconTooltipPosition="left"
+                        [iconTooltip]="'Can receive motions from committee' | translate"
                         [noWrap]="true"
                     >
                         <span>
@@ -102,8 +102,8 @@
                     <div>
                         <os-icon-container
                             icon="event_available"
-                            iconTooltip="{{ 'Meetings' | translate }}"
                             iconTooltipPosition="right"
+                            [iconTooltip]="'Meetings' | translate"
                         >
                             {{ committee.meetingAmount }}
                         </os-icon-container>
@@ -113,8 +113,8 @@
                     <div>
                         <os-icon-container
                             icon="layers"
-                            iconTooltip="{{ 'Subcommittees' | translate }}"
                             iconTooltipPosition="right"
+                            [iconTooltip]="'Subcommittees' | translate"
                         >
                             {{ getCommitteeChildrenNumber(committee) }}
                         </os-icon-container>
@@ -126,8 +126,8 @@
                     <div>
                         <os-icon-container
                             icon="group"
-                            iconTooltip="{{ 'Accounts' | translate }}"
                             iconTooltipPosition="right"
+                            [iconTooltip]="'Accounts' | translate"
                         >
                             {{ committee.memberAmount }}
                         </os-icon-container>
@@ -137,8 +137,8 @@
                     <div>
                         <os-icon-container
                             icon="engineering"
-                            iconTooltip="{{ 'Committee management' | translate }}"
                             iconTooltipPosition="right"
+                            [iconTooltip]="'Committee management' | translate"
                         >
                             {{ committee.managerAmount }}
                         </os-icon-container>

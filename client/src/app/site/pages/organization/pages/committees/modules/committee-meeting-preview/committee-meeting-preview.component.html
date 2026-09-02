@@ -72,11 +72,7 @@
             </a>
         }
         @if (!canEnter) {
-            <span
-                matTooltip="{{
-                    'You cannot enter this meeting because you are not assigned to any group.' | translate
-                }}"
-            >
+            <span [matTooltip]="'You cannot enter this meeting because you are not assigned to any group.' | translate">
                 <button color="accent" mat-stroked-button [disabled]="true">
                     {{ 'Open meeting' | translate }}
                 </button>
