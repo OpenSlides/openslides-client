@@ -4,7 +4,7 @@
         [filterService]="poll().isNamed ? filter : null"
         [fullScreen]="false"
         [listObservable]="votesData$"
-        [totalCount]="totalCount"
+        [totalCount]="totalCount()"
     >
         <!-- Content -->
         <div *osScrollingTableCell="'user'; row as vote">
@@ -36,8 +36,7 @@
                         }
                     </div>
                 </div>
-            }
-            @if (!vote.user) {
+            } @else {
                 <div>
                     <i>{{ 'Anonymous' | translate }}</i>
                 </div>

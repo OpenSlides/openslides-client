@@ -1,6 +1,6 @@
 import { Id } from '@app/domain/definitions/key-types';
 import { FULL_FIELDSET } from '@app/domain/fieldsets/misc';
-import { MeetingUserFieldsets } from '@app/domain/fieldsets/user';
+import { MeetingUserFieldsets, UserFieldsets } from '@app/domain/fieldsets/user';
 import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { BaseSimplifiedModelRequest } from '@app/site/services/model-request-builder';
@@ -36,8 +36,11 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
             fieldset: FULL_FIELDSET,
             follow: [
                 {
-                    idField: `meeting_user_id`,
-                    fieldset: [...MeetingUserFieldsets.FullNameSubscription.fieldset, `vote_delegated_to_ids`],
+                    idField: `content_object_id`,
+                    fieldset: [
+                        ...MeetingUserFieldsets.FullNameSubscription.fieldset,
+                        ...UserFieldsets.FullNameSubscription.fieldset
+                    ],
                     follow: MeetingUserFieldsets.FullNameSubscription.follow
                 }
             ]
@@ -98,10 +101,27 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
                 fieldset: FULL_FIELDSET,
                 follow: [
                     {
-                        idField: `meeting_user_id`,
-                        ...MeetingUserFieldsets.FullNameSubscription.follow
+                        idField: `content_object_id`,
+                        fieldset: [
+                            ...MeetingUserFieldsets.FullNameSubscription.fieldset,
+                            ...UserFieldsets.FullNameSubscription.fieldset
+                        ],
+                        follow: MeetingUserFieldsets.FullNameSubscription.follow
                     }
                 ]
+            },
+            {
+                idField: `entitled_user_ids`,
+                follow: [
+                    {
+                        idField: `meeting_user_id`,
+                        ...MeetingUserFieldsets.FullNameSubscription
+                    }
+                ]
+            },
+            {
+                idField: `ballot_user_ids`,
+                fieldset: [`represented_meeting_user_id`]
             },
             {
                 idField: `meeting_id`,

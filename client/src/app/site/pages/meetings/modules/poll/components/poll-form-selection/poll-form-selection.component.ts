@@ -31,7 +31,7 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
         [`no_general`, _('Sum of votes without general options')],
         [`valid`, _('All valid ballots')],
         [`cast`, _('All casted ballots')],
-        // [`entitled`, _('All entitled users')],
+        [`entitled`, _('All entitled users')],
         // [`entitled_present`, _('Present entitled users')],
         [`disabled`, _('Disabled (no percents)')]
     ];

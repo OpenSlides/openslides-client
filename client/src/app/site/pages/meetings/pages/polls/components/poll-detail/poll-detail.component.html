@@ -73,12 +73,21 @@
         <mat-tab-group [(selectedIndex)]="selectedTab">
             <mat-tab [label]="'Single votes' | translate">
                 <div class="tab-content">
-                    <os-poll-single-votes [poll]="poll()"></os-poll-single-votes>
+                    <!--
+                        This additional check is a workaround needed because only one scrolling table
+                        at a time can be displayed per page because scrolling table state is managed
+                        in ScrollingTableManageService.
+                    -->
+                    @if (selectedTab() === 0) {
+                        <os-poll-single-votes [poll]="poll()"></os-poll-single-votes>
+                    }
                 </div>
             </mat-tab>
             <mat-tab [label]="'Entitled users' | translate">
                 <div class="tab-content">
-                    <os-poll-entitled-user [poll]="poll()"></os-poll-entitled-user>
+                    @if (selectedTab() === 1) {
+                        <os-poll-entitled-user [poll]="poll()"></os-poll-entitled-user>
+                    }
                 </div>
             </mat-tab>
         </mat-tab-group>

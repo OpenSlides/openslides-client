@@ -71,8 +71,6 @@ export class PollSingleVotesComponent extends BaseComponent {
 
     public filterProps = [`user.getFullName`];
 
-    public selectedTab = signal(0);
-
     public votesData$: Observable<BaseVoteData[]> = toObservable(this.poll).pipe(
         switchMap(poll => (poll.state === PollState.Finished ? poll.ballots$ : of([]))),
         map((ballots: ViewPollBallot[]) =>
@@ -91,10 +89,10 @@ export class PollSingleVotesComponent extends BaseComponent {
                 };
             })
         ),
-        tap(ballots => (this.totalCount = ballots.length))
+        tap(ballots => this.totalCount.set(ballots.length))
     );
 
-    public totalCount = 0;
+    public totalCount = signal(0);
 
     public votingService = inject(VotingService);
     public filter = inject(VotesFilterService);

@@ -124,30 +124,6 @@ export abstract class PollService {
         */
     }
 
-    public getChartLabels(poll: ViewPoll, excludeYNALabels = false): string[] {
-        const fields = this.getPollDataFields(poll);
-        return poll.options.map(option => {
-            const votingResults = fields.map(field => {
-                const voteValue = option[field] as number;
-                const votingKey = this.translate.instant(this.pollKeyVerbose(field));
-                const resultValue = this.parseNumber(voteValue);
-                const resultInPercent = this.getVoteValueInPercent(voteValue, { poll, row: option });
-                let resultLabel = `${resultValue}`;
-                if (!excludeYNALabels) {
-                    resultLabel = `${votingKey}: ${resultLabel}`;
-                }
-
-                // 0 is a valid number in this case
-                if (resultInPercent) {
-                    resultLabel += ` (${resultInPercent})`;
-                }
-                return resultLabel;
-            });
-            const optionName = option.getOptionTitle().title;
-            return `${optionName} · ${votingResults.join(` · `)}`;
-        });
-    }
-
     public pollKeyVerbose(value: string): string {
         return PollValues[value] || value;
     }
@@ -179,53 +155,6 @@ export abstract class PollService {
 
     public shouldShowChart(_poll: ViewPoll): boolean {
         return false;
-    }
-
-    private getGlobalVoteKeys(_poll: ViewPoll): VotingResult[] {
-        return [
-            /*
-            {
-                vote: `amount_global_yes`,
-                showPercent: this.showPercentOfValidOrCast(poll),
-                amount: poll.global_option?.yes,
-                hide:
-                    poll.global_option?.yes === VOTE_UNDOCUMENTED ||
-                    !poll.global_yes ||
-                    poll.pollmethod === PollMethod.N
-            },
-            {
-                vote: `amount_global_no`,
-                showPercent: this.showPercentOfValidOrCast(poll),
-                amount: poll.global_option?.no,
-                hide: poll.global_option?.no === VOTE_UNDOCUMENTED || !poll.global_no
-            },
-            {
-                vote: `amount_global_abstain`,
-                showPercent: this.showPercentOfValidOrCast(poll),
-                amount: poll.global_option?.abstain,
-                hide: poll.global_option?.abstain === VOTE_UNDOCUMENTED || !poll.global_abstain
-            }
-            */
-        ];
-    }
-
-    private formatVotingResultToTableData(resultList: VotingResult[], poll: ViewPoll): PollTableData[] {
-        return resultList
-            .filter(key => !key.hide)
-            .map(
-                key =>
-                    ({
-                        votingOption: key.vote,
-                        class: `sums`,
-                        value: [
-                            {
-                                amount: key.amount ?? poll[key.vote! as keyof ViewPoll],
-                                hide: key.hide,
-                                showPercent: key.showPercent
-                            } as VotingResult
-                        ]
-                    }) as PollTableData
-            );
     }
 
     /**

@@ -26,6 +26,7 @@ export class Poll extends BaseModel<Poll> {
     public ballot_user_ids!: Id[];
     public entitled_group_ids!: Id[];
     public live_voting_enabled!: boolean;
+    public entitled_user_ids!: Id[];
 
     public constructor(input?: any) {
         super(Poll.COLLECTION, input);
@@ -49,6 +50,7 @@ export class Poll extends BaseModel<Poll> {
         `ballot_ids`,
         `ballot_user_ids`,
         `entitled_group_ids`,
+        `entitled_user_ids`,
         `projection_ids`,
         `meeting_id`
     ];

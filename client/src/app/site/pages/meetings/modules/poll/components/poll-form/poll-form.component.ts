@@ -213,7 +213,7 @@ export class PollFormComponent extends BaseComponent {
                 this.form['live_voting_enabled']().value.set(!!data.live_voting_enabled);
             if (data.title !== undefined) this.form['title']().value.set(data.title);
             if (data.visibility !== undefined) this.form['visibility']().value.set(data.visibility);
-            if (data.options !== undefined && !data.options.some(option => option.meeting_user_id))
+            if (data.options !== undefined && !data.options.some(option => option.content_object_id))
                 this.form['options']().value.set(data.options.map(option => option.text));
             if (data.config?.method) {
                 let preselection = data.config.method;

@@ -18,6 +18,7 @@ import { MeetingSettingsService } from '../../../services/meeting-settings.servi
 import { SlideOptions } from '../../../view-models/slide-options';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
 import { ViewPollBallotUser } from './poll-ballot-user';
+import { ViewPollEntitledUser } from './poll-entitled-user';
 
 export class ViewPoll<C extends PollContentObject = any>
     extends BaseProjectableViewModel<Poll>
@@ -172,6 +173,7 @@ interface IPollRelations<C extends PollContentObject = any, D extends BasePollCo
     ballots: ViewPollBallot[];
     ballot_users: ViewPollBallotUser[];
     entitled_groups: ViewGroup[];
+    entitled_users: ViewPollEntitledUser[];
     options: ViewPollOption[];
 }
 export interface ViewPoll<C extends PollContentObject = any, D extends BasePollConfigViewModel = any>

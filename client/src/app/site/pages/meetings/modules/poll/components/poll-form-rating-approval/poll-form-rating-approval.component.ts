@@ -40,7 +40,7 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         [`yes_no_abstain`, _('Yes/No/Abstain per candidate')],
         [`valid`, _('All valid ballots')],
         [`cast`, _('All casted ballots')],
-        // [`entitled`, _('All entitled users')],
+        [`entitled`, _('All entitled users')],
         // [`entitled_present`, _('Present entitled users')],
         [`disabled`, _('Disabled (no percents)')]
     ];

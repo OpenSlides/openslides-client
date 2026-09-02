@@ -38,7 +38,7 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
         [`yes_no`, _('Yes/No per candidate')],
         [`valid`, _('All valid ballots')],
         [`cast`, _('All casted ballots')],
-        // [`entitled`, _('All entitled users')],
+        [`entitled`, _('All entitled users')],
         // [`entitled_present`, _('Present entitled users')],
         [`disabled`, _('Disabled (no percents)')]
     ];

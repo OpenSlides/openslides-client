@@ -74,7 +74,7 @@
                 <os-poll-vote-button
                     [disabled]="loading()"
                     [isSelected]="isSelected(option.id)"
-                    [optionTitle]="option.text || option.meeting_user?.user?.getName()"
+                    [optionTitle]="option.getOptionTitleShort()"
                     [optionType]="config().strike_out ? 'no' : 'yes'"
                     (toggleOption)="toggleOption(option.id)"
                 />

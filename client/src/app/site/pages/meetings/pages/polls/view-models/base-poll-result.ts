@@ -28,10 +28,8 @@ export abstract class BasePollResult<C extends BasePollConfigViewModel = any, T 
                         input[option.id.toString()] = input[key];
                         delete input[key];
                     }
-                }
-
-                if (keyParts[0] === `meeting_user`) {
-                    const option = options.find(o => o.meeting_user_id === +keyParts[1]);
+                } else {
+                    const option = options.find(o => o.content_object_id === key);
                     if (option) {
                         input[option.id.toString()] = input[key];
                         delete input[key];
