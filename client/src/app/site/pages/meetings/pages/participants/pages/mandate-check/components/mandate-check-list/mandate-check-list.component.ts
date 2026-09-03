@@ -6,19 +6,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
-import { TranslateModule } from '@ngx-translate/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { StructureLevelRepositoryService } from '@app/gateways/repositories/structure-levels';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { GenderControllerService } from '@app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { BehaviorSubject } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { StructureLevelRepositoryService } from 'src/app/gateways/repositories/structure-levels';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
-import { GroupControllerService, ViewGroup } from '../../../../modules';
-import { ParticipantControllerService } from '../../../../services/common/participant-controller.service';
-import { ViewStructureLevel } from '../../../structure-levels/view-models';
+import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
+import { ViewGroup } from '../../../../modules/groups/view-models/view-group';
+import { ParticipantControllerService } from '../../../../services/common/participant-controller.service/participant-controller.service';
+import { ViewStructureLevel } from '../../../structure-levels/view-models/view-structure-level';
 
 const FEMALE_ID = 2;
 const MALE_ID = 1;
@@ -98,7 +99,7 @@ class MandateCheckEntry implements Identifiable {
 @Component({
     selector: 'os-mandate-check-list',
     imports: [
-        TranslateModule,
+        OpenSlidesTranslationModule,
         HeadBarModule,
         ReactiveFormsModule,
         MatButtonModule,
@@ -110,7 +111,7 @@ class MandateCheckEntry implements Identifiable {
     ],
     templateUrl: './mandate-check-list.component.html',
     styleUrl: './mandate-check-list.component.scss',
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class MandateCheckListComponent extends BaseMeetingComponent implements OnDestroy, OnInit {
     public structureLevels: ViewStructureLevel[] = [];

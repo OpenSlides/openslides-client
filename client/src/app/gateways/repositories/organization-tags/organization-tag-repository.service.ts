@@ -1,24 +1,18 @@
-import { Injectable } from '@angular/core';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
+import { inject, Service } from '@angular/core';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 
-import { Identifiable } from '../../../domain/interfaces';
+import { Identifiable } from '../../../domain/interfaces/identifiable';
 import { OrganizationTag } from '../../../domain/models/organization-tags/organization-tag';
-import { ViewOrganizationTag } from '../../../site/pages/organization/pages/organization-tags';
+import { ViewOrganizationTag } from '../../../site/pages/organization/pages/organization-tags/view-models/view-organization-tag';
 import { ThemeService } from '../../../site/services/theme.service';
 import { BaseRepository } from '../base-repository';
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { OrganizationTagAction } from './organization-tag.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class OrganizationTagRepositoryService extends BaseRepository<ViewOrganizationTag, OrganizationTag> {
-    public constructor(
-        serviceCollector: RepositoryServiceCollectorService,
-        private theme: ThemeService
-    ) {
-        super(serviceCollector, OrganizationTag);
-    }
+    public baseModelCtor = OrganizationTag;
+
+    private theme = inject(ThemeService);
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Tags` : `Tag`);
     public getTitle = (viewModel: ViewOrganizationTag): string => viewModel.name;

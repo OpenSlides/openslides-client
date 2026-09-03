@@ -7,7 +7,6 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
-import { combineLatest, distinctUntilChanged, map, Observable, startWith } from 'rxjs';
 import {
     FormPollMethod,
     PollBackendDurationChoices,
@@ -19,13 +18,15 @@ import {
     PollPropertyVerboseKey,
     PollType,
     PollTypeVerbose
-} from 'src/app/domain/models/poll';
-import { isNumberRange } from 'src/app/infrastructure/utils/validators';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
+} from '@app/domain/models/poll';
+import { isNumberRange } from '@app/infrastructure/utils/validators';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ParentErrorStateMatcher } from '@app/ui/modules/search-selector/validators';
+import { combineLatest, distinctUntilChanged, map, Observable, startWith } from 'rxjs';
 
-import { GroupControllerService, ViewGroup } from '../../../../pages/participants';
-import { ViewPoll } from '../../../../pages/polls';
+import { GroupControllerService } from '../../../../pages/participants/modules/groups/services/group-controller.service';
+import { ViewGroup } from '../../../../pages/participants/modules/groups/view-models/view-group';
+import { ViewPoll } from '../../../../pages/polls/view-models/view-poll';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VotingPrivacyWarningDialogService } from '../../modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
 import { PollService } from '../../services/poll.service';

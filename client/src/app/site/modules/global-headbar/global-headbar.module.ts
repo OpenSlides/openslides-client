@@ -16,13 +16,13 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
-import { InputModule } from 'src/app/ui/modules/input';
-import { ChessDialogModule } from 'src/app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog';
+import { DirectivesModule } from '@app/ui/directives';
+import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-listing';
+import { InputModule } from '@app/ui/modules/input';
+import { ChessDialogModule } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog';
 
-import { OpenSlidesTranslationModule } from '../translations';
-import { UserComponentsModule } from '../user-components';
+import { OpenSlidesTranslationModule } from '../translations/openslides-translation.module';
+import { UserComponentsModule } from '../user-components/user-components.module';
 import { AccountButtonComponent } from './components/account-button/account-button.component';
 import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
 import { AccountDialogMainComponent } from './components/account-dialog-main/account-dialog-main.component';
@@ -60,7 +60,7 @@ const DECLARATIONS = [GlobalHeadbarComponent];
     imports: [
         CommonModule,
         CommaSeparatedListingComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         UserComponentsModule,
         RouterModule,
         ScrollingModule,

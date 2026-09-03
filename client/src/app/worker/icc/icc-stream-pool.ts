@@ -1,4 +1,4 @@
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id } from '@app/domain/definitions/key-types';
 
 import { WorkerHttpAuth } from '../http/auth';
 import { HTTP_POOL_CONFIG, HttpStreamPool } from '../http/http-stream-pool';

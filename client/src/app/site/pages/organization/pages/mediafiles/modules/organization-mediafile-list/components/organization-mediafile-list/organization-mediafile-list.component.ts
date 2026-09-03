@@ -9,20 +9,20 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
+import { LogoDisplayNames, LogoPlace } from '@app/domain/models/mediafiles/mediafile.constants';
+import { BaseListViewComponent } from '@app/site/base/base-list-view.component';
+import { ViewMediafile } from '@app/site/pages/meetings/pages/mediafiles';
+import { MediafileListExportService } from '@app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-export.service/mediafile-list-export.service';
+import { MediafileCommonService } from '@app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
+import { MediafileControllerService } from '@app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { ORGANIZATION_SUBSCRIPTION } from '@app/site/pages/organization/organization.subscription';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { FileListComponent } from '@app/ui/modules/file-list/file-list.component';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { LogoDisplayNames, LogoPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
-import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { MediafileListExportService } from 'src/app/site/pages/meetings/pages/mediafiles/modules/mediafile-list/services/mediafile-list-export.service/mediafile-list-export.service';
-import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
-import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
-import { ORGANIZATION_SUBSCRIPTION } from 'src/app/site/pages/organization/organization.subscription';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { FileListComponent } from 'src/app/ui/modules/file-list/file-list.component';
 
 import { ORGANIZATION_MEDIAFILE_LIST_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 

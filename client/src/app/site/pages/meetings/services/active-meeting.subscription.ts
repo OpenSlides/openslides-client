@@ -1,9 +1,7 @@
-import 'src/app/site/services/model-request-builder';
-
-import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
-import { UserFieldsets } from 'src/app/domain/fieldsets/user';
-import { MEETING_MEDIAFILE_USAGE_ID_KEYS } from 'src/app/domain/models/meetings/meeting.constants';
+import { Id } from '@app/domain/definitions/key-types';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from '@app/domain/fieldsets/misc';
+import { UserFieldsets } from '@app/domain/fieldsets/user';
+import { MEETING_MEDIAFILE_USAGE_ID_KEYS } from '@app/domain/models/meetings/meeting.constants';
 
 import { ViewMeeting } from '../view-models/view-meeting';
 

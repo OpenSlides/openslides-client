@@ -1,22 +1,16 @@
-import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ChatMessage } from 'src/app/domain/models/chat/chat-message';
-import { ChatMessageRepositoryService } from 'src/app/gateways/repositories/chat/chat-message-repository.service';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { ChatMessage } from '@app/domain/models/chat/chat-message';
+import { ChatMessageRepositoryService } from '@app/gateways/repositories/chat/chat-message-repository.service';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 
-import { ViewChatMessage } from '../view-models';
+import { ViewChatMessage } from '../view-models/view-chat-message';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ChatMessageControllerService extends BaseMeetingControllerService<ViewChatMessage, ChatMessage> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: ChatMessageRepositoryService
-    ) {
-        super(controllerServiceCollector, ChatMessage, repo);
-    }
+    protected repo: ChatMessageRepositoryService = inject(ChatMessageRepositoryService);
+
+    public baseModelCtor = ChatMessage;
 
     public create(chatMessage: Partial<ChatMessage>): Promise<Identifiable[]> {
         return this.repo.create(chatMessage);

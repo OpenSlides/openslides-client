@@ -6,7 +6,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>New participant</h1>
+        <h1 class="mock-h2">{{ 'New participant' | translate }}</h1>
     </div>
 
     <!-- Next-button -->
@@ -88,7 +88,7 @@
                                     <mat-icon>help</mat-icon>
                                 </button>
                                 @if (createUserForm.controls['username'].errors?.['noSpace']) {
-                                    <mat-error translate>Username may not contain spaces</mat-error>
+                                    <mat-error>{{ 'Username may not contain spaces' | translate }}</mat-error>
                                 }
                             </mat-form-field>
                         </div>
@@ -145,24 +145,26 @@
                             <div [formGroup]="form">
                                 <mat-checkbox
                                     formControlName="is_present"
-                                    matTooltip="{{ 'Designates whether this user is in the room.' | translate }}"
                                     matTooltipPosition="right"
+                                    [matTooltip]="'Designates whether this user is in the room.' | translate"
                                 >
                                     <span>{{ 'present' | translate }}</span>
                                 </mat-checkbox>
                                 <!-- Locked out? -->
                                 <mat-checkbox
                                     formControlName="locked_out"
-                                    matTooltip="{{ 'Lock out user from this meeting.' | translate }}"
                                     matTooltipPosition="right"
+                                    [matTooltip]="'Lock out user from this meeting.' | translate"
                                 >
                                     <span>{{ 'locked out' | translate }}</span>
                                 </mat-checkbox>
                             </div>
                             @if (isLockedOutAndCanManage) {
-                                <p class="red-warning-text padding-left-12" translate>
-                                    It is not allowed to set the permisson 'Can manage participants' to a locked out
-                                    user. Please unset the lockout state before adding a group with this permission.
+                                <p class="red-warning-text padding-left-12">
+                                    {{
+                                        `It is not allowed to set the permisson 'Can manage participants' to a locked out user. Please unset the lockout state before adding a group with this permission.`
+                                            | translate
+                                    }}
                                 </p>
                             }
                             <div>
@@ -194,13 +196,16 @@
                                         <mat-label>{{ 'Vote weight' | translate }}</mat-label>
                                         <input formControlName="vote_weight" matInput type="number" />
                                         @if (isVoteWeightError && form.controls['vote_weight'].value > 0) {
-                                            <mat-error translate>
-                                                Please select a vote weight greater than or equal to 0.000001
+                                            <mat-error>
+                                                {{
+                                                    'Please select a vote weight greater than or equal to 0.000001'
+                                                        | translate
+                                                }}
                                             </mat-error>
                                         }
                                         @if (isVoteWeightError && form.controls['vote_weight'].value <= 0) {
-                                            <mat-error translate>
-                                                Please select a vote weight greater than zero.
+                                            <mat-error>
+                                                {{ 'Please select a vote weight greater than zero.' | translate }}
                                             </mat-error>
                                         }
                                     </mat-form-field>

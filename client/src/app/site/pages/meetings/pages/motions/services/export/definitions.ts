@@ -1,4 +1,4 @@
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 /**
  * Type declaring which strings are valid options for metainfos to be exported into a pdf
  */

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
 
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
@@ -24,11 +24,9 @@ export interface GetForwardingMeetingsPresenter {
 
 type GetForwardingMeetingsPresenterResult = GetForwardingMeetingsPresenter[];
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GetForwardingMeetingsPresenterService {
-    public constructor(private presenter: PresenterService) {}
+    private presenter = inject(PresenterService);
 
     public async call(payload: GetForwardMeetingsPresenterPayload): Promise<GetForwardingMeetingsPresenterResult> {
         return await this.presenter.call<GetForwardingMeetingsPresenterResult>(

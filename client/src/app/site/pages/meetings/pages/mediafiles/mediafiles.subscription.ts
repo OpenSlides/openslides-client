@@ -1,6 +1,6 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
+import { Id } from '@app/domain/definitions/key-types';
+import { FULL_FIELDSET } from '@app/domain/fieldsets/misc';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
 
 import { ViewMeeting } from '../../view-models/view-meeting';
 

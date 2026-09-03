@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { ProgressBarMode } from '@angular/material/progress-bar';
 import { Subject } from 'rxjs';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ProgressSnackBarControlService {
     /**
      * Subject to get text to display

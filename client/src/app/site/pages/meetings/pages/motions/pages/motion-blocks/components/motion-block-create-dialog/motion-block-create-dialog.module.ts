@@ -6,8 +6,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { AgendaContentObjectFormModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector/agenda-content-object-form/agenda-content-object-form.module';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { AgendaContentObjectFormModule } from '@app/site/pages/meetings/modules/meetings-component-collector/agenda-content-object-form/agenda-content-object-form.module';
 
 import { MotionBlockCreateDialogComponent } from './components/motion-block-create-dialog/motion-block-create-dialog.component';
 
@@ -22,7 +22,7 @@ import { MotionBlockCreateDialogComponent } from './components/motion-block-crea
         MatButtonModule,
         ReactiveFormsModule,
         AgendaContentObjectFormModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class MotionBlockCreateDialogModule {

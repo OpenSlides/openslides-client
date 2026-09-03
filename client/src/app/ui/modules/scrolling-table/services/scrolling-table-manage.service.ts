@@ -1,5 +1,5 @@
 import { TemplatePortal } from '@angular/cdk/portal';
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { ScrollingTableComponent } from '../components/scrolling-table/scrolling-table.component';
@@ -43,9 +43,7 @@ class ScrollingTableCellHandler implements Iterable<ScrollingTableCellDefinition
     }
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ScrollingTableManageService {
     public currentScrollingTableComponent: ScrollingTableComponent<any> | null = null;
 

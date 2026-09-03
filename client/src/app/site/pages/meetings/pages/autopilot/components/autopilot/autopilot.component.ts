@@ -1,23 +1,24 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { HasProjectorTitle } from '@app/domain/interfaces';
+import { DetailNavigable, isDetailNavigable } from '@app/domain/interfaces/detail-navigable';
+import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
+import { MeetingMediafile } from '@app/domain/models/meeting-mediafile/meeting-mediafile';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
-import { HasProjectorTitle } from 'src/app/domain/interfaces';
-import { DetailNavigable, isDetailNavigable } from 'src/app/domain/interfaces/detail-navigable';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { MeetingMediafile } from 'src/app/domain/models/meeting-mediafile/meeting-mediafile';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
-import { ViewListOfSpeakers } from '../../../agenda';
 import { CurrentListOfSpeakersService } from '../../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
 import { ListOfSpeakersControllerService } from '../../../agenda/modules/list-of-speakers/services/list-of-speakers-controller.service';
-import { HasPolls } from '../../../polls';
-import { ViewProjection, ViewProjector } from '../../../projectors';
+import { ViewListOfSpeakers } from '../../../agenda/modules/list-of-speakers/view-models/view-list-of-speakers';
+import { HasPolls } from '../../../polls/view-models/has-polls';
 import { ProjectorControllerService } from '../../../projectors/services/projector-controller.service';
+import { ViewProjection } from '../../../projectors/view-models/view-projection';
+import { ViewProjector } from '../../../projectors/view-models/view-projector';
 import { AutopilotService } from '../../services/autopilot.service';
 import { AutopilotSettingsComponent } from '../autopilot-settings/autopilot-settings.component';
 
@@ -25,6 +26,7 @@ import { AutopilotSettingsComponent } from '../autopilot-settings/autopilot-sett
     selector: `os-autopilot`,
     templateUrl: `./autopilot.component.html`,
     styleUrls: [`./autopilot.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AutopilotComponent extends BaseMeetingComponent implements OnInit {

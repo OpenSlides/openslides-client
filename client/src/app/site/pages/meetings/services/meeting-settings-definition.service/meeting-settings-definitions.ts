@@ -1,15 +1,15 @@
 import { ValidatorFn, Validators } from '@angular/forms';
-import { _ } from '@ngx-translate/core';
-import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
+import { AgendaItemType } from '@app/domain/models/agenda/agenda-item';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
 import {
     PollBackendDurationChoices,
     PollPercentBaseVerbose,
     PollTypeVerbose
-} from 'src/app/domain/models/poll/poll-constants';
-import { ObjectReplaceKeysConfig } from 'src/app/infrastructure/utils';
-import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
+} from '@app/domain/models/poll/poll-constants';
+import { ObjectReplaceKeysConfig } from '@app/infrastructure/utils';
+import { createEmailValidator } from '@app/infrastructure/utils/validators/email';
+import { _ } from '@ngx-translate/core';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
 import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
@@ -26,8 +26,6 @@ export type SettingsType =
     | `integer`
     | `boolean`
     | `choice`
-    | `date`
-    | `datetime`
     | `translations`
     | `ranking`
     | `groups`

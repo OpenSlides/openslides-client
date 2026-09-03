@@ -8,12 +8,7 @@
         <mat-form-field appearance="fill">
             <mat-label>{{ 'Color' | translate }}</mat-label>
             <input formControlName="color" matInput type="color" [required]="isCreateView" />
-            <button
-                mat-icon-button
-                matSuffix
-                matTooltip="{{ 'Generate new color' | translate }}"
-                (click)="generateColor()"
-            >
+            <button mat-icon-button matSuffix [matTooltip]="'Generate new color' | translate" (click)="generateColor()">
                 <mat-icon>autorenew</mat-icon>
             </button>
             @if (hasColorFormError('pattern')) {
@@ -28,7 +23,12 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <button color="accent" mat-button [disabled]="organizationTagForm?.invalid" (click)="onSaveClicked()">
+    <button
+        color="accent"
+        mat-button
+        [disabled]="$safeNavigationMigration(organizationTagForm?.invalid)"
+        (click)="onSaveClicked()"
+    >
         {{ 'Save' | translate }}
     </button>
     <button mat-button [mat-dialog-close]="null">{{ 'Cancel' | translate }}</button>

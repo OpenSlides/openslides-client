@@ -1,15 +1,16 @@
-import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
+import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
-import { ViewPoll } from '../../../../../polls';
 import { getPollDetailSubscriptionConfig } from '../../../../../polls/polls.subscription';
+import { ViewPoll } from '../../../../../polls/view-models/view-poll';
 
 @Component({
     selector: `os-motion-poll-main`,
     templateUrl: `./motion-poll-main.component.html`,
     styleUrls: [`./motion-poll-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionPollMainComponent extends BaseModelRequestHandlerComponent {

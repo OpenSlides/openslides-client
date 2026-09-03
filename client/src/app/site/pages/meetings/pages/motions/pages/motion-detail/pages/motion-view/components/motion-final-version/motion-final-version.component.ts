@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UnsafeHtml } from '@app/domain/definitions/key-types';
+import { LineNumberingMode } from '@app/domain/models/motions/motions.constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
 
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
-import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-view.service';
+import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-view.service/motion-detail-view.service';
 
 @Component({
     selector: `os-motion-final-version`,

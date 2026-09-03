@@ -10,12 +10,14 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { ViewModelListProvider } from '@app/ui/base/view-model-list-provider';
 import { BehaviorSubject, delay, find, map, Observable, of } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ViewModelListProvider } from 'src/app/ui/base/view-model-list-provider';
 
 import { ScrollingTableComponent } from '../../../scrolling-table/components/scrolling-table/scrolling-table.component';
-import { FilterListService, SearchService, SortListService } from '../../definitions';
+import { FilterListService } from '../../definitions/filter-service';
+import { SearchService } from '../../definitions/search-service';
+import { SortListService } from '../../definitions/sort-service';
 import { SortFilterBarComponent } from '../sort-filter-bar/sort-filter-bar.component';
 
 @Component({

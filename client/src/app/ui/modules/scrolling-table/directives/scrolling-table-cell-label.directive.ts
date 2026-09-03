@@ -1,5 +1,5 @@
 import { CdkPortal } from '@angular/cdk/portal';
-import { Directive, TemplateRef, ViewContainerRef } from '@angular/core';
+import { Directive } from '@angular/core';
 
 import { ScrollingTableCellDirective } from './scrolling-table-cell.directive';
 
@@ -8,12 +8,8 @@ import { ScrollingTableCellDirective } from './scrolling-table-cell.directive';
     standalone: false
 })
 export class ScrollingTableCellLabelDirective extends CdkPortal {
-    public constructor(
-        template: TemplateRef<HTMLElement>,
-        viewContainer: ViewContainerRef,
-        host: ScrollingTableCellDirective
-    ) {
-        super(template, viewContainer);
+    public constructor(host: ScrollingTableCellDirective) {
+        super();
         host.labelTemplate = this; // Propagate the template to the host
     }
 }

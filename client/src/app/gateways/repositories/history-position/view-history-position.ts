@@ -1,6 +1,6 @@
-import { HistoryPosition } from 'src/app/domain/models/history-position/history-position';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { HistoryPosition } from '@app/domain/models/history-position/history-position';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 
 import { ViewHistoryEntry } from '../history-entry/view-history-entry';
 

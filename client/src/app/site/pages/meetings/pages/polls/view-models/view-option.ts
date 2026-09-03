@@ -5,10 +5,12 @@ import { Option } from '../../../../../../domain/models/poll/option';
 import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { ViewUser } from '../../../view-models/view-user';
-import { UnknownUserLabel } from '../../assignments/modules/assignment-poll/services/assignment-poll.service';
 import { isSortedList, SortedList } from './sorted-list';
 import { ViewPoll } from './view-poll';
 import { ViewVote } from './view-vote';
+
+export const UnknownUserLabel = _(`Deleted user`);
+
 export class ViewOption<C extends BaseViewModel = any> extends BaseViewModel<Option> implements OptionData {
     public static COLLECTION = Option.COLLECTION;
     protected _collection = Option.COLLECTION;

@@ -1,7 +1,7 @@
-import { ElementRef, Injectable } from '@angular/core';
+import { ElementRef, inject, Service } from '@angular/core';
+import { OperatorService } from '@app/site/services/operator.service';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { BehaviorSubject, combineLatest, Observable, Subject } from 'rxjs';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { CallRestrictionService } from './call-restriction.service';
@@ -95,10 +95,12 @@ export interface JitsiConfig {
 
 export const RTC_LOGGED_STORAGE_KEY = `rtcIsLoggedIn`;
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class RtcService {
+    private userMediaPermService = inject(OperatorMediaPermissionService);
+    private storageMap = inject(StorageMap);
+    private operator = inject(OperatorService);
+
     private jitsiConfig!: JitsiConfig;
     private isJitsiEnabledSubject = new BehaviorSubject<boolean>(false);
     public isJitsiEnabledObservable = this.isJitsiEnabledSubject as Observable<boolean>;
@@ -154,13 +156,10 @@ export class RtcService {
         this.showCallDialogSubject.next(show);
     }
 
-    public constructor(
-        callRestrictionService: CallRestrictionService,
-        settingService: MeetingSettingsService,
-        private userMediaPermService: OperatorMediaPermissionService,
-        private storageMap: StorageMap,
-        private operator: OperatorService
-    ) {
+    public constructor() {
+        const callRestrictionService = inject(CallRestrictionService);
+        const settingService = inject(MeetingSettingsService);
+
         this.isSupportEnabled = settingService.get(`conference_enable_helpdesk`);
         this.autoConnect = settingService.get(`conference_auto_connect`);
 

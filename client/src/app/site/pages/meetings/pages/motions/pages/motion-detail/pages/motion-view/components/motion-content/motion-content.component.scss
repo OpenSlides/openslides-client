@@ -1,32 +1,12 @@
 @use 'src/assets/styles/mixins/detail-view-appearance.scss';
-@use 'src/assets/styles/variables.scss';
-
 .extra-data {
     display: flex;
     flex-direction: column;
     margin-top: 10px;
 }
 
-.motion-content {
-    div > div {
-        @include variables.desktop {
-            max-width: 82%;
-        }
-        @include variables.phone {
-            max-width: 100%;
-            display: block;
-            word-break: break-all;
-        }
-        @include variables.tablet {
-            max-width: 100%;
-            display: block;
-            word-break: break-all;
-        }
-        max-width: inherit;
-    }
-    h3 {
-        font-weight: bold;
-    }
+.motion-h3 {
+    font-weight: bold;
 }
 
 .attachment-entry {
@@ -42,4 +22,9 @@
     .attachment-icon {
         vertical-align: text-bottom;
     }
+}
+
+.reason-text {
+    word-wrap: break-word;
+    overflow: hidden;
 }

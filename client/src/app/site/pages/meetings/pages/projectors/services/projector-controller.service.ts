@@ -1,35 +1,29 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Ids } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { PROJECTIONDEFAULTS } from '@app/domain/models/projector/projection-default';
+import { Projector } from '@app/domain/models/projector/projector';
+import { Action } from '@app/gateways/actions';
+import { MeetingRepositoryService } from '@app/gateways/repositories/meeting-repository.service';
+import { ScrollScaleDirection } from '@app/gateways/repositories/projectors/projector.action';
+import { ProjectorRepositoryService } from '@app/gateways/repositories/projectors/projector-repository.service';
 import { Observable } from 'rxjs';
-import { Ids } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { PROJECTIONDEFAULTS } from 'src/app/domain/models/projector/projection-default';
-import { Projector } from 'src/app/domain/models/projector/projector';
-import { Action } from 'src/app/gateways/actions';
-import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
-import { ScrollScaleDirection } from 'src/app/gateways/repositories/projectors/projector.action';
-import { ProjectorRepositoryService } from 'src/app/gateways/repositories/projectors/projector-repository.service';
 
 import { BaseMeetingControllerService } from '../../../base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '../../../services/meeting-controller-service-collector.service';
+import { isProjectable, Projectable } from '../../../view-models/projectable';
 import {
-    isProjectable,
     MultiProjectionBuildDescriptor,
-    Projectable,
     ProjectionBuildDescriptor
-} from '../../../view-models';
-import { ViewProjection, ViewProjector } from '../view-models';
+} from '../../../view-models/projection-build-descriptor';
+import { ViewProjection } from '../view-models/view-projection';
+import { ViewProjector } from '../view-models/view-projector';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ProjectorControllerService extends BaseMeetingControllerService<ViewProjector, Projector> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: ProjectorRepositoryService,
-        private meetingRepo: MeetingRepositoryService
-    ) {
-        super(controllerServiceCollector, Projector, repo);
-    }
+    private meetingRepo = inject(MeetingRepositoryService);
+    protected repo: ProjectorRepositoryService = inject(ProjectorRepositoryService);
+
+    public baseModelCtor = Projector;
 
     public create(payload: any): Promise<Identifiable> {
         return this.repo.create(payload);

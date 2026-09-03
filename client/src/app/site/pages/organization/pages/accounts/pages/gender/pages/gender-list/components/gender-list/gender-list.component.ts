@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseListViewComponent } from '@app/site/base/base-list-view.component';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { GenderControllerService } from '../../../../services/gender-controller.service';
 import { ViewGender } from '../../../../view-models/view-gender';

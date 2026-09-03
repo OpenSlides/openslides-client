@@ -4,14 +4,14 @@
         <div class="remove-top-margin">
             <os-motion-manage-motion-meeting-users
                 additionalInputField="additional_submitter"
-                additionalInputLabel="{{ 'Extension' | translate }}"
                 field="submitters"
-                secondSelectorLabel="{{ 'Committees' | translate }}"
-                title="{{ 'Submitters' | translate }}"
-                [additionalInputValue]="motion?.additional_submitter"
+                [additionalInputLabel]="'Extension' | translate"
+                [additionalInputValue]="$safeNavigationMigration(motion?.additional_submitter)"
                 [loadSecondSelectorValues]="loadForwardingCommittees"
                 [motion]="motion"
                 [repo]="motionSubmitterRepo"
+                [secondSelectorLabel]="'Committees' | translate"
+                [title]="'Submitters' | translate"
                 [useAdditionalInput]="true"
             ></os-motion-manage-motion-meeting-users>
         </div>
@@ -24,18 +24,18 @@
 <div *osMeetingSetting="'motions_enable_editor'; and: perms.isAllowed('change_metadata')">
     <os-motion-manage-motion-meeting-users
         field="editors"
-        title="{{ 'Motion editor' | translate }}"
         [motion]="motion"
         [repo]="motionEditorRepo"
+        [title]="'Motion editor' | translate"
     ></os-motion-manage-motion-meeting-users>
 </div>
 
 <div *osMeetingSetting="'motions_enable_working_group_speaker'; and: perms.isAllowed('change_metadata')">
     <os-motion-manage-motion-meeting-users
         field="working_group_speakers"
-        title="{{ 'Spokesperson' | translate }}"
         [motion]="motion"
         [repo]="motionWorkingGroupSpeakerRepo"
+        [title]="'Spokesperson' | translate"
     ></os-motion-manage-motion-meeting-users>
 </div>
 
@@ -43,21 +43,21 @@
 @if (motion.state$ | async; as motionState) {
     <div>
         <os-motion-extension-field
-            extensionLabel="{{ 'Extension' | translate }}"
-            title="{{ 'State' | translate }}"
             [canBeEdited]="
                 perms.isAllowed('change_state', motion) ||
                 (!!motionState.submitter_withdraw_state && operatorIsSubmitter)
             "
             [chipValue]="stateLabel"
             [classes]="motion.stateCssColor"
+            [extensionLabel]="'Extension' | translate"
             [hasExtension]="!!motionState && motionState.show_state_extension_field"
-            [searchFieldInput]="motion?.state_extension"
+            [searchFieldInput]="$safeNavigationMigration(motion?.state_extension)"
+            [title]="'State' | translate"
             (succeeded)="setStateExtension($event)"
         >
             <span class="trigger-menu">
                 @if (perms.isAllowed('change_state', motion)) {
-                    @for (state of motionState.next_states; track state.id) {
+                    @for (state of getSortedNextStates(motionState.next_states); track state.id) {
                         <button mat-menu-item (click)="setState(state.id)">
                             {{ state.name }}
                             @if (state.show_state_extension_field) {
@@ -139,15 +139,15 @@
 @if (isRecommendationEnabled) {
     <div>
         <os-motion-extension-field
-            extensionLabel="{{ 'Extension' | translate }}"
-            title="{{ recommender }}"
             [canBeEdited]="perms.isAllowed('change_metadata', motion)"
             [chipValue]="recommendationLabel"
+            [extensionLabel]="'Extension' | translate"
             [hasExtension]="!!motion.recommendation && motion.recommendation.show_recommendation_extension_field"
-            [internal]="motion?.state?.is_internal"
+            [internal]="$safeNavigationMigration(motion?.state?.is_internal)"
             [listValueTransformFns]="[motionTransformFn]"
-            [searchFieldInput]="motion?.recommendation_extension"
+            [searchFieldInput]="$safeNavigationMigration(motion?.recommendation_extension)"
             [searchLists]="searchLists"
+            [title]="recommender"
             (succeeded)="setRecommendationExtension($event)"
         >
             <span class="trigger-menu">
@@ -211,7 +211,7 @@
 @if (motion?.identical_motions?.length) {
     <div>
         <h4>{{ 'Identical with' | translate }}</h4>
-        <os-comma-separated-listing [list]="motion?.identical_motions" [useMidpoint]="true">
+        <os-comma-separated-listing [list]="$safeNavigationMigration(motion?.identical_motions)" [useMidpoint]="true">
             <ng-template let-view>
                 <a [routerLink]="['/', activeMeetingId, 'motions', view.sequential_number]" [state]="{ back: 'true' }">
                     <span>{{ view.numberOrTitle }}</span>
@@ -303,7 +303,7 @@
 }
 
 <!-- Workflow timestamp -->
-<os-motion-manage-timestamp field="workflow_timestamp" title="{{ 'Submission date' | translate }}" [motion]="motion" />
+<os-motion-manage-timestamp field="workflow_timestamp" [motion]="motion" [title]="'Submission date' | translate" />
 
 <!-- Created timestamp -->
 @if (motion?.created && perms.isAllowed('change_metadata', motion)) {

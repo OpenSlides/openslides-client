@@ -10,20 +10,20 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { map, Observable, OperatorFunction } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
+import { Permission } from '@app/domain/definitions/permission';
+import { Identifiable } from '@app/domain/interfaces';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ViewMediafile } from '@app/site/pages/meetings/pages/mediafiles';
 import {
     getMediafilesListMinimalSubscriptionConfig,
     MEDIAFILES_LIST_MINIMAL_SUBSCRIPTION
-} from 'src/app/site/pages/meetings/pages/mediafiles/mediafiles.subscription';
-import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
-import { GroupControllerService, ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { BaseFormControlComponent } from 'src/app/ui/base/base-form-control';
+} from '@app/site/pages/meetings/pages/mediafiles/mediafiles.subscription';
+import { MediafileControllerService } from '@app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { GroupControllerService, ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ModelRequestService } from '@app/site/services/model-request.service';
+import { BaseFormControlComponent } from '@app/ui/base/base-form-control';
+import { map, Observable, OperatorFunction } from 'rxjs';
 
 @Component({
     selector: `os-attachment-control`,

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnInit } from '@angular/core';
+import { Directive, ElementRef, inject, Input, OnInit } from '@angular/core';
 
 const DEPTH_0 = 0;
 const DEPTH_0_VALUE = `none`;
@@ -38,7 +38,7 @@ export class PaperDirective implements OnInit {
         [DEPTH_5]: DEPTH_5_VALUE
     };
 
-    public constructor(private container: ElementRef<HTMLElement>) {}
+    private container = inject(ElementRef<HTMLElement>);
 
     public ngOnInit(): void {
         if (!this.depthMap[this.osPaper]) {

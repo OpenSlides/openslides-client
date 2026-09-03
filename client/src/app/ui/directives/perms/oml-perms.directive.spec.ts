@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { OperatorService } from '@app/site/services/operator.service';
 import { Observable, Subject } from 'rxjs';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { OmlPermsDirective } from './oml-perms.directive';
 import { BasePermsTestComponent } from './perms.directive.spec';
@@ -29,6 +29,7 @@ interface TestConditionalType {
             <div id="else"></div>
         </ng-template>
     `,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 class TestComponent extends BasePermsTestComponent<TestConditionalType> {

@@ -1,8 +1,8 @@
-import { MotionCategory } from 'src/app/domain/models/motions/motion-category';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
+import { MotionCategory } from '@app/domain/models/motions/motion-category';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
+import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
 
-import { ViewMotion } from '../../../view-models';
+import { ViewMotion } from '../../../view-models/view-motion';
 
 export class ViewMotionCategory extends BaseViewModel<MotionCategory> {
     public static COLLECTION = MotionCategory.COLLECTION;

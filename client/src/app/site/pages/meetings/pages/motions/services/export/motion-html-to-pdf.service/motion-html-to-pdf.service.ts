@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Content, ContentColumns } from 'pdfmake/interfaces';
-import { LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
+import { Service } from '@angular/core';
+import { LineNumberingMode } from '@app/domain/models/motions/motions.constants';
 import {
     ChildNodeParagraphPayload,
     CreateSpecificParagraphPayload,
     HtmlToPdfService
-} from 'src/app/gateways/export/html-to-pdf.service';
+} from '@app/gateways/export/html-to-pdf.service';
+import { Content, ContentColumns } from 'pdfmake/interfaces';
 
 /**
  * Shape of line number objects
@@ -27,9 +27,7 @@ interface HtmlToPdfConfig {
     lineHeight?: number;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionHtmlToPdfService extends HtmlToPdfService {
     /**
      * holds the desired line number mode
