@@ -6,6 +6,9 @@
                     <mat-form-field>
                         <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
                         <input formControlName="min_vote_sum" matInput type="number" />
+                        @if (form.get('min_options_amount').hasError('minGreaterThanMax')) {
+                            <mat-error>{{ 'Amount must not exceed max amount of votes' | translate }}</mat-error>
+                        }
                     </mat-form-field>
                 } @else {
                     <div></div>

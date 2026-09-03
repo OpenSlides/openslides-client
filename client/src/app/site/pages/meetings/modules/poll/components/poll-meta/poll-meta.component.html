@@ -5,7 +5,7 @@
             @if (isListPoll()) {
                 @let numOptions = poll().options?.length ?? 0;
                 @if (numOptions === 1) {
-                    {{ 'Nominate' | translate }}
+                    {{ 'Candidate' | translate }}
                 } @else {
                     {{ 'Nomination list' | translate }}
                     ({{ numOptions }} {{ 'Candidates' | translate }}):
