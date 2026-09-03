@@ -1,14 +1,12 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MeetingPollDefault } from '@app/domain/models/meetings/meeting-poll-default';
-import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, Observable, switchMap } from 'rxjs';
 
 import { ActiveMeetingService } from './active-meeting.service';
 
 type MeetingPollSettingCollection = 'motion' | 'topic' | 'assignment';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingPollSettingsService {
     /**
      * Stores a subject per key. Values are published, if the DataStore gets an update.
@@ -27,6 +25,7 @@ export class MeetingPollSettingsService {
     public constructor() {
         this.activeMeetingService.meetingObservable
             .pipe(
+                filter(m => !!m),
                 switchMap(m => {
                     return combineLatest([m.assignment_poll_config$, m.motion_poll_config$, m.topic_poll_config$]);
                 })
