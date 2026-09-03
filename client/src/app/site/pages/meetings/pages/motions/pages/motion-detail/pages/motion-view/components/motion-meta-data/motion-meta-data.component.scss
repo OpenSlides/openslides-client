@@ -1,3 +1,13 @@
+@use '@angular/material' as mat;
+
+.origin-view {
+    @include mat.paginator-overrides(
+        (
+            container-background-color: transparent
+        )
+    );
+}
+
 div.remove-top-margin {
     margin-top: -1.33em;
 }
@@ -8,4 +18,41 @@ div.origin-view {
 
 span.referencelist {
     display: inline-block;
+}
+
+.basic-flex-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.align-start {
+    align-items: flex-start;
+}
+
+.status-text {
+    font-size: 85%;
+    margin-top: -7px;
+    margin-left: 1px;
+    font-style: italic;
+}
+
+.margin-left {
+    margin-left: 15px;
+}
+
+.margin-left-small {
+    margin-left: 5px;
+}
+
+.margin-right-small {
+    margin-right: 3px;
+}
+
+.margin-minus {
+    margin-bottom: -5px;
+}
+
+.max-length {
+    max-width: 60%;
 }
