@@ -1,5 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
@@ -57,6 +58,12 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             display_chart: [`table`]
         });
 
+        this.form
+            .get(`max_options_amount`)
+            .valueChanges.pipe(takeUntilDestroyed())
+            .subscribe(() => {
+                this.form.get(`min_options_amount`).updateValueAndValidity({ emitEvent: false });
+            });
         effect(this.onOptionAmountUpdate.bind(this));
     }
 
