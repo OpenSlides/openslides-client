@@ -133,20 +133,20 @@
             >
                 <div *osScrollingTableCellLabel style="text-align: center; width: 100%">Action</div>
                 @if (row.state === 'error') {
-                    <mat-icon class="red-warning-text" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
+                    <mat-icon class="red-warning-text" matTooltipPosition="right" [matTooltip]="getRowTooltip(row)">
                         {{ getActionIconRow(row) }}
                     </mat-icon>
                 }
                 @if (row.state !== 'error' && row.messages.length) {
-                    <mat-icon class="warn" matTooltip="{{ getWarningRowTooltip(row) }}" matTooltipPosition="right">
+                    <mat-icon class="warn" matTooltipPosition="right" [matTooltip]="getWarningRowTooltip(row)">
                         warning
                     </mat-icon>
                 }
                 @let icon = getActionIconRow(row);
                 @if (row.state !== 'error' && icon !== '') {
                     <mat-icon
-                        matTooltip="{{ getRowTooltip(row) }}"
                         matTooltipPosition="right"
+                        [matTooltip]="getRowTooltip(row)"
                         [ngClass]="getColorIcon(row)"
                     >
                         {{ icon }}

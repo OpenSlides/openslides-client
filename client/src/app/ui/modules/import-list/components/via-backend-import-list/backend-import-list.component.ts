@@ -82,7 +82,10 @@ export class BackendImportListComponent implements OnInit {
     public modelName = ``;
 
     @Input()
-    public additionalInfo = ``;
+    public instructionsForImport = ``;
+
+    @Input()
+    public columnsInformation = ``;
 
     @Input()
     public set importer(importer: BackendImportService) {
@@ -453,7 +456,7 @@ export class BackendImportListComponent implements OnInit {
      * Opens an info dialog with the given template as content.
      */
     public async openDialog(dialogTemplate: TemplateRef<any>): Promise<void> {
-        const ref = this.dialog.open(dialogTemplate, infoDialogSettings);
+        const ref = this.dialog.open(dialogTemplate, { ...infoDialogSettings, width: '690px' });
         await firstValueFrom(ref.afterClosed());
     }
 

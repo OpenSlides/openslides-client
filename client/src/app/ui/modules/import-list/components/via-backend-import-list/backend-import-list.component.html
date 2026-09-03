@@ -3,25 +3,25 @@
         <mat-card-content>
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; width: auto">
                 <div style="display: flex; flex-direction: column">
-                    <h3 class="instructions">{{ 'Import template' | translate }}</h3>
+                    <h3 class="instructions">{{ 'Example (template)' | translate }}</h3>
                     <div>
                         <input
                             #fileInput
                             accept="text"
-                            aria-label="{{ 'Import csv template' | translate }}"
                             class="hidden-input"
                             id="user-import-file-input"
                             tabindex="0"
                             type="file"
+                            [aria-label]="'Import csv template' | translate"
                             (change)="onSelectedFile($event)"
                             (keydown.enter)="downloadCsvExample()"
                             (keydown.space)="downloadCsvExample(); $event.preventDefault()"
                         />
                         <button
-                            aria-label="{{ 'Information' | translate }}"
                             class="outlined-border"
                             matButton
                             outlined
+                            [aria-label]="'Information' | translate"
                             (click)="downloadCsvExample()"
                             (keydown.enter)="downloadCsvExample()"
                             (keydown.space)="downloadCsvExample(); $event.preventDefault()"
@@ -39,10 +39,11 @@
                             <mat-label>{{ 'INFO' | translate }}</mat-label>
                         </button>
                     </div>
+                    <span class="descriptionColumns" [innerHTML]="columnsInformation | trust: 'html'"></span>
                 </div>
                 <div style="display: flex; flex-direction: column">
                     <h3 class="instructions">{{ 'Instructions for import file' | translate }}</h3>
-                    <span [innerHTML]="additionalInfo | trust: 'html'"></span>
+                    <span [innerHTML]="instructionsForImport | trust: 'html'"></span>
                 </div>
             </div>
         </mat-card-content>
@@ -77,7 +78,7 @@
             @if (isParticipantImport) {
                 <!-- Preview button -->
                 <button
-                    class="mdc-button mat-mdc-button-base mat-mdc-button mat-accent"
+                    class="mdc-button mat-mdc-button-base mat-mdc-button mat-accent outlined-border"
                     matButton
                     outlined
                     routerLink="/participants/import/preview"
@@ -92,24 +93,38 @@
     </mat-card>
 
     <ng-template #fieldsInfoDialog>
-        <div class="action-title" mat-dialog-title>
-            <h1 class="dialog-title">{{ 'The fields are defined as follows' | translate }}</h1>
+        <div class="action-title text-align-center" mat-dialog-title>
+            <h1 class="dialog-title">
+                {{ 'The fields are defined as follows' | translate }}
+            </h1>
         </div>
         <mat-dialog-content>
             <table>
+                <br />
+                <tr style="display: table-row-group">
+                    <td>{{ 'Column Name' | translate }}</td>
+                    <td>{{ 'Meaning' | translate }}</td>
+                    <td>{{ 'Notes' | translate }}</td>
+                </tr>
+
                 @for (column of defaultColumns; track column) {
                     <tr>
                         <td class="table-title-column">{{ column.property }}:</td>
-                        <td>
-                            &nbsp;{{ column.label | translate }}
+
+                        <td class="table-title-column" style="display: inline-block">
+                            {{ column.label | translate }}
                             @if (column.customInfo) {
-                                <br />
                                 @if (isString(column.customInfo)) {
                                     {{ column.customInfo | translate }}
                                 }
                                 @if (!isString(column.customInfo)) {
                                     {{ column.customInfo | async }}
                                 }
+                            }
+                        </td>
+                        <td class="table-title-column">
+                            @if (column.description) {
+                                {{ column.description | translate }}
                             }
                         </td>
                     </tr>
@@ -199,9 +214,9 @@
                         </li>
                     </ul>
                 }
-                @if (additionalInfo) {
+                @if (instructionsForImport) {
                     <p>
-                        <span [innerHTML]="additionalInfo | trust: 'html'"></span>
+                        <span [innerHTML]="instructionsForImport | trust: 'html'"></span>
                     </p>
                 }
                 <button color="accent" mat-button (click)="downloadCsvExample()">
@@ -388,9 +403,9 @@
                 </li>
             </ul>
         }
-        @if (additionalInfo) {
+        @if (instructionsForImport) {
             <p>
-                <span [innerHTML]="additionalInfo | trust: 'html'"></span>
+                <span [innerHTML]="instructionsForImport | trust: 'html'"></span>
             </p>
         }
         <button color="accent" mat-button (click)="downloadCsvExample()">
