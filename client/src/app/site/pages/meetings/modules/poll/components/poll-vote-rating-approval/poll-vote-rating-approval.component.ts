@@ -10,6 +10,7 @@ import { ViewPollConfigRatingApproval } from '../../../../pages/polls/view-model
 import { PollVoteBaseComponent } from '../poll-vote-base.component';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 
 @Component({
     selector: 'os-poll-vote-rating-approval',
@@ -28,6 +29,7 @@ import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.co
 export class PollVoteRatingApprovalComponent extends PollVoteBaseComponent<ViewPollConfigRatingApproval> {
     private translate = inject(TranslateService);
     private promptService = inject(PromptService);
+    private meetingSettingsService = inject(MeetingSettingsService);
 
     public selectedOptions = signal<Map<number, string>>(new Map());
 
@@ -40,6 +42,10 @@ export class PollVoteRatingApprovalComponent extends PollVoteBaseComponent<ViewP
     });
 
     public maxYesReached = computed<boolean>(() => {
+        if (!this.meetingSettingsService.signal(`poll_enable_max_yes_votes`)()) {
+            return false;
+        }
+
         const max = this.config()?.max_yes_amount;
         return max != null && this.yesVotesUsed() >= max;
     });
