@@ -84,13 +84,17 @@
                 </button>
             }
         }
-
+        @if (csvEncodingOptions?.toggleCSVOptions) {
+            <os-participant-import-csv-options />
+        }
         <!-- Filter button -->
         @if (hasFilters) {
             <button
                 mat-button
                 style="width: max-content"
-                (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()"
+                [class.not-selected-option]=""
+                [class.selected-option]="filterMenu.opened"
+                (click)="openFilterMenu()"
             >
                 <mat-icon
                     matBadgeColor="accent"
@@ -141,8 +145,12 @@
 
 <!-- Header for the filter side bar -->
 <mat-drawer #filterMenu autoFocus="false" mode="push" position="end">
-    <div class="custom-table-header filter-menu-head" role="none" (click)="this.filterMenu.toggle()">
-        <span tabindex="0" (keyup.enter)="this.filterMenu.toggle()">
+    <div
+        class="custom-table-header filter-menu-head"
+        role="none"
+        (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()"
+    >
+        <span tabindex="0" (keyup.enter)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
             <mat-icon>keyboard_arrow_right</mat-icon>
         </span>
 

@@ -65,6 +65,9 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     public defaultColumnWidth: number | null = null;
 
     @Input()
+    public horizontalScroll = false;
+
+    @Input()
     public showHeader = false;
 
     @Input()
@@ -252,7 +255,10 @@ export class ScrollingTableComponent<T extends Partial<Mutable<Identifiable>>>
     }
 
     private buildDataTable(): void {
-        const source = [...this._fullSource].sort((a, b) => a.id - b.id);
+        if (!this._fullSource) {
+            return;
+        }
+        const source = [...this._fullSource!].sort((a, b) => a.id - b.id);
         const sourceMapKeys = Object.keys(this._dataSourceMap)
             .map(key => Number(key))
             .sort((a, b) => a - b);

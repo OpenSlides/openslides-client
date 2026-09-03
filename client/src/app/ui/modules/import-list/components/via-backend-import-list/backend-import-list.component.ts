@@ -1,5 +1,6 @@
 import {
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -7,7 +8,6 @@ import {
     EventEmitter,
     inject,
     Input,
-    OnDestroy,
     OnInit,
     Output,
     QueryList,
@@ -18,12 +18,14 @@ import {
 import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import { Router } from '@angular/router';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
+import { ParticipantImportCSVReloadService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-reload-file.service';
 import { BackendImportService } from '@app/ui/base/import-service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
+import { firstValueFrom, map, Observable, of } from 'rxjs';
 
 import { ScrollingTableCellDefConfig } from '../../../scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
@@ -57,7 +59,7 @@ export enum BackendImportPhase {
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class BackendImportListComponent implements OnInit, OnDestroy {
+export class BackendImportListComponent implements OnInit {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
@@ -80,7 +82,10 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     public modelName = ``;
 
     @Input()
-    public additionalInfo = ``;
+    public instructionsForImport = ``;
+
+    @Input()
+    public columnsInformation = ``;
 
     @Input()
     public set importer(importer: BackendImportService) {
@@ -253,6 +258,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
      */
     public ngOnInit(): void {
         this._importer.clearAll();
+        this.uploadButton = true;
         this._requiredFields = this.createRequiredFields();
         this._importer.currentImportPhaseObservable.subscribe(phase => {
             if (phase === BackendImportPhase.LOADING_PREVIEW && this.fileInput) {
@@ -263,17 +269,11 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         this._importer.previewsObservable.subscribe(previews => {
             this.fillPreviewData(previews);
         });
-        this._dataSource = this.importer.previewsObservable.pipe(
-            map(previews => this.calculateRows(previews)),
-            delay(50)
-        );
-    }
-
-    /**
-     * Resets the importer when leaving the view
-     */
-    public ngOnDestroy(): void {
-        this._importer.clearFile();
+        this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
+        this.CSVReloadService.openFileInput$.subscribe(async (newFile: Event) => {
+            this.importer.onSelectFile(newFile);
+        });
+        this.cd.detectChanges();
     }
 
     /**
@@ -305,6 +305,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
     public removeSelectedFile(clearImporter = true): void {
         if (this.fileInput) {
             this.fileInput.nativeElement.value = ``;
+            this.uploadButton = true;
         }
         if (clearImporter) {
             this._importer.clearFile();
@@ -455,7 +456,7 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
      * Opens an info dialog with the given template as content.
      */
     public async openDialog(dialogTemplate: TemplateRef<any>): Promise<void> {
-        const ref = this.dialog.open(dialogTemplate, infoDialogSettings);
+        const ref = this.dialog.open(dialogTemplate, { ...infoDialogSettings, width: '690px' });
         await firstValueFrom(ref.afterClosed());
     }
 
@@ -521,5 +522,58 @@ export class BackendImportListComponent implements OnInit, OnDestroy {
         } else {
             return [];
         }
+    }
+
+    protected get isParticipantImport(): boolean {
+        return this.router.url.includes('participants');
+    }
+
+    protected uploadButton: boolean;
+    protected selectedNewFile;
+
+    private CSVReloadService = inject(ParticipantImportCSVReloadService);
+
+    public constructor(
+        private cd: ChangeDetectorRef,
+        private router: Router
+    ) {}
+
+    /**
+     * triggers the importer's onSelectFile after a file has been chosen
+     */
+    public onSelectedFile(event: Event): void {
+        this._importer.onSelectFile(event);
+        if (this.fileInput.nativeElement.value) {
+            this.uploadButton = false;
+        }
+    }
+
+    public onDragOver(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    public onDropSuccess(event: DragEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+        const files = event.dataTransfer?.files;
+        if (!files || files.length === 0) {
+            return;
+        }
+        const droppedFile = {
+            target: {
+                files: files
+            }
+        };
+        try {
+            this._importer.onSelectFile(droppedFile);
+            this.uploadButton = false;
+        } catch {
+            this.uploadButton = false;
+        }
+    }
+
+    protected showPreview(): void {
+        this.router.navigateByUrl(this.router.url.concat('/preview'));
     }
 }
