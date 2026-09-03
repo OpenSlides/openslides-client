@@ -169,7 +169,6 @@ export class PollComponent extends BaseMeetingComponent {
             });
 
             dialogRef.afterClosed().subscribe(result => {
-                console.log('The dialog was closed');
                 if (result !== undefined) {
                     this.repo.finalize(this.poll(), result).catch(this.raiseError);
                 }
