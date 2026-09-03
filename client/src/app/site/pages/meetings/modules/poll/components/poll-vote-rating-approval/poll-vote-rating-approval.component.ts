@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { YES_KEY } from '@app/domain/models/poll';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
@@ -10,7 +11,6 @@ import { ViewPollConfigRatingApproval } from '../../../../pages/polls/view-model
 import { PollVoteBaseComponent } from '../poll-vote-base.component';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
 import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
-import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 
 @Component({
     selector: 'os-poll-vote-rating-approval',
