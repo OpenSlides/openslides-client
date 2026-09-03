@@ -3,7 +3,7 @@ import { BaseFilterListService, OsFilter, OsFilterOption } from '@app/site/base/
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 
 import { AssignmentPhases } from '../../../definitions';
-import { ViewAssignment } from '../../../view-models';
+import { ViewAssignment } from '../../../view-models/view-assignment';
 
 /**
  * Filter service for the assignment list

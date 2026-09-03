@@ -5,7 +5,7 @@ import { LineRange } from '@app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from '@app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { TranslateService } from '@ngx-translate/core';
 
-import { DiffLinesInParagraph } from '../../../../../../definitions/index';
+import { DiffLinesInParagraph } from '../../../../../../definitions';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 
 @Component({

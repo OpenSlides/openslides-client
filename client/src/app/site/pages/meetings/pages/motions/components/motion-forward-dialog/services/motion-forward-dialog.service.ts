@@ -4,12 +4,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ids } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
 import { Selectable } from '@app/domain/interfaces';
-import {
-    GetForwardingMeetingsPresenter,
-    GetForwardingMeetingsPresenterMeeting,
-    GetForwardingMeetingsPresenterService
-} from '@app/gateways/presenter';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from '@app/gateways/presenter';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ViewCommittee } from '@app/site/pages/organization/pages/committees';
@@ -17,13 +13,12 @@ import { ModelRequestService } from '@app/site/services/model-request.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 import { TranslateService } from '@ngx-translate/core';
-import { endOfDay, fromUnixTime } from 'date-fns';
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
 
-import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
 import { getMotionForwardDataSubscriptionConfig } from '../../../motions.subscription';
-import { MotionFormatService } from '../../../services/common/motion-format.service';
-import { ViewMotion } from '../../../view-models';
+import { MotionFormatService } from '../../../services/common/motion-format.service/motion-format.service';
+import { ViewMotion } from '../../../view-models/view-motion';
 import {
     MotionForwardDialogComponent,
     MotionForwardDialogReturnData
@@ -160,11 +155,6 @@ export class MotionForwardDialogService extends BaseDialogService<
                 this.operator.hasPerms(Permission.motionCanForward) && !!meetingId
                     ? await this.presenter.call({ meeting_id: meetingId })
                     : [];
-            meetings.forEach(
-                committee =>
-                    (committee.meetings =
-                        committee.meetings?.filter(m => this.endAndActiveMeetingFilter(m)) ?? committee.meetings)
-            );
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
             this._forwardingCommitteesSubject.next(
@@ -179,14 +169,6 @@ export class MotionForwardDialogService extends BaseDialogService<
                 })
             );
         }
-    }
-
-    private endAndActiveMeetingFilter(meetingData: GetForwardingMeetingsPresenterMeeting): boolean {
-        return (
-            +meetingData.id !== this.activeMeeting.meetingId &&
-            meetingData.end_time &&
-            new Date() <= endOfDay(fromUnixTime(Date.parse(meetingData.end_time)))
-        );
     }
 
     private createForwardingSuccessMessage(

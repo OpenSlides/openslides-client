@@ -5,7 +5,7 @@ import { PollControllerService } from '@app/site/pages/meetings/modules/poll/ser
 import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ViewPoll } from '../../../../view-models';
+import { ViewPoll } from '../../../../view-models/view-poll';
 import { PollListFilterService } from '../../services/poll-list-filter.service/poll-list-filter.service';
 
 const POLL_LIST_STORAGE_INDEX = `polls`;

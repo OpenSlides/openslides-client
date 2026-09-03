@@ -6,7 +6,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Motion blocks</h1>
+        <h1 class="mock-h2">{{ 'Motion blocks' | translate }}</h1>
     </div>
 </os-head-bar>
 
@@ -52,7 +52,7 @@
 
     <!-- Amount -->
     <div *osScrollingTableCell="'amount'; row as block; config: { width: 60 }" class="cell-slot fill">
-        <span class="os-amount-chip" matTooltip="{{ 'Motions' | translate }}" matTooltipPosition="left">
+        <span class="os-amount-chip" [matTooltip]="'Motions' | translate">
             {{ getMotionAmount(block) }}
         </span>
     </div>

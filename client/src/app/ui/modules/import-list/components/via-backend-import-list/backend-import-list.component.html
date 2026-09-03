@@ -10,7 +10,7 @@
                     </mat-tab>
                 }
                 <!-- CSV import tab -->
-                <mat-tab label="{{ 'CSV import' | translate }}">
+                <mat-tab [label]="'CSV import' | translate">
                     <ng-template matTabContent>
                         <ng-container *ngTemplateOutlet="defaultTabContent" />
                     </ng-template>
@@ -152,7 +152,7 @@
                 <h2 class="no-margin">{{ 'Summary' | translate }}</h2>
                 <button
                     mat-icon-button
-                    matTooltip="{{ 'Fullscreen' | translate }}"
+                    [matTooltip]="'Fullscreen' | translate"
                     (click)="enterFullscreen(fullscreenDialog)"
                 >
                     <mat-icon>fullscreen</mat-icon>
@@ -403,12 +403,12 @@
                 class="flex-vertical-center"
             >
                 @if (row.state === 'error') {
-                    <mat-icon class="red-warning-text" matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
+                    <mat-icon class="red-warning-text" matTooltipPosition="right" [matTooltip]="getRowTooltip(row)">
                         {{ getActionIcon(row) }}
                     </mat-icon>
                 }
                 @if (row.state !== 'error' && row.messages.length) {
-                    <mat-icon class="warn" matTooltip="{{ getWarningRowTooltip(row) }}" matTooltipPosition="right">
+                    <mat-icon class="warn" matTooltipPosition="right" [matTooltip]="getWarningRowTooltip(row)">
                         warning
                     </mat-icon>
                 }
@@ -418,7 +418,7 @@
                 class="flex-vertical-center"
             >
                 @if (row.state !== 'error') {
-                    <mat-icon matTooltip="{{ getRowTooltip(row) }}" matTooltipPosition="right">
+                    <mat-icon matTooltipPosition="right" [matTooltip]="getRowTooltip(row)">
                         {{ getActionIcon(row) }}
                     </mat-icon>
                 }
@@ -453,7 +453,7 @@
 <ng-template #fullscreenDialog>
     <div class="action-title" mat-dialog-title>
         <h1 class="dialog-title">{{ 'Preview' | translate }}</h1>
-        <button mat-icon-button matTooltip="{{ 'Exit fullscreen' | translate }}" [mat-dialog-close]="null">
+        <button mat-icon-button [mat-dialog-close]="null" [matTooltip]="'Exit fullscreen' | translate">
             <mat-icon>close</mat-icon>
         </button>
     </div>
@@ -464,7 +464,7 @@
 
 <ng-template #fieldsInfoDialog>
     <div class="action-title" mat-dialog-title>
-        <h1 class="dialog-title" translate>The fields are defined as follows</h1>
+        <h1 class="dialog-title">{{ 'The fields are defined as follows' | translate }}</h1>
     </div>
     <mat-dialog-content>
         <table>

@@ -21,7 +21,7 @@ import { GroupsRoutingModule } from './groups-routing.module';
         CommonModule,
         GroupsRoutingModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatCardModule,
         MatTableModule,
         MatExpansionModule,

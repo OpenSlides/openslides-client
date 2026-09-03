@@ -4,7 +4,7 @@ import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.serv
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ViewPoll } from '../../../../view-models';
+import { ViewPoll } from '../../../../view-models/view-poll';
 
 @Service()
 export class PollListFilterService extends BaseFilterListService<ViewPoll> {

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { brMarkup, noMarkup } from "../utils/tests";
+import { brMarkup, brMarkupCaps, noMarkup, noMarkupCaps } from "../utils/tests";
 import { htmlToFragment, nodesToHtml } from "../utils/dom-helpers";
 import { HtmlDiff, LineNumbering } from "../index";
 import { insertInternalLineMarkers, normalizeHtmlForDiff, replaceLinesMergeNodeArrays, serializePartialDomFromChild, serializePartialDomToChild } from "./internal";
@@ -624,26 +624,40 @@ describe(`MotionDiffService`, () => {
         );
 
         it(`does not mark the last line of a paragraph as change if a long new one is appended`, () => {
-                const before = `<p><span class="os-line-number line-number-5" data-line-number="5" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>`,
+                const before = `<p>${noMarkup(5)}Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>`,
                     after =
                         `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n` +
                         `\n` +
                         `<p>Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>`;
                 const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
-                    `<p><span class="line-number-5 os-line-number" contenteditable="false" data-line-number="5">&nbsp;</span>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n` +
+                    `<p>${noMarkup(5)}Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n` +
                     `<p class="insert">Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>`
                 );
             }
         );
 
+        it(`does not mark the last line of a paragraph as change if a heading is appended`, () => {
+                const before = `<p>${noMarkup(5)}Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>`,
+                    after =
+                        `<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n` +
+                        `\n` +
+                        `<h2>Test heading</h2>`;
+                const diff = HtmlDiff.diff(before, after);
+                expect(diff).toBe(
+                    `<p>${noMarkup(5)}Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>\n` +
+                    `<h2 class="insert">Test heading</h2>`
+                );
+            }
+        );
+
         it(`does not result in separate paragraphs when only the first word has changed`, () => {
-                const before = `<p class="os-split-after"><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor </p>`,
+                const before = `<p class="os-split-after">${noMarkup(1)}Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor </p>`,
                     after = `<p class="os-split-after">Bla ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</p>`;
                 const diff = HtmlDiff.diff(before, after);
 
                 expect(diff).toBe(
-                    `<p class="os-split-after"><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span><del>Lorem</del><ins>Bla</ins> ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</p>`
+                    `<p class="os-split-after">${noMarkup(1)}<del>Lorem</del><ins>Bla</ins> ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor</p>`
                 );
             }
         );
@@ -727,13 +741,13 @@ describe(`MotionDiffService`, () => {
 
         it(`handles insterted paragraphs (3)`, () => {
             // Hint: os-split-after should be moved from the first paragraph to the second one
-            const before = `<p class="os-split-after"><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, </p>`,
+            const before = `<p class="os-split-after">${noMarkup(1)}Lorem ipsum dolor sit amet, consetetur sadipscing elitr, </p>`,
                 after =
                     `<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>\n` +
                     `\n` +
                     `<p>Stet clita kasd gubergren, no sea takimata sanctus est.</p>`,
                 expected =
-                    `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Lorem ipsum dolor sit amet, consetetur sadipscing elitr,<ins> sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</ins></p>\n` +
+                    `<p>${noMarkup(1)}Lorem ipsum dolor sit amet, consetetur sadipscing elitr,<ins> sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</ins></p>\n` +
                     `<p class="insert os-split-after">Stet clita kasd gubergren, no sea takimata sanctus est.</p>`;
 
             const diff = HtmlDiff.diff(before, after);
@@ -766,9 +780,9 @@ describe(`MotionDiffService`, () => {
 
         it(`handles inserted paragraphs in front of list`, () => {
             // Hint: line number should be moved into first element
-            const before = `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum</li></ul>`,
-                after = `<p>Add before UL</p><ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Lorem ipsum</li></ul>`,
-                expected = `<p class="insert"><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Add before UL</p><ul><li>Lorem ipsum</li></ul>`;
+            const before = `<ul><li>${noMarkup(1)}Lorem ipsum</li></ul>`,
+                after = `<p>Add before UL</p><ul><li>${noMarkup(1)}Lorem ipsum</li></ul>`,
+                expected = `<p class="insert">${noMarkup(1)}Add before UL</p><ul><li>Lorem ipsum</li></ul>`;
 
             const diff = HtmlDiff.diff(before, after);
             expect(diff).toBe(expected);
@@ -778,17 +792,17 @@ describe(`MotionDiffService`, () => {
                 // Hint: line number should be moved into first element
                 const before =
                         `<ul><li><ol>` +
-                        `<li><span class="os-line-number line-number-5" data-line-number="5" contenteditable="false">&nbsp;</span>c</li>` +
+                        `<li>${noMarkup(5)}c</li>` +
                         `</ol></li></ul>`,
                     after =
                         `<UL><LI><OL>` +
-                        `<LI><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false"> </SPAN>c</LI>` +
+                        `<LI>${noMarkup(5)}c</LI>` +
                         `<LI>d</LI>` +
                         `<LI>e</LI>` +
                         `</OL></LI></UL>`,
                     expected =
                         `<ul><li><ol>` +
-                        `<li><span class="line-number-5 os-line-number" contenteditable="false" data-line-number="5">&nbsp;</span>c</li>` +
+                        `<li>${noMarkup(5)}c</li>` +
                         `<li class="insert">d</li>` +
                         `<li class="insert">e</li>` +
                         `</ol></li></ul>`;
@@ -801,10 +815,10 @@ describe(`MotionDiffService`, () => {
         it(`handles changed text within nested lists`, () => {
             // Hint: line number should be moved into first element
             const before =
-                    `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Ebene 1` +
-                    `<ul><li><span class="os-line-number line-number-2" data-line-number="2" contenteditable="false">&nbsp;</span>Ebene 2` +
-                    `<ul><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>Ebene 3` +
-                    `<ul><li><span class="os-line-number line-number-4" data-line-number="4" contenteditable="false">&nbsp;</span>Ebene 4</li>` +
+                    `<ul><li>${noMarkup(1)}Ebene 1` +
+                    `<ul><li>${noMarkup(2)}Ebene 2` +
+                    `<ul><li>${noMarkup(3)}Ebene 3` +
+                    `<ul><li>${noMarkup(4)}Ebene 4</li>` +
                     `</ul></li></ul></li></ul></li></ul>`,
                 after =
                     `<ul><li>Ebene 1` +
@@ -813,11 +827,11 @@ describe(`MotionDiffService`, () => {
                     `<ul><li>Ebene 4</li></ul>` +
                     `</li></ul></li></ul></li></ul>`,
                 expected =
-                    `<ul><li><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Ebene 1` +
-                    `<ul><li><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Ebene 2` +
-                    `<ul><li><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>` +
+                    `<ul><li>${noMarkup(1)}Ebene 1` +
+                    `<ul><li>${noMarkup(2)}Ebene 2` +
+                    `<ul><li>${noMarkup(3)}` +
                     `<del>Ebene 3</del><ins>Ebene 3a</ins>` +
-                    `<ul><li><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Ebene 4</li>` +
+                    `<ul><li>${noMarkup(4)}Ebene 4</li>` +
                     `</ul></li></ul></li></ul></li></ul>`;
 
             const diff = HtmlDiff.diff(before, after);
@@ -826,9 +840,9 @@ describe(`MotionDiffService`, () => {
 
         it.skip(`handles inserted text within nested lists`, () => {
             const before =
-                    `<ul><li><span class="os-line-number line-number-1" data-line-number="1" contenteditable="false">&nbsp;</span>Ebene 1` +
-                    `<ul><li><span class="os-line-number line-number-2" data-line-number="2" contenteditable="false">&nbsp;</span>Ebene 2` +
-                    `</li><li><span class="os-line-number line-number-3" data-line-number="3" contenteditable="false">&nbsp;</span>Ebene 3` +
+                    `<ul><li>${noMarkup(1)}Ebene 1` +
+                    `<ul><li>${noMarkup(2)}Ebene 2` +
+                    `</li><li>${noMarkup(3)}Ebene 3` +
                     `</li></ul></li></ul>`,
                 after =
                     `<ul><li>Ebene 1` +
@@ -836,10 +850,10 @@ describe(`MotionDiffService`, () => {
                     `</li><li>Ebene 3` +
                     `</li></ul></li></ul>`,
                 expected =
-                    `<ul><li><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Ebene 1` +
-                    `<ul><li><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>` +
+                    `<ul><li>${noMarkup(1)}Ebene 1` +
+                    `<ul><li>${noMarkup(2)}` +
                     `Ebene 2<ins>a</ins>` +
-                    `</li><li><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>` +
+                    `</li><li>${noMarkup(3)}` +
                     `Ebene 3` +
                     `</li></ul></li></ul>`;
 
@@ -870,15 +884,15 @@ describe(`MotionDiffService`, () => {
                 // Hint: line number should be moved into first element
                 const before =
                         `<ul><li><ul><li><ol>` +
-                        `<li><span class="os-line-number line-number-5" data-line-number="5" contenteditable="false">&nbsp;</span>Test 1</li>` +
+                        `<li>${noMarkup(5)}Test 1</li>` +
                         `</ol></li></ul></li></ul>`,
                     after =
                         `<UL><LI><UL><LI><OL>` +
-                        `<LI><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false"> </SPAN>Test 2</LI>` +
+                        `<LI>${noMarkup(5)}Test 2</LI>` +
                         `</OL></LI></UL></LI></UL>`,
                     expected =
                         `<ul><li><ul><li><ol>` +
-                        `<li><span class="line-number-5 os-line-number" contenteditable="false" data-line-number="5">&nbsp;</span>` +
+                        `<li>${noMarkup(5)}` +
                         `Test <del>1</del><ins>2</ins></li>` +
                         `</ol></li></ul></li></ul>`;
 
@@ -1022,12 +1036,12 @@ describe(`MotionDiffService`, () => {
         );
 
         it(`works with style-tags in spans`, () => {
-            const before = `<p class="os-split-before os-split-after"><span class="os-line-number line-number-4" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: rgb(0, 0, 255);" class="os-split-before os-split-after">sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`,
+            const before = `<p class="os-split-before os-split-after">${noMarkup(4)}<span style="color: rgb(0, 0, 255);" class="os-split-before os-split-after">sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`,
                 after = `<p class="os-split-after os-split-before"><span class="os-split-after os-split-before" style="color: rgb(0, 0, 255);">sanctus est Lorem ipsum dolor sit amet. Test Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`;
             const diff = HtmlDiff.diff(before, after);
 
             expect(diff).toBe(
-                `<p class="os-split-after os-split-before"><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><span class="os-split-after os-split-before" style="color: rgb(0, 0, 255);">sanctus est Lorem ipsum dolor sit amet. <ins>Test </ins>Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`
+                `<p class="os-split-after os-split-before">${noMarkup(4)}<span class="os-split-after os-split-before" style="color: rgb(0, 0, 255);">sanctus est Lorem ipsum dolor sit amet. <ins>Test </ins>Lorem ipsum dolor sit amet, consetetur sadipscing </span></p>`
             );
         });
 
@@ -1435,12 +1449,15 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`detects broken HTML and lowercases class names`, () => {
-                const before = `<p><span class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">&nbsp;</span>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">&nbsp;</span><span style="color: rgb(0, 0, 0);">"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <br class="os-line-break"><span class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">&nbsp;</span>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <br class="os-line-break"><span class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">&nbsp;</span>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</span></p>\n\n<p><span class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">&nbsp;</span>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </p>`,
+                const before =
+                    `<p>${noMarkup(3)}holen, da rief sie alle sieben herbei und sprach:</p>\n\n` +
+                    `<p>${noMarkup(4)}<span style="color: rgb(0, 0, 0);">"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er ${brMarkup(5)}hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber ${brMarkup(6)}an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</span></p>\n\n` +
+                    `<p>${noMarkup(7)}Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </p>`,
                     after = `<p>holen, da rief sie alle sieben herbei und sprach:</p>\n\n<p><span style="color: rgb(0, 0, 0);">Hello</span></p>\n\n<p><span style="color: rgb(0, 0, 0);">World</span></p>\n\n<p><span style="color: rgb(0, 0, 0);">Ya</span></p>\n\n<p>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne</p>`;
                 const diff = HtmlDiff.diff(before, after);
                 expect(diff).toBe(
-                    `<P class="delete"><SPAN class="line-number-3 os-line-number" data-line-number="3" contenteditable="false">\u00A0</SPAN>holen, da rief sie alle sieben herbei und sprach:</P><DEL>\n\n</DEL>` +
-                    `<P class="delete"><SPAN class="line-number-4 os-line-number" data-line-number="4" contenteditable="false">\u00A0</SPAN><SPAN>"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er <BR class="os-line-break"><SPAN class="line-number-5 os-line-number" data-line-number="5" contenteditable="false">\u00A0</SPAN>hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber <BR class="os-line-break"><SPAN class="line-number-6 os-line-number" data-line-number="6" contenteditable="false">\u00A0</SPAN>an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</SPAN></P><DEL>\n\n</DEL><P class="delete"><SPAN class="line-number-7 os-line-number" data-line-number="7" contenteditable="false">\u00A0</SPAN>Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </P>` +
+                    `<P class="delete">${noMarkupCaps(3)}holen, da rief sie alle sieben herbei und sprach:</P><DEL>\n\n</DEL>` +
+                    `<P class="delete">${noMarkupCaps(4)}<SPAN>"Liebe Kinder, ich will hinaus in den Wald, seid auf der Hut vor dem Wolf! Wenn er ${brMarkupCaps(5)}hereinkommt, frisst er euch alle mit Haut und Haar. Der Bösewicht verstellt sich oft, aber ${brMarkupCaps(6)}an der rauen Stimme und an seinen schwarzen Füßen werdet ihr ihn schon erkennen."</SPAN></P><DEL>\n\n</DEL><P class="delete">${noMarkupCaps(7)}Die Geißlein sagten: " Liebe Mutter, wir wollen uns schon in acht nehmen, du kannst ohne </P>` +
                     `<P class="insert">holen, da rief sie alle sieben herbei und sprach:</P><INS>\n\n</INS>` +
                     `<P class="insert"><SPAN>Hello</SPAN></P><INS>\n\n</INS>` +
                     `<P class="insert"><SPAN>World</SPAN></P><INS>\n\n</INS>` +
@@ -1579,7 +1596,7 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`replaces full paragraph with empty line numbered paragraph`, () => {
-            const inHtml = `<P class="delete"><SPAN class="line-number-4 os-line-number" contenteditable="false" data-line-number="4"> </SPAN><STRONG>Additional context</STRONG><BR><SPAN class="line-number-5 os-line-number" contenteditable="false" data-line-number="5"> </SPAN>This issue is part of the META issue <A target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/OpenSlides/openslides-client/issues/2956">#2956</A></P>`;
+            const inHtml = `<P class="delete">${noMarkup(4)}<STRONG>Additional context</STRONG><BR>${noMarkup(5)}This issue is part of the META issue <A target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/OpenSlides/openslides-client/issues/2956">#2956</A></P>`;
             const stripped = normalizeHtmlForDiff(HtmlDiff.diffHtmlToFinalText(inHtml, true));
             expect(stripped).toBe(`<P>${normalizeHtmlForDiff(noMarkup(4))}<BR>${normalizeHtmlForDiff(noMarkup(5))}</P>`);
         });
@@ -1689,26 +1706,26 @@ describe(`MotionDiffService`, () => {
 
             expect(out).toBe(
                 `<div data-change-is-colliding="" data-change-type="recommendation" data-identifier="2" data-title="Recommendation" data-change-id="recommendation-2" data-line-from="1" data-line-to="1">` +
-                `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1y</p></div>` +
+                `<p>${noMarkup(1)}Test 1y</p></div>` +
                 `<div data-change-is-colliding="" data-change-type="amendment" data-identifier="Ä1" data-title="Amendment 1" data-change-id="amendment-1-0" data-line-from="1" data-line-to="1">` +
-                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 1x</p></div>` +
-                `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 2x</p>` +
-                `<p><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Test 3</p>`
+                `<p>${noMarkup(2)}Test 1x</p></div>` +
+                `<p>${noMarkup(3)}Test 2x</p>` +
+                `<p>${noMarkup(4)}Test 3</p>`
             );
         });
     });
 
     describe(`getAmendmentParagraphsLines`, () => {
         it(`test identical inputs`, () => {
-            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p>`;
-            const outHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p>`;
+            const outHtml = `<p>${noMarkup(1)}Test 1</p>`;
 
             expect(getAmendmentParagraphsLines(2, inHtml, outHtml, 20)).toBe(null);
         });
 
         it(`test without change recos`, () => {
-            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
-            const outHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2x</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
+            const outHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2x</p><p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`;
 
             expect(getAmendmentParagraphsLines(2, inHtml, outHtml, 20)).toEqual({
                 diffLineFrom: 2,
@@ -1716,9 +1733,9 @@ describe(`MotionDiffService`, () => {
                 paragraphLineFrom: 1,
                 paragraphLineTo: 4,
                 paragraphNo: 2,
-                text: `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`,
-                textPost: `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p><p><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>Test 4</p>`,
-                textPre: `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p>`
+                text: `<p>${noMarkup(2)}Test 2<ins>x</ins></p>`,
+                textPost: `<p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p>`,
+                textPre: `<p>${noMarkup(1)}Test 1</p>`
             });
         });
 
@@ -1727,7 +1744,7 @@ describe(`MotionDiffService`, () => {
 
     describe(`getChangeDiff`, () => {
         it(`test with simple change`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`;
 
             expect(
                 getChangeDiff(
@@ -1740,13 +1757,13 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`
+                `<p>${noMarkup(2)}Test 2<ins>x</ins></p>`
             );
         });
 
         // TODO: Check what should happen when highlighted is set
         it(`test with simple change highlighted`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`;
 
             expect(
                 getChangeDiff(
@@ -1760,12 +1777,12 @@ describe(`MotionDiffService`, () => {
                     1
                 )
             ).toBe(
-                `<p><span class="line-number-2 os-line-number" contenteditable="false" data-line-number="2">&nbsp;</span>Test 2<ins>x</ins></p>`
+                `<p>${noMarkup(2)}Test 2<ins>x</ins></p>`
             );
         });
 
         it(`throws error if change is out of scope`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`;
 
             expect(
                 () => getChangeDiff(
@@ -1781,7 +1798,7 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`throws error if change is partially out of scope`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`;
 
             expect(
                 () => getChangeDiff(
@@ -1817,7 +1834,7 @@ describe(`MotionDiffService`, () => {
 
     describe(`getTextRemainderAfterLastChange`, () => {
         it(`test with simple change`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`;
 
             expect(
                 getTextRemainderAfterLastChange(
@@ -1832,12 +1849,12 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p>`
+                `<p>${noMarkup(3)}Test 3</p>`
             );
         });
 
         it(`test no remainder after last change`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`;
 
             expect(
                 getTextRemainderAfterLastChange(
@@ -1855,13 +1872,13 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`test with no changes`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`;
 
             expect(getTextRemainderAfterLastChange(inHtml, [], 20)).toBe(inHtml);
         });
 
         it(`ignores out of scope change recommendations (from)`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-1" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`;
 
             expect(
                 getTextRemainderAfterLastChange(
@@ -1881,12 +1898,12 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p>`
+                `<p>${noMarkup(3)}Test 3</p>`
             );
         });
 
         it(`ignores out of scope change recommendations (to)`, () => {
-            const inHtml = `<p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p><p><span contenteditable="false" class="os-line-number line-number-4" data-line-number="4">&nbsp;</span>Test 4</p><p><span contenteditable="false" class="os-line-number line-number-5" data-line-number="5">&nbsp;</span>Test 5</p>`;
+            const inHtml = `<p>${noMarkup(3)}Test 3</p><p>${noMarkup(4)}Test 4</p><p>${noMarkup(5)}Test 5</p>`;
 
             expect(
                 getTextRemainderAfterLastChange(
@@ -1904,7 +1921,7 @@ describe(`MotionDiffService`, () => {
         });
 
         it(`ignores partial out of scope change recommendations`, () => {
-            const inHtml = `<p><span class="line-number-1 os-line-number" contenteditable="false" data-line-number="1">&nbsp;</span>Test 1</p><p><span contenteditable="false" class="os-line-number line-number-2" data-line-number="2">&nbsp;</span>Test 2</p><p><span contenteditable="false" class="os-line-number line-number-3" data-line-number="3">&nbsp;</span>Test 3</p>`;
+            const inHtml = `<p>${noMarkup(1)}Test 1</p><p>${noMarkup(2)}Test 2</p><p>${noMarkup(3)}Test 3</p>`;
 
             expect(
                 getTextRemainderAfterLastChange(
@@ -1924,7 +1941,7 @@ describe(`MotionDiffService`, () => {
                     20
                 )
             ).toBe(
-                `<p><span class="line-number-3 os-line-number" contenteditable="false" data-line-number="3">&nbsp;</span>Test 3</p>`
+                `<p>${noMarkup(3)}Test 3</p>`
             );
         });
     });

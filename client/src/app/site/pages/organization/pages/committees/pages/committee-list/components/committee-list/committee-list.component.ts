@@ -10,10 +10,10 @@ import { ChoiceService } from '@app/ui/modules/choice-dialog/services/choice.ser
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ViewOrganizationTag } from '../../../../../organization-tags';
-import { OrganizationTagControllerService } from '../../../../../organization-tags/services/organization-tag-controller.service';
+import { OrganizationTagControllerService } from '../../../../../organization-tags/services/organization-tag-controller.service/organization-tag-controller.service';
+import { ViewOrganizationTag } from '../../../../../organization-tags/view-models/view-organization-tag';
 import { CommitteeControllerService } from '../../../../services/committee-controller.service';
-import { ViewCommittee } from '../../../../view-models';
+import { ViewCommittee } from '../../../../view-models/view-committee';
 import { CommitteeExportService } from '../../services/committee-list-export.service/committee-export.service';
 import { CommitteeFilterService } from '../../services/committee-list-filter.service/committee-filter.service';
 import { CommitteeSortService } from '../../services/committee-list-sort.service/committee-sort.service';

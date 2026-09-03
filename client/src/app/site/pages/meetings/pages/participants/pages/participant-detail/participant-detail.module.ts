@@ -35,7 +35,7 @@ import { ParticipantDetailRoutingModule } from './participant-detail-routing.mod
         RouterModule,
         SearchSelectorModule,
         EditorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         UserComponentsModule,
         PipesModule,
         HeadBarModule,

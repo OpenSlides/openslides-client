@@ -18,7 +18,7 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 
-import { ViewCommittee } from '../../../../../committees';
+import { ViewCommittee } from '../../../../../committees/view-models/view-committee';
 import { AccountExportService } from '../../../../services/account-export.service/account-export.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 import { AccountFilterService } from '../../../../services/common/account-filter.service';

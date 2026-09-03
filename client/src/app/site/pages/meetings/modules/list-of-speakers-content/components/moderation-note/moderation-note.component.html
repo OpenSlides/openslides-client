@@ -4,21 +4,21 @@
         <mat-card-content style="overflow: None">
             <!-- Title edit/save/cancle-->
             <div class="action-title">
-                <h2 class="accessibility-h2 accessibility-h2-3 subtitle-text" translate>Moderation note</h2>
+                <h2 class="accessibility-h2 accessibility-h2-3 subtitle-text">{{ 'Moderation note' | translate }}</h2>
                 <div class="buttons">
                     @if (canManageModerationNote) {
                         @if (isEditing) {
                             <button
                                 color="warn"
                                 mat-icon-button
-                                matTooltip="{{ 'Save' | translate }}"
+                                [matTooltip]="'Save' | translate"
                                 (click)="saveChangesModerationNote()"
                             >
                                 <mat-icon>done</mat-icon>
                             </button>
                             <button
                                 mat-icon-button
-                                matTooltip="{{ 'Cancel edit' | translate }}"
+                                [matTooltip]="'Cancel edit' | translate"
                                 (click)="toggleEditModeratorNote()"
                             >
                                 <mat-icon>close</mat-icon>
@@ -26,7 +26,7 @@
                         } @else {
                             <button
                                 mat-icon-button
-                                matTooltip="{{ 'Edit moderation note' | translate }}"
+                                [matTooltip]="'Edit moderation note' | translate"
                                 (click)="toggleEditModeratorNote()"
                             >
                                 <mat-icon>edit</mat-icon>
@@ -36,7 +36,7 @@
                     @if (showModerationNotesExport) {
                         <button
                             mat-icon-button
-                            matTooltip="{{ 'Export moderator note as PDF' | translate }}"
+                            [matTooltip]="'Export moderator note as PDF' | translate"
                             (click)="onDownloadPDF()"
                         >
                             <mat-icon>picture_as_pdf</mat-icon>

@@ -18,7 +18,7 @@ import { ParticipantSearchSelectorComponent } from './components/participant-sea
         ReactiveFormsModule,
         DirectivesModule,
         SearchSelectorModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     exports: [ParticipantSearchSelectorComponent]
 })

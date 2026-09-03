@@ -1,7 +1,7 @@
 import { inject, Service } from '@angular/core';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 
-import { FileExportService } from '../file-export.service';
+import { FileExportService } from '../file-export.service/file-export.service';
 import {
     BackendCsvColumnsDefinition,
     DEFAULT_COLUMN_SEPARATOR,

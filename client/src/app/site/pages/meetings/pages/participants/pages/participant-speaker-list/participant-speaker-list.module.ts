@@ -36,7 +36,7 @@ import { ParticipantSpeakerListServiceModule } from './services/participant-spea
         CountdownTimeModule,
         DirectivesModule,
         MeetingsComponentCollectorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatMenuModule,
         MatCheckboxModule,

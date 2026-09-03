@@ -33,7 +33,7 @@ import { CommentSectionSortComponent } from './components/comment-section-sort/c
         SearchSelectorModule,
         IconContainerComponent,
         PipesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatCardModule,
         MatExpansionModule,
         MatIconModule,

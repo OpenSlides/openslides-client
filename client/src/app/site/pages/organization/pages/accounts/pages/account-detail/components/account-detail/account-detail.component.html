@@ -22,11 +22,13 @@
     </div>
 
     <!-- Menu -->
-    <ng-container *osOmlPerms="userOML" class="menu-slot">
-        <button mat-icon-button type="button" [matMenuTriggerFor]="userExtraMenu">
-            <mat-icon>more_vert</mat-icon>
-        </button>
-    </ng-container>
+    @if (canEdit) {
+        <ng-container class="menu-slot">
+            <button mat-icon-button type="button" [matMenuTriggerFor]="userExtraMenu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </ng-container>
+    }
 </os-head-bar>
 
 <os-user-detail-view
@@ -44,7 +46,7 @@
         <h2>{{ 'Organization specific information' | translate }}</h2>
         <div [formGroup]="form">
             <!-- Home committee -->
-            <div class="home-committee-area">
+            <div *osOmlPerms="OML.can_manage_organization" class="home-committee-area">
                 <mat-form-field class="form50 force-min-width">
                     <mat-label>{{ 'Home committee' | translate }}</mat-label>
                     <os-repo-search-selector
@@ -99,10 +101,12 @@
                 <mat-label>{{ 'Default vote weight' | translate }}</mat-label>
                 <input formControlName="default_vote_weight" matInput type="number" />
                 @if (isDefaultVoteWeightError && form.controls['default_vote_weight'].value > 0) {
-                    <mat-error translate>Please select a vote weight greater than or equal to 0.000001</mat-error>
+                    <mat-error>
+                        {{ 'Please select a vote weight greater than or equal to 0.000001' | translate }}
+                    </mat-error>
                 }
                 @if (isDefaultVoteWeightError && form.controls['default_vote_weight'].value <= 0) {
-                    <mat-error translate>Please select a vote weight greater than zero.</mat-error>
+                    <mat-error>{{ 'Please select a vote weight greater than zero.' | translate }}</mat-error>
                 }
             </mat-form-field>
         </div>
@@ -170,17 +174,17 @@
                 <table class="participation-table">
                     <tr class="header-underline">
                         <th>
-                            <span translate>Committees</span>
+                            <span>{{ 'Committees' | translate }}</span>
                             ({{ numCommittees }})
                         </th>
                         @if (comitteeAdministrationAmount) {
                             <th class="admin-column">({{ comitteeAdministrationAmount }})</th>
                         }
                         <th>
-                            <span translate>Meetings</span>
+                            <span>{{ 'Meetings' | translate }}</span>
                             ({{ user.meetings?.length }})
                         </th>
-                        <th translate>Groups</th>
+                        <th>{{ 'Groups' | translate }}</th>
                     </tr>
                     @for (row of tableData | keyvalue: tableDataAscOrderCompare; track row; let lastLine = $last) {
                         <!-- Handle committees without meetings-->
@@ -193,7 +197,7 @@
                                     <td class="admin-column">
                                         @if (row.value.is_manager) {
                                             <mat-icon
-                                                matTooltip="{{ 'Committee admin' | translate }}"
+                                                [matTooltip]="'Committee admin' | translate"
                                                 [matTooltipPosition]="'left'"
                                             >
                                                 engineering
@@ -223,7 +227,7 @@
                                     <td class="admin-column" [attr.rowspan]="getNumberOfKeys(row.value.meetings)">
                                         @if (row.value.is_manager) {
                                             <mat-icon
-                                                matTooltip="{{ 'Committee admin' | translate }}"
+                                                [matTooltip]="'Committee admin' | translate"
                                                 [matTooltipPosition]="'left'"
                                             >
                                                 engineering

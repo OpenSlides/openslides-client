@@ -14,7 +14,7 @@ import { MeetingTimeComponent } from '@app/ui/modules/meeting-time/meeting-time.
 import { TranslatePipe } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ViewAgendaItem } from '../../../../view-models';
+import { ViewAgendaItem } from '../../../../view-models/view-agenda-item';
 
 export interface AgendaForwardDialogReturnData {
     meetingIds: Ids;

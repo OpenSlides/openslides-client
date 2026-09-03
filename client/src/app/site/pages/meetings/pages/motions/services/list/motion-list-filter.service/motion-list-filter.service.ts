@@ -10,16 +10,16 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionCategoryControllerService } from '../../../modules/categories/services';
-import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
-import { ViewMotionEditor } from '../../../modules/editors';
-import { MotionEditorControllerService } from '../../../modules/editors/services';
-import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
-import { TagControllerService } from '../../../modules/tags/services';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
-import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers';
-import { MotionWorkingGroupSpeakerControllerService } from '../../../modules/working-group-speakers/services';
-import { ForwardingStatus, ViewMotion } from '../../../view-models';
+import { MotionCategoryControllerService } from '../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionCommentSectionControllerService } from '../../../modules/comments/services/motion-comment-section-controller.service';
+import { MotionEditorControllerService } from '../../../modules/editors/services/motion-editor-controller/motion-editor-controller.service';
+import { ViewMotionEditor } from '../../../modules/editors/view-models/view-motion-editor';
+import { MotionBlockControllerService } from '../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
+import { TagControllerService } from '../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { MotionWorkflowControllerService } from '../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../modules/working-group-speakers/services/motion-working-group-speaker-controller/motion-working-group-speaker-controller.service';
+import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers/view-models/view-motion-working-group-speaker';
+import { ForwardingStatus, ViewMotion } from '../../../view-models/view-motion';
 
 /**
  * Filter description to easier parse dynamically occurring workflows
