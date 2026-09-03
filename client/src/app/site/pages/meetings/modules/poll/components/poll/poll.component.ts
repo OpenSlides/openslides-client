@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 import { PollState, PollVisibility } from '@app/domain/models/poll';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { idFromFqid } from '@app/infrastructure/utils/transform-functions';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { DirectivesModule } from '@app/ui/directives';
@@ -57,7 +58,7 @@ export class PollComponent extends BaseMeetingComponent {
     public poll = input.required<ViewPoll>();
 
     public allowEdit = input<boolean>(false);
-    public navigateToPollDetail = input<boolean>(false);
+    public navigateTo = input<`poll` | `content_object` | null>(null);
 
     public dialogOpened = output<void>();
 
@@ -69,7 +70,19 @@ export class PollComponent extends BaseMeetingComponent {
     });
 
     public getDetailLink = computed(() => {
-        return `/${this.poll().meeting_id}/polls/${this.poll().id}`;
+        if (this.navigateTo() === `poll`) {
+            return `/${this.poll().meeting_id}/polls/${this.poll().id}`;
+        } else if (this.navigateTo() === `content_object`) {
+            if (this.poll().isMotionPoll) {
+                return `/${this.poll().meeting_id}/motions/${idFromFqid(this.poll().content_object_id)}`;
+            } else if (this.poll().isAssignmentPoll) {
+                return `/${this.poll().meeting_id}/assignments/${idFromFqid(this.poll().content_object_id)}`;
+            } else if (this.poll().isTopicPoll) {
+                return `/${this.poll().meeting_id}/topics/${idFromFqid(this.poll().content_object_id)}`;
+            }
+        }
+
+        return null;
     });
 
     public pollStateAction: Signal<PollStateAction | null> = computed(() => {
