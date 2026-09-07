@@ -7,7 +7,7 @@ import { Deferred } from '@app/infrastructure/utils/promises';
 import { OsSortProperty } from '@app/site/base/base-sort.service';
 import { SortListService } from '@app/ui/modules/list';
 import { TranslateService } from '@ngx-translate/core';
-import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, filter, Observable, Subject, Subscription, throttleTime } from 'rxjs';
 
 import { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
@@ -154,10 +154,10 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
     private repositoryServiceCollector = inject(RepositoryServiceCollectorService);
 
     public constructor() {
-        // All data is piped through an auditTime of 1ms. This is to prevent massive
+        // All data is piped through an throttleTime of 20ms. This is to prevent massive
         // updates, if e.g. an autoupdate with a lot motions come in. The result is just one
         // update of the new list instead of many unnecessary updates.
-        this.unsafeViewModelListSubject.pipe(auditTime(1)).subscribe(models => {
+        this.unsafeViewModelListSubject.pipe(throttleTime(20)).subscribe(models => {
             if (models) {
                 this.updateViewModelListSubject(models);
             }
