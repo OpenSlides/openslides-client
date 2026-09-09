@@ -21,6 +21,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 import { Router } from '@angular/router';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
+import { ParticipantImportListInfoDialogComponent } from '@app/site/pages/meetings/pages/participants/pages/participant-import/components/participant-import-list-info-dialog/participant-import-list-info-dialog.component';
 import { ParticipantImportCSVReloadService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-reload-file.service';
 import { BackendImportService } from '@app/ui/base/import-service';
 import { _ } from '@ngx-translate/core';
@@ -455,8 +456,11 @@ export class BackendImportListComponent implements OnInit {
     /**
      * Opens an info dialog with the given template as content.
      */
-    public async openDialog(dialogTemplate: TemplateRef<any>): Promise<void> {
-        const ref = this.dialog.open(dialogTemplate, { ...infoDialogSettings, width: '690px' });
+    public async openDialog(dialogTemplate?: TemplateRef<any>): Promise<void> {
+        const ref = this.dialog.open(dialogTemplate ?? ParticipantImportListInfoDialogComponent, {
+            ...infoDialogSettings,
+            width: dialogTemplate ? undefined : '690px'
+        });
         await firstValueFrom(ref.afterClosed());
     }
 

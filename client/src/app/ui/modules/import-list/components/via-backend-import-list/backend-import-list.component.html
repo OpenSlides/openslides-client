@@ -122,11 +122,11 @@
                                 }
                             }
                         </td>
-                        <td class="table-title-column">
-                            @if (column.description) {
+                        @if (column.description) {
+                            <td class="table-title-column">
                                 {{ column.description | translate }}
-                            }
-                        </td>
+                            </td>
+                        }
                     </tr>
                 }
             </table>
@@ -374,7 +374,14 @@
                     }
                 </span>
             }
-            <mat-icon class="pointer-icon" color="primary" inline (click)="openDialog(fieldsInfoDialog)">info</mat-icon>
+            <mat-icon
+                class="pointer-icon"
+                color="primary"
+                inline
+                (click)="isParticipantImport ? openDialog() : openDialog(fieldsInfoDialog)"
+            >
+                info
+            </mat-icon>
         </div>
         @if (requiredFields.length) {
             <ul>

@@ -30,10 +30,7 @@
                                         [ngStyle]="{
                                             flexBasis: definition.width || defaultColumnWidth,
                                             width: definition.width || defaultColumnWidth,
-                                            minWidth:
-                                                definition.property === 'email' && horizontalScroll
-                                                    ? '300px'
-                                                    : definition.minWidth || defaultColumnWidth,
+                                            minWidth: definition.minWidth || defaultColumnWidth,
                                             maxWidth: definition.maxWidth || defaultColumnWidth
                                         }"
                                     >
@@ -72,10 +69,7 @@
                                         [ngStyle]="{
                                             flexBasis: definition.width || defaultColumnWidth,
                                             width: definition.width || defaultColumnWidth,
-                                            minWidth:
-                                                definition.property === 'email' && horizontalScroll
-                                                    ? '300px'
-                                                    : definition.minWidth || defaultColumnWidth,
+                                            minWidth: definition.minWidth || defaultColumnWidth,
                                             maxWidth: definition.maxWidth || defaultColumnWidth
                                         }"
                                     >

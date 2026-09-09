@@ -13,9 +13,11 @@ import {
 } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { AccountControllerService } from '@app/site/pages/organization/pages/accounts/services/common/account-controller.service';
@@ -35,7 +37,7 @@ import { ListModule } from '@app/ui/modules/list';
 import { ScrollingTableCellDefConfig } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import { START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { map, Observable, of, Subscription } from 'rxjs';
+import { firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
 
 import { ViewGroup } from '../../../../modules';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
@@ -44,6 +46,7 @@ import { ParticipantImportFilterService } from '../../services/participant-impor
 import { CSVEncodingOptionsService } from '../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
 import { ViewImportedParticipant } from '../../view-models/view-participant-import';
+import { ParticipantImportListInfoDialogComponent } from '../participant-import-list-info-dialog/participant-import-list-info-dialog.component';
 
 @Component({
     selector: `os-participant-import-list-preview`,
@@ -60,14 +63,16 @@ import { ViewImportedParticipant } from '../../view-models/view-participant-impo
         MatCheckbox,
         NgClass,
         MatDialogModule,
-        MatProgressSpinner
+        MatProgressSpinner,
+        MatLabel
     ]
 })
 export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
     public readonly START_POSITION = START_POSITION;
 
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
-    protected accountsControllerService = inject(AccountControllerService);
+    private accountsControllerService = inject(AccountControllerService);
+    private userAccounts = this.accountsControllerService.getViewModelList();
 
     private modelName = `Participant`;
 
@@ -101,31 +106,29 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      */
     public showHeader = true;
 
-    private userAccounts = this.accountsControllerService.getViewModelList();
-
     /** The header's order according to how they are displayed on the template file */
-    private headersOrder = [
-        'title',
-        'first_name',
-        'last_name',
-        'email',
-        'member_number',
-        'structure_level',
-        'groups',
-        'number',
-        'vote_weight',
-        'gender',
-        'pronoun',
-        'username',
-        'default_password',
-        'is_active',
-        'is_physical_person',
-        'is_present',
-        'locked_out',
-        'saml_id',
-        'home_committee',
-        'external',
-        'comment'
+    private headersConfig = [
+        { header: 'title', size: 50 },
+        { header: 'first_name', size: 200 },
+        { header: 'last_name', size: 50 },
+        { header: 'email', size: 300 },
+        { header: 'member_number', size: 50 },
+        { header: 'structure_level', size: 500 },
+        { header: 'groups', size: 300 },
+        { header: 'number', size: 50 },
+        { header: 'vote_weight', size: 50 },
+        { header: 'gender', size: 50 },
+        { header: 'pronoun', size: 50 },
+        { header: 'username', size: 50 },
+        { header: 'default_password', size: 50 },
+        { header: 'is_active', size: 50 },
+        { header: 'is_physical_person', size: 50 },
+        { header: 'is_present', size: 50 },
+        { header: 'locked_out', size: 50 },
+        { header: 'saml_id', size: 50 },
+        { header: 'home_committee', size: 50 },
+        { header: 'external', size: 50 },
+        { header: 'comment', size: 500 }
     ];
 
     /**
@@ -227,11 +230,23 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     /**
+     * Opens an info dialog with the column's descriptions.
+     */
+    public async openDialog(): Promise<void> {
+        const ref = this.dialog.open(ParticipantImportListInfoDialogComponent, {
+            ...infoDialogSettings,
+            width: '851px'
+        });
+        await firstValueFrom(ref.afterClosed());
+    }
+
+    /**
      * Gets the style of the column for the given property.
      */
     protected getColumnConfig(propertyName: string): ScrollingTableCellDefConfig {
         const defaultHeader = this._headers[propertyName]?.default;
-        const colWidth = defaultHeader?.width ?? 50;
+        const headerConfig = this.headersConfig.find(config => config.header === propertyName);
+        const colWidth = defaultHeader?.width ?? (headerConfig ? headerConfig.size : 150);
         const def: ScrollingTableCellDefConfig = { minWidth: Math.max(150, colWidth) };
         if (!defaultHeader?.flexible) {
             def.width = colWidth;
@@ -266,9 +281,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Generated:
                 return `merge`;
             case BackendImportState.Remove:
-                return `remove`;
-            case BackendImportState.Unchanged:
                 return ``;
+            case BackendImportState.Unchanged:
+                return `remove`;
             default:
                 return `block`; // fallback: Error
         }
@@ -288,11 +303,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.New:
                 return `add_circle_outline`;
             case BackendImportState.Done:
-                return 'autorenew';
+                return '';
             case BackendImportState.Generated:
                 return `merge`;
             case BackendImportState.Remove:
-                return `remove`;
+                return `remove_circle_outline`;
             default:
                 // ad hoc check for updated structure levels and groups
                 if ((item.info as string) === 'updated') {
@@ -307,7 +322,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Error: // no import possible
                 return `red-warning-text`;
             case BackendImportState.Warning:
-                return 'warning';
+                return 'warn';
             case BackendImportState.New:
                 return 'os-green';
             case BackendImportState.Done: // has been imported / item will be updated
@@ -325,6 +340,10 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Unchanged:
                 return ``;
             default:
+                // ad hoc check for updated structure levels and groups
+                if ((item['info'] as string) === 'updated') {
+                    return 'os-yellow';
+                }
                 return `block`; // fallback: Error
         }
     }
@@ -390,6 +409,14 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                         ? this.translate.instant(`will be updated`) // item will be updated
                         : this.translate.instant(`has been updated`))
                 ); // item has been updated
+            case BackendImportState.Unchanged:
+                return (
+                    this.translate.instant(this.modelName) +
+                    ` ` +
+                    (this._state !== BackendImportPhase.FINISHED
+                        ? this.translate.instant(`will not be changed`) // item will not be changed
+                        : this.translate.instant(`has not been changed`)) // item has not been changed
+                );
             case BackendImportState.Referenced:
                 return (
                     this.translate.instant(this.modelName) +
@@ -398,8 +425,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                         ? this.translate.instant(`will be referenced`) // item will be referenced
                         : this.translate.instant(`has been referenced`)) // item has been referenced
                 );
-            case BackendImportState.Unchanged:
-                return ``;
             default:
                 return undefined;
         }
@@ -470,12 +495,12 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this._summary = undefined;
             this._rows = undefined;
         } else {
-            const orderMap = new Map(this.headersOrder.map((property, index) => [property, index]));
+            const orderMap = new Map(this.headersConfig.map((property, index) => [property.header, index]));
             this._previewColumns = (previews[0]?.headers ?? this._previewColumns)
                 .filter(header => !header.is_hidden)
                 .sort((a, b) => {
-                    const aIndex = orderMap.get(a.property) ?? this.headersOrder.length;
-                    const bIndex = orderMap.get(b.property) ?? this.headersOrder.length;
+                    const aIndex = orderMap.get(a.property) ?? this.headersConfig.length;
+                    const bIndex = orderMap.get(b.property) ?? this.headersConfig.length;
                     return aIndex - bIndex;
                 });
             this.transformSummary(previews);
@@ -559,13 +584,13 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         ref.close();
     }
 
-    private isReferenced(row: ViewImportedParticipant): boolean {
+    protected isReferenced(row: ViewImportedParticipant): boolean {
         if (row.state !== 'done') {
             return false;
         }
         for (const user of this.userAccounts) {
             if (
-                (user.meeting_ids.includes(row.meeting_id) && row.username && row.username === user.username) ||
+                (row.username && row.username === user.username && user.meeting_ids.includes(row.meeting_id)) ||
                 (row.member_number && row.member_number === user.member_number) ||
                 (row.saml_id && row.saml_id === user.saml_id)
             ) {
@@ -576,11 +601,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return true;
     }
 
-    private isUnchanged(item: ViewImportedParticipant): boolean {
-        if (item.state !== BackendImportState.Done) {
+    protected isUnchanged(item: ViewImportedParticipant): boolean {
+        if (![BackendImportState.Done, BackendImportState.Referenced].includes(item.state)) {
             return false;
         }
-        if (this.checkChanges(item) === false) {
+        if (this.checkChanges(item)) {
             item.setState = BackendImportState.Unchanged;
             return true;
         }
@@ -640,7 +665,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             new: item.number
                         };
                     }
-                    if (item.comment !== user.comment(this.activeMeetingIdService.meetingId)) {
+                    if (
+                        item.comment !== user.comment(this.activeMeetingIdService.meetingId) &&
+                        user.comment(this.activeMeetingIdService.meetingId) &&
+                        !(item.comment === undefined)
+                    ) {
                         changes['comment'] = {
                             old: user.comment(),
                             new: item.comment
@@ -654,7 +683,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                     }
                     if (
                         this.getShortenedDecimal(item.voteWeight) !==
-                        this.getShortenedDecimal(user.voteWeight.toString())
+                            this.getShortenedDecimal(user.voteWeight.toString()) &&
+                        user.voteWeight !== undefined
                     ) {
                         changes['vote_weight'] = {
                             old: user.voteWeight,

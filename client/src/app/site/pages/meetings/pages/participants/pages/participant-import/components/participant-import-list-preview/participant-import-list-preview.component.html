@@ -35,35 +35,41 @@
                 >
                     @let entry = row.data;
                     @let type = column.type;
+                    @let changes = checkChanges(row, column.property);
                     <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) | translate }}</div>
                     @if (entry && (entry[def] || type === 'boolean')) {
                         <div class="flex-vertical-center">
                             @if (getHeader(def).is_list && entry[def]) {
-                                @for (item of entry[def]; track item) {
+                                @for (item of entry[def]; track item; let last = $last; let index = $index) {
+                                    @let icon = getEntryIcon(item);
+                                    @let rowIcon = getActionIconRow(item);
                                     <span>
                                         {{ entry[def].value }}
                                         @if (getHeader(def).is_object) {
-                                            <div>
-                                                @if (getHeader(def).type === 'string') {
-                                                    {{ item.value }}
-                                                }
-                                                @if (getHeader(def).type === 'number') {
-                                                    {{ item.value }}
-                                                }
-                                                @if (getHeader(def).type === 'date') {
-                                                    {{ item.value }}
-                                                }
-                                                @if (getHeader(def).type === 'boolean') {
-                                                    <mat-checkbox disabled [checked]="item.value" />
-                                                }
-                                                &nbsp;
-
-                                                @if (getActionIconRow(item)) {
-                                                    <mat-icon class="lower-margin-top" color="accent" inline>
-                                                        {{ getEntryIcon(item) }}
-                                                    </mat-icon>
-                                                }
-                                            </div>
+                                            @if (getHeader(def).type === 'string') {
+                                                {{ item.value }}
+                                            }
+                                            @if (getHeader(def).type === 'number') {
+                                                {{ item.value }}
+                                            }
+                                            @if (getHeader(def).type === 'date') {
+                                                {{ item.value }}
+                                            }
+                                            @if (getHeader(def).type === 'boolean') {
+                                                <mat-checkbox disabled [checked]="item.value" />
+                                            }
+                                            @if (rowIcon !== 'remove') {
+                                                <mat-icon
+                                                    class="lower-margin-top"
+                                                    color="accent"
+                                                    inline
+                                                    style="margin-left: -5px"
+                                                    [class.os-green]="icon === 'add_circle_outline'"
+                                                    [class.os-yellow]="icon === 'autorenew'"
+                                                >
+                                                    {{ icon }}
+                                                </mat-icon>
+                                            }
                                         } @else {
                                             @if (getHeader(def).type === 'string') {
                                                 {{ item.value }}
@@ -80,15 +86,17 @@
                                             @if (getHeader(def).type === 'boolean') {
                                                 <mat-checkbox disabled [checked]="item.value" />
                                             }
-                                            <span>&nbsp;</span>
                                         }
                                     </span>
+                                    @if (!last && index >= 0) {
+                                        <div>,&nbsp;</div>
+                                    }
                                 }
                             }
                             <span>
                                 @if (!getHeader(def).is_list && entry[def] !== undefined) {
                                     @if (getHeader(def).is_object) {
-                                        @let icon = getActionIconEntry(entry[def]);
+                                        @let icon = changes !== '' ? changes : getActionIconEntry(entry[def]);
                                         <div class="cell-wrapper">
                                             <div [class.email-cell]="getHeader(def).property === 'email'">
                                                 @if (getHeader(def).type === 'string') {
@@ -108,12 +116,15 @@
                                                 }
                                             </div>
                                             <div>
-                                                @if (getEntryIcon(entry[def]) || checkChanges(row, column.property)) {
+                                                @if (icon !== '') {
+                                                    @let color = getColorIcon(entry[def]);
                                                     <mat-icon
                                                         class="lower-margin-top"
                                                         inline
                                                         [class.error-icon]="icon === 'error_outline'"
-                                                        [color]="icon !== 'error_outline' ? 'accent' : null"
+                                                        [class.os-green]="icon === 'add_circle_outline'"
+                                                        [class.os-yellow]="icon === 'autorenew'"
+                                                        [color]="color"
                                                     >
                                                         {{ icon }}
                                                     </mat-icon>
@@ -128,7 +139,7 @@
                 </div>
             }
             <div
-                *osScrollingTableCell="'errors'; row as row; config: { width: 55, position: START_POSITION }"
+                *osScrollingTableCell="'errors'; row as row; config: { width: 100, position: START_POSITION }"
                 class="flex-vertical-center icon-container"
             >
                 <div *osScrollingTableCellLabel style="text-align: center; width: 100%">Action</div>
@@ -164,6 +175,12 @@
             </mat-icon>
             <div style="margin-bottom: 8px">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
         }
+        <div style="margin-left: auto; margin-right: 15px">
+            <button matButton (click)="openDialog()">
+                <mat-icon color="accent">info</mat-icon>
+                <mat-label>{{ 'INFO' | translate }}</mat-label>
+            </button>
+        </div>
     </footer>
 </div>
 
