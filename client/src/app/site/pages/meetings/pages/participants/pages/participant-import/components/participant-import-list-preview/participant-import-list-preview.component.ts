@@ -357,7 +357,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 total: ['group', 'accent'],
                 error: ['error_outline', 'red-warning-text'],
                 warning: ['warning', 'warn'],
-                created: ['add_circle_outline', 'os-green'],
+                new: ['add_circle_outline', 'os-green'],
                 updated: ['autorenew', 'os-yellow'],
                 referenced: ['merge', 'accent'],
                 unchanged: [``, ``]
@@ -522,6 +522,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             (this._summary.find(item => item?.name === 'updated')?.value - countReferenced - countUnchanged) | 0;
         const error = this._summary.find(item => item.name === 'error');
         this._summary = this._summary.filter(item => item.name !== 'updated');
+        this._summary.map(item => {
+            item.name === 'created' && (item.name = 'new');
+        });
         if (countReferenced > 0) {
             this._summary.push({ name: 'referenced', value: countReferenced });
         }

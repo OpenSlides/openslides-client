@@ -32,6 +32,30 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
+                property: `isPresent`,
+                label: _(`Presence`),
+                options: [
+                    { condition: true, label: _(`Is present`) },
+                    { condition: [false, null], label: _(`Is not present`) }
+                ]
+            },
+            {
+                property: `hasGroups`,
+                label: _(`Groups`),
+                options: [
+                    { condition: true, label: _(`Has groups`) },
+                    { condition: [false, null], label: _(`Has no groups`) }
+                ]
+            },
+            {
+                property: `isLockedOut`,
+                label: `Locked out`,
+                options: [
+                    { condition: true, label: `Is locked out` },
+                    { condition: [false, null], label: `Is not locked out` }
+                ]
+            },
+            {
                 property: `isActive`,
                 label: _(`Active`),
                 options: [
@@ -48,54 +72,6 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `isPresent`,
-                label: _(`Presence`),
-                options: [
-                    { condition: true, label: _(`Is present`) },
-                    { condition: [false, null], label: _(`Is not present`) }
-                ]
-            },
-            {
-                property: `changedVoteWeight`,
-                label: _(`Vote weight`),
-                options: [
-                    { condition: true, label: _(`Has changed vote weight`) },
-                    { condition: [false, null], label: _(`Has unchanged vote weight`) }
-                ]
-            },
-            {
-                property: `isLockedOut`,
-                label: `Locked out`,
-                options: [
-                    { condition: true, label: `Is locked out` },
-                    { condition: [false, null], label: `Is not locked out` }
-                ]
-            },
-            {
-                property: `hasMemberNumber`,
-                label: _(`Membership number`),
-                options: [
-                    { condition: true, label: _(`Has a membership number`) },
-                    { condition: [false, null], label: _(`Has no membership number`) }
-                ]
-            },
-            {
-                property: `hasTitle`,
-                label: _(`Title`),
-                options: [
-                    { condition: true, label: _(`Has a title`) },
-                    { condition: [false, null], label: _(`Has no title`) }
-                ]
-            },
-            {
-                property: `hasSamlId`,
-                label: _(`SSO`),
-                options: [
-                    { condition: true, label: _(`Has SSO identification`) },
-                    { condition: [false, null], label: _(`Has no SSO identification`) }
-                ]
-            },
-            {
                 property: `gender`,
                 label: _(`Gender`),
                 options: [
@@ -107,11 +83,43 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
+                property: `hasMemberNumber`,
+                label: _(`Membership number`),
+                options: [
+                    { condition: true, label: _(`Has a membership number`) },
+                    { condition: [false, null], label: _(`Has no membership number`) }
+                ]
+            },
+            {
                 property: `hasEmail`,
                 label: _(`Email address`),
                 options: [
                     { condition: true, label: _(`Has an email address`) },
                     { condition: [false, null], label: _(`Has no email address`) }
+                ]
+            },
+            {
+                property: `hasSamlId`,
+                label: _(`SSO`),
+                options: [
+                    { condition: true, label: _(`Has SSO identification`) },
+                    { condition: [false, null], label: _(`Has no SSO identification`) }
+                ]
+            },
+            {
+                property: `changedVoteWeight`,
+                label: _(`Vote weight`),
+                options: [
+                    { condition: true, label: _(`Has changed vote weight`) },
+                    { condition: [false, null], label: _(`Has unchanged vote weight`) }
+                ]
+            },
+            {
+                property: `hasTitle`,
+                label: _(`Title`),
+                options: [
+                    { condition: true, label: _(`Has a title`) },
+                    { condition: [false, null], label: _(`Has no title`) }
                 ]
             },
             {
@@ -136,14 +144,6 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                 options: [
                     { condition: true, label: _(`Has home committee`) },
                     { condition: [false, null], label: _(`Has no home committee`) }
-                ]
-            },
-            {
-                property: `hasGroups`,
-                label: _(`Groups`),
-                options: [
-                    { condition: true, label: _(`Has groups`) },
-                    { condition: [false, null], label: _(`Has no groups`) }
                 ]
             }
         ];

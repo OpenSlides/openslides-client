@@ -183,7 +183,7 @@
         <div class="import-successful" [hidden]="!importDone">
             {{ 'Import successful' | translate }}
         </div>
-        <div style="max-width: inherit; margin-left: auto; margin-right: 15px">
+        <div style="margin-left: auto; margin-right: 15px">
             <button matButton (click)="openDialog()">
                 <mat-icon color="accent">info</mat-icon>
                 <mat-label>{{ 'INFO' | translate }}</mat-label>
@@ -231,7 +231,7 @@
                             <mat-icon inline [ngClass]="colInfo[1]">
                                 {{ colInfo[0] }}
                             </mat-icon>
-                            <div class="summary-text">{{ row.value }}&nbsp;{{ row.name }}</div>
+                            <div class="summary-text">{{ row.value }}&nbsp;{{ row.name | translate }}</div>
                         </div>
                     }
                 </div>
