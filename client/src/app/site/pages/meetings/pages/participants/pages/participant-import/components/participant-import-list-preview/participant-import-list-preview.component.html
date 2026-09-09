@@ -3,7 +3,12 @@
         <h1 class="mock-h2">{{ 'Import participants' | translate }}</h1>
     </div>
     <ng-container class="menu-slot">
-        <button mat-button [disabled]="uploadButton" (click)="importData(ImportDialog, ImportDialogSummary)">
+        <button
+            mat-button
+            [disabled]="uploadButton"
+            [hidden]="importDone"
+            (click)="importData(ImportDialog, ImportDialogSummary)"
+        >
             <span class="upper">{{ 'Import' | translate }}</span>
         </button>
     </ng-container>
@@ -175,7 +180,10 @@
             </mat-icon>
             <div style="margin-bottom: 8px">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
         }
-        <div style="margin-left: auto; margin-right: 15px">
+        <div class="import-successful" [hidden]="!importDone">
+            {{ 'Import successful' | translate }}
+        </div>
+        <div style="max-width: inherit; margin-left: auto; margin-right: 15px">
             <button matButton (click)="openDialog()">
                 <mat-icon color="accent">info</mat-icon>
                 <mat-label>{{ 'INFO' | translate }}</mat-label>

@@ -156,4 +156,13 @@ $os-yellow: rgb(255, 193, 7);
     border-top: 1px solid rgba(0, 0, 0, 0.12);
     display: flex;
     align-items: center;
+
+    .import-successful {
+        flex: 1;
+        text-align: center;
+        padding-right: 200px;
+        font-weight: 500;
+        font-size: larger;
+        color: $os-green
+    }
 }

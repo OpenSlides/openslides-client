@@ -170,6 +170,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
 
     private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
     protected uploadButton: boolean;
+    protected importDone: boolean;
     private tempPreviewsObservable: Subscription;
 
     public constructor(
@@ -186,6 +187,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
         this.importer.currentImportPhaseObservable.subscribe(phase => {
             this._state = phase;
+            this.importDone = [BackendImportPhase.FINISHED, BackendImportPhase.FINISHED_WITH_WARNING].includes(phase);
         });
         this.CSVEncodingOptions.toggleCSVOptions = true;
         let previousConfig = this.CSVEncodingOptions?.SelectedConfig$.value;
@@ -216,6 +218,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      */
     public ngOnDestroy(): void {
         this.CSVEncodingOptions.toggleCSVOptions = false;
+        this.importDone = undefined;
         this.tempPreviewsObservable.unsubscribe();
         this.importer.clearPreview();
         this.importer.clearFile();
