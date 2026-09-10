@@ -598,7 +598,8 @@ export abstract class BasePollPdfService {
         )) {
             const tableLine = [
                 {
-                    text: index
+                    text: index,
+                    noWrap: true
                 },
                 {
                     text: this.getUserNameForExport(date.user)
@@ -668,7 +669,8 @@ export abstract class BasePollPdfService {
             }
             const tableLine = [
                 {
-                    text: index
+                    text: index,
+                    noWrap: true
                 },
                 {
                     text: name + represented
@@ -693,7 +695,7 @@ export abstract class BasePollPdfService {
         return [
             {
                 table: {
-                    widths: showVoteWeight ? [`4%`, `32%`, `32%`, `32%`] : [`4%`, `48%`, `48%`],
+                    widths: showVoteWeight ? [`4%`, `48%`, `24%`, `24%`] : [`4%`, `72%`, `24%`],
                     headerRows: 1,
                     body: pollTableBody
                 },
@@ -703,7 +705,7 @@ export abstract class BasePollPdfService {
     }
 
     private getUserNameForExport(user: ViewUser | undefined): string {
-        return user?.getShortName() ?? this.translate.instant(`Anonymous`);
+        return user?.getFullName() ?? this.translate.instant(`Anonymous`);
     }
 
     private getUserVoteWeightForExport(user: ViewUser | undefined): string {
