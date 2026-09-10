@@ -83,6 +83,8 @@ export class PollSingleVotesComponent extends BaseComponent {
                             : null,
                     user: user,
                     id: user?.id,
+                    groupIds: ballot.groupIds,
+                    structureLevelIds: ballot.structureLevelIds,
                     weight: +ballot.weight !== 1 ? +ballot.weight : undefined,
                     value: this.parseVoteValue(ballot.value),
                     valueRaw: ballot.parsedValue()
