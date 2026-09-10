@@ -11,7 +11,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
-import { PollState } from '@app/domain/models/poll';
 import { KeyedTranslations } from '@app/domain/translations';
 import { BaseComponent } from '@app/site/base/base.component';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
@@ -72,7 +71,7 @@ export class PollSingleVotesComponent extends BaseComponent {
     public filterProps = [`user.getFullName`];
 
     public votesData$: Observable<BaseVoteData[]> = toObservable(this.poll).pipe(
-        switchMap(poll => (poll.state === PollState.Finished ? poll.ballots$ : of([]))),
+        switchMap(poll => (poll.published ? poll.ballots$ : of([]))),
         map((ballots: ViewPollBallot[]) =>
             ballots.map(ballot => {
                 const user = ballot.represented_meeting_user?.user;
