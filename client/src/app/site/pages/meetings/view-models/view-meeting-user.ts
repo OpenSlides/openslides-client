@@ -49,7 +49,7 @@ interface IMeetingUserRelations {
     motion_working_group_speakers: ViewMotionWorkingGroupSpeaker[];
     acting_ballots: ViewPollBallotUser[];
     represented_ballots: ViewPollBallotUser[];
-    vote_delegated_to: ViewMeetingUser;
+    vote_delegated_to: ViewMeetingUser[];
     vote_delegations_from: ViewMeetingUser[];
     structure_levels: ViewStructureLevel[];
     poll_options: ViewPollOption[];

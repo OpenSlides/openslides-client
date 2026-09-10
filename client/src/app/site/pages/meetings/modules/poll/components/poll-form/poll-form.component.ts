@@ -136,14 +136,6 @@ export class PollFormComponent extends BaseComponent {
         return null;
     });
 
-    public methodConfig = computed<unknown>(() => {
-        if (this.methodForm()) {
-            return this.methodForm().getSerialzedForm();
-        }
-
-        return null;
-    });
-
     public isOpenVotingSelected = computed(() => {
         return this.form.visibility().value() === PollVisibility.Open || false;
     });
@@ -174,6 +166,14 @@ export class PollFormComponent extends BaseComponent {
         effect(this.updateData.bind(this));
         effect(this.updateConfigData.bind(this));
         effect(this.changeMethod.bind(this));
+    }
+
+    public methodConfig(): Record<string, unknown> | null {
+        if (this.methodForm()) {
+            return this.methodForm().getSerialzedForm();
+        }
+
+        return null;
     }
 
     public getValues(): Partial<{ [place in keyof ViewPoll]: any }> {

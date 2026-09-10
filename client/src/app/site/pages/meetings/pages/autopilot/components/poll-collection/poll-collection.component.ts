@@ -105,10 +105,6 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         super.ngOnDestroy();
     }
 
-    public identifyPoll(index: number, poll: ViewPoll): number {
-        return poll.id;
-    }
-
     public getPollVoteTitle(poll: ViewPoll): string {
         const contentObject = poll.getContentObject();
         const listTitle = contentObject.getListTitle();

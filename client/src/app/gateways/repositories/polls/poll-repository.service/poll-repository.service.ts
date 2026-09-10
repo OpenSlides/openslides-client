@@ -69,7 +69,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     private async updateAnalogPoll(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
-        if (poll.config.METHOD_NAME === payload.method) {
+        if (poll.config.method === payload.method) {
             delete payload[`method`];
         }
 
@@ -77,7 +77,21 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     private async updateElectronicPoll(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
-        if (poll.config.METHOD_NAME === payload.method) {
+        if (poll.state !== PollState.Created) {
+            const methodConfig: {
+                display_chart?: string;
+                onehundred_percent_base?: string;
+                required_majority?: string;
+            } = payload.method_config || {};
+            return this.voteApi.update(poll.id, {
+                title: payload.title,
+                method_config: {
+                    display_chart: methodConfig.display_chart,
+                    onehundred_percent_base: methodConfig.onehundred_percent_base,
+                    required_majority: methodConfig.required_majority
+                }
+            });
+        } else if (poll.config.method === payload.method) {
             delete payload[`method`];
         }
 

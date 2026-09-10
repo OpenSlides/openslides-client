@@ -58,7 +58,7 @@ export class TopicPollService extends PollService {
 
     public getDefaultPollData(contentObject?: Topic): Partial<ViewPoll> {
         const poll: Partial<ViewPoll> = {
-            title: this.translate.instant(`Ballot`),
+            title: this.translate.instant(`Poll`),
             entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
             visibility: this.isElectronicVotingEnabled ? this.defaultPollType : PollVisibility.Manually,
             live_voting_enabled: this.defaultEnableLiveVote,

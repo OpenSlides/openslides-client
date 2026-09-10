@@ -2,8 +2,8 @@
     <mat-card class="os-card">
         <mat-card-content>
             <os-poll
+                navigateTo="poll"
                 [allowEdit]="true"
-                [navigateToPollDetail]="true"
                 [poll]="poll.value()"
                 (dialogOpened)="dialogOpened.emit($event)"
             />

@@ -1,5 +1,5 @@
 @if (!disableRunning) {
-    @for (poll of polls; track identifyPoll($index, poll)) {
+    @for (poll of polls; track poll.id) {
         <ng-container [ngTemplateOutlet]="pollArea" [ngTemplateOutletContext]="{ poll: poll, last: false }" />
     }
 }
@@ -10,7 +10,7 @@
 <ng-template #pollArea let-last="last" let-poll="poll">
     <mat-card class="os-card">
         <mat-card-content>
-            <os-poll [poll]="poll" />
+            <os-poll navigateTo="content_object" [poll]="poll" />
         </mat-card-content>
     </mat-card>
 </ng-template>

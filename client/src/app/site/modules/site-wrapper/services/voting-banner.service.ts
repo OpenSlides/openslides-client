@@ -54,6 +54,10 @@ export class VotingBannerService {
 
     private async updateVotablePollSubscription(polls: ViewPoll[]): Promise<void> {
         this.pollsToVoteSubscription?.unsubscribe();
+        if (!polls.length) {
+            this.updateBanner(polls, {});
+            return;
+        }
 
         this.pollsToVoteSubscription = this.sendVotesService.subscribeVoted(...polls).subscribe(voted => {
             this.updateBanner(polls, voted);

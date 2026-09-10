@@ -18,6 +18,14 @@
                     <mat-form-field>
                         <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
                         <input formControlName="min_options_amount" matInput required type="number" />
+                        @if (form.get('min_options_amount').hasError('min')) {
+                            <mat-error>{{ 'Amount needs to be at least 1' | translate }}</mat-error>
+                        }
+                        @if (form.get('min_options_amount').hasError('minGreaterThanMax')) {
+                            <mat-error>
+                                {{ 'Amount must not exceed amount of max amount of votes' | translate }}
+                            </mat-error>
+                        }
                     </mat-form-field>
                 } @else {
                     <div></div>
