@@ -69,9 +69,17 @@
         <div>
             {{ 'Voting method' | translate }}:
             @if (config().strike_out === true) {
-                <span>{{ 'Disapproval voting' | translate }}</span>
+                @if (isPersonPoll()) {
+                    <span>{{ 'No per candidate' | translate }}</span>
+                } @else {
+                    <span>{{ 'No per option' | translate }}</span>
+                }
             } @else if (config().strike_out === false) {
-                <span>{{ 'Approval voting' | translate }}</span>
+                @if (isPersonPoll()) {
+                    <span>{{ 'Yes per candidate' | translate }}</span>
+                } @else {
+                    <span>{{ 'Yes per option' | translate }}</span>
+                }
             } @else if (config().allow_abstain === true) {
                 <span>{{ 'Yes/No/Abstain' | translate }}</span>
             } @else if (config().allow_abstain === false) {
