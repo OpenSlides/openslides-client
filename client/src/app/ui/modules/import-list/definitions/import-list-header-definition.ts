@@ -11,4 +11,5 @@ interface HeaderDefinition {
     width?: number;
     flexible?: boolean;
     customInfo?: string | Observable<string>;
+    description?: string;
 }
