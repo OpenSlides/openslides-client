@@ -17,6 +17,7 @@ import { MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
+import { toDecimal } from '@app/infrastructure/utils';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
@@ -523,7 +524,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         const error = this._summary.find(item => item.name === 'error');
         this._summary = this._summary.filter(item => item.name !== 'updated');
         this._summary.map(item => {
-            item.name === 'created' && (item.name = 'new');
+            if (item.name === 'created') {
+                item.name = 'new';
+            }
         });
         if (countReferenced > 0) {
             this._summary.push({ name: 'referenced', value: countReferenced });
@@ -611,14 +614,17 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         if (![BackendImportState.Done, BackendImportState.Referenced].includes(item.state)) {
             return false;
         }
-        if (this.checkChanges(item)) {
+        if (this.checkChanges(item) === false) {
             item.setState = BackendImportState.Unchanged;
             return true;
         }
         return false;
     }
 
-    protected checkChanges(item: ViewImportedParticipant, headerName?: string): false | string {
+    protected checkChanges(
+        item: ViewImportedParticipant,
+        headerName?: string
+    ): false | (string | Partial<Record<keyof ViewUser, { old?: unknown; new: unknown }>>)[] {
         for (const user of this.userAccounts) {
             if (
                 (user.meeting_ids.includes(item.meeting_id) && item.username && item.username === user.username) ||
@@ -626,7 +632,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 (item.saml_id && item.saml_id === user.saml_id)
             ) {
                 const updatedUser = user.getModel();
-                const changes: Partial<Record<keyof ViewUser, { old?: unknown; new: unknown | unknown[] }>> = {};
+                const changes: Partial<
+                    Record<keyof ViewUser, { old?: unknown; new: unknown | unknown[]; removed?: boolean }>
+                > = {};
                 const changedStructureLevels = this.checkArrayFields(
                     Array.isArray(item.data?.['structure_level']) ? item.data?.['structure_level'] : [],
                     user?.structure_levels(this.activeMeetingIdService.meetingId)
@@ -687,11 +695,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             new: item.gender
                         };
                     }
-                    if (
-                        this.getShortenedDecimal(item.voteWeight) !==
-                            this.getShortenedDecimal(user.voteWeight.toString()) &&
-                        user.voteWeight !== undefined
-                    ) {
+                    if (this.voteWeightChanged(item, user)) {
                         changes['vote_weight'] = {
                             old: user.voteWeight,
                             new: item.voteWeight
@@ -703,28 +707,30 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             new: item.external
                         };
                     }
-                    if (changedGroups.new?.length) {
+                    if (changedGroups?.new !== changedGroups?.old) {
                         changes['groups'] = {
                             old: changedGroups.old,
-                            new: changedGroups.new
+                            new: changedGroups.new,
+                            removed: changedGroups.removed
                         };
                     }
-                    if (changedStructureLevels.new?.length) {
+                    if (changedStructureLevels?.new !== changedStructureLevels?.old) {
                         changes['structure_level'] = {
                             old: changedStructureLevels.old,
-                            new: changedStructureLevels.new
+                            new: changedStructureLevels.new,
+                            removed: changedStructureLevels.removed
                         };
                     }
                 }
                 if (Object.keys(changes).includes(headerName)) {
-                    return 'autorenew';
+                    return ['autorenew', changes];
                 }
                 if (Object.keys(changes).length === 0) {
                     return false;
                 }
             }
         }
-        return '';
+        return ['', {}];
     }
 
     private checkArrayFields(
@@ -733,20 +739,53 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     ): {
         old?: number[];
         new: BackendImportEntry[];
+        removed?: boolean;
     } {
         const oldItemIds = oldItems.map((oldItem: ViewGroup | ViewStructureLevel) => oldItem.id).sort();
-        if (addedItems.every(item => oldItemIds.includes(item['id']))) {
-            return { new: null };
+        if (addedItems.every(item => oldItemIds.includes(item['id'])) && addedItems.length === oldItemIds.length) {
+            return { new: undefined };
         }
         const diffItemNames = addedItems
-            .filter(addedItem => !oldItems.includes(addedItem['id']) && addedItem['id'])
+            .filter(
+                addedItem =>
+                    addedItem['info'] === 'new' ||
+                    oldItemIds.includes(addedItem['id']) ||
+                    addedItem['info'] === 'done' ||
+                    addedItem['info'] === 'updated'
+            )
             .sort();
-        diffItemNames.filter(infoState => {
-            if (!oldItemIds.includes(infoState['id'])) infoState['info'] = 'updated';
+        diffItemNames.forEach(item => {
+            if (item['id'] && !oldItemIds.includes(item['id'])) {
+                item['info'] = 'updated';
+            }
         });
         return {
             old: oldItemIds,
-            new: diffItemNames
+            new: diffItemNames,
+            removed: this.removedArrayItem(oldItemIds, diffItemNames)
         };
+    }
+
+    protected removedArrayItem(oldItemIds: number[], diffItemNames: BackendImportEntry[]): boolean {
+        return oldItemIds.every(
+            id =>
+                !diffItemNames
+                    .map(item => item['id'])
+                    .filter((id): id is number => id !== undefined)
+                    .includes(id)
+        );
+    }
+
+    private voteWeightChanged(item: ViewImportedParticipant, user: ViewUser): boolean {
+        if ('vote_weight' in item === false) {
+            return false;
+        }
+        if (item.voteWeight === undefined && user.voteWeight !== undefined) {
+            item.vote_weight = toDecimal(1);
+        }
+        return (
+            this.getShortenedDecimal(item.voteWeight.toString()) !==
+            this.getShortenedDecimal(user.voteWeight.toString())
+        );
     }
 }
