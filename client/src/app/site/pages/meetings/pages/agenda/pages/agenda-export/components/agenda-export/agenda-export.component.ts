@@ -99,6 +99,10 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         return this.fileFormats[this.tabIndex] === ExportFileFormat.CSV;
     }
 
+    public get isXMLFormat(): boolean {
+        return this.fileFormats[this.tabIndex] === ExportFileFormat.XML;
+    }
+
     public agendaItems: Id[] = [];
 
     private pdfDefaults = {
@@ -112,12 +116,14 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         metaInfo: [`duration`]
     };
 
+    private xmlDefaults = this.csvDefaults;
+
     private tabIndex = 0;
     // Store fileformats with corresponding tab group index
-    private fileFormats: ExportFileFormat[] = [ExportFileFormat.PDF, ExportFileFormat.CSV];
+    private fileFormats: ExportFileFormat[] = [ExportFileFormat.PDF, ExportFileFormat.CSV, ExportFileFormat.XML];
     private savedSelections: SavedSelections = {
         tab_index: 0,
-        tab_selections: [this.pdfDefaults, this.csvDefaults]
+        tab_selections: [this.pdfDefaults, this.csvDefaults, this.xmlDefaults]
     };
 
     private backNr: string;
@@ -176,6 +182,9 @@ export class AgendaExportComponent extends BaseComponent implements OnDestroy, A
         } else if (this.isCSVFormat) {
             const csvMetaInfo = this.dialogForm.get(`metaInfo`).value ?? [];
             this.agendaExportService.exportAsCsv(views, info, csvMetaInfo);
+        } else if (this.isXMLFormat) {
+            const metaInfo = this.dialogForm.get(`metaInfo`).value ?? [];
+            this.agendaExportService.exportAsXML(views, info, metaInfo);
         }
         this.router.navigate([this.activeMeetingIdService.meetingId, `agenda`]);
     }
