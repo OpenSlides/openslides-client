@@ -315,11 +315,11 @@
         <div class="origin-view">
             @for (origin of currentOriginPage(); track origin.id; let last = $last) {
                 <div class="basic-flex-container">
-                    <span class="margin-right-small">
+                    <span class="indicator-icon">
                         <mat-icon [color]="origin.id === motion.id ? 'accent' : ''">fiber_manual_record</mat-icon>
                     </span>
                     @if (origin.meeting?.locked_from_inside) {
-                        <mat-icon class="margin-left-small">lock</mat-icon>
+                        <mat-icon class="lock-icon">lock</mat-icon>
                     }
                     <ng-container
                         *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
@@ -333,7 +333,7 @@
                     ) {
                         <mat-slide-toggle
                             *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
-                            class="margin-left"
+                            class="slider-margin"
                             [aria-label]="'Activate backtracking' | translate"
                             [checked]="originMotionStatus[origin.id]"
                             [matTooltip]="'Activate backtracking' | translate"
@@ -341,7 +341,7 @@
                         ></mat-slide-toggle>
                     }
                 </div>
-                <div class="basic-flex-container align-start" [class]="last ? 'margin-minus' : ''">
+                <div class="basic-flex-container flex-container-forward-icon " [class]="last ? 'last-element-margin' : ''">
                     @if (!last && !!origin.origin_id) {
                         <mat-icon>north</mat-icon>
                     } @else {
@@ -404,7 +404,7 @@
 
 <ng-template #meetingLink let-motion="motion" let-showTooltip="showTooltip || false">
     @if (canAccess(motion)) {
-        <span class="max-length">
+        <span class="meeting-name-width">
             <a
                 [matTooltip]="
                     showTooltip
