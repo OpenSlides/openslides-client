@@ -137,6 +137,19 @@
                                         </div>
                                     }
                                 }
+                                <!-- Icon display when value is removed -->
+                                @if (
+                                    column.property === 'external' &&
+                                    changes[1]?.[column.property]?.removed === true &&
+                                    changes[1]?.[column.property]?.new === undefined
+                                ) {
+                                    <span>
+                                        &nbsp;
+                                        <mat-icon class="os-yellow" inline style="margin-bottom: -3px">
+                                            {{ changes[0] }}
+                                        </mat-icon>
+                                    </span>
+                                }
                             </span>
                         </div>
                     }

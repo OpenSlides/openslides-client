@@ -22,6 +22,7 @@ import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { AccountControllerService } from '@app/site/pages/organization/pages/accounts/services/common/account-controller.service';
+import { CommitteeControllerService } from '@app/site/pages/organization/pages/committees/services/committee-controller.service';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { BackendImportPhase } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
@@ -74,6 +75,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
     private accountsControllerService = inject(AccountControllerService);
     private userAccounts = this.accountsControllerService.getViewModelList();
+
+    private committeeService = inject(CommitteeControllerService);
 
     private modelName = `Participant`;
 
@@ -287,7 +290,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Remove:
                 return ``;
             case BackendImportState.Unchanged:
-                return `remove`;
+                return this._state !== BackendImportPhase.FINISHED ? 'drag_handle' : `done`;
             default:
                 return `block`; // fallback: Error
         }
@@ -342,6 +345,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Generated:
                 return `accent`;
             case BackendImportState.Unchanged:
+                if (this._state === BackendImportPhase.FINISHED) {
+                    return 'os-green';
+                }
                 return ``;
             default:
                 // ad hoc check for updated structure levels and groups
@@ -655,6 +661,16 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                             };
                         }
                     }
+                    if (
+                        item.home_committee !== user.home_committee?.getModel()?.name &&
+                        !(item.home_committee === null && user.home_committee?.getModel()?.name === undefined)
+                    ) {
+                        changes['home_committee'] = {
+                            old: user.home_committee?.getModel()?.name,
+                            new: item.home_committee,
+                            removed: this.homeCommitteeRemovalCheck(item, user)
+                        };
+                    }
                     if (item.isLockedOut !== user.is_locked_out && user.is_locked_out !== undefined) {
                         changes['locked_out'] = {
                             old: user.is_locked_out,
@@ -704,7 +720,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                     if (item.isExternal !== user.external && user.external !== undefined) {
                         changes['external'] = {
                             old: user.external,
-                            new: item.external
+                            new: item.external,
+                            removed: ![null, undefined].includes(user.external) && item.home_committee === undefined
                         };
                     }
                     if (changedGroups?.new !== changedGroups?.old) {
@@ -787,5 +804,12 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this.getShortenedDecimal(item.voteWeight.toString()) !==
             this.getShortenedDecimal(user.voteWeight.toString())
         );
+    }
+
+    private homeCommitteeRemovalCheck(item: ViewImportedParticipant, user: ViewUser): boolean {
+        if (!(item.home_committee === null && user.home_committee?.getModel()?.name)) {
+            return true;
+        }
+        return false;
     }
 }
