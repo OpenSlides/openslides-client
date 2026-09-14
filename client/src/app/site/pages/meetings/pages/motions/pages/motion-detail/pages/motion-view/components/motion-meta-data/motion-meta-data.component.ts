@@ -154,8 +154,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 }
             }
         }
-        const tree = this.createForwardTree(futureList, pastList);
-        this.originTreeData = tree;
+        this.originTreeData = this.createForwardTree(futureList, pastList);
         if (this.originTreeData.length > 0) {
             this.currentOriginPage.set(this.originTreeData[this.currentPageIndex]);
         }
@@ -225,6 +224,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         this.derivedMotionSubscriptions.push(
             this.motion.all_derived_motions$.subscribe(_ => this.refreshOriginMotions()),
             // TODO: Use actual setting
+            // motions_enable_origin_motion_display is NOT the wanted setting here
             this.meetingSettingsService
                 .get(`motions_enable_origin_motion_display`)
                 .pipe(map(v => !!v))
