@@ -5,8 +5,10 @@
                 <col />
                 <col width="1" />
                 <col width="1" />
+                <col width="1" />
                 <tr>
                     <th></th>
+                    <th class="check-icon"></th>
                     <th class="result-col-header" colspan="2">{{ 'Votes' | translate }}</th>
                 </tr>
 
@@ -15,6 +17,7 @@
                     let-amount="amount"
                     let-color="color"
                     let-firstSummary="firstSummary"
+                    let-majority="majority"
                     let-option="option"
                     let-percent="percent"
                     let-votingOption="votingOption"
@@ -38,6 +41,12 @@
                                         {{ votingOption }}
                                     }
                                 </span>
+                            }
+                        </td>
+
+                        <td class="check-icon">
+                            @if (majority) {
+                                <mat-icon>check</mat-icon>
                             }
                         </td>
 
@@ -143,6 +152,17 @@
                             amount: invalidBallots(),
                             percent: invalidBallotsPercent(),
                             votingOption: 'Invalid votes' | translate
+                        }"
+                    />
+                }
+
+                @if (requiredMajority() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: requiredMajority(),
+                            percent: null,
+                            votingOption: 'Required majority' | translate
                         }"
                     />
                 }

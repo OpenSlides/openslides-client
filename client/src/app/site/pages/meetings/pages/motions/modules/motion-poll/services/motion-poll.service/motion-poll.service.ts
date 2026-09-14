@@ -1,6 +1,5 @@
 import { inject, Service } from '@angular/core';
 import { Motion } from '@app/domain/models/motions/motion';
-import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import { PollVisibility } from '@app/domain/models/poll/poll-constants';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service/poll.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
@@ -13,35 +12,27 @@ import { MotionPollControllerService } from '../motion-poll-controller.service/m
  */
 @Service()
 export class MotionPollService extends PollService {
-    public defaultPercentBase!: BaseOnehundredPercentBase;
-    public defaultPollVisibility!: PollVisibility;
-    public defaultGroupIds!: number[];
-    public defaultAllowAbstain = false;
-
     private repo = inject(MotionPollControllerService);
     private meetingPollSettingsService = inject(MeetingPollSettingsService);
 
+    private defaultPercentBase = this.meetingPollSettingsService.signal(`motion`, `onehundred_percent_base`);
+    private defaultPollVisibility = this.meetingPollSettingsService.signal(`motion`, `visibility`);
+    private defaultGroupIds = this.meetingPollSettingsService.signal(`motion`, `group_ids`);
+    private defaultAllowAbstain = this.meetingPollSettingsService.signal(`motion`, `allow_abstain`);
+    private defaultRequiredMajority = this.meetingSettingsService.signal(`poll_default_required_majority`);
+
     public constructor() {
         super();
-        this.meetingPollSettingsService
-            .get(`motion`, `onehundred_percent_base`)
-            .subscribe(base => (this.defaultPercentBase = base));
-        this.meetingPollSettingsService
-            .get(`motion`, `visibility`)
-            .subscribe(type => (this.defaultPollVisibility = type as any));
-        this.meetingPollSettingsService.get(`motion`, `group_ids`).subscribe(ids => (this.defaultGroupIds = ids ?? []));
-        this.meetingPollSettingsService
-            .get(`motion`, `allow_abstain`)
-            .subscribe(bool => (this.defaultAllowAbstain = bool));
     }
 
     public getDefaultPollData(contentObject?: Motion): Partial<ViewPoll> {
         const poll: Partial<ViewPoll> = {
-            entitled_group_ids: Object.values(this.defaultGroupIds ?? []),
-            visibility: this.isElectronicVotingEnabled ? this.defaultPollVisibility : PollVisibility.Manually,
+            entitled_group_ids: Object.values(this.defaultGroupIds() ?? []),
+            visibility: this.isElectronicVotingEnabled ? this.defaultPollVisibility() : PollVisibility.Manually,
             config: {
-                allow_abstain: this.defaultAllowAbstain,
-                onehundred_percent_base: this.defaultPercentBase
+                allow_abstain: this.defaultAllowAbstain(),
+                onehundred_percent_base: this.defaultPercentBase(),
+                required_majority: this.defaultRequiredMajority()
             }
         };
 

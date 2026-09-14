@@ -33,7 +33,7 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
             case 'cast':
                 return this.totalVotes;
             case 'entitled':
-                return null;
+                return this.poll.entitled_user_ids?.length;
             case 'entitled_present':
                 return null;
         }
@@ -62,7 +62,7 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
             case 'cast':
                 return this.poll.ballot_user_ids?.length || 0;
             case 'entitled':
-                return null;
+                return this.poll.entitled_user_ids?.length;
             case 'entitled_present':
                 return null;
         }

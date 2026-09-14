@@ -78,6 +78,36 @@
             </mat-form-field>
 
             <mat-form-field>
+                <mat-label>{{ 'Required majority' | translate }}</mat-label>
+                <mat-select formControlName="required_majority" panelClass="required-majority-panel">
+                    <mat-option value="no_majority">
+                        {{ 'no_majority' | translateKey: 'poll_required_majority' }}
+                    </mat-option>
+                    <mat-option value="two_third_majority">
+                        {{ 'two_third_majority' | translateKey: 'poll_required_majority' }}
+                    </mat-option>
+                    <mat-option value="absolute_majority">
+                        {{ 'absolute_majority' | translateKey: 'poll_required_majority' }}
+                    </mat-option>
+                </mat-select>
+                @if (form.get('required_majority').getRawValue() === 'absolute_majority') {
+                    <mat-hint
+                        [innerText]="
+                            'Indicates if a majority of more than 50% was reached, dependent on the 100%-base'
+                                | translate
+                        "
+                    ></mat-hint>
+                } @else if (form.get('required_majority').getRawValue() === 'two_third_majority') {
+                    <mat-hint
+                        [innerText]="
+                            'Indicates if a majority of two-thirds or more was reached, dependent on the 100%-base'
+                                | translate
+                        "
+                    ></mat-hint>
+                }
+            </mat-form-field>
+
+            <mat-form-field>
                 <mat-label>{{ 'Display result as' | translate }}</mat-label>
                 <mat-select formControlName="display_chart">
                     <mat-option value="table">{{ 'Table' | translate }}</mat-option>

@@ -156,4 +156,11 @@
             <span>{{ config().onehundred_percent_base | translateKey: 'poll_percent_base' }}</span>
         </div>
     }
+
+    @if (config().required_majority !== undefined && config().required_majority !== 'no_majority') {
+        <div>
+            {{ 'Required majority' | translate }}:
+            <span>{{ config().required_majority | translateKey: 'poll_required_majority' }}</span>
+        </div>
+    }
 </div>

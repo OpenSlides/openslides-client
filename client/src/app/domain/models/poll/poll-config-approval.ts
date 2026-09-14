@@ -1,4 +1,5 @@
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { PollRequiredMajority } from '.';
 import { BasePollConfigModel } from './base-poll-config';
 import { BaseOnehundredPercentBase } from './poll-config-types';
 
@@ -9,6 +10,7 @@ export class PollConfigApproval extends BasePollConfigModel<PollConfigApproval> 
 
     public allow_abstain!: boolean;
     public onehundred_percent_base!: ApprovalOnehundredPercentBase;
+    public required_majority!: PollRequiredMajority;
 
     public constructor(input?: Partial<PollConfigApproval>) {
         super(PollConfigApproval.COLLECTION, input);
@@ -18,7 +20,8 @@ export class PollConfigApproval extends BasePollConfigModel<PollConfigApproval> 
         `id`,
         `poll_id`,
         `allow_abstain`,
-        `onehundred_percent_base`
+        `onehundred_percent_base`,
+        `required_majority`
     ];
 }
 

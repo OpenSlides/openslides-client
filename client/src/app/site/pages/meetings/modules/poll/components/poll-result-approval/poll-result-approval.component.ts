@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { VOTE_MAJORITY } from '@app/domain/models/poll';
+import { PollRequiredMajority, VOTE_MAJORITY } from '@app/domain/models/poll';
 import { ApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-approval';
 import { ThemeService } from '@app/site/services/theme.service';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
@@ -113,7 +113,9 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
         }
 
         return [`yes`, `no`, `abstain`]
-            .filter(k => k !== `abstain` || this.config().onehundred_percent_base !== `yes_no`)
+            .filter(
+                k => (k !== `abstain` || this.config().onehundred_percent_base !== `yes_no`) && (+results[k] || 0) > 0
+            )
             .map(key => {
                 return {
                     data: [+results[key] || 0],
@@ -194,5 +196,19 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     public presentEntitledUsers = computed<number | null>(() => {
         // TODO: Implement if available
         return null;
+    });
+
+    public majorityReached = computed<boolean | undefined>(() => {
+        if (!this.config().onehundredPercentBaseNum) {
+            return undefined;
+        }
+
+        if (this.config().required_majority === PollRequiredMajority.AbsoluteMajority) {
+            return +this.results().yes > this.config().onehundredPercentBaseNum / 2;
+        } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
+            return +this.results().yes >= (this.config().onehundredPercentBaseNum * 2) / 3;
+        }
+
+        return undefined;
     });
 }

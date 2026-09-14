@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Service, Signal, signal, WritableSignal } from '@angular/core';
 import { MeetingPollDefault } from '@app/domain/models/meetings/meeting-poll-default';
 import { BehaviorSubject, combineLatest, filter, Observable, switchMap } from 'rxjs';
 
@@ -8,6 +8,15 @@ type MeetingPollSettingCollection = 'motion' | 'topic' | 'assignment';
 
 @Service()
 export class MeetingPollSettingsService {
+    /**
+     * Stores a subject per key. Values are published, if the DataStore gets an update.
+     */
+    private settingSignals: Record<MeetingPollSettingCollection, Record<string, WritableSignal<any>>> = {
+        assignment: {},
+        motion: {},
+        topic: {}
+    };
+
     /**
      * Stores a subject per key. Values are published, if the DataStore gets an update.
      */
@@ -37,6 +46,12 @@ export class MeetingPollSettingsService {
                             this.settingSubjects[`assignment`][key].next(assignmentPollConfig[key]);
                         }
                     }
+
+                    for (const key of Object.keys(this.settingSignals[`assignment`])) {
+                        if (this.settingSignals[`assignment`][key]() !== assignmentPollConfig[key]) {
+                            this.settingSignals[`assignment`][key].set(assignmentPollConfig[key]);
+                        }
+                    }
                 }
 
                 if (motionPollConfig) {
@@ -45,12 +60,24 @@ export class MeetingPollSettingsService {
                             this.settingSubjects[`motion`][key].next(motionPollConfig[key]);
                         }
                     }
+
+                    for (const key of Object.keys(this.settingSignals[`motion`])) {
+                        if (this.settingSignals[`motion`][key]() !== motionPollConfig[key]) {
+                            this.settingSignals[`motion`][key].set(motionPollConfig[key]);
+                        }
+                    }
                 }
 
                 if (topicPollConfig) {
                     for (const key of Object.keys(this.settingSubjects[`topic`])) {
                         if (this.settingSubjects[`topic`][key].getValue() !== topicPollConfig[key]) {
                             this.settingSubjects[`topic`][key].next(topicPollConfig[key]);
+                        }
+                    }
+
+                    for (const key of Object.keys(this.settingSignals[`topic`])) {
+                        if (this.settingSignals[`topic`][key]() !== topicPollConfig[key]) {
+                            this.settingSignals[`topic`][key].set(topicPollConfig[key]);
                         }
                     }
                 }
@@ -85,5 +112,20 @@ export class MeetingPollSettingsService {
             this.settingSubjects[collection][key] = new BehaviorSubject<any>(this.instant(collection, key));
         }
         return this.settingSubjects[collection][key] as Observable<MeetingPollDefault[T]>;
+    }
+
+    /**
+     * Get a signal for the setting value given by the key.
+     *
+     * @param key The setting value to get from.
+     */
+    public signal<T extends keyof MeetingPollDefault>(
+        collection: MeetingPollSettingCollection,
+        key: T
+    ): Signal<MeetingPollDefault[T]> {
+        if (!this.settingSignals[collection][key]) {
+            this.settingSignals[collection][key] = signal<MeetingPollDefault[T]>(this.instant(collection, key));
+        }
+        return this.settingSignals[collection][key] as Signal<MeetingPollDefault[T]>;
     }
 }

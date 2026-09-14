@@ -9,6 +9,7 @@ import { RatingApprovalOnehundredPercentBase } from '@app/domain/models/poll/pol
 import { RatingScoreOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-score';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
 import { _, TranslatePipe } from '@ngx-translate/core';
 
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
@@ -29,7 +30,8 @@ export interface PollFormRatingApproval {
         MatSelectModule,
         MatCheckboxModule,
         MatInputModule,
-        TranslatePipe
+        TranslatePipe,
+        TranslateKeyPipe
     ],
     templateUrl: './poll-form-rating-approval.component.html',
     styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-approval.component.scss`],
@@ -59,7 +61,8 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
             allow_abstain: [false],
             max_yes_amount: [1, [Validators.required, Validators.min(1)]],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
-            min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]]
+            min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]],
+            required_majority: [`no_majority`]
         });
 
         effect(this.onOptionAmountUpdate.bind(this));
@@ -79,7 +82,8 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
             `allow_abstain`,
             `max_yes_amount`,
             `max_options_amount`,
-            `min_options_amount`
+            `min_options_amount`,
+            `required_majority`
         ]) {
             if (data && data[field] !== undefined) patch[field] = data[field];
             else if (data && data.config[field] !== undefined) patch[field] = data.config[field];

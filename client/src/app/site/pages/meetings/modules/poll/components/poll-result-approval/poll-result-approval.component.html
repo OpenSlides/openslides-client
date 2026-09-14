@@ -120,7 +120,7 @@
 
         @if (displayChart()) {
             <div class="doughnut-chart-normal">
-                <os-chart type="doughnut" [data]="chartData()"></os-chart>
+                <os-chart type="doughnut" [data]="chartData()" [majority]="majorityReached()"></os-chart>
             </div>
         }
     </div>

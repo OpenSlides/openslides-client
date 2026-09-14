@@ -6,12 +6,13 @@
         <col width="1" />
         <col width="1" />
         <col width="1" />
+        <col width="1" />
         @if (config().allow_abstain) {
             <col width="1" />
             <col width="1" />
         }
         <tr>
-            <th colspan="2"></th>
+            <th colspan="3"></th>
             <th class="yes result-col-header" colspan="2" width="1">{{ 'Yes' | translate }}</th>
             <th class="no result-col-header" colspan="2" width="1">{{ 'No' | translate }}</th>
             @if (config().allow_abstain) {
@@ -44,6 +45,11 @@
             <tr>
                 <td>{{ i + 1 }}.</td>
                 <td><os-poll-vote-option [option]="row.option" /></td>
+                <td class="check-icon">
+                    @if (row.majority) {
+                        <mat-icon>check</mat-icon>
+                    }
+                </td>
                 <ng-container
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
@@ -77,6 +83,7 @@
             <tr>
                 <td></td>
                 <td>{{ 'Valid votes' | translate }}</td>
+                <td></td>
                 <ng-container
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
@@ -91,6 +98,7 @@
             <tr>
                 <td></td>
                 <td>{{ 'Casted ballots' | translate }}</td>
+                <td></td>
                 <ng-container
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
@@ -105,6 +113,7 @@
             <tr>
                 <td></td>
                 <td>{{ 'Entitled users' | translate }}</td>
+                <td></td>
                 <ng-container
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
@@ -119,6 +128,7 @@
             <tr>
                 <td></td>
                 <td>{{ 'Present entitled users' | translate }}</td>
+                <td></td>
                 <ng-container
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
@@ -133,11 +143,27 @@
             <tr>
                 <td></td>
                 <td>{{ 'Invalid votes' | translate }}</td>
+                <td></td>
                 <ng-container
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
                         amount: invalidBallots(),
                         percent: invalidBallotsPercent()
+                    }"
+                />
+            </tr>
+        }
+
+        @if (globalRequiredMajority() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Required majority' | translate }}</td>
+                <td></td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: globalRequiredMajority(),
+                        percent: null
                     }"
                 />
             </tr>
