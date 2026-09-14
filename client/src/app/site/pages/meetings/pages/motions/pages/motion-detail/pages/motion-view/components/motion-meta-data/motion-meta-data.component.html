@@ -341,7 +341,10 @@
                         ></mat-slide-toggle>
                     }
                 </div>
-                <div class="basic-flex-container flex-container-forward-icon " [class]="last ? 'last-element-margin' : ''">
+                <div
+                    class="basic-flex-container flex-container-forward-icon"
+                    [class]="last ? 'last-element-margin' : ''"
+                >
                     @if (!last && !!origin.origin_id) {
                         <mat-icon>north</mat-icon>
                     } @else {
