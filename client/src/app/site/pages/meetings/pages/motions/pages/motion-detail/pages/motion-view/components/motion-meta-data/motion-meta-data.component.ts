@@ -130,7 +130,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public originTreeData: ViewMotion[][] = [];
 
     public refreshOriginMotions(): void {
-        this.displayFutureForward.set(true); // TODO: remove this line
+        this.displayFutureForward.set(true); // TODO: waiting for new setting, also see TODO in ngOnInit
         const futureList: ViewMotion[] =
             this.displayFutureForward() && this.motion.all_derived_motions ? this.motion.all_derived_motions : [];
         const pastList: ViewMotion[] =
