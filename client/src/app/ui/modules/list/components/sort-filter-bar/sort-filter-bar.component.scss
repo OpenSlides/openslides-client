@@ -112,9 +112,8 @@ os-sort-filter-bar {
 .not-selected-button * {
     color: gray !important;
 }
-mat-drawer {
-    margin-top: 41px;
-    max-height: calc(100% - 91px);
+.mat-drawer-placement {
+    max-height: calc(100% - 49px);
 }
 
 .fileInput {

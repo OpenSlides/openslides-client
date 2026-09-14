@@ -144,7 +144,13 @@
 </div>
 
 <!-- Header for the filter side bar -->
-<mat-drawer #filterMenu autoFocus="false" mode="push" position="end">
+<mat-drawer
+    #filterMenu
+    autoFocus="false"
+    mode="push"
+    position="end"
+    [class.mat-drawer-placement]="csvEncodingOptions?.toggleCSVOptions"
+>
     <div
         class="custom-table-header filter-menu-head"
         role="none"
