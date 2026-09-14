@@ -1,11 +1,13 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { SelectionOnehundredPercentBase } from '@app/domain/models/poll/poll-config-selection';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
+import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
 import { _, TranslatePipe } from '@ngx-translate/core';
 
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
@@ -21,7 +23,15 @@ export interface PollFormSelection {
 
 @Component({
     selector: 'os-poll-form-selection',
-    imports: [ReactiveFormsModule, MatCheckboxModule, MatInputModule, MatSelectModule, TranslatePipe, AsyncPipe],
+    imports: [
+        ReactiveFormsModule,
+        MatCheckboxModule,
+        MatInputModule,
+        MatSelectModule,
+        TranslatePipe,
+        TranslateKeyPipe,
+        AsyncPipe
+    ],
     templateUrl: './poll-form-selection.component.html',
     styleUrls: [`../poll-form/poll-form.component.scss`, './poll-form-selection.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -54,9 +64,16 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             allow_general_abstain: [false],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator()]],
-            display_chart: [`table`]
+            display_chart: [`table`],
+            required_majority: [`no_majority`]
         });
 
+        this.form
+            .get(`max_options_amount`)
+            .valueChanges.pipe(takeUntilDestroyed())
+            .subscribe(() => {
+                this.form.get(`min_options_amount`).updateValueAndValidity({ emitEvent: false });
+            });
         effect(this.onOptionAmountUpdate.bind(this));
     }
 
@@ -68,7 +85,8 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             `allow_nota`,
             `max_options_amount`,
             `min_options_amount`,
-            `display_chart`
+            `display_chart`,
+            `required_majority`
         ]) {
             if (data && data[field] !== undefined) patch[field] = data[field];
             else if (data && data.config[field] !== undefined) patch[field] = data.config[field];

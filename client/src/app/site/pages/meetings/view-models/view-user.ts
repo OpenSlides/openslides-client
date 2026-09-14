@@ -208,10 +208,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.vote_delegations_from_ids(meetingId || this.getEnsuredActiveMeetingId())?.length > 0;
     }
 
-    public delegationName(meetingId?: Id): string | undefined {
-        return this.vote_delegated_to(meetingId || this.getEnsuredActiveMeetingId())?.getFullName();
-    }
-
     public speaker_ids(meetingId?: Id): Id[] {
         return this.getMeetingUser(meetingId)?.speaker_ids;
     }
@@ -236,8 +232,8 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.getMeetingUser(meetingId)?.chat_message_ids;
     }
 
-    public vote_delegated_to_ids(meetingId?: Id): Id {
-        return this.getMeetingUser(meetingId)?.vote_delegated_to?.user_id;
+    public vote_delegated_to_ids(meetingId?: Id): Id[] {
+        return this.getMeetingUser(meetingId)?.vote_delegated_to_ids;
     }
 
     public vote_delegated_to_meeting_user_ids(meetingId?: Id): Id[] {
@@ -311,13 +307,13 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get isVoteCountable(): boolean {
-        const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
+        const delegates = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
         const present = this.isPresentInMeeting();
         if (this.isSelfVotingAllowedDespiteDelegation() && present) {
             return true;
         }
-        if (this.getDelegationSettingEnabled() && delegate) {
-            return delegate.isPresentInMeeting();
+        if (this.getDelegationSettingEnabled() && delegates.length) {
+            return delegates.some(delegate => delegate.isPresentInMeeting());
         }
         return present;
     }
@@ -355,12 +351,12 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.vote_delegations_from_ids()?.includes(user.id);
     }
 
-    public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {
+    public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser[] {
         return this.getMeetingUser(meetingId)?.vote_delegated_to;
     }
 
-    public vote_delegated_to(meetingId?: number): ViewUser {
-        return this.vote_delegated_to_meeting_user(meetingId)?.user;
+    public vote_delegated_to(meetingId?: number): ViewUser[] {
+        return this.vote_delegated_to_meeting_user(meetingId)?.map(meeting_user => meeting_user.user) || [];
     }
 
     public vote_delegations_from_meeting_users(meetingId?: number): ViewMeetingUser[] {

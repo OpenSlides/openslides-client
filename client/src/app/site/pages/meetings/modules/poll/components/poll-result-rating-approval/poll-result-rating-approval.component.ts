@@ -1,5 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { PollRequiredMajority } from '@app/domain/models/poll';
 import { RatingApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-approval';
 import { TranslatePipe } from '@ngx-translate/core';
 import Big from 'big.js';
@@ -20,11 +22,12 @@ interface ResultRow {
     no_percent: number | null;
     abstain: number;
     abstain_percent: number | null;
+    majority: boolean;
 }
 
 @Component({
     selector: 'os-poll-result-rating-approval',
-    imports: [PollVoteOptionComponent, PollParseNumberPipe, TranslatePipe, NgTemplateOutlet],
+    imports: [PollVoteOptionComponent, PollParseNumberPipe, TranslatePipe, NgTemplateOutlet, MatIconModule],
     templateUrl: './poll-result-rating-approval.component.html',
     styleUrl: './poll-result-rating-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
@@ -46,6 +49,12 @@ export class PollResultRatingApprovalComponent extends PollResultBaseComponent<
         const rows: Results = [];
         for (const option of this.options()) {
             const onehundredBase = this.config().getOptionOnehundredPercentBaseNum(option);
+            let majority = false;
+            if (this.config().required_majority === PollRequiredMajority.AbsoluteMajority) {
+                majority = (+results[option.id]?.yes || 0) > onehundredBase / 2;
+            } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
+                majority = (+results[option.id]?.yes || 0) >= (onehundredBase * 2) / 3;
+            }
             rows.push({
                 option,
                 yes: +results[option.id]?.yes || 0,
@@ -68,7 +77,8 @@ export class PollResultRatingApprovalComponent extends PollResultBaseComponent<
                           .div(onehundredBase)
                           .mul(100)
                           .toNumber()
-                    : onehundredBase
+                    : onehundredBase,
+                majority
             });
         }
 
@@ -120,12 +130,28 @@ export class PollResultRatingApprovalComponent extends PollResultBaseComponent<
     });
 
     public entitledUsers = computed<number | null>(() => {
-        // TODO: Implement if available
-        return null;
+        if (this.config().onehundred_percent_base !== `entitled`) {
+            return null;
+        }
+
+        return this.poll().entitled_user_ids?.length;
     });
 
     public presentEntitledUsers = computed<number | null>(() => {
         // TODO: Implement if available
+        return null;
+    });
+
+    public globalRequiredMajority = computed<number | null>(() => {
+        const baseAmount = this.config().onehundredPercentBaseNum;
+        if (baseAmount !== null) {
+            if (this.config().required_majority === PollRequiredMajority.AbsoluteMajority) {
+                return Math.ceil(baseAmount / 2 + 1);
+            } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
+                return Math.ceil((baseAmount * 2) / 3);
+            }
+        }
+
         return null;
     });
 }

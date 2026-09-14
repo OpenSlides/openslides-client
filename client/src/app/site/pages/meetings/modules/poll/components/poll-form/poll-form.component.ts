@@ -136,14 +136,6 @@ export class PollFormComponent extends BaseComponent {
         return null;
     });
 
-    public methodConfig = computed<unknown>(() => {
-        if (this.methodForm()) {
-            return this.methodForm().getSerialzedForm();
-        }
-
-        return null;
-    });
-
     public isOpenVotingSelected = computed(() => {
         return this.form.visibility().value() === PollVisibility.Open || false;
     });
@@ -174,6 +166,14 @@ export class PollFormComponent extends BaseComponent {
         effect(this.updateData.bind(this));
         effect(this.updateConfigData.bind(this));
         effect(this.changeMethod.bind(this));
+    }
+
+    public methodConfig(): Record<string, unknown> | null {
+        if (this.methodForm()) {
+            return this.methodForm().getSerialzedForm();
+        }
+
+        return null;
     }
 
     public getValues(): Partial<{ [place in keyof ViewPoll]: any }> {
@@ -227,8 +227,22 @@ export class PollFormComponent extends BaseComponent {
                     preselection += data.config.strike_out ? `.no` : `.yes`;
                 }
 
-                this.form['method_preselection']().value.set(preselection);
+                this.updateMethodPreselectionDefault(preselection);
             }
+        }
+    }
+
+    private updateMethodPreselectionDefault(preselection: string): void {
+        let needsUpdate = this.form['method_preselection']().value() === '';
+        const parts = this.form['method_preselection']().value().split(`.`);
+        if (this.optionAmount() <= 1 && this.form.options().value().length <= 1) {
+            needsUpdate = needsUpdate || parts[0] !== `approval`;
+        } else if (this.optionType() === 'text') {
+            needsUpdate = needsUpdate || (parts[0] !== `selection` && parts[0] !== `rating_score`);
+        }
+
+        if (needsUpdate) {
+            this.form['method_preselection']().value.set(preselection);
         }
     }
 

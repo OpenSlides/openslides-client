@@ -1,6 +1,7 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
-import { VOTE_MAJORITY } from '@app/domain/models/poll';
+import { MatIconModule } from '@angular/material/icon';
+import { PollRequiredMajority, VOTE_MAJORITY } from '@app/domain/models/poll';
 import { ThemeService } from '@app/site/services/theme.service';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -20,6 +21,7 @@ interface ResultRow {
     key: string;
     votingOption: string;
     color: string;
+    majority: boolean;
     amount: number;
     percent: number | null;
     option?: ViewPollOption;
@@ -52,7 +54,8 @@ const PollChartBarThickness = 20;
         PollParseNumberPipe,
         ChartComponent,
         TranslatePipe,
-        NgTemplateOutlet
+        NgTemplateOutlet,
+        MatIconModule
     ],
     templateUrl: './poll-result-selection.component.html',
     styleUrl: './poll-result-selection.component.scss'
@@ -80,12 +83,14 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
         for (const i in this.options()) {
             const option = this.options()[i];
             const optionText = option.getOptionTitle()?.title ?? this.translate.instant(UnknownUserLabel);
+            const amount = +results[option.id] || 0;
             rows.push({
                 key: option.fqid,
                 option: option,
                 votingOption: optionText,
                 color: showPieChart ? colors[i] : null,
-                amount: +results[option.id] || 0,
+                amount,
+                majority: !this.config().strike_out && amount >= this.requiredMajority(),
                 percent: showPercent
                     ? Big(results[option.id] || 0)
                           .div(this.config().onehundredPercentBaseNum)
@@ -116,17 +121,6 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
             })
             .filter(option => option.data[0]);
     });
-
-    private generateChartColors(amount: number): string[] {
-        let colors = Array.from(pollChartColors.values());
-        while (colors.length < amount) {
-            colors = colors.concat(Array.from(pollChartColors.values()));
-        }
-        while (colors.length > amount) {
-            colors.pop();
-        }
-        return colors;
-    }
 
     public displayChart = computed<boolean>(() => {
         const chartData = this.chartData();
@@ -186,12 +180,29 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public entitledUsers = computed<number | null>(() => {
-        // TODO: Implement if available
-        return null;
+        if (this.config().onehundred_percent_base !== `entitled`) {
+            return null;
+        }
+
+        return this.poll().entitled_user_ids?.length;
     });
 
     public presentEntitledUsers = computed<number | null>(() => {
         // TODO: Implement if available
+        return null;
+    });
+
+    public requiredMajority = computed<number | null>(() => {
+        if (!this.config().onehundredPercentBaseNum) {
+            return null;
+        }
+
+        if (this.config().required_majority === PollRequiredMajority.AbsoluteMajority) {
+            return Math.ceil(this.config().onehundredPercentBaseNum / 2 + 1);
+        } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
+            return Math.ceil((this.config().onehundredPercentBaseNum * 2) / 3);
+        }
+
         return null;
     });
 
@@ -234,4 +245,15 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
 
         return this.formatResultDecimal((this.nota() / this.config().onehundredPercentBaseNum) * 100);
     });
+
+    private generateChartColors(amount: number): string[] {
+        let colors = Array.from(pollChartColors.values());
+        while (colors.length < amount) {
+            colors = colors.concat(Array.from(pollChartColors.values()));
+        }
+        while (colors.length > amount) {
+            colors.pop();
+        }
+        return colors;
+    }
 }

@@ -30,19 +30,21 @@
                                 <input matInput type="number" [formField]="resultForm.options[i].value[key]" />
                             </mat-form-field>
 
-                            <mat-radio-button class="option-majority" [value]="key">
-                                {{ 'majority' | translate }}
-                            </mat-radio-button>
+                            <div class="majority-container">
+                                <mat-radio-button class="option-majority" [value]="key">
+                                    {{ 'majority' | translate }}
+                                </mat-radio-button>
 
-                            @if (resultForm.options[i].majority_value().value() === key) {
-                                <button
-                                    mat-icon-button
-                                    [attr.aria-label]="'Unselect majority' | translate"
-                                    (click)="resultForm.options[i].majority_value().value.set(null)"
-                                >
-                                    <mat-icon>close</mat-icon>
-                                </button>
-                            }
+                                @if (resultForm.options[i].majority_value().value() === key) {
+                                    <button
+                                        mat-icon-button
+                                        [attr.aria-label]="'Unselect majority' | translate"
+                                        (click)="resultForm.options[i].majority_value().value.set(null)"
+                                    >
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                }
+                            </div>
                         </div>
                     </ng-template>
 

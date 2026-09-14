@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, On
 import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { Permission } from '@app/domain/definitions/permission';
+import { viewModelListEqual } from '@app/infrastructure/utils';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { AutoupdateService, ModelSubscription } from '@app/site/services/autoupdate';
 import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
@@ -9,7 +10,7 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { TranslateModule } from '@ngx-translate/core';
-import { map } from 'rxjs';
+import { distinctUntilChanged, map } from 'rxjs';
 
 import { getParticipantVoteInfoSubscriptionConfig } from '../../../../pages/participants/participants.subscription';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
@@ -25,10 +26,11 @@ export class PollProgressComponent extends BaseUiComponent implements OnDestroy 
     public poll = input.required<ViewPoll>();
 
     public votescast = computed(() => {
-        return Object.keys(this.poll().ballot_user_ids ?? {}).length;
+        return (this.poll().ballot_user_ids ?? []).length;
     });
 
     public canSeeProgressBar = signal(false);
+    public entitledGroupIds = signal([]);
 
     public valueInPercent = computed(() => {
         return (this.votescast() / this.max()) * 100;
@@ -41,10 +43,11 @@ export class PollProgressComponent extends BaseUiComponent implements OnDestroy 
     private modelRequestBuilder = inject(ModelRequestBuilderService);
 
     public maxResource = rxResource({
-        params: () => ({ entitledGroupIds: this.poll().entitled_group_ids }),
+        params: () => ({ entitledGroupIds: this.entitledGroupIds() }),
 
         stream: ({ params }) =>
             this.userRepo.getViewModelListObservable().pipe(
+                distinctUntilChanged(viewModelListEqual),
                 map(users => {
                     /**
                      * Filter the users who would be able to vote:
@@ -84,6 +87,13 @@ export class PollProgressComponent extends BaseUiComponent implements OnDestroy 
                         subscriptionConfig.subscriptionName
                     );
                 });
+            }
+        });
+
+        effect(() => {
+            const entitledGroups = this.poll().entitled_group_ids;
+            if (JSON.stringify(entitledGroups) !== JSON.stringify(this.entitledGroupIds())) {
+                this.entitledGroupIds.set(entitledGroups);
             }
         });
 

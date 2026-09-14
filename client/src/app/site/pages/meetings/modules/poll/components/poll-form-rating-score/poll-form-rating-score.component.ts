@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { RatingScoreOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-score';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
+import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
 import { _, TranslatePipe } from '@ngx-translate/core';
 
 import { PollFormBaseComponent } from '../poll-config-form-base.component';
@@ -27,7 +29,8 @@ export interface PollFormRatingScore {
         MatSelectModule,
         MatCheckboxModule,
         MatInputModule,
-        TranslatePipe
+        TranslatePipe,
+        TranslateKeyPipe
     ],
     templateUrl: './poll-form-rating-score.component.html',
     styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-score.component.scss`],
@@ -64,10 +67,25 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
                 [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_options_amount`)]
             ],
             max_vote_sum: [1, [Validators.required, Validators.min(1)]],
-            min_vote_sum: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_vote_sum`)]]
+            min_vote_sum: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_vote_sum`)]],
+            required_majority: [`no_majority`]
         });
 
         effect(this.onOptionAmountUpdate.bind(this));
+
+        this.form
+            .get(`max_options_amount`)
+            .valueChanges.pipe(takeUntilDestroyed())
+            .subscribe(() => {
+                this.form.get(`min_options_amount`).updateValueAndValidity({ emitEvent: false });
+            });
+
+        this.form
+            .get(`max_vote_sum`)
+            .valueChanges.pipe(takeUntilDestroyed())
+            .subscribe(() => {
+                this.form.get(`min_vote_sum`).updateValueAndValidity({ emitEvent: false });
+            });
     }
 
     protected getPatchedFormData(data: Partial<ViewPoll>): Record<string, unknown> {
@@ -78,7 +96,8 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
             `max_options_amount`,
             `min_options_amount`,
             `max_vote_sum`,
-            `min_vote_sum`
+            `min_vote_sum`,
+            `required_majority`
         ]) {
             if (data && data[field] !== undefined) patch[field] = data[field];
             else if (data && data.config[field] !== undefined) patch[field] = data.config[field];

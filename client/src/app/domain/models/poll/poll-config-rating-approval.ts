@@ -1,4 +1,5 @@
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { PollRequiredMajority } from '.';
 import { BasePollConfigModel } from './base-poll-config';
 import { BaseOnehundredPercentBase } from './poll-config-types';
 
@@ -12,6 +13,7 @@ export class PollConfigRatingApproval extends BasePollConfigModel<PollConfigRati
     public max_yes_amount!: number;
     public allow_abstain!: boolean;
     public onehundred_percent_base!: RatingApprovalOnehundredPercentBase;
+    public required_majority!: PollRequiredMajority;
 
     public get max_vote_sum(): number {
         return this.max_options_amount;
@@ -32,7 +34,8 @@ export class PollConfigRatingApproval extends BasePollConfigModel<PollConfigRati
         `min_options_amount`,
         `max_yes_amount`,
         `allow_abstain`,
-        `onehundred_percent_base`
+        `onehundred_percent_base`,
+        `required_majority`
     ];
 }
 

@@ -1,4 +1,5 @@
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { PollRequiredMajority } from '.';
 import { BasePollConfigModel } from './base-poll-config';
 import { BaseOnehundredPercentBase } from './poll-config-types';
 
@@ -13,6 +14,7 @@ export class PollConfigRatingScore extends BasePollConfigModel<PollConfigRatingS
     public max_vote_sum!: number;
     public min_vote_sum!: number;
     public onehundred_percent_base!: RatingScoreOnehundredPercentBase;
+    public required_majority!: PollRequiredMajority;
 
     public constructor(input?: Partial<PollConfigRatingScore>) {
         super(PollConfigRatingScore.COLLECTION, input);
@@ -26,7 +28,8 @@ export class PollConfigRatingScore extends BasePollConfigModel<PollConfigRatingS
         `max_votes_per_option`,
         `max_vote_sum`,
         `min_vote_sum`,
-        `onehundred_percent_base`
+        `onehundred_percent_base`,
+        `required_majority`
     ];
 }
 

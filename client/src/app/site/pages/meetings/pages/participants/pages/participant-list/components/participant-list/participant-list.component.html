@@ -160,7 +160,7 @@
                     </os-icon-container>
                 </div>
             }
-            @if (user.vote_delegated_to() && voteDelegationEnabled) {
+            @if (user.vote_delegated_to_ids() && voteDelegationEnabled) {
                 <div
                     class="spacer-top-5"
                     matTooltip="{{ 'Voting right delegated to (proxy)' | translate }}"

@@ -55,7 +55,7 @@ export class PollEntitledUserComponent extends BaseComponent {
         return `/${this.poll().getDetailStateUrl()}`;
     });
 
-    public filterProps = [`user.getFullName`];
+    public filterProps = [`meetingUser.user.getFullName`];
 
     public entitledUsers$: Observable<EntitledUserData[]> = toObservable(this.poll).pipe(
         switchMap(poll => combineLatest([poll.entitled_users$, poll.ballot_users$.pipe(startWith([]))])),

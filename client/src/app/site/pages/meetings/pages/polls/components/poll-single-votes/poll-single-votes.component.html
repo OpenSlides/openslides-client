@@ -1,7 +1,7 @@
 <div *osPerms="permission.userCanSee">
     <os-list
-        [filterProps]="filterProps"
-        [filterService]="poll().isNamed ? filter : null"
+        [filterProps]="!poll().anonymized ? filterProps : null"
+        [filterService]="!poll().anonymized ? filter : null"
         [fullScreen]="false"
         [listObservable]="votesData$"
         [totalCount]="totalCount()"

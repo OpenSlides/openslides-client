@@ -12,6 +12,7 @@ import { PollControllerService } from '@app/site/pages/meetings/modules/poll/ser
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { DirectivesModule } from '@app/ui/directives';
+import { filter } from 'rxjs';
 
 @Component({
     selector: `os-assignment-poll`,
@@ -29,7 +30,7 @@ export class AssignmentPollComponent extends BaseMeetingComponent {
 
     public poll = rxResource<ViewPoll, Id>({
         params: () => this.pollId(),
-        stream: ({ params }) => this.repo.getViewModelObservable(params)
+        stream: ({ params }) => this.repo.getViewModelObservable(params).pipe(filter(p => !!p))
     });
 
     public showPoll = computed<boolean>(() => {

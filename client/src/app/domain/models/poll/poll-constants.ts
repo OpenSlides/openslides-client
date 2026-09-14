@@ -15,6 +15,12 @@ export enum PollVisibility {
     Secret = `secret`
 }
 
+export enum PollRequiredMajority {
+    NoMajority = `no_majority`,
+    TwoThirdMajority = `two_third_majority`,
+    AbsoluteMajority = `absolute_majority`
+}
+
 /**
  * Colors for chart color generation
  * Keys are freely invented and not in sync with html color names

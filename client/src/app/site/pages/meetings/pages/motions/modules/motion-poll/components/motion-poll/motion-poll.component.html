@@ -2,8 +2,8 @@
     <mat-card class="motion-poll-wrapper">
         <mat-card-content>
             <os-poll
+                navigateTo="poll"
                 [allowEdit]="true"
-                [navigateToPollDetail]="true"
                 [poll]="poll()"
                 (dialogOpened)="dialogOpened.emit($event)"
             ></os-poll>

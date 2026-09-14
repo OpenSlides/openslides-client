@@ -18,6 +18,14 @@
                     <mat-form-field>
                         <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
                         <input formControlName="min_options_amount" matInput required type="number" />
+                        @if (form.get('min_options_amount').hasError('min')) {
+                            <mat-error>{{ 'Amount needs to be at least 1' | translate }}</mat-error>
+                        }
+                        @if (form.get('min_options_amount').hasError('minGreaterThanMax')) {
+                            <mat-error>
+                                {{ 'Amount must not exceed amount of max amount of votes' | translate }}
+                            </mat-error>
+                        }
                     </mat-form-field>
                 } @else {
                     <div></div>
@@ -67,6 +75,36 @@
                         }
                     }
                 </mat-select>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>{{ 'Required majority' | translate }}</mat-label>
+                <mat-select formControlName="required_majority" panelClass="required-majority-panel">
+                    <mat-option value="no_majority">
+                        {{ 'no_majority' | translateKey: 'poll_required_majority' }}
+                    </mat-option>
+                    <mat-option value="two_third_majority">
+                        {{ 'two_third_majority' | translateKey: 'poll_required_majority' }}
+                    </mat-option>
+                    <mat-option value="absolute_majority">
+                        {{ 'absolute_majority' | translateKey: 'poll_required_majority' }}
+                    </mat-option>
+                </mat-select>
+                @if (form.get('required_majority').getRawValue() === 'absolute_majority') {
+                    <mat-hint
+                        [innerText]="
+                            'Indicates if a majority of more than 50% was reached, dependent on the 100%-base'
+                                | translate
+                        "
+                    ></mat-hint>
+                } @else if (form.get('required_majority').getRawValue() === 'two_third_majority') {
+                    <mat-hint
+                        [innerText]="
+                            'Indicates if a majority of two-thirds or more was reached, dependent on the 100%-base'
+                                | translate
+                        "
+                    ></mat-hint>
+                }
             </mat-form-field>
 
             <mat-form-field>
