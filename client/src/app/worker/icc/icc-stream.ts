@@ -37,7 +37,6 @@ export class ICCStream extends HttpStream {
 
     public removeUser(): void {
         this.users--;
-        console.log(this.users);
         if (this.users <= 0) {
             this.abort();
         }
