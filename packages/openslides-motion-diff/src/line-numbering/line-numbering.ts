@@ -460,7 +460,6 @@ export class LineNumbering {
         const el = document.createElement(`span`);
         el.textContent = `\u00A0`;
         el.className = `line-number-${lineNumber} os-line-number`;
-        el.setAttribute(`contenteditable`, `false`);
         el.dataset.lineNumber = lineNumber.toString();
 
         return el;
