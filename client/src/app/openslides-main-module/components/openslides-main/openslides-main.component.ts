@@ -1,15 +1,8 @@
-import {
-    ApplicationRef,
-    ChangeDetectionStrategy,
-    Component,
-    DOCUMENT,
-    inject,
-    OnInit,
-    ViewContainerRef
-} from '@angular/core';
+import { ApplicationRef, ChangeDetectionStrategy, Component, DOCUMENT, inject, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { allAvailableTranslations } from '@app/domain/definitions/languages';
 import { HasSequentialNumber } from '@app/domain/interfaces';
 import { StorageService } from '@app/gateways/storage.service';
@@ -17,8 +10,10 @@ import { langToTimeLocale } from '@app/infrastructure/utils';
 import { overloadJsFunctions } from '@app/infrastructure/utils/overload-js-functions';
 import { Deferred } from '@app/infrastructure/utils/promises';
 import { BaseViewModel } from '@app/site/base/base-view-model';
+import { GlobalSpinnerModule } from '@app/site/modules/global-spinner';
 import { UpdateService } from '@app/site/modules/site-wrapper/services/update.service';
 import { CustomTranslationService } from '@app/site/modules/translations/custom-translation.service';
+import { WaitForActionDialogModule } from '@app/site/modules/wait-for-action-dialog';
 import { LifecycleService } from '@app/site/services/lifecycle.service';
 import { OpenSlidesService } from '@app/site/services/openslides.service';
 import { OpenSlidesStatusService } from '@app/site/services/openslides-status.service';
@@ -27,14 +22,22 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { DateFnsConfigurationService } from 'ngx-date-fns';
 import { first, firstValueFrom, tap } from 'rxjs';
 
+import { OpenSlidesOverlayContainerComponent } from '../openslides-overlay-container/openslides-overlay-container.component';
+
 const CURRENT_LANGUAGE_STORAGE_KEY = `currentLanguage`;
 
 @Component({
     selector: `os-root`,
     templateUrl: `./openslides-main.component.html`,
     styleUrls: [`./openslides-main.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [
+        RouterOutlet,
+        OpenSlidesOverlayContainerComponent,
+        MatSnackBarModule,
+        GlobalSpinnerModule,
+        WaitForActionDialogModule
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class OpenSlidesMainComponent implements OnInit {
     private onInitDone = new Deferred();
@@ -55,7 +58,9 @@ export class OpenSlidesMainComponent implements OnInit {
     private modelStore = inject(ViewModelStoreService);
     private ctService = inject(CustomTranslationService);
 
-    public constructor(_viewContainer: ViewContainerRef, _openslidesService: OpenSlidesService) {
+    public constructor() {
+        inject(OpenSlidesService);
+
         overloadJsFunctions();
         this.addDebugFunctions();
         this.waitForAppLoaded();
