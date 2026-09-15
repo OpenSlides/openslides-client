@@ -6,6 +6,10 @@
             container-background-color: transparent
         )
     );
+    mat-paginator {
+        display: flex;
+        justify-content: flex-start;
+    }
 }
 
 div.remove-top-margin {

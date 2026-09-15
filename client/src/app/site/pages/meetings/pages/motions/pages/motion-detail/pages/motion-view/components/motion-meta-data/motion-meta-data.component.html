@@ -316,7 +316,12 @@
             @for (origin of currentOriginPage(); track origin.id; let last = $last) {
                 <div class="basic-flex-container">
                     <span class="indicator-icon">
-                        <mat-icon [color]="origin.id === motion.id ? 'accent' : ''" [ngClass]="{ 'user-subtitle': origin.id !== motion.id }">fiber_manual_record</mat-icon>
+                        <mat-icon
+                            [color]="origin.id === motion.id ? 'accent' : ''"
+                            [ngClass]="{ 'user-subtitle': origin.id !== motion.id }"
+                        >
+                            fiber_manual_record
+                        </mat-icon>
                     </span>
                     @if (origin.meeting?.locked_from_inside) {
                         <mat-icon class="lock-icon user-subtitle">lock</mat-icon>
@@ -341,10 +346,7 @@
                         ></mat-slide-toggle>
                     }
                 </div>
-                <div
-                    class="basic-flex-container"
-                    [class]="last ? 'last-element-margin' : ''"
-                >
+                <div class="basic-flex-container" [class]="last ? 'last-element-margin' : ''">
                     @if (!last && !!origin.origin_id) {
                         <mat-icon class="user-subtitle">north</mat-icon>
                     } @else {
