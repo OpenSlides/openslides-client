@@ -100,6 +100,15 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     @Input()
     public showMenu = true;
 
+    /*
+     * To Optionally show the scrolling-table's header bar
+     */
+    @Input()
+    public showHeader: boolean;
+
+    @Input()
+    public horizontalScroll: boolean;
+
     /**
      * Fix value for the height of the rows in the virtual-scroll-list.
      */
@@ -166,7 +175,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public get totalCountObservable(): Observable<number> {
-        return this._totalCountObservable ?? this._source.pipe(map(items => items.length));
+        return this._totalCountObservable ?? this._source.pipe(map(items => items?.length));
     }
 
     public get source(): V[] {
