@@ -313,7 +313,7 @@
             <h4>{{ 'Origin' | translate }}</h4>
         }
         <div class="origin-view">
-            @for (origin of currentOriginPage(); track origin.id; let last = $last) {
+            @for (origin of currentOriginPage(); track origin.id; let last = $last; let first =$first) {
                 <div class="basic-flex-container">
                     <span class="indicator-icon">
                         <mat-icon
@@ -347,8 +347,10 @@
                     }
                 </div>
                 <div class="basic-flex-container" [class]="last ? 'last-element-margin' : ''">
-                    @if (!last && !!origin.origin_id) {
+                    @if (first && !!origin.origin_id) {
                         <mat-icon class="user-subtitle">north</mat-icon>
+                    } @else if (!!origin.origin_id) {
+                        <mat-icon class="user-subtitle line-path">horizontal_rule</mat-icon>
                     } @else {
                         <mat-icon></mat-icon>
                     }
