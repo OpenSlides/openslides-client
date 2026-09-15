@@ -2,13 +2,15 @@ import { inject, Service } from '@angular/core';
 import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
 import { MeetingCsvExportForBackendService } from '@app/site/pages/meetings/services/export/meeting-csv-export-for-backend.service';
+import { MeetingXmlExportService } from '@app/site/pages/meetings/services/export/meeting-xml-export.service';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AgendaPdfCatalogExportService } from '../../../../services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service';
 
 export enum ExportFileFormat {
     PDF = 0,
-    CSV
+    CSV = 1,
+    XML = 2
 }
 
 export type InfoToExport =
@@ -25,12 +27,15 @@ export type pdfMetaInfo = `table_of_content` | `line_break` | `header` | `footer
 
 export type csvMetaInfo = `duration` | `tags` | `agenda_visibility` | `done`;
 
+export type xmlMetaInfo = csvMetaInfo;
+
 @Service()
 export class AgendaItemExportService {
     private translate = inject(TranslateService);
     private csvExportService = inject(MeetingCsvExportForBackendService);
     private pdfExportService = inject(MeetingPdfExportService);
     private agendaPdfExportService = inject(AgendaPdfCatalogExportService);
+    private xmlExportService = inject(MeetingXmlExportService);
 
     public exportAsCsv(source: ViewAgendaItem[], info: InfoToExport[], csvMeta: csvMetaInfo): void {
         const config = [];
@@ -97,5 +102,11 @@ export class AgendaItemExportService {
             exportInfo: metaExportInfo,
             filename
         });
+    }
+
+    public exportAsXML(source: ViewAgendaItem[], info: InfoToExport[], xmlMeta: xmlMetaInfo[]): void {
+        const filename = this.translate.instant(`Agenda`) + `.xml`;
+        const config: (InfoToExport | csvMetaInfo)[] = [...info, ...xmlMeta];
+        this.xmlExportService.export(source, filename, config);
     }
 }
