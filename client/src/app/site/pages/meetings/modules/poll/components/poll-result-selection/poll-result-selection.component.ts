@@ -90,7 +90,8 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
                 votingOption: optionText,
                 color: showPieChart ? colors[i] : null,
                 amount,
-                majority: !this.config().strike_out && amount >= this.requiredMajority(),
+                majority:
+                    !this.config().strike_out && this.requiredMajority() !== null && amount >= this.requiredMajority(),
                 percent: showPercent
                     ? Big(results[option.id] || 0)
                           .div(this.config().onehundredPercentBaseNum)
