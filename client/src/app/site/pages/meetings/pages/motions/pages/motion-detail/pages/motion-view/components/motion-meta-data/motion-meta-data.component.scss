@@ -1,3 +1,17 @@
+@use '@angular/material' as mat;
+
+.origin-view {
+    @include mat.paginator-overrides(
+        (
+            container-background-color: transparent
+        )
+    );
+    mat-paginator {
+        display: flex;
+        justify-content: flex-start;
+    }
+}
+
 div.remove-top-margin {
     margin-top: -1.33em;
 }
@@ -8,4 +22,41 @@ div.origin-view {
 
 span.referencelist {
     display: inline-block;
+}
+
+.basic-flex-container {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.status-text {
+    font-size: 85%;
+    margin-top: -7px;
+    margin-left: 1px;
+    font-style: italic;
+}
+
+.slider-margin {
+    margin-left: 15px;
+}
+
+.lock-icon {
+    margin-left: 5px;
+}
+
+.indicator-icon {
+    margin-right: 3px;
+}
+
+.last-element-margin {
+    margin-bottom: -5px;
+}
+
+.meeting-name-width {
+    max-width: 60%;
+}
+
+.line-path {
+    transform: rotate(90deg);
 }
