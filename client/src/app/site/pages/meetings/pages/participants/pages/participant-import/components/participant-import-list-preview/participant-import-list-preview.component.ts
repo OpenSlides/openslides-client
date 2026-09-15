@@ -310,11 +310,16 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.New:
                 return `add_circle_outline`;
             case BackendImportState.Done:
+                if (item['changed'] === true) {
+                    return 'autorenew';
+                }
                 return '';
             case BackendImportState.Generated:
                 return `merge`;
             case BackendImportState.Remove:
                 return `remove_circle_outline`;
+            case BackendImportState.Referenced:
+                return `merge`;
             default:
                 // ad hoc check for updated structure levels and groups
                 if ((item.info as string) === 'updated') {
@@ -412,13 +417,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                         : this.translate.instant(`has been created`)) // item has been created
                 );
             case BackendImportState.Done:
-                return (
-                    this.translate.instant(this.modelName) +
-                    ` ` +
-                    (this._state !== BackendImportPhase.FINISHED
-                        ? this.translate.instant(`will be updated`) // item will be updated
-                        : this.translate.instant(`has been updated`))
-                ); // item has been updated
+                return this.updatedRowTooltip();
             case BackendImportState.Unchanged:
                 return (
                     this.translate.instant(this.modelName) +
@@ -438,6 +437,16 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             default:
                 return undefined;
         }
+    }
+
+    protected updatedRowTooltip(): string {
+        return (
+            this.translate.instant(this.modelName) +
+            ` ` +
+            (this._state !== BackendImportPhase.FINISHED
+                ? this.translate.instant(`will be updated`) // item will be updated
+                : this.translate.instant(`has been updated`))
+        ); // item has been updated
     }
 
     public getWarningRowTooltip(row: ViewImportedParticipant): string {
@@ -523,10 +532,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this._summary = previews.some(preview => preview.statistics)
             ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
             : [];
-        const countReferenced = this.rows.filter(row => row?.state === BackendImportState.Referenced)?.length | 0;
         const countUnchanged = this.rows.filter(row => row?.state === BackendImportState.Unchanged)?.length | 0;
-        const countUpdated =
-            (this._summary.find(item => item?.name === 'updated')?.value - countReferenced - countUnchanged) | 0;
+        const countUpdated = (this._summary.find(item => item?.name === 'updated')?.value - countUnchanged) | 0;
         const error = this._summary.find(item => item.name === 'error');
         this._summary = this._summary.filter(item => item.name !== 'updated');
         this._summary.map(item => {
@@ -534,9 +541,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 item.name = 'new';
             }
         });
-        if (countReferenced > 0) {
-            this._summary.push({ name: 'referenced', value: countReferenced });
-        }
         if (countUpdated > 0) {
             this._summary.push({ name: 'updated', value: countUpdated });
         }
@@ -600,20 +604,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     protected isReferenced(row: ViewImportedParticipant): boolean {
-        if (row.state !== 'done') {
-            return false;
+        if (row.data?.['username']['info'] === 'referenced') {
+            row.setState = BackendImportState.Referenced;
+            return true;
         }
-        for (const user of this.userAccounts) {
-            if (
-                (row.username && row.username === user.username && user.meeting_ids.includes(row.meeting_id)) ||
-                (row.member_number && row.member_number === user.member_number) ||
-                (row.saml_id && row.saml_id === user.saml_id)
-            ) {
-                return false;
-            }
-        }
-        row.setState = BackendImportState.Referenced;
-        return true;
+        return false;
     }
 
     protected isUnchanged(item: ViewImportedParticipant): boolean {
@@ -630,7 +625,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     protected checkChanges(
         item: ViewImportedParticipant,
         headerName?: string
-    ): false | (string | Partial<Record<keyof ViewUser, { old?: unknown; new: unknown }>>)[] {
+    ): boolean | (string | Partial<Record<keyof ViewUser, { old?: unknown; new: unknown }>>)[] {
         for (const user of this.userAccounts) {
             if (
                 (user.meeting_ids.includes(item.meeting_id) && item.username && item.username === user.username) ||
@@ -674,25 +669,30 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                     if (item.isLockedOut !== user.is_locked_out && user.is_locked_out !== undefined) {
                         changes['locked_out'] = {
                             old: user.is_locked_out,
-                            new: item.isLockedOut
+                            new: item.isLockedOut,
+                            removed: ![null, undefined].includes(user.is_locked_out) && item.isLockedOut === undefined
                         };
                     }
                     if (item.isPresent !== user.isPresentInMeeting() && user.isPresentInMeeting() !== undefined) {
                         changes['is_present'] = {
                             old: user.isPresentInMeeting(),
-                            new: item.isPresent
+                            new: item.isPresent,
+                            removed:
+                                ![null, undefined].includes(user.isPresentInMeeting()) && item.isPresent === undefined
                         };
                     }
                     if (item.saml_id !== user.saml_id) {
                         changes['saml_id'] = {
                             old: user.saml_id,
-                            new: item.saml_id
+                            new: item.saml_id,
+                            removed: ![null, undefined].includes(user.saml_id) && item.saml_id === undefined
                         };
                     }
                     if (item.number !== user.number() && user.number() !== '') {
                         changes['number'] = {
                             old: user.number(),
-                            new: item.number
+                            new: item.number,
+                            removed: ![null, undefined].includes(user.number()) && item.number === undefined
                         };
                     }
                     if (
@@ -702,26 +702,29 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                     ) {
                         changes['comment'] = {
                             old: user.comment(),
-                            new: item.comment
+                            new: item.comment,
+                            removed: ![null, undefined].includes(user.comment()) && item.comment === undefined
                         };
                     }
                     if (item.gender !== user.gender_name && user.gender_name !== '') {
                         changes['gender'] = {
                             old: user.gender_name,
-                            new: item.gender
+                            new: item.gender,
+                            removed: ![null, undefined].includes(user.gender_name) && item.gender === undefined
                         };
                     }
                     if (this.voteWeightChanged(item, user)) {
                         changes['vote_weight'] = {
                             old: user.voteWeight,
-                            new: item.voteWeight
+                            new: item.voteWeight,
+                            removed: ![null, undefined].includes(user.voteWeight) && item.voteWeight === undefined
                         };
                     }
                     if (item.isExternal !== user.external && user.external !== undefined) {
                         changes['external'] = {
                             old: user.external,
                             new: item.external,
-                            removed: ![null, undefined].includes(user.external) && item.home_committee === undefined
+                            removed: ![null, undefined].includes(user.external) && item.external === undefined
                         };
                     }
                     if (changedGroups?.new !== changedGroups?.old) {
@@ -739,14 +742,21 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                         };
                     }
                 }
+                // check for displaying the icon on every entry and provide context if an entry is removed
                 if (Object.keys(changes).includes(headerName)) {
                     return ['autorenew', changes];
                 }
+                // check for unchanged users
                 if (Object.keys(changes).length === 0) {
                     return false;
                 }
+                // check for displaying the updated icon if participant is referenced
+                if (item.state === 'referenced' && Object.keys(changes).length > 0) {
+                    return true;
+                }
             }
         }
+        // new user
         return ['', {}];
     }
 
@@ -800,10 +810,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         if (item.voteWeight === undefined && user.voteWeight !== undefined) {
             item.vote_weight = toDecimal(1);
         }
-        return (
-            this.getShortenedDecimal(item.voteWeight.toString()) !==
-            this.getShortenedDecimal(user.voteWeight.toString())
-        );
+        return this.getShortenedDecimal(item.voteWeight) !== this.getShortenedDecimal(user.voteWeight.toString());
     }
 
     private homeCommitteeRemovalCheck(item: ViewImportedParticipant, user: ViewUser): boolean {
