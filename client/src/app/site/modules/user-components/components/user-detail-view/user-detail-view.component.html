@@ -85,7 +85,7 @@
             @if (disableGenderField()) {
                 <mat-form-field class="form58 force-min-width">
                     <mat-label>{{ 'Gender' | translate }}</mat-label>
-                    <input matInput readonly value="{{ genderName | translate }}" />
+                    <input matInput readonly [value]="genderName | translate" />
                 </mat-form-field>
             } @else {
                 <mat-form-field class="form58 force-min-width">
@@ -223,15 +223,15 @@
                         <span>({{ user.pronoun }})</span>
                     }
                     @if (!user.is_active && isAllowed('seeSensitiveData')) {
-                        <mat-icon class="red-warning-text" matTooltip="{{ 'Inactive' | translate }}">
+                        <mat-icon class="red-warning-text" [matTooltip]="'Inactive' | translate">
                             do_not_disturb_on
                         </mat-icon>
                     }
                     @if (!user.is_physical_person) {
-                        <mat-icon matTooltip="{{ 'Is no natural person' | translate }}">account_balance</mat-icon>
+                        <mat-icon [matTooltip]="'Is no natural person' | translate">account_balance</mat-icon>
                     }
                     @if (user.hasSamlId && isAllowed('seeSensitiveData')) {
-                        <mat-icon matTooltip="{{ 'Has SSO identification' | translate }}">fingerprint</mat-icon>
+                        <mat-icon [matTooltip]="'Has SSO identification' | translate">fingerprint</mat-icon>
                     }
                 </span>
             </div>

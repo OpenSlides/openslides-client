@@ -7,8 +7,8 @@
                     <mat-icon
                         append
                         class="primary-accent-by-theme"
-                        matTooltip="{{ 'The list of speakers is closed.' | translate }}"
                         style="margin-top: 8px"
+                        [matTooltip]="'The list of speakers is closed.' | translate"
                     >
                         lock
                     </mat-icon>
@@ -127,8 +127,8 @@
         @if (canManage) {
             <div class="search-new-speaker-form">
                 <os-participant-search-selector
-                    placeholder="{{ 'Select speaker' | translate }}"
                     [nonSelectableUserIds]="nonAvailableUserIds"
+                    [placeholder]="'Select speaker' | translate"
                     (userSelected)="addUserAsNewSpeaker($event)"
                 ></os-participant-search-selector>
             </div>

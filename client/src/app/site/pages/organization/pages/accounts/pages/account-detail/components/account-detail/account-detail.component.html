@@ -197,7 +197,7 @@
                                     <td class="admin-column">
                                         @if (row.value.is_manager) {
                                             <mat-icon
-                                                matTooltip="{{ 'Committee admin' | translate }}"
+                                                [matTooltip]="'Committee admin' | translate"
                                                 [matTooltipPosition]="'left'"
                                             >
                                                 engineering
@@ -227,7 +227,7 @@
                                     <td class="admin-column" [attr.rowspan]="getNumberOfKeys(row.value.meetings)">
                                         @if (row.value.is_manager) {
                                             <mat-icon
-                                                matTooltip="{{ 'Committee admin' | translate }}"
+                                                [matTooltip]="'Committee admin' | translate"
                                                 [matTooltipPosition]="'left'"
                                             >
                                                 engineering
