@@ -18,7 +18,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
 import { toDecimal } from '@app/infrastructure/utils';
-import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { AccountControllerService } from '@app/site/pages/organization/pages/accounts/services/common/account-controller.service';
@@ -241,8 +241,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      */
     public async openDialog(): Promise<void> {
         const ref = this.dialog.open(ParticipantImportListInfoDialogComponent, {
-            ...infoDialogSettings,
-            width: '851px'
+            ...mediumDialogSettings
         });
         await firstValueFrom(ref.afterClosed());
     }
@@ -286,7 +285,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Referenced:
                 return this._state !== BackendImportPhase.FINISHED ? 'merge' : `done`;
             case BackendImportState.Generated:
-                return `merge`;
+                return ``;
             case BackendImportState.Remove:
                 return ``;
             case BackendImportState.Unchanged:
@@ -319,7 +318,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Remove:
                 return `remove_circle_outline`;
             case BackendImportState.Referenced:
-                return `merge`;
+                return ``;
             default:
                 // ad hoc check for updated structure levels and groups
                 if ((item.info as string) === 'updated') {
@@ -532,18 +531,34 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this._summary = previews.some(preview => preview.statistics)
             ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
             : [];
-        const countUnchanged = this.rows.filter(row => row?.state === BackendImportState.Unchanged)?.length | 0;
-        const countUpdated = (this._summary.find(item => item?.name === 'updated')?.value - countUnchanged) | 0;
+        const counts = [0, 0];
+        this.rows.filter(participant => {
+            if (participant.state === BackendImportState.Done) {
+                counts[0] += 1;
+            } else if (participant.state === BackendImportState.Referenced) {
+                counts[1] += 1;
+            }
+        });
         const error = this._summary.find(item => item.name === 'error');
-        this._summary = this._summary.filter(item => item.name !== 'updated');
+        const addIfMissing: (...items: any[]) => void = (...items) => {
+            for (const [name, value] of items) {
+                if (value > 0 && !this._summary.some(item => item.name === name)) {
+                    this._summary.push({ name, value });
+                }
+            }
+        };
+        addIfMissing(['updated', counts[0]], ['referenced', counts[1]]);
         this._summary.map(item => {
             if (item.name === 'created') {
                 item.name = 'new';
             }
+            if (counts[0] > 0 && item.name === 'updated') {
+                item.value = counts[0];
+            }
+            if (counts[1] > 0 && item.name === 'referenced') {
+                item.value = counts[1];
+            }
         });
-        if (countUpdated > 0) {
-            this._summary.push({ name: 'updated', value: countUpdated });
-        }
         this._summary = this._summary.filter(item => item.name !== 'error');
         this._summary.push({ name: error?.name, value: error?.value });
     }
@@ -604,6 +619,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     protected isReferenced(row: ViewImportedParticipant): boolean {
+        if (row.state === 'error') return false;
         if (row.data?.['username']['info'] === 'referenced') {
             row.setState = BackendImportState.Referenced;
             return true;
