@@ -290,7 +290,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             case BackendImportState.Remove:
                 return ``;
             case BackendImportState.Unchanged:
-                return this._state !== BackendImportPhase.FINISHED ? 'drag_handle' : `done`;
+                return this._state !== BackendImportPhase.FINISHED ? '' : `done`;
             default:
                 return `block`; // fallback: Error
         }
@@ -315,7 +315,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 }
                 return '';
             case BackendImportState.Generated:
-                return `merge`;
+                return ``;
             case BackendImportState.Remove:
                 return `remove_circle_outline`;
             case BackendImportState.Referenced:
