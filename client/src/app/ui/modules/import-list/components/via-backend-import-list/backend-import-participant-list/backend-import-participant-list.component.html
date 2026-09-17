@@ -33,7 +33,7 @@
             <div style="display: flex; flex-direction: column">
                 <h3 class="instructions">{{ 'Description of columns' | translate }}</h3>
                 <div>
-                    <button class="outlined-border" matButton outlined (click)="openDialog(fieldsInfoDialog)">
+                    <button class="outlined-border" matButton outlined (click)="openDialog()">
                         <mat-icon color="accent">info</mat-icon>
                         <mat-label>{{ 'INFO' | translate }}</mat-label>
                     </button>
@@ -88,48 +88,3 @@
         </button>
     </mat-card-content>
 </mat-card>
-
-<ng-template #fieldsInfoDialog>
-    <div class="action-title text-align-center" mat-dialog-title>
-        <h1 class="dialog-title">
-            {{ 'The fields are defined as follows' | translate }}
-        </h1>
-    </div>
-    <mat-dialog-content>
-        <table>
-            <br />
-            <tr style="display: table-row-group">
-                <td>{{ 'Column Name' | translate }}</td>
-                <td style="padding-left: 20px">{{ 'Meaning' | translate }}</td>
-                <td>{{ 'Notes' | translate }}</td>
-            </tr>
-
-            @for (column of defaultColumns; track column) {
-                <tr>
-                    <td class="table-title-column">{{ column.property }}:</td>
-                    <td style="margin-left: 20px; margin-right: 20px; display: inline-block">
-                        {{ column.label | translate }}
-                        @if (column.customInfo) {
-                            @if (isString(column.customInfo)) {
-                                {{ column.customInfo | translate }}
-                            }
-                            @if (!isString(column.customInfo)) {
-                                {{ column.customInfo | async }}
-                            }
-                        }
-                    </td>
-                    @if (column.description) {
-                        <td class="table-title-column">
-                            {{ column.description | translate }}
-                        </td>
-                    }
-                </tr>
-            }
-        </table>
-    </mat-dialog-content>
-    <mat-dialog-actions>
-        <button mat-button mat-dialog-close>
-            {{ 'Close' | translate }}
-        </button>
-    </mat-dialog-actions>
-</ng-template>

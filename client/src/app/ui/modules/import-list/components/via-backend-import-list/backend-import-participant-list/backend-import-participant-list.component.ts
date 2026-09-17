@@ -1,12 +1,12 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, Input, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ParticipantImportListInfoDialogComponent } from '@app/site/pages/meetings/pages/participants/pages/participant-import/components/participant-import-list-info-dialog/participant-import-list-info-dialog.component';
 import { BackendImportService } from '@app/ui/base/import-service';
 import { PipesModule } from '@app/ui/pipes';
@@ -119,10 +119,9 @@ export class BackendImportParticipantListComponent {
     /**
      * Opens an info dialog with the given template as content.
      */
-    public async openDialog(dialogTemplate?: TemplateRef<any>): Promise<void> {
-        const ref = this.dialog.open(dialogTemplate ?? ParticipantImportListInfoDialogComponent, {
-            ...infoDialogSettings,
-            width: dialogTemplate ? undefined : '690px'
+    public async openDialog(): Promise<void> {
+        const ref = this.dialog.open(ParticipantImportListInfoDialogComponent, {
+            ...mediumDialogSettings
         });
         await firstValueFrom(ref.afterClosed());
     }

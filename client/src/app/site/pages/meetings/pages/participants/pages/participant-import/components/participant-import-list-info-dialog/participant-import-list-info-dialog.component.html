@@ -4,18 +4,19 @@
             {{ 'The fields are defined as follows' | translate }}
         </h1>
     </div>
-    <mat-dialog-content>
+    <mat-dialog-content class="fix-size">
         <table>
+            <br />
             <tr style="display: table-row-group">
                 <td>{{ 'Column Name' | translate }}</td>
-                <td>{{ 'Meaning' | translate }}</td>
+                <td class="padding-left-20">{{ 'Meaning' | translate }}</td>
                 <td>{{ 'Notes' | translate }}</td>
             </tr>
 
             @for (column of defaultColumns; track column) {
                 <tr>
                     <td class="table-title-column">{{ column.property }}:</td>
-                    <td class="table-title-column" style="display: inline-block">
+                    <td class="table-title-column fix-table-column-size">
                         {{ column.label | translate }}
                         @if (column.customInfo) {
                             @if (isString(column.customInfo)) {

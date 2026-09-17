@@ -7,3 +7,20 @@
 .text-align-center {
     text-align: center;
 }
+
+.fix-size {
+    height: 100%;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.fix-table-column-size {
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+    display: inline-block !important;
+    min-width: 134px !important;
+}
+
+.padding-left-20{
+    padding-left: 20px !important;
+}
