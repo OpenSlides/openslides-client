@@ -4,9 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 
-import { ParticipantSearchSelectorModule } from '../../../participant-search-selector';
+import { ParticipantSearchSelectorModule } from '../../../participant-search-selector/participant-search-selector.module';
 import { SpeakerUserSelectDialogComponent } from './components/speaker-user-select-dialog/speaker-user-select-dialog.component';
 
 @NgModule({
@@ -18,7 +18,7 @@ import { SpeakerUserSelectDialogComponent } from './components/speaker-user-sele
         MatButtonModule,
         MatSelectModule,
         ParticipantSearchSelectorModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class SpeakerUserSelectDialogModule {

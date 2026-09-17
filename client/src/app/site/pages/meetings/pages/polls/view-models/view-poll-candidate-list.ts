@@ -1,5 +1,5 @@
-import { PollCandidateList } from 'src/app/domain/models/poll-candidate-lists/poll-candidate-list';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { PollCandidateList } from '@app/domain/models/poll-candidate-lists/poll-candidate-list';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { HasMeeting } from '../../../view-models/has-meeting';
 import { SortedList, SortedListEntry } from './sorted-list';

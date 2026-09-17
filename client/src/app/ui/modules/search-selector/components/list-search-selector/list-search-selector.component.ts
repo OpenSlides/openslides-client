@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, Optional, Self, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Optional, Self, signal, ViewEncapsulation } from '@angular/core';
 import { NgControl } from '@angular/forms';
 import { MatFormFieldControl } from '@angular/material/form-field';
 import { auditTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
@@ -18,6 +18,8 @@ import { BaseSearchSelectorComponent } from '../base-search-selector/base-search
 export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
     private _inputListValuesSubscription: Subscription;
 
+    private isListEmpty = signal(true);
+
     /**
      * The inputlist subject. Subscribes to it and updates the selector, if the subject
      * changes its values.
@@ -32,13 +34,11 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
         }
         if (Array.isArray(value)) {
             this.selectableItems = value;
+            this.isListEmpty.set(!value || (!!value && !value.length));
         } else {
             this._inputListValuesSubscription = value.pipe(auditTime(10), distinctUntilChanged()).subscribe(items => {
                 this.selectableItems = items;
-                if (this.contentForm) {
-                    this.disabled =
-                        (this.disabled || !items || (!!items && !items.length)) && !this.clickNotFound.observed;
-                }
+                this.isListEmpty.set(!items || (!!items && !items.length));
             });
             this.subscriptions.push(this._inputListValuesSubscription);
         }
@@ -48,5 +48,14 @@ export class ListSearchSelectorComponent extends BaseSearchSelectorComponent {
 
     public constructor(@Optional() @Self() ngControl: NgControl) {
         super(ngControl);
+    }
+
+    public override get disabled(): boolean {
+        return super.disabled || (this.isListEmpty() && !this.clickNotFound.observed);
+    }
+
+    @Input()
+    public override set disabled(value: boolean) {
+        super.disabled = value;
     }
 }

@@ -8,14 +8,14 @@ import {
     Input,
     OnDestroy,
     Output,
-    ViewChild,
+    viewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { OpenSlidesStatusService } from '@app/site/services/openslides-status.service';
 import { _ } from '@ngx-translate/core';
 import { catchError, firstValueFrom, map, of } from 'rxjs';
 import { ajax, AjaxResponse } from 'rxjs/ajax';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
 
 enum MimeType {
     mp4 = `video/mp4`,
@@ -42,8 +42,7 @@ enum Player {
     standalone: false
 })
 export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
-    @ViewChild(`vjs`, { static: false })
-    private vjsPlayerElementRef!: ElementRef;
+    private vjsPlayerElementRef = viewChild<ElementRef>(`vjs`);
 
     private _videoUrl!: string;
 
@@ -267,7 +266,11 @@ export class VideoPlayerComponent implements AfterViewInit, OnDestroy {
         await this.isUrlReachable();
         if (!this.vjsPlayer && this.usingVjs && this.vjsPlayerElementRef) {
             const videojs = (await import(`video.js`)).default;
-            this.vjsPlayer = videojs(this.vjsPlayerElementRef.nativeElement, {
+            const vjsEl = this.vjsPlayerElementRef().nativeElement;
+            if (!vjsEl?.isConnected) {
+                return;
+            }
+            this.vjsPlayer = videojs(vjsEl, {
                 textTrackSettings: { persistTextTrackSettings: false },
                 fluid: true,
                 autoplay: `any`,

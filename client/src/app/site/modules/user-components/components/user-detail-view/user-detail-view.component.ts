@@ -1,11 +1,14 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
     EventEmitter,
+    inject,
     Input,
+    input,
     OnInit,
     Output,
     QueryList,
@@ -19,21 +22,22 @@ import {
     ValidatorFn,
     Validators
 } from '@angular/forms';
+import { createEmailValidator } from '@app/infrastructure/utils/validators/email';
+import { getGenderListSubscriptionConfig } from '@app/site/pages/organization/pages/accounts/pages/gender/gender.subscription';
+import { GenderControllerService } from '@app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { TranslateService } from '@ngx-translate/core';
 import { map, OperatorFunction, Subscription } from 'rxjs';
-import { createEmailValidator } from 'src/app/infrastructure/utils/validators/email';
-import { getGenderListSubscriptionConfig } from 'src/app/site/pages/organization/pages/accounts/pages/gender/gender.subscription';
-import { GenderControllerService } from 'src/app/site/pages/organization/pages/accounts/pages/gender/services/gender-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { ViewUser } from '../../../../../site/pages/meetings/view-models/view-user';
-import { OneOfValidator } from '../../validators';
+import { OneOfValidator } from '../../validators/one-of.validator';
 
 @Component({
     selector: `os-user-detail-view`,
     templateUrl: `./user-detail-view.component.html`,
     styleUrls: [`./user-detail-view.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class UserDetailViewComponent extends BaseUiComponent implements OnInit, AfterViewInit {
@@ -65,9 +69,6 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     }
 
     @Input()
-    public isNewUser = false;
-
-    @Input()
     public set isEditing(is: boolean) {
         this._isEditing = is;
         if (is) {
@@ -78,15 +79,6 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     public get isEditing(): boolean {
         return this._isEditing;
     }
-
-    @Input()
-    public useMatcard = true;
-
-    @Input()
-    public useBottomMargin = true;
-
-    @Input()
-    public useAdditionalEditTemplate = true;
 
     @Input()
     public set additionalFormControls(controls: any) {
@@ -103,23 +95,25 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         this.prepareForm();
     }
 
-    @Input()
-    public isAccountSelfUpdate = false;
+    public readonly generatePasswordFn = input<(() => string) | null | undefined>(null);
 
-    @Input()
-    public patchFormValueFn: (controlName: string, user?: ViewUser) => any | null = () => {};
+    public readonly isNewUser = input(false);
 
-    @Input()
-    public isAllowedFn: (permission: string) => boolean = () => true;
+    public readonly useMatcard = input(true);
 
-    @Input()
-    public generatePasswordFn: (() => string) | null | undefined;
+    public readonly useBottomMargin = input(true);
 
-    @Input()
-    public shouldEnableFormControlFn: (controlName: string) => boolean = () => true;
+    public readonly useAdditionalEditTemplate = input(true);
 
-    @Input()
-    public disableGenderField = false;
+    public readonly isAccountSelfUpdate = input(false);
+
+    public readonly patchFormValueFn = input<(controlName: string, user?: ViewUser) => any | null>(() => {});
+
+    public readonly isAllowedFn = input<(permission: string) => boolean>(() => true);
+
+    public readonly shouldEnableFormControlFn = input<(controlName: string) => boolean>(() => true);
+
+    public readonly disableGenderField = input(false);
 
     @Output()
     public changeEvent = new EventEmitter();
@@ -174,41 +168,37 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private selfUpdateEnabled = false;
 
-    public constructor(
-        private fb: UntypedFormBuilder,
-        private operator: OperatorService,
-        public genderRepo: GenderControllerService,
-        private cd: ChangeDetectorRef,
-        private translate: TranslateService
-    ) {
-        super();
-    }
+    public genderRepo = inject(GenderControllerService);
+    private fb = inject(UntypedFormBuilder);
+    private operator = inject(OperatorService);
+    private cd = inject(ChangeDetectorRef);
+    private translate = inject(TranslateService);
 
     public ngOnInit(): void {
         this.subscriptions.push(
             this.operator.operatorUpdated.subscribe(() =>
-                this.updateFormControlsAccessibility(this.shouldEnableFormControlFn)
+                this.updateFormControlsAccessibility(this.shouldEnableFormControlFn())
             )
         );
     }
 
     public ngAfterViewInit(): void {
-        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
+        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn());
         this.cd.detectChanges();
     }
 
     public update(): void {
-        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
+        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn());
     }
 
     public isAllowed(permission: string): boolean {
-        return this.isAllowedFn(permission);
+        return this.isAllowedFn()(permission);
     }
 
     public setRandomPassword(): void {
-        if (this.generatePasswordFn) {
+        if (this.generatePasswordFn()) {
             this.personalInfoForm.patchValue({
-                default_password: this.generatePasswordFn()
+                default_password: this.generatePasswordFn()()
             });
         }
     }
@@ -230,7 +220,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private enterEditMode(): void {
         this.prepareForm();
-        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
+        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn());
         if (this.user) {
             this.patchFormValues();
         }
@@ -297,11 +287,11 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
         });
         this.personalInfoForm.patchValue(personalInfoPatch);
         this._initialState = personalInfoPatch;
-        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn);
+        this.updateFormControlsAccessibility(this.shouldEnableFormControlFn());
     }
 
     private getFormValuePatch(controlName: keyof ViewUser): any {
-        let patchValue = this.patchFormValueFn(controlName, this.user!);
+        let patchValue = this.patchFormValueFn()(controlName, this.user!);
         if (!patchValue) {
             const userValue = this.user![controlName] as () => unknown | string;
             patchValue = typeof userValue === `function` ? userValue.call(this.user) : userValue;
@@ -338,7 +328,10 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
 
     private getCreateFormControlsConfig(): Record<string, any> {
         return {
-            username: [``, this.isNewUser ? [this.noSpaceValidator()] : [Validators.required, this.noSpaceValidator()]],
+            username: [
+                ``,
+                this.isNewUser() ? [this.noSpaceValidator()] : [Validators.required, this.noSpaceValidator()]
+            ],
             pronoun: [``, Validators.maxLength(32)],
             title: [``],
             first_name: [``],
@@ -359,7 +352,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
             // setTimeout prevents 'ExpressionChangedAfterItHasBeenChecked'-error
             const changes = this.getChangedValues(this.personalInfoForm.value);
             this.changeEvent.emit(changes);
-            this.validEvent.emit(this.personalInfoForm.valid && (this.isNewUser || this._hasChanges));
+            this.validEvent.emit(this.personalInfoForm.valid && (this.isNewUser() || this._hasChanges));
             this.errorEvent.emit(this.personalInfoForm.errors);
         });
     }
@@ -381,7 +374,7 @@ export class UserDetailViewComponent extends BaseUiComponent implements OnInit, 
     }
 
     private getChangedValues(formData: Record<string, any>): Record<string, any> {
-        const data = this.useAdditionalEditTemplate
+        const data = this.useAdditionalEditTemplate()
             ? formData
             : Object.keys(formData).mapToObject(key =>
                   Object.keys(this._additionalFormControls ?? {}).includes(key) ? {} : { [key]: formData[key] }

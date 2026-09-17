@@ -12,18 +12,18 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { SpeakingTimesComponent } from 'src/app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { EditorModule } from 'src/app/ui/modules/editor';
-import { SortingListModule } from 'src/app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
-import { PipesModule } from 'src/app/ui/pipes';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { SpeakingTimesComponent } from '@app/site/pages/meetings/modules/list-of-speakers-content/components/speaking-times/speaking-times.component';
+import { DirectivesModule } from '@app/ui/directives';
+import { EditorModule } from '@app/ui/modules/editor';
+import { SortingListModule } from '@app/ui/modules/sorting/modules/sorting-list/sorting-list.module';
+import { PipesModule } from '@app/ui/pipes';
 
 import { ParticipantCommonServiceModule } from '../../pages/participants/services/common/participant-common-service.module';
-import { MeetingExportModule } from '../../services/export';
+import { MeetingExportModule } from '../../services/export/meeting-export.module';
 import { DetailViewModule } from '../meetings-component-collector/detail-view/detail-view.module';
 import { ProjectorButtonModule } from '../meetings-component-collector/projector-button/projector-button.module';
-import { ParticipantSearchSelectorModule } from '../participant-search-selector';
+import { ParticipantSearchSelectorModule } from '../participant-search-selector/participant-search-selector.module';
 import { CountdownTimeModule } from '../projector/modules/countdown-time/countdown-time.module';
 import { ListOfSpeakersContentComponent } from './components/list-of-speakers-content/list-of-speakers-content.component';
 import { ListOfSpeakersEntryComponent } from './components/list-of-speakers-entry/list-of-speakers-entry.component';
@@ -67,7 +67,7 @@ const DECLARATIONS = [
         ProjectorButtonModule,
         CountdownTimeModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         PipesModule,
         MeetingExportModule
     ]

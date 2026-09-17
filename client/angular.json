@@ -134,7 +134,12 @@
                         ],
                         "scripts": [],
                         "webWorkerTsConfig": "tsconfig.worker.json",
-                        "sourceMap": false
+                        "sourceMap": false,
+                        "stylePreprocessorOptions": {
+                            "includePaths": [
+                                "."
+                            ]
+                        }
                     }
                 },
                 "lint": {

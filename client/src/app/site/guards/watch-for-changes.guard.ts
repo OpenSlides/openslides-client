@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 /**
  * Interface to describe the function that is necessary.
@@ -7,9 +7,7 @@ export interface CanComponentDeactivate {
     canDeactivate: () => Promise<boolean>;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class WatchForChangesGuard {
     /**
      * Function to determine whether the route will change or not.

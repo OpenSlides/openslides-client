@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, inject, OnDestroy, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    OnDestroy,
+    ViewChild,
+    ViewEncapsulation
+} from '@angular/core';
 import { ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,31 +17,34 @@ import { MatChipOption, MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTabChangeEvent, MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute } from '@angular/router';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from '@app/domain/models/motions/motions.constants';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
+import { StorageService } from '@app/gateways/storage.service';
+import { BaseComponent } from '@app/site/base/base.component';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { ViewMotion, ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
+import { MeetingComponentServiceCollectorService } from '@app/site/pages/meetings/services/meeting-component-service-collector.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { DirectivesModule } from '@app/ui/directives';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, pairwise, Subscription } from 'rxjs';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { StorageService } from 'src/app/gateways/storage.service';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { ViewMotion, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingComponentServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-component-service-collector.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
 
 import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
 import { getMotionDetailSubscriptionConfig } from '../../../../motions.subscription';
-import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
-import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service';
+import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
+import { MotionLineNumberingService } from '../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
 import {
     ExportFileFormat,
     InfoToExport,
     motionImportExportHeaderOrder,
     noMetaData
 } from '../../../../services/export/definitions';
-import { MotionExportInfo, MotionExportService } from '../../../../services/export/motion-export.service';
+import {
+    MotionExportInfo,
+    MotionExportService
+} from '../../../../services/export/motion-export.service/motion-export.service';
 
 interface SavedSelections {
     tab_index: number;
@@ -46,6 +57,7 @@ interface SavedSelections {
     templateUrl: `./motion-export.component.html`,
     styleUrls: [`./motion-export.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CommonModule,
         ReactiveFormsModule,

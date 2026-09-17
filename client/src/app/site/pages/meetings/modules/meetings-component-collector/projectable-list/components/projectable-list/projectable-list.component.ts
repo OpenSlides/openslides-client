@@ -1,18 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { HasListOfSpeakers, hasListOfSpeakers } from '@app/site/pages/meetings/pages/agenda';
+import { InteractionService } from '@app/site/pages/meetings/pages/interaction/services/interaction.service';
+import { BaseProjectableViewModel } from '@app/site/pages/meetings/view-models/base-projectable-model';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ColumnRestriction, ListComponent } from '@app/ui/modules/list';
+import { BaseListComponent } from '@app/ui/modules/list/base/base-list.component';
+import { ViewListComponent } from '@app/ui/modules/list/components/view-list/view-list.component';
+import { END_POSITION, START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 import { map, Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { HasListOfSpeakers, hasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
-import { InteractionService } from 'src/app/site/pages/meetings/pages/interaction/services/interaction.service';
-import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models/base-projectable-model';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ColumnRestriction, ListComponent } from 'src/app/ui/modules/list';
-import { BaseListComponent } from 'src/app/ui/modules/list/base/base-list.component';
-import { ViewListComponent } from 'src/app/ui/modules/list/components/view-list/view-list.component';
-import {
-    END_POSITION,
-    START_POSITION
-} from 'src/app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 
 import { ProjectableListService } from '../../services/projectable-list.service';
 

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Permission } from 'src/app/domain/definitions/permission';
+import { Permission } from '@app/domain/definitions/permission';
 
 import { MotionExportComponent } from '../motion-export/components/motion-export/motion-export.component';
 import { AmendmentListComponent } from './components/amendment-list/amendment-list.component';

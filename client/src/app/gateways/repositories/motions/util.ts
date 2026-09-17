@@ -1,10 +1,10 @@
-import { Identifiable } from 'src/app/domain/interfaces';
-import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { Action } from 'src/app/gateways/actions';
-import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { Action } from '@app/gateways/actions';
+import { BaseHasMeetingUserViewModel } from '@app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 interface MotionMeetingUserActions {
     CREATE: string;
@@ -12,19 +12,13 @@ interface MotionMeetingUserActions {
     SORT: string;
 }
 
+@Service()
 export abstract class BaseMotionMeetingUserRepositoryService<
     V extends BaseHasMeetingUserViewModel<M>,
     M extends BaseModel
 > extends BaseMeetingRelatedRepository<V, M> {
+    protected abstract actionDefs: MotionMeetingUserActions;
     protected abstract sortPayloadField: string;
-
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        constructor: ModelConstructor<M>,
-        private actionDefs: MotionMeetingUserActions
-    ) {
-        super(repositoryServiceCollector, constructor);
-    }
 
     public getTitle = (model: V): string => model?.user?.getTitle() || this.translate.instant(`Deleted user`);
 

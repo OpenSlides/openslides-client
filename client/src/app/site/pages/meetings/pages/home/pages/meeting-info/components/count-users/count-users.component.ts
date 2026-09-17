@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
 import { CountUsersStatisticsService, CountUserStatistics } from '../../services/count-users-statistics.service';
 
@@ -13,6 +13,7 @@ enum DISPLAY_MODES {
     selector: `os-count-users`,
     templateUrl: `./count-users.component.html`,
     styleUrls: [`./count-users.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CountUsersComponent extends BaseUiComponent {

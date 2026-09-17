@@ -1,20 +1,18 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { PROJECTIONDEFAULT } from '@app/domain/models/projector/projection-default';
+import { MeetingProjectionType } from '@app/gateways/repositories/meeting-repository.service';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { PROJECTIONDEFAULT } from 'src/app/domain/models/projector/projection-default';
-import { MeetingProjectionType } from 'src/app/gateways/repositories/meeting-repository.service';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class CurrentSpeakerChyronSlideService {
-    public constructor(
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private repo: ProjectorControllerService,
-        private translate: TranslateService
-    ) {}
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private repo = inject(ProjectorControllerService);
+    private translate = inject(TranslateService);
 
     /**
      * @returns the slide build descriptor for the overlay or slide

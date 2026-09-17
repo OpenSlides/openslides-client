@@ -10,8 +10,8 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
+import { Selectable } from '@app/domain/interfaces/selectable';
 import { distinctUntilChanged, Observable, Subscription } from 'rxjs';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
 
 export interface SearchListDefinition {
     observable: Observable<Selectable[]>;

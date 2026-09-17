@@ -126,14 +126,17 @@
                 (keydown.enter)="onEditFile(mediafile, fileEditDialog)"
             >
                 @if (isInMeeting) {
-                    <os-icon-container icon="group">
+                    <os-icon-container
+                        icon="group"
+                        [attr.aria-label]="('Groups' | translate) + ' ' + getGroups(mediafile)"
+                    >
                         <os-comma-separated-listing [list]="getGroups(mediafile)" [showElementsAmount]="3">
                             <ng-template let-group>{{ $any(group).getTitle() }}</ng-template>
                         </os-comma-separated-listing>
                     </os-icon-container>
                 }
                 @if (!isInMeeting) {
-                    <os-icon-container icon="edit"></os-icon-container>
+                    <os-icon-container icon="edit" [attr.aria-label]="'Edit' | translate"></os-icon-container>
                 }
             </div>
         }
@@ -260,22 +263,26 @@
             <mat-label>{{ 'Upload to' | translate }}</mat-label>
             <os-list-search-selector
                 formControlName="directory_id"
-                noneTitle="{{ 'Base folder' | translate }}"
                 [includeNone]="true"
                 [inputListValues]="filteredDirectoryBehaviorSubject"
+                [noneTitle]="'Base folder' | translate"
             />
         </mat-form-field>
 
         @if (movingFromPublicFolder && !movingToPublicFolder) {
-            <p class="warn" translate>
-                You are moving a file from a public folder into an not published folder. The file will not be accessible
-                in meetings afterwards.
+            <p class="warn">
+                {{
+                    'You are moving a file from a public folder into an not published folder. The file will not be accessible in meetings afterwards.'
+                        | translate
+                }}
             </p>
         }
         @if (movingToPublicFolder && !movingFromPublicFolder) {
-            <p class="warn" translate>
-                You are moving an unpublished file to a public folder. The file will be accessible in ALL meetings
-                afterwards.
+            <p class="warn">
+                {{
+                    'You are moving an unpublished file to a public folder. The file will be accessible in ALL meetings afterwards.'
+                        | translate
+                }}
             </p>
         }
     </mat-dialog-content>

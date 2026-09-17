@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewEncapsulation } from '@angular/core';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { BaseProjectableViewModel } from '@app/site/pages/meetings/view-models';
 import { distinctUntilChanged, map } from 'rxjs';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { BaseProjectableViewModel } from 'src/app/site/pages/meetings/view-models';
 
 @Component({
     selector: `os-projectable-title`,

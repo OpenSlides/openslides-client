@@ -1,22 +1,18 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import {
     CsvColumnsDefinition,
     CsvExportService,
     DEFAULT_COLUMN_SEPARATOR,
     DEFAULT_ENCODING,
     DEFAULT_LINE_SEPARATOR
-} from 'src/app/gateways/export/csv-export.service';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+} from '@app/gateways/export/csv-export.service';
+import { BaseViewModel } from '@app/site/base/base-view-model';
 
 import { MeetingSettingsService } from '../meeting-settings.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingCsvExportService extends CsvExportService {
-    public constructor(private meetingSettings: MeetingSettingsService) {
-        super();
-    }
+    private meetingSettings = inject(MeetingSettingsService);
 
     /**
      * Saves an array of model data to a CSV.

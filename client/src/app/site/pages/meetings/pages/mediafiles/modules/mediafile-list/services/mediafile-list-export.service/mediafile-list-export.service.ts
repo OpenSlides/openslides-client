@@ -1,17 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { FileExportService } from '@app/gateways/export/file-export.service/file-export.service';
+import { HttpService } from '@app/gateways/http.service';
+import { ViewMediafile } from '@app/site/pages/meetings/pages/mediafiles';
 import JSZip from 'jszip';
-import { FileExportService } from 'src/app/gateways/export/file-export.service/file-export.service';
-import { HttpService } from 'src/app/gateways/http.service';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class MediafileListExportService {
-    public constructor(
-        private exporter: FileExportService,
-        private http: HttpService
-    ) {}
+    private exporter = inject(FileExportService);
+    private http = inject(HttpService);
 
     public downloadArchive(filename: string, mediafiles: ViewMediafile[]): Promise<void> {
         return this.exporter.saveFileZip(filename, async zip => await this.addFileToZip(mediafiles, zip));

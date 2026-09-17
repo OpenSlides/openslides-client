@@ -1,7 +1,7 @@
 import { Directive, inject } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+import { Id } from '@app/domain/definitions/key-types';
+import { BaseComponent } from '@app/site/base/base.component';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 
 import { ActiveMeetingService } from '../services/active-meeting.service';
 import { ActiveMeetingIdService } from '../services/active-meeting-id.service';

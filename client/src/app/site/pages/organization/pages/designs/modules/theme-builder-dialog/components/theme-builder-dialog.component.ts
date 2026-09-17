@@ -1,13 +1,13 @@
-import { AfterViewInit, Component, Inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ThemePalette } from '@angular/material/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Theme, ThemeGeneralColors } from '@app/domain/models/theme/theme';
+import { OrganizationService } from '@app/site/pages/organization/services/organization.service';
+import { ColorService } from '@app/site/services/color.service';
+import { GENERAL_DEFAULT_COLORS, ThemeService } from '@app/site/services/theme.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Theme, ThemeGeneralColors } from 'src/app/domain/models/theme/theme';
-import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
-import { ColorService } from 'src/app/site/services/color.service';
-import { GENERAL_DEFAULT_COLORS, ThemeService } from 'src/app/site/services/theme.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 type ThemeBuilderDialogData = {
     [K in keyof Theme]?: string;
@@ -17,6 +17,7 @@ type ThemeBuilderDialogData = {
     selector: `os-theme-builder-dialog`,
     templateUrl: `./theme-builder-dialog.component.html`,
     styleUrls: [`./theme-builder-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ThemeBuilderDialogComponent extends BaseUiComponent implements AfterViewInit {

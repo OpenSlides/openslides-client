@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Content, ContentText, PageSize, TDocumentDefinitions } from 'pdfmake/interfaces';
-import { FontPlace } from 'src/app/domain/models/mediafiles/mediafile.constants';
+import { inject, Service } from '@angular/core';
+import { FontPlace } from '@app/domain/models/mediafiles/mediafile.constants';
 import {
     PdfDocumentService,
     PdfFontDescription,
     PdfVirtualFileSystem,
     TocLineDefinition,
     TocTableDefinition
-} from 'src/app/gateways/export/pdf-document.service';
-import { HttpService } from 'src/app/gateways/http.service';
-import { mmToPoints } from 'src/app/infrastructure/utils';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
+} from '@app/gateways/export/pdf-document.service';
+import { HttpService } from '@app/gateways/http.service';
+import { mmToPoints } from '@app/infrastructure/utils';
+import { MediaManageService } from '@app/site/pages/meetings/services/media-manage.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { Content, ContentText, PageSize, TDocumentDefinitions } from 'pdfmake/interfaces';
 
 interface MeetingDownloadLandscapeConfig {
     docDefinition: Content;
@@ -24,10 +24,13 @@ interface MeetingDownloadConfig extends MeetingDownloadLandscapeConfig {
     disableProgress?: boolean;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingPdfExportService {
+    private pdfExportService = inject(PdfDocumentService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private httpService = inject(HttpService);
+    private mediaManageService = inject(MediaManageService);
+
     private get fontSize(): number | null {
         return this.meetingSettingsService.instant(`export_pdf_fontsize`);
     }
@@ -51,13 +54,6 @@ export class MeetingPdfExportService {
     public get pageMarginPointsBottom(): number {
         return mmToPoints(this.meetingSettingsService.instant(`export_pdf_page_margin_bottom`)!);
     }
-
-    public constructor(
-        private pdfExportService: PdfDocumentService,
-        private meetingSettingsService: MeetingSettingsService,
-        private httpService: HttpService,
-        private mediaManageService: MediaManageService
-    ) {}
 
     public blob(config: MeetingDownloadConfig): Promise<Blob | null> {
         const pageMargins: [number, number, number, number] = [

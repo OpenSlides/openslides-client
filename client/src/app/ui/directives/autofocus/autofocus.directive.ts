@@ -1,17 +1,11 @@
-import { Directive, ElementRef, OnInit } from '@angular/core';
+import { Directive, ElementRef, inject, OnInit } from '@angular/core';
 
 @Directive({
     selector: `[osAutofocus]`,
     standalone: false
 })
 export class AutofocusDirective implements OnInit {
-    /**
-     * Constructor
-     *
-     * Gets the reference of the annotated element
-     * @param el ElementRef
-     */
-    public constructor(private el: ElementRef) {}
+    private el = inject(ElementRef);
 
     /**
      * Executed after page init, calls the focus function after an unnoticeable timeout

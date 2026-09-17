@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { AutoupdateService } from '@app/site/services/autoupdate';
+import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
+import { OperatorService } from '@app/site/services/operator.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { map } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { AutoupdateService } from 'src/app/site/services/autoupdate';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { UserControllerService } from 'src/app/site/services/user-controller.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { getParticipantVoteInfoSubscriptionConfig } from '../../../../pages/participants/participants.subscription';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';

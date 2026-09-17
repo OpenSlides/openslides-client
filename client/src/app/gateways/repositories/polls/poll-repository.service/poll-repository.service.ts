@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
-import { Decimal } from 'src/app/domain/definitions/key-types';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
-import { toDecimal } from 'src/app/infrastructure/utils';
-import { VoteControllerService } from 'src/app/site/pages/meetings/modules/poll/services/vote-controller.service';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
+import { inject, Service } from '@angular/core';
+import { Decimal } from '@app/domain/definitions/key-types';
+import { Poll } from '@app/domain/models/poll/poll';
+import { PollState, PollType } from '@app/domain/models/poll/poll-constants';
+import { toDecimal } from '@app/infrastructure/utils';
+import { VoteControllerService } from '@app/site/pages/meetings/modules/poll/services/vote-controller.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { VoteRepositoryService } from '../vote-repository.service';
+import { VoteRepositoryService } from '../vote-repository.service/vote-repository.service';
 import { PollAction } from './poll.action';
 
 interface AnalogPollVotesValues {
@@ -25,17 +24,12 @@ interface AnalogPollGlobalValues {
     amount_global_abstain?: Decimal;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll, Poll> {
-    public constructor(
-        repoServiceCollector: RepositoryMeetingServiceCollectorService,
-        private voteController: VoteControllerService,
-        private voteRepo: VoteRepositoryService
-    ) {
-        super(repoServiceCollector, Poll);
-    }
+    private voteController = inject(VoteControllerService);
+    private voteRepo = inject(VoteRepositoryService);
+
+    public baseModelCtor = Poll;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Polls` : `Poll`);
     public getTitle = (viewModel: ViewPoll): string => viewModel.title;

@@ -1,30 +1,25 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { Restriction } from '@app/domain/models/motions/motion-state';
+import { AmendmentType } from '@app/domain/models/motions/motions.constants';
+import { BaseFilterListService, OsFilter, OsFilterOption, OsFilterOptions } from '@app/site/base/base-filter.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ActiveFiltersService } from '@app/site/services/active-filters.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Restriction } from 'src/app/domain/models/motions/motion-state';
-import { AmendmentType } from 'src/app/domain/models/motions/motions.constants';
-import {
-    BaseFilterListService,
-    OsFilter,
-    OsFilterOption,
-    OsFilterOptions
-} from 'src/app/site/base/base-filter.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
-import { MotionCategoryControllerService } from '../../../modules/categories/services';
-import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
-import { ViewMotionEditor } from '../../../modules/editors';
-import { MotionEditorControllerService } from '../../../modules/editors/services';
-import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
-import { TagControllerService } from '../../../modules/tags/services';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
-import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers';
-import { MotionWorkingGroupSpeakerControllerService } from '../../../modules/working-group-speakers/services';
-import { ForwardingStatus, ViewMotion } from '../../../view-models';
+import { MotionCategoryControllerService } from '../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionCommentSectionControllerService } from '../../../modules/comments/services/motion-comment-section-controller.service';
+import { MotionEditorControllerService } from '../../../modules/editors/services/motion-editor-controller/motion-editor-controller.service';
+import { ViewMotionEditor } from '../../../modules/editors/view-models/view-motion-editor';
+import { MotionBlockControllerService } from '../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
+import { TagControllerService } from '../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { MotionWorkflowControllerService } from '../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
+import { MotionWorkingGroupSpeakerControllerService } from '../../../modules/working-group-speakers/services/motion-working-group-speaker-controller/motion-working-group-speaker-controller.service';
+import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers/view-models/view-motion-working-group-speaker';
+import { ForwardingStatus, ViewMotion } from '../../../view-models/view-motion';
 
 /**
  * Filter description to easier parse dynamically occurring workflows
@@ -42,9 +37,7 @@ interface WorkflowConfiguration {
 /**
  * Filter the motion list
  */
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
     /**
      * set the storage key name
@@ -206,7 +199,8 @@ export class MotionListFilterService extends BaseFilterListService<ViewMotion> {
     private operator = inject(OperatorService);
     private meetingSettingsService = inject(MeetingSettingsService);
 
-    public constructor(store: ActiveFiltersService) {
+    public constructor() {
+        const store = inject(ActiveFiltersService);
         super(store);
         this.getWorkflowConfig();
         this.getShowAmendmentConfig();

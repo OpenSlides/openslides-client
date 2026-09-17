@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
 
 import { getMotionWorkflowSubscriptionConfig } from '../../../../../motions/motions.subscription';
 
@@ -9,6 +9,7 @@ const MOTIONS_SETTINGS_GROUP = `motions`;
     selector: `os-meeting-settings-group-detail-main`,
     templateUrl: `./meeting-settings-group-detail-main.component.html`,
     styleUrls: [`./meeting-settings-group-detail-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MeetingSettingsGroupDetailMainComponent extends BaseModelRequestHandlerComponent {

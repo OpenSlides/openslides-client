@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Column, Content, ContentColumns, ContentTable, TableCell } from 'pdfmake/interfaces';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
 
 /**
  * Creates a pdf for a user, containing greetings and initial login information
@@ -15,18 +15,11 @@ import { OrganizationSettingsService } from 'src/app/site/pages/organization/ser
  * const pdfMakeCompatibleDocDef = this.UserPdfService.createUserListDocDef(Users);
  * ```
  */
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ParticipantPdfService {
-    /**
-     * Constructor
-     */
-    public constructor(
-        private translate: TranslateService,
-        private meetingSettingsService: MeetingSettingsService,
-        private orgaSettingsService: OrganizationSettingsService
-    ) {}
+    private translate = inject(TranslateService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private orgaSettingsService = inject(OrganizationSettingsService);
 
     /**
      * Converts a user to PdfMake doc definition, containing access information

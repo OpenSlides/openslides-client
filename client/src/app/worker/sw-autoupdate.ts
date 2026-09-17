@@ -1,5 +1,4 @@
-import { environment } from 'src/environments/environment';
-
+import { environment } from '../../environments/environment';
 import { AutoupdateStreamPool } from './autoupdate/autoupdate-stream-pool';
 import { AutoupdateSubscription } from './autoupdate/autoupdate-subscription';
 import {

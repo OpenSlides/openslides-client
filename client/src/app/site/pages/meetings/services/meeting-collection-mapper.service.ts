@@ -1,25 +1,27 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { BaseMeetingRelatedRepository } from 'src/app/gateways/repositories/base-meeting-related-repository';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { inject, Service } from '@angular/core';
+import { Fqid } from '@app/domain/definitions/key-types';
+import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
+import { BaseViewModel } from '@app/site/base/base-view-model';
 import {
     CollectionMappedTypes,
     CollectionMapperService,
     CollectionType
-} from 'src/app/site/services/collection-mapper.service';
-import { CollectionMapper } from 'src/app/site/services/collection-mapper.service/collection-mapper';
+} from '@app/site/services/collection-mapper.service';
+import { CollectionMapper } from '@app/site/services/collection-mapper.service/collection-mapper';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingCollectionMapperService extends CollectionMapperService implements CollectionMapper {
     private readonly _meetingRepositoriesSubject = new BehaviorSubject<BaseMeetingRelatedRepository<any, any>[]>([]);
 
-    public constructor(private collectionMapperService: CollectionMapperService) {
+    private collectionMapperService = inject(CollectionMapperService);
+
+    public constructor() {
         super();
-        collectionMapperService.getAllCollectionMaps().forEach(mapping => this.registerMeetingRepository(mapping));
-        collectionMapperService.afterRepositoryRegistered.subscribe(mapping => this.registerMeetingRepository(mapping));
+        this.collectionMapperService.getAllCollectionMaps().forEach(mapping => this.registerMeetingRepository(mapping));
+        this.collectionMapperService.afterRepositoryRegistered.subscribe(mapping =>
+            this.registerMeetingRepository(mapping)
+        );
     }
 
     public getAllRepositoriesObservable(): Observable<BaseMeetingRelatedRepository<any, any>[]> {

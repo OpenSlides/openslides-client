@@ -63,7 +63,7 @@
             </div>
             <!-- forward motions to -->
             @if (committee.forward_to_committee_ids?.length > 0 && isOrgaAdmin()) {
-                <os-committee-meta-info icon="file_upload" title="{{ 'Forward motions to' | translate }}">
+                <os-committee-meta-info icon="file_upload" [title]="'Forward motions to' | translate">
                     <ul class="content-list expandable-list" [class.expanded]="forwardingExpanded">
                         @for (
                             forwarding of sortCommitteesByName(committee.forward_to_committee_ids);
@@ -99,7 +99,7 @@
             }
             <!-- receive motions from -->
             @if (committee.receive_forwardings_from_committee_ids?.length > 0 && isOrgaAdmin()) {
-                <os-committee-meta-info icon="file_download" title="{{ 'Receive motions from' | translate }}">
+                <os-committee-meta-info icon="file_download" [title]="'Receive motions from' | translate">
                     <ul class="content-list expandable-list" [class.expanded]="receiveExpanded">
                         @for (
                             receive of sortCommitteesByName(committee.receive_forwardings_from_committee_ids);
@@ -135,12 +135,14 @@
             }
             <!-- Member amount -->
             @if (canManageCommittee) {
-                <os-committee-meta-info icon="engineering" title="{{ 'Committee admin' | translate }}">
+                <os-committee-meta-info icon="engineering" [title]="'Committee admin' | translate">
                     @if (committee.getManagers(); as managers) {
                         <os-comma-separated-listing [list]="managers">
                             <ng-template let-manager>
                                 <ng-container *osOmlPerms="OML.can_manage_users">
-                                    <a [routerLink]="['/', 'accounts', manager?.id]">{{ manager }}</a>
+                                    <a [routerLink]="['/', 'accounts', $safeNavigationMigration(manager?.id)]">
+                                        {{ manager }}
+                                    </a>
                                 </ng-container>
                                 <ng-container *osOmlPerms="OML.can_manage_users; complement: true">
                                     <span>{{ manager }}</span>
@@ -155,7 +157,7 @@
                     }
                 </os-committee-meta-info>
                 <!-- Numbers of accounts -->
-                <os-committee-meta-info icon="person" title="{{ 'Accounts' | translate }}">
+                <os-committee-meta-info icon="person" [title]="'Accounts' | translate">
                     <div>
                         <b>{{ accountNumber }}</b>
                         @if ((childCommitteesObservable | async).length > 0) {

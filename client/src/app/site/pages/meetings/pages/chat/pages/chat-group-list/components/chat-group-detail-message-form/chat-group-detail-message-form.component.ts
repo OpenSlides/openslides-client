@@ -1,17 +1,18 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CHAT_MESSAGE_MAX_LENGTH } from '@app/gateways/repositories/chat/chat-message-repository.service';
+import { KeyCode } from '@app/infrastructure/utils/key-code';
+import { ViewChatMessage } from '@app/site/pages/meetings/pages/chat';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
-import { CHAT_MESSAGE_MAX_LENGTH } from 'src/app/gateways/repositories/chat/chat-message-repository.service';
-import { KeyCode } from 'src/app/infrastructure/utils/key-code';
-import { ViewChatMessage } from 'src/app/site/pages/meetings/pages/chat';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
     selector: `os-chat-group-detail-message-form`,
     templateUrl: `./chat-group-detail-message-form.component.html`,
     styleUrls: [`./chat-group-detail-message-form.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ChatGroupDetailMessageFormComponent {

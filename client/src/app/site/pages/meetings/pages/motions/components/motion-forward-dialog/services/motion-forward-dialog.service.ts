@@ -1,37 +1,30 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Ids } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { Selectable } from '@app/domain/interfaces';
+import { GetForwardingMeetingsPresenter, GetForwardingMeetingsPresenterService } from '@app/gateways/presenter';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
+import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ViewCommittee } from '@app/site/pages/organization/pages/committees';
+import { ModelRequestService } from '@app/site/services/model-request.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 import { TranslateService } from '@ngx-translate/core';
-import { endOfDay, fromUnixTime } from 'date-fns';
 import { BehaviorSubject, filter, firstValueFrom, Observable } from 'rxjs';
-import { Ids } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Selectable } from 'src/app/domain/interfaces';
-import {
-    GetForwardingMeetingsPresenter,
-    GetForwardingMeetingsPresenterMeeting,
-    GetForwardingMeetingsPresenterService
-} from 'src/app/gateways/presenter';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ViewCommittee } from 'src/app/site/pages/organization/pages/committees';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
 
-import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
 import { getMotionForwardDataSubscriptionConfig } from '../../../motions.subscription';
-import { MotionFormatService } from '../../../services/common/motion-format.service';
-import { ViewMotion } from '../../../view-models';
+import { MotionFormatService } from '../../../services/common/motion-format.service/motion-format.service';
+import { ViewMotion } from '../../../view-models/view-motion';
 import {
     MotionForwardDialogComponent,
     MotionForwardDialogReturnData
 } from '../components/motion-forward-dialog/motion-forward-dialog.component';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class MotionForwardDialogService extends BaseDialogService<
     MotionForwardDialogComponent,
     ViewMotion[],
@@ -50,17 +43,17 @@ export class MotionForwardDialogService extends BaseDialogService<
     private _forwardingMeetings: GetForwardingMeetingsPresenter[] = [];
     private _forwardingMeetingsUpdateRequired = true;
 
-    public constructor(
-        private translate: TranslateService,
-        private repo: MotionRepositoryService,
-        private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private formatService: MotionFormatService,
-        private snackbar: MatSnackBar,
-        private presenter: GetForwardingMeetingsPresenterService,
-        private activeMeeting: ActiveMeetingService,
-        private operator: OperatorService,
-        private modelRequest: ModelRequestService
-    ) {
+    private translate = inject(TranslateService);
+    private repo = inject(MotionRepositoryService);
+    private changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    private formatService = inject(MotionFormatService);
+    private snackbar = inject(MatSnackBar);
+    private presenter = inject(GetForwardingMeetingsPresenterService);
+    private activeMeeting = inject(ActiveMeetingService);
+    private operator = inject(OperatorService);
+    private modelRequest = inject(ModelRequestService);
+
+    public constructor() {
         super();
 
         this.activeMeeting.meetingIdObservable.subscribe(() => {
@@ -162,11 +155,6 @@ export class MotionForwardDialogService extends BaseDialogService<
                 this.operator.hasPerms(Permission.motionCanForward) && !!meetingId
                     ? await this.presenter.call({ meeting_id: meetingId })
                     : [];
-            meetings.forEach(
-                committee =>
-                    (committee.meetings =
-                        committee.meetings?.filter(m => this.endAndActiveMeetingFilter(m)) ?? committee.meetings)
-            );
             this._forwardingMeetings = meetings;
             this._forwardingMeetingsUpdateRequired = false;
             this._forwardingCommitteesSubject.next(
@@ -181,14 +169,6 @@ export class MotionForwardDialogService extends BaseDialogService<
                 })
             );
         }
-    }
-
-    private endAndActiveMeetingFilter(meetingData: GetForwardingMeetingsPresenterMeeting): boolean {
-        return (
-            +meetingData.id !== this.activeMeeting.meetingId &&
-            meetingData.end_time &&
-            new Date() <= endOfDay(fromUnixTime(Date.parse(meetingData.end_time)))
-        );
     }
 
     private createForwardingSuccessMessage(

@@ -1,23 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { Topic } from '@app/domain/models/topics/topic';
+import { TopicRepositoryService } from '@app/gateways/repositories/topics/topic-repository.service';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 
-import { ViewTopic } from '../../view-models';
+import { ViewTopic } from '../../view-models/view-topic';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class TopicControllerService extends BaseMeetingControllerService<ViewTopic, Topic> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: TopicRepositoryService
-    ) {
-        super(controllerServiceCollector, Topic, repo);
-    }
+    protected repo: TopicRepositoryService = inject(TopicRepositoryService);
+
+    public baseModelCtor = Topic;
 
     public create(...topics: Partial<Topic>[]): Promise<Identifiable[]> {
         return this.repo.create(...topics);

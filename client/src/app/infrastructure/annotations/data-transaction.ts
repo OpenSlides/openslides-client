@@ -1,4 +1,4 @@
-import { Constructable } from 'src/app/domain/interfaces/constructable';
+import { Constructable } from '@app/domain/interfaces/constructable';
 
 import { DataType } from './data-type';
 

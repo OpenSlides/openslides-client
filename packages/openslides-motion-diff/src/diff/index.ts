@@ -614,7 +614,7 @@ export function diff(
         (whole: string, insDel: string): string => {
             const modificationClass = insDel.toLowerCase() === `ins` ? `insert` : `delete`;
             return whole.replace(
-                /(<(p|div|blockquote|ul|ol|li)[^>]*>)([\s\S]*?)(<\/\2>)/gi,
+                /(<(p|div|blockquote|ul|ol|li|h[1-6])[^>]*>)([\s\S]*?)(<\/\2>)/gi,
                 (_whole2: string, opening: string, _blockTag: string, content: string, closing: string): string => {
                     const modifiedTag = addClassToHtmlTag(opening, modificationClass);
                     return `</` + insDel + `>` + modifiedTag + content + closing + `<` + insDel + `>`;
@@ -809,8 +809,8 @@ export function diff(
         ): string => `<ins>` + insertedText1 + `</ins>` + closingTag + `<ins>` + insertedText2 + `</ins>`
     );
 
-    // <del>Ebene 3 <UL><LI></del><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span><ins>Ebene 3a <UL><LI></ins>
-    // => <del>Ebene 3 </del><ins>Ebene 3a </ins><UL><LI><span class="line-number-4 os-line-number" contenteditable="false" data-line-number="4">&nbsp;</span>
+    // <del>Ebene 3 <UL><LI></del><span class="line-number-4 os-line-number" data-line-number="4">&nbsp;</span><ins>Ebene 3a <UL><LI></ins>
+    // => <del>Ebene 3 </del><ins>Ebene 3a </ins><UL><LI><span class="line-number-4 os-line-number" data-line-number="4">&nbsp;</span>
     diffUnnormalized = diffUnnormalized.replace(
         /<del>([^<]+)((?:<(?:ul|ol|li)>)+)<\/del>(<span[^>]*os-line-number[^>]*>(?:&nbsp;|\s)<\/span>)?<ins>([^<]+)\2<\/ins>/gi,
         (_whole: string, del: string, block: string, ln: string, ins: string): string =>

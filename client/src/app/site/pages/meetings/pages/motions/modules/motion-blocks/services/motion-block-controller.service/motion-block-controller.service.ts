@@ -1,24 +1,18 @@
-import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { MotionBlockRepositoryService } from 'src/app/gateways/repositories/motions';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionBlock } from '@app/domain/models/motions/motion-block';
+import { MotionBlockRepositoryService } from '@app/gateways/repositories/motions/motion-block-repository.service';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
-import { ViewMotionBlock } from '../../view-models';
+import { ViewMotionBlock } from '../../view-models/view-motion-block';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionBlockControllerService extends BaseMeetingControllerService<ViewMotionBlock, MotionBlock> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionBlockRepositoryService,
-        private motionRepo: MotionControllerService
-    ) {
-        super(controllerServiceCollector, MotionBlock, repo);
-    }
+    protected repo: MotionBlockRepositoryService = inject(MotionBlockRepositoryService);
+    private motionRepo = inject(MotionControllerService);
+
+    public baseModelCtor = MotionBlock;
 
     public create(...blocks: Partial<MotionBlock>[]): Promise<Identifiable[]> {
         return this.repo.create(...blocks);

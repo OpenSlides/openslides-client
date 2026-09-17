@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MediaManageService } from 'src/app/site/pages/meetings/services/media-manage.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from '@angular/core';
+import { MediaManageService } from '@app/site/pages/meetings/services/media-manage.service';
+import { ThemeService } from '@app/site/services/theme.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
 const DEFAULT_LOGO = `/assets/img/openslides-logo.svg`;
 const DEFAULT_LOGO_DARK_THEME = `/assets/img/openslides-logo-dark.svg`;
@@ -10,6 +10,7 @@ const DEFAULT_LOGO_DARK_THEME = `/assets/img/openslides-logo-dark.svg`;
     selector: `os-logo`,
     templateUrl: `./logo.component.html`,
     styleUrls: [`./logo.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class LogoComponent extends BaseUiComponent implements OnInit {
@@ -38,12 +39,8 @@ export class LogoComponent extends BaseUiComponent implements OnInit {
     private _path: string | null = null;
     private _isDarkMode = false;
 
-    public constructor(
-        private themeService: ThemeService,
-        private mediaManageService: MediaManageService
-    ) {
-        super();
-    }
+    private themeService = inject(ThemeService);
+    private mediaManageService = inject(MediaManageService);
 
     public ngOnInit(): void {
         this.subscriptions.push(

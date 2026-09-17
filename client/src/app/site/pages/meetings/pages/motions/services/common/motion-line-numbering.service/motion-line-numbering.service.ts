@@ -1,16 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
 
 import { DiffLinesInParagraph } from '../../../definitions';
-import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../../modules';
 import {
     LineNumberedString,
-    LineNumberRange,
-    MotionChangeRecommendationControllerService
-} from '../../../modules/change-recommendations/services';
-import { ViewMotion } from '../../../view-models';
+    LineNumberRange
+} from '../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
+import { ViewMotionChangeRecommendation } from '../../../modules/change-recommendations/view-models/view-motion-change-recommendation';
+import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
+import { ViewMotion } from '../../../view-models/view-motion';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
 
 /**
@@ -38,17 +39,13 @@ export interface ParagraphToChoose {
     lineTo: number;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionLineNumberingService {
     private amendmentChangeRecoMap: Record<string, ViewMotionChangeRecommendation[]> = {};
     private amendmentChangeRecoSubscriptionMap: Record<string, Subscription> = {};
 
-    public constructor(
-        private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private translate: TranslateService
-    ) {}
+    private changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    private translate = inject(TranslateService);
 
     /**
      * Merges amendments and change recommendations and sorts them by the line numbers.

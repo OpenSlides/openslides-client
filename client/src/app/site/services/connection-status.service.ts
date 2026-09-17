@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { _ } from '@ngx-translate/core';
 import { BehaviorSubject, filter, firstValueFrom, fromEvent, map, Observable } from 'rxjs';
 
@@ -28,9 +28,7 @@ const OFFLINE_BANNER: BannerDefinition = {
 /**
  * This service handles the status being connected to the internet.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ConnectionStatusService {
     public get offlineGone(): Observable<void> {
         return this.isOfflineObservable.pipe(
@@ -54,7 +52,9 @@ export class ConnectionStatusService {
 
     private _config: OfflineReasonConfig | null = null;
 
-    public constructor(private bannerService: BannerService) {
+    private bannerService = inject(BannerService);
+
+    public constructor() {
         fromEvent(window, `offline`).subscribe(() => this.goOffline(DEFAULT_OFFLINE_REASON));
     }
 

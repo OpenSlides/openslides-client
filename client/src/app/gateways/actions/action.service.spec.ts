@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { QueryParams } from 'src/app/infrastructure/definitions/http';
+import { QueryParams } from '@app/infrastructure/definitions/http';
 
 import { HttpService } from '../http.service';
 import { Action, createEmptyAction } from './action';
@@ -13,8 +13,6 @@ class MockHttpService {
     public lastPosts: { path: string; data: any; queryParams: QueryParams }[] = [];
 
     public returnType: `response` | `error` | `nothing` | `too little` | `non-response` | `no results` = `response`;
-
-    public constructor() {}
 
     public async post<R>(path: string, data: any, queryParams: QueryParams): Promise<R> {
         this.lastPosts.push({ path, data, queryParams });

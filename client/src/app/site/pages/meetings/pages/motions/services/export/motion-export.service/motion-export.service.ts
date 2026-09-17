@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { PdfError } from 'src/app/gateways/export/pdf-document.service';
+import { inject, Service } from '@angular/core';
+import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/motions.constants';
+import { PdfError } from '@app/gateways/export/pdf-document.service';
 
-import { ViewMotion } from '../../../view-models';
+import { ViewMotion } from '../../../view-models/view-motion';
 import { ExportFileFormat, InfoToExport } from '../definitions';
-import { MotionCsvExportService } from '../motion-csv-export.service';
-import { MotionPdfExportService } from '../motion-pdf-export.service';
-import { MotionXlsxExportService } from '../motion-xlsx-export.service';
+import { MotionCsvExportService } from '../motion-csv-export.service/motion-csv-export.service';
+import { MotionPdfExportService } from '../motion-pdf-export.service/motion-pdf-export.service';
+import { MotionXlsxExportService } from '../motion-xlsx-export.service/motion-xlsx-export.service';
 
 /**
  * Shape the structure of the dialog data
@@ -23,15 +23,11 @@ export interface MotionExportInfo {
     includePdfAttachments?: boolean;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionExportService {
-    public constructor(
-        private pdfExport: MotionPdfExportService,
-        private csvExport: MotionCsvExportService,
-        private xlsxExport: MotionXlsxExportService
-    ) {}
+    private pdfExport = inject(MotionPdfExportService);
+    private csvExport = inject(MotionCsvExportService);
+    private xlsxExport = inject(MotionXlsxExportService);
 
     public evaluateExportRequest(exportInfo: MotionExportInfo, data: ViewMotion[]): void {
         if (!exportInfo) {

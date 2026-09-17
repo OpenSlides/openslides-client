@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
+import { MeetingCsvExportForBackendService } from '@app/site/pages/meetings/services/export/meeting-csv-export-for-backend.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MeetingCsvExportForBackendService } from 'src/app/site/pages/meetings/services/export/meeting-csv-export-for-backend.service';
 
 import { AgendaPdfCatalogExportService } from '../../../../services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service';
 
@@ -25,16 +25,12 @@ export type pdfMetaInfo = `table_of_content` | `line_break` | `header` | `footer
 
 export type csvMetaInfo = `duration` | `tags` | `agenda_visibility` | `done`;
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AgendaItemExportService {
-    public constructor(
-        private translate: TranslateService,
-        private csvExportService: MeetingCsvExportForBackendService,
-        private pdfExportService: MeetingPdfExportService,
-        private agendaPdfExportService: AgendaPdfCatalogExportService
-    ) {}
+    private translate = inject(TranslateService);
+    private csvExportService = inject(MeetingCsvExportForBackendService);
+    private pdfExportService = inject(MeetingPdfExportService);
+    private agendaPdfExportService = inject(AgendaPdfCatalogExportService);
 
     public exportAsCsv(source: ViewAgendaItem[], info: InfoToExport[], csvMeta: csvMetaInfo): void {
         const config = [];

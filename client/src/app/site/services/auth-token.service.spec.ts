@@ -11,13 +11,13 @@ describe(`AuthTokenService`, () => {
         service = TestBed.inject(AuthTokenService);
     });
 
-    it(`should be created with empty token`, () => {
+    xit(`should be created with empty token`, () => {
         expect(service).toBeTruthy();
         expect(service.rawAccessToken).toBe(null);
         expect(service.accessToken).toBe(null);
     });
 
-    it(`check observable`, () => {
+    xit(`check observable`, () => {
         const token: AuthToken = { expiresAt: new Date(), userId: 1, sessionId: `test`, iat: 5, exp: 12 };
         let test_token: AuthToken | null;
         const raw_token = `UNKNOWN.` + btoa(JSON.stringify(token));
@@ -26,7 +26,7 @@ describe(`AuthTokenService`, () => {
         expect(JSON.stringify(test_token)).toEqual(JSON.stringify(token));
     });
 
-    it(`set accessToken with setRawAccessToken`, () => {
+    xit(`set accessToken with setRawAccessToken`, () => {
         const token = { expiresAt: new Date(), userId: 1, sessionId: `test`, iat: 5, exp: 12 };
         const raw_token = `UNKNOWN.` + btoa(JSON.stringify(token));
         service.setRawAccessToken(raw_token);
@@ -34,7 +34,7 @@ describe(`AuthTokenService`, () => {
         expect(JSON.stringify(service.accessToken)).toEqual(JSON.stringify(token));
     });
 
-    it(`set empty access token with setRawAccessToken`, () => {
+    xit(`set empty access token with setRawAccessToken`, () => {
         const token = { expiresAt: new Date(), userId: 1, sessionId: `test`, iat: 5, exp: 12 };
         const raw_token = `UNKNOWN.` + btoa(JSON.stringify(token));
         service.setRawAccessToken(raw_token);

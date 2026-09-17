@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ListSearchService } from 'src/app/ui/modules/list/services/list-search.service';
+import { Service } from '@angular/core';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { ListSearchService } from '@app/ui/modules/list/services/list-search.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AccountListSearchService extends ListSearchService<ViewUser> {
     public constructor() {
         super(

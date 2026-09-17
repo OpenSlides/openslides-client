@@ -1,6 +1,6 @@
-import { Fqid } from 'src/app/domain/definitions/key-types';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { Poll } from 'src/app/domain/models/poll/poll';
+import { Fqid } from '@app/domain/definitions/key-types';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { Poll } from '@app/domain/models/poll/poll';
 
 export interface PollDialogData {
     // Required

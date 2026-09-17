@@ -1,6 +1,6 @@
 import { Fqid, Id } from '../../definitions/key-types';
-import { HasMeetingId } from '../../interfaces';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
+import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
 import { HasProperties } from '../../interfaces/has-properties';
 import { BaseModel } from '../base/base-model';

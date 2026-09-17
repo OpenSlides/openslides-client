@@ -1,20 +1,18 @@
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injector, Service } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Id } from '@app/domain/definitions/key-types';
+import { ActionWorker } from '@app/domain/models/action-worker/action-worker';
+import { ActionWorkerWatchService } from '@app/gateways/action-worker-watch/action-worker-watch.service';
+import { ActionWorkerRepositoryService } from '@app/gateways/repositories/action-worker/action-worker-repository.service';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ActionWorker } from 'src/app/domain/models/action-worker/action-worker';
-import { ActionWorkerWatchService } from 'src/app/gateways/action-worker-watch/action-worker-watch.service';
-import { ActionWorkerRepositoryService } from 'src/app/gateways/repositories/action-worker/action-worker-repository.service';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
 
 import { BannerService } from '../../site-wrapper/services/banner.service';
 import { StoppedWaitingForActionDialogComponent } from '../components/stopped-waiting-for-action-dialog/stopped-waiting-for-action-dialog.component';
 import { WaitForActionBannerComponent } from '../components/wait-for-action-banner/wait-for-action-banner.component';
 import { WaitForActionData, WaitForActionReason } from '../definitions';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class WaitForActionDialogService {
     public get currentReasonObservable(): Observable<WaitForActionReason> {
         return this._currentReasonObservable;
@@ -64,12 +62,10 @@ export class WaitForActionDialogService {
 
     private _snapshots = new BehaviorSubject<(Partial<ActionWorker> & { closed: number })[]>([]);
 
-    public constructor(
-        private injector: Injector,
-        private dialog: MatDialog,
-        private repo: ActionWorkerRepositoryService,
-        private bannerService: BannerService
-    ) {}
+    private injector = inject(Injector);
+    private dialog = inject(MatDialog);
+    private repo = inject(ActionWorkerRepositoryService);
+    private bannerService = inject(BannerService);
 
     public addNewDialog(reason: WaitForActionReason, data: WaitForActionData): void {
         this.removeAllDates(data.workerId);

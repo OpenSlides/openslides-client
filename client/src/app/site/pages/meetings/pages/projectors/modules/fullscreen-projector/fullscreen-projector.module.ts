@@ -1,14 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
-import { DirectivesModule } from 'src/app/ui/directives';
+import { MeetingsComponentCollectorModule } from '@app/site/pages/meetings/modules/meetings-component-collector';
+import { DirectivesModule } from '@app/ui/directives';
 
 import { ProjectorComponent } from '../../../../modules/projector/components/projector/projector.component';
 import { ProjectorModule } from '../../../../modules/projector/projector.module';
 import { TopicPollServiceModule } from '../../../agenda/modules/topics/modules/topic-poll/services/topic-poll-service.module';
 import { AssignmentPollServiceModule } from '../../../assignments/modules/assignment-poll/services/assignment-poll-service.module';
-import { MotionPollServiceModule } from '../../../motions/modules/motion-poll';
+import { MotionPollServiceModule } from '../../../motions/modules/motion-poll/services/motion-poll-service.module';
 import { FullscreenProjectorComponent } from './components/fullscreen-projector/fullscreen-projector.component';
 import { FullscreenProjectorDetailComponent } from './components/fullscreen-projector-detail/fullscreen-projector-detail.component';
 import { FullscreenProjectorMainComponent } from './components/fullscreen-projector-main/fullscreen-projector-main.component';

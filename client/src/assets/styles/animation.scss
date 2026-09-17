@@ -1,0 +1,63 @@
+
+.nav-slide-in {
+  animation: navSlideIn 600ms ease forwards;
+}
+
+@keyframes navSlideIn {
+  from {
+    transform: translateX(-85%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.nav-slide-out {
+  animation: navSlideOut 600ms ease forwards;
+}
+
+@keyframes navSlideOut {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-85%);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeInAnimation 600ms ease forwards;
+}
+
+@keyframes fadeInAnimation {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-out {
+  opacity: 1;
+  animation: fadeOutAnimation 600ms ease forwards;
+}
+
+@keyframes fadeOutAnimation {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.icon-pulse {
+  animation: pulseFadeInOut 2s ease-in-out infinite;
+}
+
+@keyframes pulseFadeInOut {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.2; }
+}

@@ -1,11 +1,11 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject } from '@angular/core';
 
 @Directive({
     selector: `[osTrimOnPaste]`,
     standalone: false
 })
 export class TrimOnPasteDirective {
-    public constructor(private el: ElementRef) {}
+    private el = inject(ElementRef);
 
     @HostListener(`paste`, [`$event`]) public onPaste(event: ClipboardEvent): void {
         const clipboardData = event.clipboardData;

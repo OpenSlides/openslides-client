@@ -1,6 +1,6 @@
+import { Deferred } from '@app/infrastructure/utils/promises';
+import { OsSortingDefinition, OsSortProperty } from '@app/site/base/base-sort.service';
 import { Observable } from 'rxjs';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
-import { OsSortingDefinition, OsSortProperty } from 'src/app/site/base/base-sort.service';
 export type SortDefinition<T> = keyof T | OsSortDefinition<T>;
 
 /**

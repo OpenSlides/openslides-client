@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { BehaviorSubject } from 'rxjs';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
 
 import { titleVerbose, WaitForActionData, WaitForActionReason, waitForActionReason } from '../../definitions';
-import { WaitForActionDialogService } from '../../services';
+import { WaitForActionDialogService } from '../../services/wait-for-action-dialog.service';
 
 @Component({
     selector: `os-wait-for-action-banner`,

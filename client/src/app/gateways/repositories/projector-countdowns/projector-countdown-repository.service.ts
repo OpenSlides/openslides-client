@@ -1,26 +1,20 @@
-import { Injectable } from '@angular/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ProjectorCountdown } from 'src/app/domain/models/projector/projector-countdown';
-import { ViewProjectorCountdown } from 'src/app/site/pages/meetings/pages/projectors';
+import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { ProjectorCountdown } from '@app/domain/models/projector/projector-countdown';
+import { ViewProjectorCountdown } from '@app/site/pages/meetings/pages/projectors';
 
 import { ServerTimeService } from '../../server-time.service';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorCountdownAction } from './projector-countdown.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepository<
     ViewProjectorCountdown,
     ProjectorCountdown
 > {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        private serverTime: ServerTimeService
-    ) {
-        super(repositoryServiceCollector, ProjectorCountdown);
-    }
+    private serverTime = inject(ServerTimeService);
+
+    public baseModelCtor = ProjectorCountdown;
 
     public getTitle = (viewProjectorCountdown: ViewProjectorCountdown): string =>
         viewProjectorCountdown.description

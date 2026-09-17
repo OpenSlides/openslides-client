@@ -1,4 +1,4 @@
-import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
+import { MeetingRepositoryService } from '@app/gateways/repositories/meeting-repository.service';
 
 import { Meeting } from '../../../domain/models/meetings/meeting';
 import { AppConfig } from '../../../infrastructure/definitions/app-config';

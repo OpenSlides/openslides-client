@@ -1,6 +1,6 @@
 import { Directive, Input } from '@angular/core';
-import { PollBackendDurationChoices } from 'src/app/domain/models/poll/poll-constants';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
+import { PollBackendDurationChoices } from '@app/domain/models/poll/poll-constants';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 
 @Directive()
 export abstract class BasePollMetaInformationComponent {

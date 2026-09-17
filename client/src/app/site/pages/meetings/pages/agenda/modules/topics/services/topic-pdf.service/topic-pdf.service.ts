@@ -1,25 +1,23 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { PollMethod, PollTableData, VotingResult } from '@app/domain/models/poll';
+import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText } from 'pdfmake/interfaces';
-import { PollMethod, PollTableData, VotingResult } from 'src/app/domain/models/poll';
-import { HtmlToPdfService } from 'src/app/gateways/export/html-to-pdf.service';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
 
-import { ViewPoll } from '../../../../../polls';
+import { ViewPoll } from '../../../../../polls/view-models/view-poll';
 import { TopicPollService } from '../../modules/topic-poll/services/topic-poll.service';
-import { ViewTopic } from '../../view-models';
+import { ViewTopic } from '../../view-models/view-topic';
 
 /**
  * Creates a PDF document from a single tpoic
  */
-@Injectable({ providedIn: 'root' })
+@Service()
 export class TopicPdfService {
-    public constructor(
-        private translate: TranslateService,
-        private htmlToPdfService: HtmlToPdfService,
-        private pdfDocumentService: MeetingPdfExportService,
-        private pollService: TopicPollService
-    ) {}
+    private translate = inject(TranslateService);
+    private htmlToPdfService = inject(HtmlToPdfService);
+    private pdfDocumentService = inject(MeetingPdfExportService);
+    private pollService = inject(TopicPollService);
 
     /**
      * Generates an pdf out of a given topic and saves it as file

@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
 
 import { getMeetingUserIdsSubscriptionConfig } from '../../../../accounts.subscription';
 
@@ -7,6 +7,7 @@ import { getMeetingUserIdsSubscriptionConfig } from '../../../../accounts.subscr
     selector: `os-account-list-main`,
     templateUrl: `./account-list-main.component.html`,
     styleUrls: [`./account-list-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AccountListMainComponent extends BaseModelRequestHandlerComponent {

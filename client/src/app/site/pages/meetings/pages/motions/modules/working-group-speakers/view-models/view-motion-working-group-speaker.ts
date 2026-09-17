@@ -1,6 +1,6 @@
-import { MotionWorkingGroupSpeaker } from 'src/app/domain/models/motions/motion-working-group-speaker';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { MotionWorkingGroupSpeaker } from '@app/domain/models/motions/motion-working-group-speaker';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
+import { BaseHasMeetingUserViewModel } from '@app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { HasMeeting } from '../../../../../view-models/has-meeting';
 import { ViewMotion } from '../../../view-models/view-motion';

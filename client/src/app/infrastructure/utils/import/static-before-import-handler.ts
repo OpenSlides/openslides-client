@@ -1,4 +1,4 @@
-import { Ids } from 'src/app/domain/definitions/key-types';
+import { Ids } from '@app/domain/definitions/key-types';
 
 import { Id } from '../../../domain/definitions/key-types';
 import { isEmpty } from '../functions';

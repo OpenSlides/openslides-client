@@ -1,15 +1,13 @@
-import { Injectable, Injector } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Action } from '@app/gateways/actions';
+import { ImportMeeting } from '@app/gateways/repositories/meeting-repository.service';
+import { BaseController } from '@app/site/base/base-controller';
 import { Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Action } from 'src/app/gateways/actions';
-import { ImportMeeting } from 'src/app/gateways/repositories/meeting-repository.service';
-import { PointOfOrderCategoryRepositoryService } from 'src/app/gateways/repositories/point-of-order-category/point-of-order-category-repository.service';
-import { BaseController } from 'src/app/site/base/base-controller';
 
-import { Identifiable } from '../../../../domain/interfaces';
+import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { Meeting } from '../../../../domain/models/meetings/meeting';
 import { MeetingRepositoryService } from '../../../../gateways/repositories/meeting-repository.service';
-import { ControllerServiceCollectorService } from '../../../services/controller-service-collector.service';
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ViewUser } from '../view-models/view-user';
 
@@ -20,26 +18,11 @@ export interface MeetingUserModifiedFields {
     removedAdmins?: ViewUser[];
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingControllerService extends BaseController<ViewMeeting, Meeting> {
-    private get pointOfOrdercategoryRepo(): PointOfOrderCategoryRepositoryService {
-        if (!this._pointOfOrdercategoryRepo) {
-            this._pointOfOrdercategoryRepo = this.injector.get(PointOfOrderCategoryRepositoryService);
-        }
-        return this._pointOfOrdercategoryRepo;
-    }
+    protected repo: MeetingRepositoryService = inject(MeetingRepositoryService);
 
-    private _pointOfOrdercategoryRepo: PointOfOrderCategoryRepositoryService;
-
-    public constructor(
-        repositoryServiceCollector: ControllerServiceCollectorService,
-        protected override repo: MeetingRepositoryService,
-        private injector: Injector
-    ) {
-        super(repositoryServiceCollector, Meeting, repo);
-    }
+    public baseModelCtor = Meeting;
 
     public create(...payload: any[]): Action<Identifiable[]> {
         return this.repo.create(...payload);
