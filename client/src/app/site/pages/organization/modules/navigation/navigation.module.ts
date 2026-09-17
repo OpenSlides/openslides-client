@@ -22,7 +22,7 @@ import { OrganizationNavigationWrapperComponent } from './organization-navigatio
         MatDividerModule,
         MatIconModule,
         MatMenuModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         DirectivesModule
     ]
 })

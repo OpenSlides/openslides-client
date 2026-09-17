@@ -9,7 +9,7 @@ import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 import { _ } from '@ngx-translate/core';
 
-import { UserDeleteDialogComponent } from '../components';
+import { UserDeleteDialogComponent } from '../components/user-delete-dialog/user-delete-dialog.component';
 
 interface UserDeleteDialogOpenConfig {
     toRemove: ViewUser[];

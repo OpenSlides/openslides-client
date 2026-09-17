@@ -2,7 +2,7 @@ import { inject, Service } from '@angular/core';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
+import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 
 @Service()
 export class MotionBlockDetailFilterListService extends MotionListFilterService {

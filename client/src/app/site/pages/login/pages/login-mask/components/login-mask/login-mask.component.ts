@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Meeting } from '@app/domain/models/meetings/meeting';
-import { fadeInAnim } from '@app/infrastructure/animations';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ORGANIZATION_ID, OrganizationService } from '@app/site/pages/organization/services/organization.service';
@@ -15,7 +14,6 @@ import { OpenSlidesRouterService } from '@app/site/services/openslides-router.se
 import { OperatorService } from '@app/site/services/operator.service';
 import { ParentErrorStateMatcher } from '@app/ui/modules/search-selector/validators';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
 import { filter, Observable, Subscription } from 'rxjs';
 
 import { BrowserSupportService } from '../../../../services/browser-support.service';
@@ -34,7 +32,6 @@ interface LoginValues {
     selector: `os-login-mask`,
     templateUrl: `./login-mask.component.html`,
     styleUrls: [`./login-mask.component.scss`],
-    animations: [fadeInAnim],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
@@ -59,14 +56,8 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
      */
     public installationNotice = ``;
 
-    /**
-     * Login Error Message if any
-     */
     public loginErrorMsg = ``;
 
-    /**
-     * Form group for the login form
-     */
     public loginForm: UntypedFormGroup;
 
     /**
@@ -91,27 +82,24 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
     private currentMeetingId: number | null = null;
     private guestMeetingId: number | null = null;
 
-    public constructor(
-        protected override translate: TranslateService,
-        private authService: AuthService,
-        private autoupdate: AutoupdateService,
-        private modelRequestBuilder: ModelRequestBuilderService,
-        private operator: OperatorService,
-        private route: ActivatedRoute,
-        private osRouter: OpenSlidesRouterService,
-        private formBuilder: UntypedFormBuilder,
-        private orgaService: OrganizationService,
-        private orgaSettings: OrganizationSettingsService,
-        private browserSupport: BrowserSupportService // private spinnerService: SpinnerService
-    ) {
+    private authService = inject(AuthService);
+    private autoupdate = inject(AutoupdateService);
+    private modelRequestBuilder = inject(ModelRequestBuilderService);
+    private operator = inject(OperatorService);
+    private route = inject(ActivatedRoute);
+    private osRouter = inject(OpenSlidesRouterService);
+    private formBuilder = inject(UntypedFormBuilder);
+    private orgaService = inject(OrganizationService);
+    private orgaSettings = inject(OrganizationSettingsService);
+    private browserSupport = inject(BrowserSupportService);
+
+    public constructor() {
         super();
         // Hide the spinner if the user is at `login-mask`
         this.loginForm = this.createForm();
     }
 
     /**
-     * Init.
-     *
      * Set the title to "Log In"
      * Observes the operator, if a user was already logged in, recreate to user and skip the login
      */
@@ -158,9 +146,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         this.checkForUnsecureConnection();
     }
 
-    /**
-     * Clear the subscription on destroy.
-     */
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
         this.clearOperatorSubscription();
@@ -195,9 +180,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         location.replace(redirectUrl);
     }
 
-    /**
-     * Go to the reset password view
-     */
     public resetPassword(): void {
         this.router.navigate([`./forget-password`], { relativeTo: this.route });
     }
@@ -260,9 +242,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         }
     }
 
-    /**
-     * Clears the subscription to the operator.
-     */
     private clearOperatorSubscription(): void {
         if (this.operatorSubscription) {
             this.operatorSubscription.unsubscribe();
@@ -270,9 +249,6 @@ export class LoginMaskComponent extends BaseMeetingComponent implements OnInit, 
         }
     }
 
-    /**
-     * Create the login Form
-     */
     private createForm(): UntypedFormGroup {
         return this.formBuilder.group({
             username: [``, [Validators.required, Validators.maxLength(128)]],

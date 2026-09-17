@@ -7,7 +7,7 @@ import { VotingPrivacyWarningDialogService } from '@app/site/pages/meetings/modu
 import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
 import { OperatorService } from '@app/site/services/operator.service';
 
-import { ViewTopic } from '../../../../view-models';
+import { ViewTopic } from '../../../../view-models/view-topic';
 import { TopicPollPdfService } from '../../services/topic-poll-pdf.service/topic-poll-pdf.service';
 
 @Component({

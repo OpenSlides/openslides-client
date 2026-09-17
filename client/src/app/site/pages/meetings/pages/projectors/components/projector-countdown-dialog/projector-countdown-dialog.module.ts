@@ -18,7 +18,7 @@ import { ProjectorCountdownDialogComponent } from './components/projector-countd
         MatButtonModule,
         MatDialogModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ProjectorCountdownDialogModule {

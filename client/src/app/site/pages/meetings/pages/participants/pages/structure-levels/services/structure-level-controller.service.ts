@@ -4,20 +4,15 @@ import { Identifiable } from '@app/domain/interfaces';
 import { StructureLevel } from '@app/domain/models/structure-levels/structure-level';
 import { StructureLevelRepositoryService } from '@app/gateways/repositories/structure-levels';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { Observable } from 'rxjs';
 
 import { ViewStructureLevel } from '../view-models/view-structure-level';
 
 @Service()
 export class StructureLevelControllerService extends BaseMeetingControllerService<ViewStructureLevel, StructureLevel> {
-    protected override repo: StructureLevelRepositoryService;
+    protected repo: StructureLevelRepositoryService = inject(StructureLevelRepositoryService);
 
-    public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(StructureLevelRepositoryService);
-        super(controllerServiceCollector, StructureLevel, repo);
-    }
+    public baseModelCtor = StructureLevel;
 
     public create(...structureLevels: Partial<StructureLevel>[]): Promise<Identifiable[] | void> {
         return this.repo.create(structureLevels).resolve();

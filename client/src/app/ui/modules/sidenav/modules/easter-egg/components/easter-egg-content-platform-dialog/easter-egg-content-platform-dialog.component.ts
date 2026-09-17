@@ -1,8 +1,8 @@
 import { ComponentPortal, ComponentType } from '@angular/cdk/portal';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { C4DialogModule } from '../../modules/c4-dialog';
-import { ChessDialogModule } from '../../modules/chess-dialog';
+import { C4DialogModule } from '../../modules/c4-dialog/c4-dialog.module';
+import { ChessDialogModule } from '../../modules/chess-dialog/chess-dialog.module';
 
 interface EasterEggModuleDescription {
     label: string;

@@ -4,29 +4,21 @@ import { Identifiable } from '@app/domain/interfaces';
 import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
 import { MediafileRepositoryService } from '@app/gateways/repositories/mediafiles/mediafile-repository.service';
 import { BaseController } from '@app/site/base/base-controller';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
-import { ViewMediafile } from '../view-models';
+import { ViewMediafile } from '../view-models/view-mediafile';
 
 @Service()
 export class MediafileControllerService extends BaseController<ViewMediafile, Mediafile> {
-    protected override controllerServiceCollector: MeetingControllerServiceCollectorService;
-    protected override repo: MediafileRepositoryService;
+    protected repo: MediafileRepositoryService = inject(MediafileRepositoryService);
     private operator = inject(OperatorService);
     private activeMeeting = inject(ActiveMeetingService);
 
-    public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(MediafileRepositoryService);
-        super(controllerServiceCollector, Mediafile, repo);
-        this.controllerServiceCollector = controllerServiceCollector;
-        this.repo = repo;
-    }
+    public baseModelCtor = Mediafile;
 
     public move(files: Identifiable[], directoryId: Id | null): Promise<void> {
         return this.repo.move(files, directoryId);

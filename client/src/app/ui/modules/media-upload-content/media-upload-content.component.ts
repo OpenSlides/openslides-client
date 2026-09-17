@@ -11,10 +11,10 @@ import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
-import { PipesModule } from '../../pipes';
-import { FileUploadModule } from '../file-upload';
+import { PipesModule } from '../../pipes/pipes.module';
 import { FileData } from '../file-upload/components/file-upload/file-upload.component';
-import { SearchSelectorModule } from '../search-selector';
+import { FileUploadModule } from '../file-upload/file-upload.module';
+import { SearchSelectorModule } from '../search-selector/search-selector.module';
 
 let uniqueCounter = 0;
 

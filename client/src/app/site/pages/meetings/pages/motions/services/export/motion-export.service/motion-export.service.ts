@@ -2,11 +2,11 @@ import { inject, Service } from '@angular/core';
 import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/motions.constants';
 import { PdfError } from '@app/gateways/export/pdf-document.service';
 
-import { ViewMotion } from '../../../view-models';
+import { ViewMotion } from '../../../view-models/view-motion';
 import { ExportFileFormat, InfoToExport } from '../definitions';
-import { MotionCsvExportService } from '../motion-csv-export.service';
-import { MotionPdfExportService } from '../motion-pdf-export.service';
-import { MotionXlsxExportService } from '../motion-xlsx-export.service';
+import { MotionCsvExportService } from '../motion-csv-export.service/motion-csv-export.service';
+import { MotionPdfExportService } from '../motion-pdf-export.service/motion-pdf-export.service';
+import { MotionXlsxExportService } from '../motion-xlsx-export.service/motion-xlsx-export.service';
 
 /**
  * Shape the structure of the dialog data

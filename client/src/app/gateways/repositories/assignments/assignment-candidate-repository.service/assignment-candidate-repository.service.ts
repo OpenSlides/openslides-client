@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Action } from '@app/gateways/actions';
@@ -7,7 +7,6 @@ import { ViewAssignmentCandidate } from '@app/site/pages/meetings/pages/assignme
 import { UnknownUserLabel } from '@app/site/pages/meetings/pages/assignments/modules/assignment-poll/services/assignment-poll.service';
 
 import { AssignmentCandidate } from '../../../../domain/models/assignments/assignment-candidate';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentCandidateAction } from './assignment-candidate.action';
 
 @Service()
@@ -15,10 +14,7 @@ export class AssignmentCandidateRepositoryService extends BaseMeetingRelatedRepo
     ViewAssignmentCandidate,
     AssignmentCandidate
 > {
-    public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, AssignmentCandidate);
-    }
+    public baseModelCtor = AssignmentCandidate;
 
     public getTitle = (viewAssignmentCandidate: ViewAssignmentCandidate): string =>
         viewAssignmentCandidate.user?.getTitle() ?? UnknownUserLabel;

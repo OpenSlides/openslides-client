@@ -5,10 +5,10 @@ import { ListOfSpeakersRepositoryService } from '@app/gateways/repositories/list
 import { BaseController } from '@app/site/base/base-controller';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
-import { ControllerServiceCollectorService } from '@app/site/services/controller-service-collector.service';
 
-import { ViewStructureLevel } from '../../../../participants/pages/structure-levels/view-models';
-import { ViewListOfSpeakers, ViewSpeaker } from '../view-models';
+import { ViewStructureLevel } from '../../../../participants/pages/structure-levels/view-models/view-structure-level';
+import { ViewListOfSpeakers } from '../view-models/view-list-of-speakers';
+import { ViewSpeaker } from '../view-models/view-speaker';
 
 /**
  * An object, that contains information about
@@ -23,14 +23,10 @@ export interface SpeakingTimeStructureLevelObject {
 
 @Service()
 export class ListOfSpeakersControllerService extends BaseController<ViewListOfSpeakers, ListOfSpeakers> {
-    protected override repo: ListOfSpeakersRepositoryService;
+    protected repo: ListOfSpeakersRepositoryService = inject(ListOfSpeakersRepositoryService);
     private meetingSettings = inject(MeetingSettingsService);
 
-    public constructor() {
-        const controllerServiceCollector = inject(ControllerServiceCollectorService);
-        const repo = inject(ListOfSpeakersRepositoryService);
-        super(controllerServiceCollector, ListOfSpeakers, repo);
-    }
+    public baseModelCtor = ListOfSpeakers;
 
     public readdLastSpeaker(listOfSpeakers: ViewListOfSpeakers): Promise<void> {
         return this.repo.readdLastSpeaker(listOfSpeakers);

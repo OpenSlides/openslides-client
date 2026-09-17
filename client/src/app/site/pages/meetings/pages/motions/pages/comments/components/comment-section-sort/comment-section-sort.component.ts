@@ -3,7 +3,7 @@ import { BaseComponent } from '@app/site/base/base.component';
 import { ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionCommentSectionControllerService } from '../../../../modules/comments/services';
+import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
 
 @Component({
     selector: `os-comment-section-sort`,

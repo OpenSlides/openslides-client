@@ -24,7 +24,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscriber } from 'rxjs';
 
 import { GlobalHeadbarService } from '../../modules/global-headbar/global-headbar.service';
-import { SpinnerService } from '../../modules/global-spinner';
+import { SpinnerService } from '../../modules/global-spinner/services/spinner.service';
 import { UpdateService } from '../../modules/site-wrapper/services/update.service';
 import { AuthService } from '../auth.service';
 import { AuthTokenService } from '../auth-token.service';

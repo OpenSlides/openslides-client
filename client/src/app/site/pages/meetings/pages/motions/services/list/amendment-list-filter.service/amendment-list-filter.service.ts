@@ -3,8 +3,8 @@ import { OsFilter } from '@app/site/base/base-filter.service';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionControllerService } from '../../common/motion-controller.service';
-import { MotionListFilterService } from '../motion-list-filter.service';
+import { MotionControllerService } from '../../common/motion-controller.service/motion-controller.service';
+import { MotionListFilterService } from '../motion-list-filter.service/motion-list-filter.service';
 
 @Service()
 export class AmendmentListFilterService extends MotionListFilterService {

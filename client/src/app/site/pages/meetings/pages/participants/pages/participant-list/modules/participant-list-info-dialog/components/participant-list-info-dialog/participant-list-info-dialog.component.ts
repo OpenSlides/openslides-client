@@ -14,7 +14,7 @@ import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { StructureLevelControllerService } from '../../../../../structure-levels/services/structure-level-controller.service';
-import { ViewStructureLevel } from '../../../../../structure-levels/view-models';
+import { ViewStructureLevel } from '../../../../../structure-levels/view-models/view-structure-level';
 import { ParticipantListSortService } from '../../../../services/participant-list-sort/participant-list-sort.service';
 import { InfoDialog } from '../../services/participant-list-info-dialog.service';
 

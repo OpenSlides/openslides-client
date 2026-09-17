@@ -28,7 +28,7 @@ import { LoginMaskRoutingModule } from './login-mask-routing.module';
         SpinnerModule,
         MatExpansionModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class LoginMaskModule {}

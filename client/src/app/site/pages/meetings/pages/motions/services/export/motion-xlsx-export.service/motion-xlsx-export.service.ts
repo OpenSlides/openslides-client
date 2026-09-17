@@ -7,10 +7,10 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Workbook } from 'exceljs';
 
-import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
-import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers';
-import { ViewMotion } from '../../../view-models';
-import { MotionControllerService } from '../../common/motion-controller.service';
+import { MotionCommentSectionControllerService } from '../../../modules/comments/services/motion-comment-section-controller.service';
+import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers/view-models/view-motion-working-group-speaker';
+import { ViewMotion } from '../../../view-models/view-motion';
+import { MotionControllerService } from '../../common/motion-controller.service/motion-controller.service';
 import { InfoToExport, sortMotionPropertyList } from '../definitions';
 
 interface MotionXlsxExportConfig {
@@ -180,7 +180,7 @@ export class MotionXlsxExportService {
                                 .join(`, `);
                         case `referring_motions`:
                             return motion.referenced_in_motion_recommendation_extensions
-                                .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
+                                .naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`])
                                 .map(motion => motion.getNumberOrTitle())
                                 .join(`, `);
                         default:

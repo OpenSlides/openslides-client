@@ -26,7 +26,7 @@ import { _ } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { ViewTopic } from '../../../../view-models';
+import { ViewTopic } from '../../../../view-models/view-topic';
 import { TopicPollMethodVerbose } from '../../definitions';
 import { TopicPollService } from '../../services/topic-poll.service';
 

@@ -11,6 +11,6 @@ const DECLARATIONS = [SortingListComponent];
 @NgModule({
     declarations: DECLARATIONS,
     exports: DECLARATIONS,
-    imports: [CommonModule, MatIconModule, DragDropModule, OpenSlidesTranslationModule.forChild()]
+    imports: [CommonModule, MatIconModule, DragDropModule, OpenSlidesTranslationModule]
 })
 export class SortingListModule {}

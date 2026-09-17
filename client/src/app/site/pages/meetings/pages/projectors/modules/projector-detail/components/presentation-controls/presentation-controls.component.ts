@@ -3,7 +3,7 @@ import { ViewMediafile, ViewMeetingMediafile } from '@app/site/pages/meetings/pa
 import { ViewProjection, ViewProjector } from '@app/site/pages/meetings/pages/projectors';
 import { combineLatest, map, merge, mergeMap, Observable, of } from 'rxjs';
 
-import { ProjectionControllerService } from '../../services/projection-controller.service';
+import { ProjectionControllerService } from '../../services/projection-controller.service/projection-controller.service';
 
 @Component({
     selector: `os-presentation-controls`,

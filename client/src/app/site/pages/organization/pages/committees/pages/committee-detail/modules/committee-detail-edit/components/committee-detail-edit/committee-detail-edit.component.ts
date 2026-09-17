@@ -16,7 +16,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, OperatorFunction } from 'rxjs';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
-import { ViewCommittee } from '../../../../../../view-models';
+import { ViewCommittee } from '../../../../../../view-models/view-committee';
 import { NAVIGATION_FROM_LIST } from '../../../../../committee-list/components/committee-list/committee-list.component';
 import { CommitteeSortService } from '../../../../../committee-list/services/committee-list-sort.service/committee-sort.service';
 

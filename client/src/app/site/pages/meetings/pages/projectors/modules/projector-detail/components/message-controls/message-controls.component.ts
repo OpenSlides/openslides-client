@@ -5,7 +5,7 @@ import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ProjectorMessageDialogService } from '../../../../components/projector-message-dialog/services/projector-message-dialog.service';
-import { ProjectorMessageControllerService } from '../../services/projector-message-controller.service';
+import { ProjectorMessageControllerService } from '../../services/projector-message-controller.service/projector-message-controller.service';
 
 @Component({
     selector: `os-message-controls`,

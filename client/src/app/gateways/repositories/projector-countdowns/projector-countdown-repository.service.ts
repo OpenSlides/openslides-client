@@ -5,7 +5,6 @@ import { ViewProjectorCountdown } from '@app/site/pages/meetings/pages/projector
 
 import { ServerTimeService } from '../../server-time.service';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { ProjectorCountdownAction } from './projector-countdown.action';
 
 @Service()
@@ -15,10 +14,7 @@ export class ProjectorCountdownRepositoryService extends BaseMeetingRelatedRepos
 > {
     private serverTime = inject(ServerTimeService);
 
-    public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, ProjectorCountdown);
-    }
+    public baseModelCtor = ProjectorCountdown;
 
     public getTitle = (viewProjectorCountdown: ViewProjectorCountdown): string =>
         viewProjectorCountdown.description

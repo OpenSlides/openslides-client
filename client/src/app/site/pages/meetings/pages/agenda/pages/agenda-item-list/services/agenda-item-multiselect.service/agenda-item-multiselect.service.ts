@@ -4,10 +4,10 @@ import { ChoiceService } from '@app/ui/modules/choice-dialog';
 import { ChoiceAnswer } from '@app/ui/modules/choice-dialog/definitions';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ViewTag } from '../../../../../motions';
-import { TagControllerService } from '../../../../../motions/modules/tags/services';
-import { AgendaItemControllerService } from '../../../../services';
-import { ViewAgendaItem } from '../../../../view-models';
+import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
+import { ViewTag } from '../../../../../motions/modules/tags/view-models/view-tag';
+import { AgendaItemControllerService } from '../../../../services/agenda-item-controller.service/agenda-item-controller.service';
+import { ViewAgendaItem } from '../../../../view-models/view-agenda-item';
 
 @Service()
 export class AgendaItemMultiselectService {

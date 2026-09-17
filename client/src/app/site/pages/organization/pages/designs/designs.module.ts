@@ -24,7 +24,7 @@ const NG_MODULES = [
     MatMenuModule,
     MatTooltipModule
 ];
-const CUSTOM_MODULES = [OpenSlidesTranslationModule.forChild(), ColorFormFieldComponent, ListModule, HeadBarModule];
+const CUSTOM_MODULES = [OpenSlidesTranslationModule, ColorFormFieldComponent, ListModule, HeadBarModule];
 
 @NgModule({
     declarations: [],

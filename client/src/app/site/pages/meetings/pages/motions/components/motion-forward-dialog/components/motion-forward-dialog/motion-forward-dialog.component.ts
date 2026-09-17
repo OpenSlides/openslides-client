@@ -8,7 +8,7 @@ import { OrganizationSettingsService } from '@app/site/pages/organization/servic
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { ViewMotion } from '../../../../view-models';
+import { ViewMotion } from '../../../../view-models/view-motion';
 
 export interface MotionForwardDialogReturnData {
     meetingIds: Ids;

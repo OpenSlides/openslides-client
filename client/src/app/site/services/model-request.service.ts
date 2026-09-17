@@ -3,9 +3,9 @@ import { isValidId } from '@app/infrastructure/utils';
 import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
 import { filter, first, Observable, Subscription } from 'rxjs';
 
-import { AU_PAUSE_ON_INACTIVITY_TIMEOUT, AutoupdateService, ModelSubscription } from './autoupdate';
+import { AU_PAUSE_ON_INACTIVITY_TIMEOUT, AutoupdateService, ModelSubscription } from './autoupdate/autoupdate.service';
 import { ModelData } from './autoupdate/utils';
-import { SimplifiedModelRequest } from './model-request-builder';
+import { SimplifiedModelRequest } from './model-request-builder/model-request-builder.service';
 import { WindowVisibilityService } from './window-visibility.service';
 
 export interface SubscribeToConfig {

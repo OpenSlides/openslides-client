@@ -27,7 +27,7 @@ const DECLARATIONS = [SpeakerButtonComponent];
         MatMenuModule,
         DetailViewModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class SpeakerButtonModule {}

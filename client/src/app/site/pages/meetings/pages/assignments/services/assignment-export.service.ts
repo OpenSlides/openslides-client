@@ -5,7 +5,7 @@ import { MeetingSettingsService } from '@app/site/pages/meetings/services/meetin
 import { TranslateService } from '@ngx-translate/core';
 import { Content } from 'pdfmake/interfaces';
 
-import { ViewAssignment } from '../view-models';
+import { ViewAssignment } from '../view-models/view-assignment';
 import { AssignmentPdfService } from './assignment-pdf.service';
 
 /**

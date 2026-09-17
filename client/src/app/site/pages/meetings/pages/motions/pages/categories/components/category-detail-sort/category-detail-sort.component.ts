@@ -10,8 +10,8 @@ import { SortingListComponent } from '@app/ui/modules/sorting/modules/sorting-li
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service';
+import { MotionCategoryControllerService } from '../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
 
 /**
  * View for rearranging and renumbering the motions of a category. The {@link onNumberMotions}

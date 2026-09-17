@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 
 import { CurrentListOfSpeakersSlideService } from '../../services/current-list-of-speakers-slide.service';
 import { ListOfSpeakersControllerService } from '../../services/list-of-speakers-controller.service';
-import { ViewListOfSpeakers } from '../../view-models';
+import { ViewListOfSpeakers } from '../../view-models/view-list-of-speakers';
 
 @Component({
     selector: `os-list-of-speakers`,

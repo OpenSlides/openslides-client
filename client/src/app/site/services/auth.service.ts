@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 import { AuthToken } from '../../domain/interfaces/auth-token';
 import { AuthAdapterService } from '../../gateways/auth-adapter.service';
-import { ProcessError } from '../../infrastructure/errors';
+import { ProcessError } from '../../infrastructure/errors/process.error';
 import { AuthTokenService } from './auth-token.service';
 import { DataStoreService } from './data-store.service';
 import { LifecycleService } from './lifecycle.service';

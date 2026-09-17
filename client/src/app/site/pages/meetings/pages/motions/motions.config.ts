@@ -13,40 +13,38 @@ import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
 import { MotionWorkingGroupSpeaker } from '@app/domain/models/motions/motion-working-group-speaker';
 import { PersonalNote } from '@app/domain/models/motions/personal-note';
 import { Tag } from '@app/domain/models/tag/tag';
+import { MotionBlockRepositoryService } from '@app/gateways/repositories/motions/motion-block-repository.service';
+import { MotionCategoryRepositoryService } from '@app/gateways/repositories/motions/motion-category-repository.service';
+import { MotionChangeRecommendationRepositoryService } from '@app/gateways/repositories/motions/motion-change-recommendation-repository.service';
 import {
-    MotionBlockRepositoryService,
-    MotionCategoryRepositoryService,
-    MotionChangeRecommendationRepositoryService,
     MotionCommentRepositoryService,
-    MotionCommentSectionRepositoryService,
-    MotionEditorRepositoryService,
-    MotionRepositoryService,
-    MotionStateRepositoryService,
-    MotionSubmitterRepositoryService,
-    MotionWorkflowRepositoryService,
-    MotionWorkingGroupSpeakerRepositoryService
-} from '@app/gateways/repositories/motions';
+    MotionCommentSectionRepositoryService
+} from '@app/gateways/repositories/motions/motion-comments';
+import { MotionEditorRepositoryService } from '@app/gateways/repositories/motions/motion-editor-repository';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
+import { MotionStateRepositoryService } from '@app/gateways/repositories/motions/motion-state-repository.service';
+import { MotionSubmitterRepositoryService } from '@app/gateways/repositories/motions/motion-submitter-repository.service';
 import { MotionSupporterRepositoryService } from '@app/gateways/repositories/motions/motion-supporter';
+import { MotionWorkflowRepositoryService } from '@app/gateways/repositories/motions/motion-workflow-repository.service';
+import { MotionWorkingGroupSpeakerRepositoryService } from '@app/gateways/repositories/motions/motion-working-group-speaker-repository';
 import { PersonalNoteRepositoryService } from '@app/gateways/repositories/motions/personal-note-repository.service';
 import { TagRepositoryService } from '@app/gateways/repositories/tags';
 import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
-import {
-    ViewMotionBlock,
-    ViewMotionCategory,
-    ViewMotionChangeRecommendation,
-    ViewMotionComment,
-    ViewMotionCommentSection,
-    ViewMotionState,
-    ViewMotionSubmitter,
-    ViewMotionWorkflow,
-    ViewPersonalNote,
-    ViewTag
-} from './modules';
-import { ViewMotionEditor } from './modules/editors';
-import { ViewMotionSupporter } from './modules/supporters';
-import { ViewMotionWorkingGroupSpeaker } from './modules/working-group-speakers';
-import { ViewMotion } from './view-models';
+import { ViewMotionCategory } from './modules/categories/view-models/view-motion-category';
+import { ViewMotionChangeRecommendation } from './modules/change-recommendations/view-models/view-motion-change-recommendation';
+import { ViewMotionComment } from './modules/comments/view-models/view-motion-comment';
+import { ViewMotionCommentSection } from './modules/comments/view-models/view-motion-comment-section';
+import { ViewMotionEditor } from './modules/editors/view-models/view-motion-editor';
+import { ViewMotionBlock } from './modules/motion-blocks/view-models/view-motion-block';
+import { ViewPersonalNote } from './modules/personal-notes/view-models/view-personal-note';
+import { ViewMotionState } from './modules/states/view-models/view-motion-state';
+import { ViewMotionSubmitter } from './modules/submitters/view-models/view-motion-submitter';
+import { ViewMotionSupporter } from './modules/supporters/view-models/view-motion-supporter';
+import { ViewTag } from './modules/tags/view-models/view-tag';
+import { ViewMotionWorkflow } from './modules/workflows/view-models/view-motion-workflow';
+import { ViewMotionWorkingGroupSpeaker } from './modules/working-group-speakers/view-models/view-motion-working-group-speaker';
+import { ViewMotion } from './view-models/view-motion';
 
 export const MotionsAppConfig: AppConfig = {
     name: `motions`,

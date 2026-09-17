@@ -8,7 +8,7 @@ import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
-import { ViewCommittee } from '../../view-models';
+import { ViewCommittee } from '../../view-models/view-committee';
 import { MeetingService } from '../services/meeting.service';
 
 @Component({

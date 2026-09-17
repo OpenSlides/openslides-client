@@ -7,10 +7,10 @@ import { MeetingSettingsService } from '@app/site/pages/meetings/services/meetin
 import { TranslateService } from '@ngx-translate/core';
 import { Content } from 'pdfmake/interfaces';
 
-import { MotionCategoryControllerService } from '../../../modules/categories/services';
-import { MotionControllerService } from '../../common/motion-controller.service';
-import { MotionExportInfo } from '../motion-export.service';
-import { MotionPdfService } from '../motion-pdf.service';
+import { MotionCategoryControllerService } from '../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionControllerService } from '../../common/motion-controller.service/motion-controller.service';
+import { MotionExportInfo } from '../motion-export.service/motion-export.service';
+import { MotionPdfService } from '../motion-pdf.service/motion-pdf.service';
 
 /**
  * Service to export a list of motions.

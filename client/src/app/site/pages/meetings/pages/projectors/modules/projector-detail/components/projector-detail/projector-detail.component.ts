@@ -19,18 +19,21 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, Observable, switchMap } from 'rxjs';
 
-import { hasListOfSpeakers, ViewListOfSpeakers } from '../../../../../agenda';
 import { CurrentListOfSpeakersSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-list-of-speakers-slide.service';
 import { CurrentSpeakingStructureLevelSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
 import { CurrentStructureLevelListSlideService } from '../../../../../agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';
-import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog';
+import { hasListOfSpeakers } from '../../../../../agenda/modules/list-of-speakers/view-models/has-list-of-speakers';
+import { ViewListOfSpeakers } from '../../../../../agenda/modules/list-of-speakers/view-models/view-list-of-speakers';
+import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog/services/projector-countdown-dialog.service';
 import { ProjectorEditDialogService } from '../../../../components/projector-edit-dialog/services/projector-edit-dialog.service';
-import { ProjectorMessageDialogService } from '../../../../components/projector-message-dialog';
-import { ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from '../../../../view-models';
-import { CurrentSpeakerChyronSlideService } from '../../services/current-speaker-chyron-slide.service';
-import { ProjectionControllerService } from '../../services/projection-controller.service';
-import { ProjectorCountdownControllerService } from '../../services/projector-countdown-controller.service';
-import { ProjectorMessageControllerService } from '../../services/projector-message-controller.service';
+import { ProjectorMessageDialogService } from '../../../../components/projector-message-dialog/services/projector-message-dialog.service';
+import { ViewProjector } from '../../../../view-models/view-projector';
+import { ViewProjectorCountdown } from '../../../../view-models/view-projector-countdown';
+import { ViewProjectorMessage } from '../../../../view-models/view-projector-message';
+import { CurrentSpeakerChyronSlideService } from '../../services/current-speaker-chyron-slide.service/current-speaker-chyron-slide.service';
+import { ProjectionControllerService } from '../../services/projection-controller.service/projection-controller.service';
+import { ProjectorCountdownControllerService } from '../../services/projector-countdown-controller.service/projector-countdown-controller.service';
+import { ProjectorMessageControllerService } from '../../services/projector-message-controller.service/projector-message-controller.service';
 
 /**
  * The projector detail view.

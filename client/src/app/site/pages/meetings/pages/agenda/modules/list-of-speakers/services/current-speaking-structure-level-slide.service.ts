@@ -4,8 +4,8 @@ import { MeetingProjectionType } from '@app/gateways/repositories/meeting-reposi
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
 
-import { ViewProjector } from '../../../../projectors';
 import { ProjectorControllerService } from '../../../../projectors/services/projector-controller.service';
+import { ViewProjector } from '../../../../projectors/view-models/view-projector';
 
 @Service()
 export class CurrentSpeakingStructureLevelSlideService {
@@ -22,7 +22,7 @@ export class CurrentSpeakingStructureLevelSlideService {
         }
         return {
             content_object_id: `meeting/${meetingId}`,
-            type: MeetingProjectionType.CurrentSpeakingStructureLevel,
+            type: MeetingProjectionType.CurrentSpeaker,
             stable: overlay,
             projectionDefault: PROJECTIONDEFAULT.currentListOfSpeakers,
             getDialogTitle: () => `Current speaker`

@@ -9,7 +9,10 @@ import { ProjectorMessageRepositoryService } from '@app/gateways/repositories/pr
 import { ProjectorRepositoryService } from '@app/gateways/repositories/projectors/projector-repository.service';
 import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
-import { ViewProjection, ViewProjector, ViewProjectorCountdown, ViewProjectorMessage } from './view-models';
+import { ViewProjection } from './view-models/view-projection';
+import { ViewProjector } from './view-models/view-projector';
+import { ViewProjectorCountdown } from './view-models/view-projector-countdown';
+import { ViewProjectorMessage } from './view-models/view-projector-message';
 
 export const ProjectorAppConfig: AppConfig = {
     name: `projector`,

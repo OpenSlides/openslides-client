@@ -35,7 +35,7 @@ import { AssignmentPollMainComponent } from './components/assignment-poll-main/a
         ListModule,
         HeadBarModule,
         MeetingsComponentCollectorModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class AssignmentPollsModule {}

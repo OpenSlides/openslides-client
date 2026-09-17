@@ -6,8 +6,8 @@ import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 
 import { listOfSpeakersSpeakerCountSubscription } from '../agenda/agenda.subscription';
 import { pollModelRequest } from '../polls/polls.subscription';
-import { ViewMotionWorkflow } from './modules';
-import { ViewMotion } from './view-models';
+import { ViewMotionWorkflow } from './modules/workflows/view-models/view-motion-workflow';
+import { ViewMotion } from './view-models/view-motion';
 
 export const AMENDMENT_LIST_SUBSCRIPTION = `amendment_list`;
 export const MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION = `motion_additional_detail`;

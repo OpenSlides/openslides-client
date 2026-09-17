@@ -21,7 +21,7 @@ import { DaterangepickerComponent } from './components/daterangepicker/daterange
         MatFormFieldModule,
         MatButtonModule,
         MatIconModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     exports: [DatepickerComponent, DaterangepickerComponent]
 })

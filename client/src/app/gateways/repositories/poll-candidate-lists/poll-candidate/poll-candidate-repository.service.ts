@@ -1,10 +1,9 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { PollCandidate } from '@app/domain/models/poll-candidate-lists/poll-candidate';
 import { ViewPollCandidate } from '@app/site/pages/meetings/pages/polls/view-models/view-poll-candidate';
 import { DEFAULT_FIELDSET, Fieldsets } from '@app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 
 /**
  * Repository service for the PollCandidate.
@@ -18,10 +17,7 @@ import { RepositoryMeetingServiceCollectorService } from '../../repository-meeti
  */
 @Service()
 export class PollCandidateRepositoryService extends BaseMeetingRelatedRepository<ViewPollCandidate, PollCandidate> {
-    public constructor() {
-        const repoServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repoServiceCollector, PollCandidate);
-    }
+    public baseModelCtor = PollCandidate;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `PollCandidates` : `PollCandidate`);
     public getTitle = (viewModel: ViewPollCandidate): string => viewModel.user?.getShortName();

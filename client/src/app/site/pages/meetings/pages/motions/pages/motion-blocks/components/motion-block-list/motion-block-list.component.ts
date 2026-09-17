@@ -8,9 +8,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
-import { ViewMotionBlock } from '../../../../modules';
-import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
-import { MotionBlockSortService } from '../../services/motion-block-sort.service';
+import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
+import { ViewMotionBlock } from '../../../../modules/motion-blocks/view-models/view-motion-block';
+import { MotionBlockSortService } from '../../services/motion-block-sort.service/motion-block-sort.service';
 import { MotionBlockCreateDialogService } from '../motion-block-create-dialog/services/motion-block-create-dialog.service';
 
 const MOTION_BLOCK_LIST_STORAGE_INDEX = `motion_blocks`;

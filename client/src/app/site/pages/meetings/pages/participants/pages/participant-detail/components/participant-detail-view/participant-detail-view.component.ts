@@ -17,12 +17,12 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, Observable } from 'rxjs';
 
-import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
-import { GroupControllerService } from '../../../../modules';
+import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service/participant-pdf-export.service';
+import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../participants.subscription';
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
-import { ViewStructureLevel } from '../../../structure-levels/view-models';
+import { ViewStructureLevel } from '../../../structure-levels/view-models/view-structure-level';
 
 @Component({
     selector: `os-participant-detail-view`,

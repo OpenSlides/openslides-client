@@ -23,12 +23,13 @@ import { _ } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable } from 'rxjs';
 
 import { InteractionService } from '../../../../../interaction/services/interaction.service';
-import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service';
-import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service';
-import { GroupControllerService, ViewGroup } from '../../../../modules';
+import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service/participant-csv-export.service';
+import { ParticipantPdfExportService } from '../../../../export/participant-pdf-export.service/participant-pdf-export.service';
+import { GroupControllerService } from '../../../../modules/groups/services/group-controller.service';
+import { ViewGroup } from '../../../../modules/groups/view-models/view-group';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
-import { ViewStructureLevel } from '../../../structure-levels/view-models';
-import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog';
+import { ViewStructureLevel } from '../../../structure-levels/view-models/view-structure-level';
+import { ParticipantListInfoDialogService } from '../../modules/participant-list-info-dialog/services/participant-list-info-dialog.service';
 import { ParticipantListFilterService } from '../../services/participant-list-filter/participant-list-filter.service';
 import { ParticipantListSortService } from '../../services/participant-list-sort/participant-list-sort.service';
 import { ParticipantSwitchDialogComponent } from '../participant-switch-dialog/participant-switch-dialog.component';

@@ -6,8 +6,9 @@ import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { FollowList } from '@app/site/services/model-request-builder';
 
 import { pollModelRequest } from '../polls/polls.subscription';
-import { ViewListOfSpeakers, ViewTopic } from './modules';
-import { ViewAgendaItem } from './view-models';
+import { ViewListOfSpeakers } from './modules/list-of-speakers/view-models/view-list-of-speakers';
+import { ViewTopic } from './modules/topics/view-models/view-topic';
+import { ViewAgendaItem } from './view-models/view-agenda-item';
 
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
 export const AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION = `agenda_list_minimal`;

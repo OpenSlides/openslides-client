@@ -26,8 +26,8 @@ import { ThemeService } from '@app/site/services/theme.service';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, combineLatest, filter, iif, map, NEVER, startWith, switchMap } from 'rxjs';
 
-import { ViewPoll } from '../../../../../polls';
-import { ViewAssignment } from '../../../../view-models';
+import { ViewPoll } from '../../../../../polls/view-models/view-poll';
+import { ViewAssignment } from '../../../../view-models/view-assignment';
 import { AssignmentPollService } from '../../services/assignment-poll.service';
 
 @Component({

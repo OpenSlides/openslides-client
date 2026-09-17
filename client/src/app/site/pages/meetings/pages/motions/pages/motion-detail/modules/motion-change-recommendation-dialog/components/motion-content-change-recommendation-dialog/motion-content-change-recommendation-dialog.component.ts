@@ -5,7 +5,7 @@ import { isNumberRange } from '@app/infrastructure/utils/validators';
 import { ParentErrorStateMatcher } from '@app/ui/modules/search-selector/validators';
 import { _ } from '@ngx-translate/core';
 
-import { LineRange } from '../../../../../../definitions/index';
+import { LineRange } from '../../../../../../definitions';
 import {
     BaseChangeRecommendationData,
     BaseChangeRecommendationDialogComponent

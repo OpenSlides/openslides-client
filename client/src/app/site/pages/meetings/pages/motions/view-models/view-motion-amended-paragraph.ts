@@ -2,7 +2,8 @@ import { MergeAmendment } from '@app/domain/models/motions/motion-state';
 import { ModificationType } from '@app/domain/models/motions/motions.constants';
 
 import { LineRange } from '../definitions';
-import { ViewUnifiedChange, ViewUnifiedChangeType } from '../modules';
+import { ViewUnifiedChangeType } from '../modules';
+import { ViewUnifiedChange } from '../modules/change-recommendations/view-models/view-unified-change';
 import { ViewMotion } from './view-motion';
 
 export type ViewMotionAmendedParagraphs = Record<number, ViewMotionAmendedParagraph>;

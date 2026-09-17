@@ -4,7 +4,7 @@ import { HtmlColor } from '@app/domain/definitions/key-types';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
-import { ViewOrganizationTag } from '../../../view-models';
+import { ViewOrganizationTag } from '../../../view-models/view-organization-tag';
 import { OrganizationTagDialogComponent } from '../components/organization-tag-dialog.component';
 
 export interface OrganizationTagDialogData {

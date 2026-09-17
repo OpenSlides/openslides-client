@@ -54,7 +54,7 @@ import { AccountPasswordComponent } from './components/account-password/account-
         DirectivesModule,
         UserComponentsModule,
         SearchSelectorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         PipesModule
     ]
 })

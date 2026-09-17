@@ -21,8 +21,8 @@ import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-
 import { InputModule } from '@app/ui/modules/input';
 import { ChessDialogModule } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog';
 
-import { OpenSlidesTranslationModule } from '../translations';
-import { UserComponentsModule } from '../user-components';
+import { OpenSlidesTranslationModule } from '../translations/openslides-translation.module';
+import { UserComponentsModule } from '../user-components/user-components.module';
 import { AccountButtonComponent } from './components/account-button/account-button.component';
 import { AccountDialogComponent } from './components/account-dialog/account-dialog.component';
 import { AccountDialogMainComponent } from './components/account-dialog-main/account-dialog-main.component';
@@ -60,7 +60,7 @@ const DECLARATIONS = [GlobalHeadbarComponent];
     imports: [
         CommonModule,
         CommaSeparatedListingComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         UserComponentsModule,
         RouterModule,
         ScrollingModule,

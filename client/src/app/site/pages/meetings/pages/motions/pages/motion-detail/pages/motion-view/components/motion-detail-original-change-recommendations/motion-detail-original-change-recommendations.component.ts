@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Permission } from '@app/domain/definitions/permission';
 import { ModificationType } from '@app/domain/models/motions/motions.constants';
-import { MotionRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { LineRange } from '@app/site/pages/meetings/pages/motions/definitions';
 import { ViewUnifiedChange } from '@app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
@@ -20,7 +20,7 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { filter, firstValueFrom } from 'rxjs';
 
 import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 
 /**
  * This component displays either the original motion text or the original amendment diff text
@@ -173,14 +173,9 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
 
         this.update();
 
-        // The positioning of the change recommendations depends on the rendered HTML
-        // If we show it right away, there will be nasty Angular warnings about changed values, as the position
-        // is changing while the DOM updates
-        setTimeout(() => {
-            this.checkPermissions();
-            this.setLineNumberCache();
-            this.setTextChangeRecommendations(this._changeRecommendations);
-        }, 1);
+        this.checkPermissions();
+        this.setLineNumberCache();
+        this.setTextChangeRecommendations(this._changeRecommendations);
     }
 
     // public ngOnChanges(): void {
@@ -212,9 +207,11 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
 
         if (to) {
             return (to.offsetHeight + to.offsetTop - from.offsetTop).toString() + `px`;
-        } else {
+        } else if (from) {
             return from.offsetHeight.toString() + `px`;
         }
+
+        return `0px`;
     }
 
     /**

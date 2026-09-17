@@ -1,9 +1,10 @@
 import { inject, Service } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { ViewProjector } from '../../../../projectors';
 import { ProjectorControllerService } from '../../../../projectors/services/projector-controller.service';
-import { hasListOfSpeakers, ViewListOfSpeakers } from '../view-models';
+import { ViewProjector } from '../../../../projectors/view-models/view-projector';
+import { hasListOfSpeakers } from '../view-models/has-list-of-speakers';
+import { ViewListOfSpeakers } from '../view-models/view-list-of-speakers';
 import { ListOfSpeakersControllerService } from './list-of-speakers-controller.service';
 
 /**

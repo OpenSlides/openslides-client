@@ -11,7 +11,7 @@ import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { MeetingTimeComponent } from '@app/ui/modules/meeting-time/meeting-time.component';
 
-import { IconContainerComponent } from '../../../../../../../ui/modules/icon-container';
+import { IconContainerComponent } from '../../../../../../../ui/modules/icon-container/icon-container.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DashboardDetailRoutingModule } from './dashboard-detail-routing.module';
 
@@ -29,7 +29,7 @@ import { DashboardDetailRoutingModule } from './dashboard-detail-routing.module'
         ScrollingModule,
         HeadBarModule,
         MeetingTimeComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         IconContainerComponent
     ]
 })

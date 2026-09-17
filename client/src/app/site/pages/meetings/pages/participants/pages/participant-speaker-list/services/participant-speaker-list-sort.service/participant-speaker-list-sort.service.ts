@@ -4,7 +4,7 @@ import { SpeakerRepositoryService } from '@app/gateways/repositories/speakers/sp
 import { BaseSortListService, OsSortingOption } from '@app/site/base/base-sort.service';
 import { _ } from '@ngx-translate/core';
 
-import { ViewSpeaker } from '../../../../../agenda';
+import { ViewSpeaker } from '../../../../../agenda/modules/list-of-speakers/view-models/view-speaker';
 
 @Service()
 export class ParticipantSpeakerListSortService extends BaseSortListService<ViewSpeaker> {

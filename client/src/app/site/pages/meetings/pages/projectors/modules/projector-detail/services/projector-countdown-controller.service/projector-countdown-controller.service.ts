@@ -4,20 +4,15 @@ import { ProjectorCountdown } from '@app/domain/models/projector/projector-count
 import { ProjectorCountdownRepositoryService } from '@app/gateways/repositories/projector-countdowns/projector-countdown-repository.service';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { ViewProjectorCountdown } from '@app/site/pages/meetings/pages/projectors';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 @Service()
 export class ProjectorCountdownControllerService extends BaseMeetingControllerService<
     ViewProjectorCountdown,
     ProjectorCountdown
 > {
-    protected override repo: ProjectorCountdownRepositoryService;
+    protected repo: ProjectorCountdownRepositoryService = inject(ProjectorCountdownRepositoryService);
 
-    public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(ProjectorCountdownRepositoryService);
-        super(controllerServiceCollector, ProjectorCountdown, repo);
-    }
+    public baseModelCtor = ProjectorCountdown;
 
     public create(payload: any): Promise<Identifiable> {
         return this.repo.create(payload);

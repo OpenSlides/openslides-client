@@ -17,7 +17,7 @@ import { LogoComponent } from './components/logo/logo.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { SidenavDrawerContentDirective } from './directives/sidenav-drawer-content.directive';
 import { SidenavMainContentDirective } from './directives/sidenav-main-content.directive';
-import { EasterEggModule } from './modules/easter-egg';
+import { EasterEggModule } from './modules/easter-egg/easter-egg.module';
 
 const EXPORTS = [SidenavComponent, SidenavMainContentDirective, SidenavDrawerContentDirective];
 
@@ -36,7 +36,7 @@ const EXPORTS = [SidenavComponent, SidenavMainContentDirective, SidenavDrawerCon
         MatTooltipModule,
         EasterEggModule,
         PipesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class SidenavModule {}

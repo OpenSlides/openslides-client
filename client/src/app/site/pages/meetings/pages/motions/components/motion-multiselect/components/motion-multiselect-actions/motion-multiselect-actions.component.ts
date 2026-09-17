@@ -10,10 +10,10 @@ import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { SortListService } from '@app/ui/modules/list';
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
-import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
+import { MotionCategoryControllerService } from '../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
 import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
-import { MotionListSortService } from '../../../../services/list/motion-list-sort.service';
+import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
 import { MotionMultiselectService } from '../../services/motion-multiselect.service';
 
 @Component({

@@ -14,9 +14,12 @@ import { ViewPortService } from '@app/site/services/view-port.service';
 import { ViewModelListProvider } from '@app/ui/base/view-model-list-provider';
 import { Observable } from 'rxjs';
 
-import { ScrollingTableManageService } from '../../scrolling-table';
+import { ScrollingTableManageService } from '../../scrolling-table/services/scrolling-table-manage.service';
 import { ViewListComponent } from '../components/view-list/view-list.component';
-import { ColumnRestriction, FilterListService, SearchService, SortListService } from '../definitions';
+import { ColumnRestriction } from '../definitions/column-restriction';
+import { FilterListService } from '../definitions/filter-service';
+import { SearchService } from '../definitions/search-service';
+import { SortListService } from '../definitions/sort-service';
 import { ListSearchService } from '../services/list-search.service';
 
 @Directive()

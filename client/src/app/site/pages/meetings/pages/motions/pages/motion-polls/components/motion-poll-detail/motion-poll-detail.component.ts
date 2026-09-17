@@ -7,9 +7,9 @@ import {
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionPollService } from '../../../../modules/motion-poll/services';
-import { MotionPollDialogService } from '../../../../modules/motion-poll/services/motion-poll-dialog.service';
-import { MotionPollPdfService } from '../../../../modules/motion-poll/services/motion-poll-pdf.service';
+import { MotionPollService } from '../../../../modules/motion-poll/services/motion-poll.service/motion-poll.service';
+import { MotionPollDialogService } from '../../../../modules/motion-poll/services/motion-poll-dialog.service/motion-poll-dialog.service';
+import { MotionPollPdfService } from '../../../../modules/motion-poll/services/motion-poll-pdf.service/motion-poll-pdf.service';
 
 export interface ExtendedVoteData extends BaseVoteData {
     vote_verbose_translated?: string | null;

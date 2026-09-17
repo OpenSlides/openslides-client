@@ -18,9 +18,9 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
 import { GroupControllerService } from '../../../pages/participants/modules/groups/services/group-controller.service';
-import { EntitledUsersTableEntry } from '../definitions';
+import { EntitledUsersTableEntry } from '../definitions/entitled-users-table-entry';
 import { PollService } from '../services/poll.service';
-import { VoteControllerService } from '../services/vote-controller.service';
+import { VoteControllerService } from '../services/vote-controller.service/vote-controller.service';
 import { BasePollPdfService } from './base-poll-pdf.service';
 
 export interface BaseVoteData extends Identifiable {

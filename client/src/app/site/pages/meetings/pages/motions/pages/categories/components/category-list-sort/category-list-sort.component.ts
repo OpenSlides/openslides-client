@@ -7,7 +7,7 @@ import { SortingTreeComponent } from '@app/ui/modules/sorting/modules/sorting-tr
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
+import { MotionCategoryControllerService } from '../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
 
 @Component({
     selector: `os-category-list-sort`,

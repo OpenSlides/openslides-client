@@ -5,9 +5,9 @@ import { MeetingPdfExportService } from '@app/site/pages/meetings/services/expor
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText } from 'pdfmake/interfaces';
 
-import { ViewPoll } from '../../../../../polls';
+import { ViewPoll } from '../../../../../polls/view-models/view-poll';
 import { TopicPollService } from '../../modules/topic-poll/services/topic-poll.service';
-import { ViewTopic } from '../../view-models';
+import { ViewTopic } from '../../view-models/view-topic';
 
 /**
  * Creates a PDF document from a single tpoic

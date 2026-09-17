@@ -4,7 +4,7 @@ import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-requ
 import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 
 import { getProjectorSubscriptionConfig } from '../../../../projectors.subscription';
-import { ViewProjector } from '../../../../view-models';
+import { ViewProjector } from '../../../../view-models/view-projector';
 
 @Component({
     selector: `os-fullscreen-projector-main`,

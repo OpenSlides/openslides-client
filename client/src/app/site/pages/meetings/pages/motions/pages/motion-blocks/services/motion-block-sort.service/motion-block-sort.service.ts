@@ -1,6 +1,6 @@
 import { ProviderToken, Service } from '@angular/core';
 import { BaseRepository } from '@app/gateways/repositories/base-repository';
-import { MotionBlockRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionBlockRepositoryService } from '@app/gateways/repositories/motions/motion-block-repository.service';
 import { BaseSortListService, OsSortingOption } from '@app/site/base/base-sort.service';
 import { ViewMotionBlock } from '@app/site/pages/meetings/pages/motions';
 import { _ } from '@ngx-translate/core';

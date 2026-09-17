@@ -17,7 +17,7 @@ import { OrganizationTagDialogComponent } from './components/organization-tag-di
     declarations: [OrganizationTagDialogComponent],
     imports: [
         CommonModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatFormFieldModule,
         ReactiveFormsModule,
         MatTooltipModule,

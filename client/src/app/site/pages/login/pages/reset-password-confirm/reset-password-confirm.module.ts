@@ -20,7 +20,7 @@ import { ResetPasswordConfirmRoutingModule } from './reset-password-confirm-rout
         MatInputModule,
         MatIconModule,
         MatButtonModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ResetPasswordConfirmModule {}

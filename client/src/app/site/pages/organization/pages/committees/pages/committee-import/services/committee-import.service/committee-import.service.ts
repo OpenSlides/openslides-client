@@ -5,7 +5,7 @@ import { ImportServiceCollectorService } from '@app/site/services/import-service
 import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
 
-import { COMMITTEE_CSV_EXPORT_EXAMPLE } from '../../../../export';
+import { COMMITTEE_CSV_EXPORT_EXAMPLE } from '../../../../export/committee-csv-export-example';
 import { CommitteeControllerService } from '../../../../services/committee-controller.service';
 import { committeeHeadersAndVerboseNames } from '../../definitions';
 

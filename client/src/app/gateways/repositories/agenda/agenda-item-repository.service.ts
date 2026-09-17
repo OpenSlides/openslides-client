@@ -7,18 +7,18 @@ import { BaseViewModel } from '@app/site/base/base-view-model';
 import { AgendaListTitle, HasAgendaItem, ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 
-import { Action } from '../../actions';
+import { Action } from '../../actions/action';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { AgendaItemAction } from './agenda-item.action';
 
 @Service()
 export class AgendaItemRepositoryService extends BaseMeetingRelatedRepository<ViewAgendaItem, AgendaItem> {
     private treeService = inject(TreeService);
 
+    public baseModelCtor = AgendaItem;
+
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, AgendaItem);
+        super();
 
         this.setSortFunction((a, b) => a.tree_weight - b.tree_weight); // leave the sorting as it is
     }

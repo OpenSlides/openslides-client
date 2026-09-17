@@ -5,7 +5,7 @@ import { SubscriptionConfig, SubscriptionConfigGenerator } from '@app/domain/int
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 
 import { pollModelRequest } from '../polls/polls.subscription';
-import { ViewProjection } from '../projectors';
+import { ViewProjection } from '../projectors/view-models/view-projection';
 
 export const AUTOPILOT_SUBSCRIPTION = `autopilot`;
 export const AUTOPILOT_CONTENT_SUBSCRIPTION = `autopilot_content`;

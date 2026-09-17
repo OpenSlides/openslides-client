@@ -9,16 +9,16 @@ import { firstValueFrom, map } from 'rxjs';
 
 import { MotionForwardDialogService } from '../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
+import { MotionCategoryControllerService } from '../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
 import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
-import { TagControllerService } from '../../../../modules/tags/services';
-import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service';
-import { MotionControllerService } from '../../../../services/common/motion-controller.service';
-import { MotionPermissionService } from '../../../../services/common/motion-permission.service';
-import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service';
+import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
+import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
+import { MotionPermissionService } from '../../../../services/common/motion-permission.service/motion-permission.service';
+import { MotionListFilterService } from '../../../../services/list/motion-list-filter.service/motion-list-filter.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { ViewMotion } from '../../../../view-models';
-import { MotionListInfoDialogService } from '../../modules/motion-list-info-dialog';
+import { ViewMotion } from '../../../../view-models/view-motion';
+import { MotionListInfoDialogService } from '../../modules/motion-list-info-dialog/services/motion-list-info-dialog.service';
 
 /**
  * Determine the types of the motionList

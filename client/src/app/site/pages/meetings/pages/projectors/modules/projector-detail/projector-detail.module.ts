@@ -48,7 +48,7 @@ import { ProjectorDetailServiceModule } from './services/projector-detail-servic
         IconContainerComponent,
         GridModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MeetingsComponentCollectorModule,
         HeadBarModule,
         MatMenuModule,

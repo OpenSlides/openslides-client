@@ -10,7 +10,7 @@ import { PipesModule } from '@app/ui/pipes';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { Dimension } from '../../../../pages/projectors/definitions';
+import { Dimension } from '../../../../pages/projectors/definitions/dimension';
 
 @Component({
     standalone: true,
@@ -177,7 +177,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
                 this.projector.id,
                 () => this.authTokenService.rawAccessToken,
                 {
-                    lang: this.translate.getCurrentLang()
+                    lang: this.translate.getCurrentLang() ?? `en`
                 }
             );
         });

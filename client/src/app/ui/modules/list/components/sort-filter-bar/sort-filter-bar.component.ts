@@ -181,7 +181,9 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
 
     public get sortOption(): OsSortingOption<V> {
         if (!this._sortOption) {
-            this._sortOption = this.sortOptions.find(option => option.property === this.sortService.sortProperty);
+            this._sortOption = this.sortOptions.find(
+                option => JSON.stringify(option.property) === JSON.stringify(this.sortService.sortProperty)
+            );
         }
         return this._sortOption;
     }

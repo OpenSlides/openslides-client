@@ -37,11 +37,11 @@ import { SortingModule } from '@app/ui/modules/sorting';
 import { PipesModule } from '@app/ui/pipes/pipes.module';
 
 import { AttachmentControlModule } from '../../../../modules/meetings-component-collector/attachment-control/attachment-control.module';
-import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector';
+import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector/participant-search-selector.module';
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
 import { ParticipantCommonServiceModule } from '../../../participants/services/common/participant-common-service.module';
 import { MotionForwardDialogModule } from '../../components/motion-forward-dialog/motion-forward-dialog.module';
-import { MotionPollModule } from '../../modules/motion-poll';
+import { MotionPollModule } from '../../modules/motion-poll/motion-poll.module';
 import { MotionsExportModule } from '../../services/export/motions-export.module';
 import { MotionsListServiceModule } from '../../services/list/motions-list-service.module';
 import { MotionDetailComponent } from './components/motion-detail/motion-detail.component';
@@ -117,7 +117,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         HeadBarModule,
         AttachmentControlModule,
         MeetingsComponentCollectorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         RouterModule,
         FormsModule,
         ReactiveFormsModule,

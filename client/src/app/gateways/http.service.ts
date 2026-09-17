@@ -11,7 +11,7 @@ import {
     QueryParams,
     ResponseType
 } from '../infrastructure/definitions/http';
-import { ProcessError } from '../infrastructure/errors';
+import { ProcessError } from '../infrastructure/errors/process.error';
 import { toBase64 } from '../infrastructure/utils/functions';
 import { ActionWorkerWatchService } from './action-worker-watch/action-worker-watch.service';
 import { ErrorMapService } from './error-mapping/error-map.service';
@@ -94,10 +94,14 @@ export class HttpService {
                     this.snackBar.open(cleanError, this.translate.instant(`Ok`));
                     throw new ProcessError(cleanError);
                 } else if (error.error.message) {
-                    const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
-                        data,
-                        url: error.url
-                    });
+                    const cleanError = this.errorMapper.getCleanErrorMessage(
+                        error.error.message,
+                        {
+                            data,
+                            url: error.url
+                        },
+                        error.error.message_args
+                    );
                     if (typeof cleanError !== `string`) {
                         throw cleanError;
                     }

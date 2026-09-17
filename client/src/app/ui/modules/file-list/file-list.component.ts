@@ -35,13 +35,13 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { PipesModule } from '../../pipes';
-import { CommaSeparatedListingComponent } from '../comma-separated-listing';
-import { IconContainerComponent } from '../icon-container';
-import { ListModule } from '../list';
-import { PromptService } from '../prompt-dialog';
+import { PipesModule } from '../../pipes/pipes.module';
+import { CommaSeparatedListingComponent } from '../comma-separated-listing/comma-separated-listing.component';
+import { IconContainerComponent } from '../icon-container/icon-container.component';
+import { ListModule } from '../list/list.module';
+import { PromptService } from '../prompt-dialog/services/prompt.service';
 import { END_POSITION, START_POSITION } from '../scrolling-table/directives/scrolling-table-cell-position';
-import { SearchSelectorModule } from '../search-selector';
+import { SearchSelectorModule } from '../search-selector/search-selector.module';
 
 interface MoveEvent {
     files: ViewMediafile[];
@@ -258,7 +258,7 @@ export class FileListComponent extends BaseUiComponent implements OnInit, OnDest
     }
 
     public ngOnInit(): void {
-        this._languageCollator = new Intl.Collator(this.translate.getCurrentLang());
+        this._languageCollator = new Intl.Collator(this.translate.getCurrentLang() ?? `en`);
         this.translate.onLangChange.subscribe(changeEvent => {
             this._languageCollator = getIntlCollatorForLang(changeEvent.lang);
             this.updateView();

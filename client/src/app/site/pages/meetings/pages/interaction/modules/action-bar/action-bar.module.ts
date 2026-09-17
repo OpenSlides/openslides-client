@@ -23,7 +23,7 @@ const EXPORTS = [ActionBarComponent];
         MatBadgeModule,
         RouterModule,
         PipesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ActionBarModule {}

@@ -6,7 +6,7 @@ import { ActiveFiltersService } from '@app/site/services/active-filters.service'
 import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
 
-import { OrganizationTagControllerService } from '../../../../../organization-tags/services/organization-tag-controller.service';
+import { OrganizationTagControllerService } from '../../../../../organization-tags/services/organization-tag-controller.service/organization-tag-controller.service';
 
 @Service()
 export class MeetingListFilterService extends BaseFilterListService<ViewMeeting> {

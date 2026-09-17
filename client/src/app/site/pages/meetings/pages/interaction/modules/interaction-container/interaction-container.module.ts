@@ -45,7 +45,7 @@ const EXPORTS = [InteractionContainerComponent];
         NgxParticlesModule,
         DirectivesModule,
         PipesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class InteractionContainerModule {}

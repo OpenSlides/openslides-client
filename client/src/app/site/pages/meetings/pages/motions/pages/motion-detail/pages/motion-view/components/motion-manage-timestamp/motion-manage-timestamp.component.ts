@@ -6,8 +6,8 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { fromUnixTime, isDate } from 'date-fns';
 
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
-import { ViewMotion } from '../../../../../../view-models';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
+import { ViewMotion } from '../../../../../../view-models/view-motion';
 
 @Component({
     selector: `os-motion-manage-timestamp`,

@@ -1,6 +1,7 @@
 import { ModificationType } from '@app/domain/models/motions/motions.constants';
 
-import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../modules';
+import { ViewMotionChangeRecommendation } from '../modules/change-recommendations/view-models/view-motion-change-recommendation';
+import { ViewUnifiedChange } from '../modules/change-recommendations/view-models/view-unified-change';
 
 /**
  * Gets the name of the modification type

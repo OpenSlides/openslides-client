@@ -3,7 +3,7 @@ import { Collection, Ids } from '@app/domain/definitions/key-types';
 import { Observable, Subject } from 'rxjs';
 
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
-import { CollectionMapperService } from './collection-mapper.service';
+import { CollectionMapperService } from './collection-mapper.service/collection-mapper.service';
 import { DataStoreUpdateManagerService } from './data-store-update-manager.service';
 
 /**

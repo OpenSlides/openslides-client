@@ -12,7 +12,7 @@ import { filter, firstValueFrom } from 'rxjs';
 import { verboseChangeRecoMode } from '../../../../../../../../../../../domain/models/motions/motions.constants';
 import { ViewUnifiedChange } from '../../../../../../modules/change-recommendations/view-models/view-unified-change';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
-import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-view.service';
+import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-view.service/motion-detail-view.service';
 
 @Component({
     selector: `os-motion-highlight-form`,

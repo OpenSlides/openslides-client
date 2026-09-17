@@ -7,8 +7,8 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { ViewPoll } from '../../../../../polls';
-import { MotionPollService } from '../../services';
+import { ViewPoll } from '../../../../../polls/view-models/view-poll';
+import { MotionPollService } from '../../services/motion-poll.service/motion-poll.service';
 import { MotionPollPdfService } from '../../services/motion-poll-pdf.service/motion-poll-pdf.service';
 
 @Component({

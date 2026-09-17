@@ -31,7 +31,7 @@ const DECLARATIONS = [AttachmentControlComponent];
         MediafileCommonServiceModule,
         DirectivesModule,
         ScrollingTableModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class AttachmentControlModule {}

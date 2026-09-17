@@ -5,7 +5,7 @@ import { StorageMap } from '@ngx-pwa/local-storage';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, map, Observable, Subject } from 'rxjs';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
-import { SpeakerStateOnList } from '../../agenda';
+import { SpeakerStateOnList } from '../../agenda/definitions';
 import { CurrentListOfSpeakersService } from '../../agenda/modules/list-of-speakers/services/current-list-of-speakers.service';
 import { RTC_LOGGED_STORAGE_KEY } from './rtc.service';
 

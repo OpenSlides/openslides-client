@@ -8,7 +8,7 @@ import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { _ } from '@ngx-translate/core';
 
 import { HasMeeting } from '../../../view-models/has-meeting';
-import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers';
+import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers/view-models/has-list-of-speakers';
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachmentMeetingMediafiles } from '../../mediafiles/view-models/has-attachment';
 import { HasTags } from '../../motions/modules/tags/view-models/has-tags';

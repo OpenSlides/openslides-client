@@ -8,7 +8,7 @@ import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ProjectorCountdownDialogService } from '../../../../components/projector-countdown-dialog/services/projector-countdown-dialog.service';
-import { ProjectorCountdownControllerService } from '../../services/projector-countdown-controller.service';
+import { ProjectorCountdownControllerService } from '../../services/projector-countdown-controller.service/projector-countdown-controller.service';
 
 @Component({
     selector: `os-countdown-controls`,

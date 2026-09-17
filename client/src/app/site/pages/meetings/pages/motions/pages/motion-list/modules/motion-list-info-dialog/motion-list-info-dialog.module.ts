@@ -19,7 +19,7 @@ import { MotionListInfoDialogComponent } from './components/motion-list-info-dia
         MatSelectModule,
         MatDialogModule,
         MatButtonModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         DirectivesModule
     ]
 })

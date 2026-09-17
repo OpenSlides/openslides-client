@@ -3,8 +3,8 @@ import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-requ
 import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../participants/participants.subscription';
-import { ViewPoll } from '../../../../../polls';
 import { getPollDetailSubscriptionConfig } from '../../../../../polls/polls.subscription';
+import { ViewPoll } from '../../../../../polls/view-models/view-poll';
 
 @Component({
     selector: `os-motion-poll-main`,

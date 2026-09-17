@@ -1,5 +1,5 @@
 import { Id } from '../../definitions/key-types';
-import { HasMeetingId } from '../../interfaces';
+import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { BaseModel } from '../base/base-model';
 
 export class PollCandidate extends BaseModel<PollCandidate> {

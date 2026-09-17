@@ -12,8 +12,8 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
-import { MotionStateControllerService } from '../../../../modules/states/services';
-import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
+import { MotionStateControllerService } from '../../../../modules/states/services/motion-state-controller.service/motion-state-controller.service';
+import { MotionWorkflowControllerService } from '../../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
 import { WorkflowExportService } from '../../services/workflow-export.service/workflow-export.service';
 
 /**

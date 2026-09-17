@@ -3,7 +3,8 @@ import { PollPercentBase, VoteValue, VoteValueVerbose } from '@app/domain/models
 import { ThemeService } from '@app/site/services/theme.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
-import { ViewPoll, ViewVote } from '../../../../pages/polls';
+import { ViewPoll } from '../../../../pages/polls/view-models/view-poll';
+import { ViewVote } from '../../../../pages/polls/view-models/view-vote';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VotesFilterService } from '../../services/votes-filter.service';
 

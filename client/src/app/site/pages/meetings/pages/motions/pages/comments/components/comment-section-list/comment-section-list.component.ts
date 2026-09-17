@@ -13,7 +13,7 @@ import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
-import { MotionCommentSectionControllerService } from '../../../../modules/comments/services';
+import { MotionCommentSectionControllerService } from '../../../../modules/comments/services/motion-comment-section-controller.service';
 
 @Component({
     selector: `os-comment-section-list`,

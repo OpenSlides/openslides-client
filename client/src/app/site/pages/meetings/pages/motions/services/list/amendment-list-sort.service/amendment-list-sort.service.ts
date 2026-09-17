@@ -2,7 +2,7 @@ import { Service } from '@angular/core';
 import { OsSortingOption } from '@app/site/base/base-sort.service';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 
-import { MotionListBaseSortService } from '../motion-list-base-sort.service';
+import { MotionListBaseSortService } from '../motion-list-base-sort.service/motion-list-base-sort.service';
 
 @Service()
 export class AmendmentListSortService extends MotionListBaseSortService {

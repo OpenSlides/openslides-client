@@ -11,9 +11,12 @@ import { AutoupdateService } from '@app/site/services/autoupdate';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from '@app/site/services/model-request-builder';
 import { Subscription } from 'rxjs';
 
-import { ViewMotion, ViewMotionBlock, ViewMotionCategory, ViewMotionWorkflow } from '../pages/motions';
-import { ViewPoll } from '../pages/polls';
-import { ViewProjector } from '../pages/projectors';
+import { ViewMotionCategory } from '../pages/motions/modules/categories/view-models/view-motion-category';
+import { ViewMotionBlock } from '../pages/motions/modules/motion-blocks/view-models/view-motion-block';
+import { ViewMotionWorkflow } from '../pages/motions/modules/workflows/view-models/view-motion-workflow';
+import { ViewMotion } from '../pages/motions/view-models/view-motion';
+import { ViewPoll } from '../pages/polls/view-models/view-poll';
+import { ViewProjector } from '../pages/projectors/view-models/view-projector';
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ActiveMeetingService } from './active-meeting.service';
 import { MeetingCollectionMapperService } from './meeting-collection-mapper.service';
@@ -84,6 +87,22 @@ export class SequentialNumberMappingService {
         return await this.getBehaviorSubject(collection, meetingIdSequentialNumber);
     }
 
+    public async setSequentialNumber(
+        collection: Collection,
+        meetingId: number,
+        sequentialNumber: number,
+        value: number
+    ): Promise<void> {
+        if (!this._mapSequentialNumberId[collection]) {
+            const unlock = await this._mutex.lock();
+            this._mapSequentialNumberId[collection] = {};
+            unlock();
+        }
+
+        const meetingIdSequentialNumber = `${meetingId}/${sequentialNumber}`;
+        return this.setBehaviorSubject(collection, meetingIdSequentialNumber, value);
+    }
+
     private updateRepositoriesSubscriptions(): void {
         while (this._subscriptions.length > 0) {
             const subscription = this._subscriptions.shift();
@@ -98,12 +117,14 @@ export class SequentialNumberMappingService {
         }
     }
 
-    private doSequentialNumberMapping(
+    private async doSequentialNumberMapping(
         collection: Collection,
         viewModels: (BaseViewModel & HasMeetingId & Partial<HasSequentialNumber>)[]
-    ): void {
+    ): Promise<void> {
         if (!this._mapSequentialNumberId[collection]) {
+            const unlock = await this._mutex.lock();
             this._mapSequentialNumberId[collection] = {};
+            unlock();
         }
         for (const viewModel of viewModels) {
             if (isSequentialNumberHaving(viewModel)) {
@@ -143,12 +164,11 @@ export class SequentialNumberMappingService {
         collection: Collection,
         meetingIdSequentialNumber: string
     ): Promise<number | null> {
-        if (!this._mapSequentialNumberId[collection]) {
-            this._mapSequentialNumberId[collection] = {};
-        }
-
         const unlock = await this._mutex.lock();
-        if (!this._mapSequentialNumberId[collection][meetingIdSequentialNumber]) {
+        if (
+            !this._mapSequentialNumberId[collection] ||
+            !this._mapSequentialNumberId[collection][meetingIdSequentialNumber]
+        ) {
             try {
                 const data = await this.autoupdateService.single(
                     await this.modelRequestBuilder.build(this.getSequentialNumberRequest(collection)),
@@ -158,8 +178,13 @@ export class SequentialNumberMappingService {
                 const val = Object.values(data[collection]).find(
                     el => el[`meeting_id`] + `/` + el[`sequential_number`] === meetingIdSequentialNumber
                 );
-                this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = val[`id`];
-            } catch (e) {}
+
+                if (val && val[`id`]) {
+                    this.setBehaviorSubject(collection, meetingIdSequentialNumber, val[`id`]);
+                }
+            } catch (e) {
+                console.error(e);
+            }
         }
         unlock();
 
@@ -167,10 +192,6 @@ export class SequentialNumberMappingService {
     }
 
     private setBehaviorSubject(collection: Collection, meetingIdSequentialNumber: string, value: number): void {
-        if (!this._mapSequentialNumberId[collection]) {
-            this._mapSequentialNumberId[collection] = {};
-        }
-
         this._mapSequentialNumberId[collection][meetingIdSequentialNumber] = value;
     }
 }

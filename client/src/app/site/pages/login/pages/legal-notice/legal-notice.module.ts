@@ -8,6 +8,6 @@ import { LegalNoticeRoutingModule } from './legal-notice-routing.module';
 
 @NgModule({
     declarations: [LegalNoticeComponent],
-    imports: [CommonModule, LegalNoticeRoutingModule, InfoModule, OpenSlidesTranslationModule.forChild()]
+    imports: [CommonModule, LegalNoticeRoutingModule, InfoModule, OpenSlidesTranslationModule]
 })
 export class LegalNoticeModule {}
