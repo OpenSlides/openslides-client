@@ -94,7 +94,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 icon: `circle`,
                 amount: +results.abstain || 0,
                 percent:
-                    this.onehundredPercentBase() === `yes_no_abstain`
+                    this.onehundredPercentBase() === `yes_no_abstain` && this.config().onehundredPercentBaseNum
                         ? Big(results.abstain || 0)
                               .div(this.config().onehundredPercentBaseNum)
                               .mul(100)

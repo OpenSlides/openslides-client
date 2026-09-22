@@ -40,8 +40,8 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
     private _totalVotes: number;
     public get totalVotes(): number | null {
         if (!this._totalVotes) {
-            this._totalVotes = Big(this.parsedResult().yes)
-                .plus(Big(this.parsedResult().no))
+            this._totalVotes = Big(this.parsedResult().yes || 0)
+                .plus(Big(this.parsedResult().no || 0))
                 .plus(Big(this.parsedResult().abstain || 0))
                 .toNumber();
         }
