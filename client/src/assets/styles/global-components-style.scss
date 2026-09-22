@@ -164,10 +164,6 @@
         color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 
-    .path-line {
-        border-left: 3px solid mat.m2-get-color-from-palette($foreground, secondary-text);
-    }
-
     .mat-mdc-card-header {
         background-color: mat.m2-get-color-from-palette($background, app-bar);
     }
@@ -397,4 +393,19 @@
             background: color.adjust(mat.m2-get-color-from-palette($background, background), $hue: 0.005);
         }
     }
+
+    .motion-forward-path {
+        border-left: 3px solid #757575;
+        @if $is-dark-theme {
+            border-left: 3px solid #fff
+        }
+    }
+
+    .motion-forward-icon {
+        color: #757575 !important;
+        @if $is-dark-theme {
+            color: #fff !important;
+        }
+    }
+
 }

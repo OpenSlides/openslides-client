@@ -314,12 +314,12 @@
         }
         <table class="origin-view">
             @for (origin of currentOriginPage(); track origin.id; let last = $last; let first = $first) {
-                <tr class="basic-flex-container" [class]="!last ? 'path-line' : 'hidden-path'">
+                <tr class="basic-flex-container" [class]="!last ? 'motion-forward-path' : 'hidden-path'">
                     <td class="indicator-icon">
                         <mat-icon
                             class="move-icon-left"
                             [color]="origin.id === motion.id ? 'accent' : ''"
-                            [ngClass]="{ 'user-subtitle adjust-icon': origin.id !== motion.id }"
+                            [ngClass]="{ 'motion-forward-icon adjust-icon': origin.id !== motion.id }"
                         >
                             fiber_manual_record
                         </mat-icon>
@@ -328,7 +328,7 @@
                         *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
                     ></ng-container>
                     @if (origin.meeting?.locked_from_inside) {
-                        <mat-icon class="lock-icon user-subtitle adjust-icon">lock</mat-icon>
+                        <mat-icon class="lock-icon motion-forward-icon adjust-icon">lock</mat-icon>
                     }
                     @if (
                         canAccess(origin) &&
@@ -347,10 +347,13 @@
                         ></mat-slide-toggle>
                     }
                 </tr>
-                <tr class="basic-flex-container" [ngClass]="{ 'path-line': !last, 'last-element-margin': last }">
+                <tr
+                    class="basic-flex-container"
+                    [ngClass]="{ 'motion-forward-path': !last, 'last-element-margin': last }"
+                >
                     <td>
                         @if (first && !!origin.origin_id) {
-                            <mat-icon class="user-subtitle move-icon-left">north</mat-icon>
+                            <mat-icon class="motion-forward-icon move-icon-left">north</mat-icon>
                         } @else {
                             <mat-icon class="move-icon-left"></mat-icon>
                         }
