@@ -12,34 +12,30 @@ import {
     TemplateRef
 } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
 import { toDecimal } from '@app/infrastructure/utils';
-import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { AccountControllerService } from '@app/site/pages/organization/pages/accounts/services/common/account-controller.service';
-import { CommitteeControllerService } from '@app/site/pages/organization/pages/committees/services/committee-controller.service';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
-import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { BackendImportPhase } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 import {
     BackendImportEntry,
     BackendImportEntryObject,
-    BackendImportHeader,
-    BackendImportIdentifiedRow,
     BackendImportPreview,
     BackendImportState,
     BackendImportSummary
 } from '@app/ui/modules/import-list/definitions/backend-import-preview';
+import { ImportListPreview } from '@app/ui/modules/import-list/import-list-preview';
 import { ListModule } from '@app/ui/modules/list';
 import { ScrollingTableCellDefConfig } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import { START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
-import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
+import { _, TranslatePipe } from '@ngx-translate/core';
+import { map, Observable, Subscription } from 'rxjs';
 
 import { ViewGroup } from '../../../../modules';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
@@ -48,7 +44,6 @@ import { ParticipantImportFilterService } from '../../services/participant-impor
 import { CSVEncodingOptionsService } from '../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
 import { ViewImportedParticipant } from '../../view-models/view-participant-import';
-import { ParticipantImportListInfoDialogComponent } from '../participant-import-list-info-dialog/participant-import-list-info-dialog.component';
 
 @Component({
     selector: `os-participant-import-list-preview`,
@@ -69,18 +64,15 @@ import { ParticipantImportListInfoDialogComponent } from '../participant-import-
         MatLabel
     ]
 })
-export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
+export class ParticipantImportListPreviewComponent extends ImportListPreview implements OnInit, OnDestroy {
     public readonly START_POSITION = START_POSITION;
 
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
     private accountsControllerService = inject(AccountControllerService);
     private userAccounts = this.accountsControllerService.getViewModelList();
 
-    private committeeService = inject(CommitteeControllerService);
+    public modelName = `Participant`;
 
-    private modelName = `Participant`;
-
-    @Input()
     public importer = inject(ParticipantImportService);
 
     public filterService = inject(ParticipantImportFilterService);
@@ -135,59 +127,17 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         { header: 'comment', size: 500 }
     ];
 
-    /**
-     * The actual headers of the preview, as they were delivered by the backend.
-     */
-    public get previewColumns(): BackendImportHeader[] {
-        return this._previewColumns;
-    }
-
-    /**
-     * The summary of the preview, as it was delivered by the backend.
-     */
-    public get summary(): BackendImportSummary[] {
-        return this._summary;
-    }
-
-    /**
-     * The rows of the preview, which were delivered by the backend.
-     * Affixed with fake ids for the purpose of displaying them correctly.
-     */
-    public get rows(): BackendImportIdentifiedRow[] {
-        return this._rows;
-    }
-
-    /**
-     * The Observable from which the views table will be calculated
-     */
-    public get dataSource(): Observable<BackendImportIdentifiedRow[]> {
-        return this._dataSource;
-    }
-
-    private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
-
-    private _summary: BackendImportSummary[];
-    private _rows: ViewImportedParticipant[];
-    private _previewColumns: BackendImportHeader[];
-
-    private _dataSource: Observable<BackendImportIdentifiedRow[]> = of([]);
-
-    private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
-    protected uploadButton: boolean;
     protected importDone: boolean;
     private tempPreviewsObservable: Subscription;
 
-    public constructor(
-        protected translate: TranslateService,
-        private cd: ChangeDetectorRef,
-        private dialog: MatDialog
-    ) {}
+    public constructor(private cd: ChangeDetectorRef) {
+        super();
+    }
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)
      */
-    public ngOnInit(): void {
-        /* TODO: REMOVE THE MANUAL STATISTICS' CALCULATION */
+    public override ngOnInit(): void {
         this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
         this.importer.currentImportPhaseObservable.subscribe(phase => {
             this._state = phase;
@@ -230,26 +180,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     /**
-     * Gets the relevant backend header information for a property.
-     */
-    protected getHeader(propertyName: string): BackendImportHeader {
-        return this._headers[propertyName]?.preview;
-    }
-
-    /**
-     * Opens an info dialog with the column's descriptions.
-     */
-    public async openDialog(): Promise<void> {
-        const ref = this.dialog.open(ParticipantImportListInfoDialogComponent, {
-            ...mediumDialogSettings
-        });
-        await firstValueFrom(ref.afterClosed());
-    }
-
-    /**
      * Gets the style of the column for the given property.
      */
-    protected getColumnConfig(propertyName: string): ScrollingTableCellDefConfig {
+    protected override getColumnConfig(propertyName: string): ScrollingTableCellDefConfig {
         const defaultHeader = this._headers[propertyName]?.default;
         const headerConfig = this.headersConfig.find(config => config.header === propertyName);
         const colWidth = defaultHeader?.width ?? (headerConfig ? headerConfig.size : 150);
@@ -258,74 +191,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             def.width = colWidth;
         }
         return def;
-    }
-
-    /**
-     * Gets the label of the column for the given property.
-     */
-    protected getColumnLabel(propertyName: string): string {
-        return this._headers[propertyName]?.default?.label ?? propertyName;
-    }
-
-    /**
-     * Get the icon for the the item
-     * @param item a row with a current state
-     * @return the icon for the item
-     */
-    protected getActionIconRow(item: ViewImportedParticipant): string {
-        switch (item[`state`]) {
-            case BackendImportState.Error: // no import possible
-                return this._state !== BackendImportPhase.FINISHED ? `error_outline` : 'close';
-            case BackendImportState.Warning:
-                return `warning`;
-            case BackendImportState.New: // item will be imported / has been imported
-                return this._state !== BackendImportPhase.FINISHED ? `add_circle_outline` : `done`;
-            case BackendImportState.Done:
-                return this._state !== BackendImportPhase.FINISHED ? 'autorenew' : 'done';
-            case BackendImportState.Referenced:
-                return this._state !== BackendImportPhase.FINISHED ? 'merge' : `done`;
-            case BackendImportState.Generated:
-                return ``;
-            case BackendImportState.Remove:
-                return ``;
-            case BackendImportState.Unchanged:
-                return this._state !== BackendImportPhase.FINISHED ? '' : `done`;
-            default:
-                return `block`; // fallback: Error
-        }
-    }
-
-    /**
-     * Get the icon for the the entry
-     * @param item an entry with a current state
-     * @return the icon for the item
-     */
-    protected getActionIconEntry(item: BackendImportEntryObject): string {
-        switch (item.info) {
-            case BackendImportState.Error: // no import possible
-                return `error_outline`;
-            case BackendImportState.Warning:
-                return `warning`;
-            case BackendImportState.New:
-                return `add_circle_outline`;
-            case BackendImportState.Done:
-                if (item['changed'] === true) {
-                    return 'autorenew';
-                }
-                return '';
-            case BackendImportState.Generated:
-                return ``;
-            case BackendImportState.Remove:
-                return `remove_circle_outline`;
-            case BackendImportState.Referenced:
-                return ``;
-            default:
-                // ad hoc check for updated structure levels and groups
-                if ((item.info as string) === 'updated') {
-                    return 'autorenew';
-                }
-                return 'mood_bad';
-        }
     }
 
     protected getColorIcon(item: ViewImportedParticipant | BackendImportEntryObject): string {
@@ -376,7 +241,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         );
     }
 
-    protected getEntryIcon(item: BackendImportEntryObject): string {
+    protected override getEntryIcon(item: BackendImportEntryObject): string {
         if (item.info === BackendImportState.Done || !item) {
             return undefined;
         }
@@ -398,7 +263,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * @param entry a row with a current state
      * @eturn the tooltip for the item
      */
-    protected getRowTooltip(row: ViewImportedParticipant): string {
+    protected override getRowTooltip(row: ViewImportedParticipant): string {
         switch (row.state) {
             case BackendImportState.Error: // no import possible
                 return (
@@ -448,18 +313,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         ); // item has been updated
     }
 
-    public getWarningRowTooltip(row: ViewImportedParticipant): string {
-        switch (row.state) {
-            case BackendImportState.Error: // no import possible
-                return (
-                    this.getErrorDescription(row) ??
-                    _(`There is an unspecified error in this line, which prevents the import.`)
-                );
-            default:
-                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
-        }
-    }
-
     /**
      * The column separator selection.
      */
@@ -484,30 +337,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this.importer.refreshFile();
     }
 
-    public getShortenedDecimal(decimalString: string): string {
-        while (decimalString?.length && [`0`, `.`].includes(decimalString?.charAt(decimalString?.length - 1))) {
-            decimalString = decimalString?.substring(0, decimalString?.length - 1);
-        }
-        return decimalString;
-    }
-
-    private setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
-        for (const key of Object.keys(data)) {
-            for (const header of data[key] ?? []) {
-                if (!this._headers[header.property]) {
-                    this._headers[header.property] = { [key]: header };
-                } else {
-                    this._headers[header.property][key] = header;
-                }
-            }
-        }
-    }
-
-    private getErrorDescription(entry: ViewImportedParticipant): string {
-        return entry.messages?.map(error => this.translate.instant(this.importer.verbose(error))).join(`\n `);
-    }
-
-    private fillPreviewData(previews: BackendImportPreview[]): void {
+    protected override fillPreviewData(previews: BackendImportPreview[]): void {
         if (!previews || !previews.length) {
             this._previewColumns = undefined;
             this._summary = undefined;
@@ -563,7 +393,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this._summary.push({ name: error?.name, value: error?.value });
     }
 
-    private calculateRows(previews: BackendImportPreview[]): ViewImportedParticipant[] {
+    protected override calculateRows(previews: BackendImportPreview[]): ViewImportedParticipant[] {
         return previews?.flatMap(preview =>
             preview.rows.map(row => {
                 const participant = new ViewImportedParticipant(row.id, row, this.activeMeetingIdService.meetingId);
@@ -668,7 +498,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                         if (updatedUser[key] !== importedValue) {
                             changes[key] = {
                                 old: updatedUser[key],
-                                new: importedValue
+                                new: importedValue,
+                                removed: ![null, undefined].includes(updatedUser[key]) && importedValue === undefined
                             };
                         }
                     }
@@ -820,6 +651,15 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     private voteWeightChanged(item: ViewImportedParticipant, user: ViewUser): boolean {
+        console.log(
+            item.username,
+            item.voteWeight,
+            this.getShortenedDecimal(item.voteWeight),
+            user.username,
+            user.voteWeight,
+            this.getShortenedDecimal(user.voteWeight.toString()),
+            this.getShortenedDecimal(item.voteWeight) !== this.getShortenedDecimal(user.voteWeight.toString())
+        );
         if ('vote_weight' in item === false) {
             return false;
         }

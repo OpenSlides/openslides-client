@@ -4,8 +4,8 @@ import { ImportStep } from '@app/infrastructure/utils/import/import-step';
 import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
 import { Observable } from 'rxjs';
 
-import { BackendImportPhase } from '../modules/import-list/components/via-backend-import-list/backend-import-list.component';
 import { BackendImportPreview } from '../modules/import-list/definitions/backend-import-preview';
+import { BackendImportPhase } from '../modules/import-list/import-list-preview';
 
 interface ImportServicePreview {
     new: number;

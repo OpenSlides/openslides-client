@@ -72,7 +72,7 @@ export class BackendImportParticipantListComponent {
     @ViewChild(`fileInput`)
     private fileInput!: ElementRef<HTMLInputElement>;
 
-    protected uploadButton: boolean;
+    protected uploadButton = true;
 
     private _importer!: BackendImportService;
     private _defaultColumns: ImportListHeaderDefinition[] = [];
