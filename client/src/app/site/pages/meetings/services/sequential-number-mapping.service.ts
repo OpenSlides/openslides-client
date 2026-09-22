@@ -7,6 +7,7 @@ import { Topic } from '@app/domain/models/topics/topic';
 import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
 import { Mutex } from '@app/infrastructure/utils/promises';
 import { BaseViewModel } from '@app/site/base/base-view-model';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { AutoupdateService } from '@app/site/services/autoupdate';
 import { ModelRequestBuilderService, SimplifiedModelRequest } from '@app/site/services/model-request-builder';
 import { Subscription } from 'rxjs';
@@ -15,7 +16,6 @@ import { ViewMotionCategory } from '../pages/motions/modules/categories/view-mod
 import { ViewMotionBlock } from '../pages/motions/modules/motion-blocks/view-models/view-motion-block';
 import { ViewMotionWorkflow } from '../pages/motions/modules/workflows/view-models/view-motion-workflow';
 import { ViewMotion } from '../pages/motions/view-models/view-motion';
-import { ViewPoll } from '../pages/polls/view-models/view-poll';
 import { ViewProjector } from '../pages/projectors/view-models/view-projector';
 import { ViewMeeting } from '../view-models/view-meeting';
 import { ActiveMeetingService } from './active-meeting.service';

@@ -46,7 +46,7 @@ export const MEETING_RELATED_FORM_CONTROLS = [
     `comment`,
     `group_ids`,
     `vote_delegations_from_ids`,
-    `vote_delegated_to_id`,
+    `vote_delegated_to_ids`,
     `is_present`,
     `locked_out`
 ];

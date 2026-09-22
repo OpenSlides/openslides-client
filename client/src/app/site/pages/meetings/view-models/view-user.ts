@@ -9,10 +9,8 @@ import { ViewCommittee } from '../../organization/pages/committees/view-models/v
 import { ViewOrganization } from '../../organization/view-models/view-organization';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models/view-structure-level';
-import { ViewOption } from '../pages/polls/view-models/view-option';
-import { ViewPoll } from '../pages/polls/view-models/view-poll';
-import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
-import { ViewVote } from '../pages/polls/view-models/view-vote';
+import { ViewPollBallot } from '../pages/polls/view-models/poll-ballot';
+import { ViewPollOption } from '../pages/polls/view-models/poll-option';
 import { DelegationType } from './delegation-type';
 import { ViewMeeting } from './view-meeting';
 import { ViewMeetingUser } from './view-meeting-user';
@@ -210,10 +208,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.vote_delegations_from_ids(meetingId || this.getEnsuredActiveMeetingId())?.length > 0;
     }
 
-    public delegationName(meetingId?: Id): string | undefined {
-        return this.vote_delegated_to(meetingId || this.getEnsuredActiveMeetingId())?.getFullName();
-    }
-
     public speaker_ids(meetingId?: Id): Id[] {
         return this.getMeetingUser(meetingId)?.speaker_ids;
     }
@@ -238,12 +232,12 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.getMeetingUser(meetingId)?.chat_message_ids;
     }
 
-    public vote_delegated_to_id(meetingId?: Id): Id {
-        return this.getMeetingUser(meetingId)?.vote_delegated_to?.user_id;
+    public vote_delegated_to_ids(meetingId?: Id): Id[] {
+        return this.getMeetingUser(meetingId)?.vote_delegated_to_ids;
     }
 
-    public vote_delegated_to_meeting_user_id(meetingId?: Id): Id {
-        return this.getMeetingUser(meetingId)?.vote_delegated_to_id;
+    public vote_delegated_to_meeting_user_ids(meetingId?: Id): Id[] {
+        return this.getMeetingUser(meetingId)?.vote_delegated_to_ids;
     }
 
     public vote_delegations_from_ids(meetingId?: Id): Id[] {
@@ -305,7 +299,7 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get isVoteRightDelegated(): boolean {
-        return !!this.vote_delegated_to_id(this.getEnsuredActiveMeetingId());
+        return !!this.vote_delegated_to_ids(this.getEnsuredActiveMeetingId());
     }
 
     public get voteWeight(): number {
@@ -313,13 +307,13 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
     }
 
     public get isVoteCountable(): boolean {
-        const delegate = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
+        const delegates = this.vote_delegated_to(this.getEnsuredActiveMeetingId());
         const present = this.isPresentInMeeting();
         if (this.isSelfVotingAllowedDespiteDelegation() && present) {
             return true;
         }
-        if (this.getDelegationSettingEnabled() && delegate) {
-            return delegate.isPresentInMeeting();
+        if (this.getDelegationSettingEnabled() && delegates.length) {
+            return delegates.some(delegate => delegate.isPresentInMeeting());
         }
         return present;
     }
@@ -357,12 +351,12 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
         return this.vote_delegations_from_ids()?.includes(user.id);
     }
 
-    public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser {
+    public vote_delegated_to_meeting_user(meetingId?: number): ViewMeetingUser[] {
         return this.getMeetingUser(meetingId)?.vote_delegated_to;
     }
 
-    public vote_delegated_to(meetingId?: number): ViewUser {
-        return this.vote_delegated_to_meeting_user(meetingId)?.user;
+    public vote_delegated_to(meetingId?: number): ViewUser[] {
+        return this.vote_delegated_to_meeting_user(meetingId)?.map(meeting_user => meeting_user.user) || [];
     }
 
     public vote_delegations_from_meeting_users(meetingId?: number): ViewMeetingUser[] {
@@ -371,16 +365,6 @@ export class ViewUser extends BaseViewModel<User> /* implements Searchable */ {
 
     public vote_delegations_from(meetingId?: number): ViewUser[] {
         return this.vote_delegations_from_meeting_users(meetingId)?.map(meeting_user => meeting_user.user) || [];
-    }
-
-    /**
-     * Returns all votes given by the user in a given meeting.
-     */
-    public getAllVotes(meetingId?: number): ViewVote[] {
-        const meetingID = meetingId ?? this.getEnsuredActiveMeetingId();
-        return this.votes
-            .filter(vote => vote.meeting_id === meetingID)
-            .concat(this.getMeetingUser(meetingId)?.vote_delegated_votes ?? []);
     }
 
     public getDuplicateStatusInMap(data: { name: Map<string, Id[]>; email: Map<string, Id[]> }): DuplicateStatus {
@@ -403,11 +387,9 @@ interface IUserRelations {
     meetings: ViewMeeting[];
     organization: ViewOrganization;
     meeting_users: ViewMeetingUser[];
-    poll_voted: ViewPoll[];
     committee_managements: ViewCommittee[];
-    options: ViewOption[];
-    votes: ViewVote[];
-    poll_candidates: ViewPollCandidate[];
+    options: ViewPollOption[];
+    votes: ViewPollBallot[];
     gender?: ViewGender;
     history_positions: ViewHistoryPosition[];
 }

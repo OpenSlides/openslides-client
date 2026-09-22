@@ -54,7 +54,7 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
         comment: [``],
         group_ids: [``],
         vote_delegations_from_ids: [``],
-        vote_delegated_to_id: [``],
+        vote_delegated_to_ids: [``],
         is_present: [``],
         locked_out: [``],
         external: [``],
@@ -312,14 +312,13 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
         if (this.operator.hasPerms(Permission.userCanUpdate)) {
             this.checkForGroups(this.personalInfoFormValue);
             const isPresent = this.personalInfoFormValue.is_present || false;
-            if (this.personalInfoFormValue.vote_delegated_to_id === 0) {
-                this.personalInfoFormValue.vote_delegated_to_id = null;
-            }
             const payload = {
                 ...this.personalInfoFormValue,
-                vote_delegated_to_id: this.personalInfoFormValue.vote_delegated_to_id
-                    ? this.repo.getViewModel(this.personalInfoFormValue.vote_delegated_to_id).getMeetingUser().id
-                    : null,
+                vote_delegated_to_ids: this.personalInfoFormValue.vote_delegated_to_ids
+                    ? this.personalInfoFormValue.vote_delegated_to_ids
+                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter(id => !!id)
+                    : [],
                 vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
                     ? this.personalInfoFormValue.vote_delegations_from_ids
                           .map(id => this.repo.getViewModel(id).getMeetingUser().id)

@@ -1,0 +1,25 @@
+<mat-list cdkDropList class="editable-list" (cdkDropListDropped)="drop($event)">
+    @for (item of items(); track item; let i = $index) {
+        <mat-list-item cdkDrag class="editable-list-item">
+            <mat-icon cdkDragHandle class="drag-handle" matListItemIcon>drag_indicator</mat-icon>
+            <span matListItemTitle>{{ item }}</span>
+            <button mat-icon-button matListItemMeta type="button" (click)="removeItem(i)">
+                <mat-icon>delete</mat-icon>
+            </button>
+            <div *cdkDragPreview class="drag-preview">{{ item }}</div>
+        </mat-list-item>
+    }
+    @if (items().length === 0) {
+        <mat-list-item>
+            <span class="empty-hint" matListItemTitle>{{ 'No items yet' | translate }}</span>
+        </mat-list-item>
+    }
+</mat-list>
+
+<mat-form-field class="add-field">
+    <mat-label>{{ placeholder() | translate }}</mat-label>
+    <input matInput [ngModel]="inputValue()" (keydown.enter)="addItem()" (ngModelChange)="inputValue.set($event)" />
+    <button mat-icon-button matSuffix type="button" [aria-label]="'Add item' | translate" (click)="addItem()">
+        <mat-icon>add</mat-icon>
+    </button>
+</mat-form-field>

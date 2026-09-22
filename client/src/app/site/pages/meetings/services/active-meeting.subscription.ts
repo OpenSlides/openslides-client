@@ -2,12 +2,17 @@ import { Id } from '@app/domain/definitions/key-types';
 import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from '@app/domain/fieldsets/misc';
 import { UserFieldsets } from '@app/domain/fieldsets/user';
 import { MEETING_MEDIAFILE_USAGE_ID_KEYS } from '@app/domain/models/meetings/meeting.constants';
+import { FollowList } from '@app/site/services/model-request-builder';
 
 import { ViewMeeting } from '../view-models/view-meeting';
 
 export const ACTIVE_MEETING_SUBSCRIPTION = `active_meeting`;
 
-export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[] = []): any {
+export function getActiveMeetingSubscriptionConfig(
+    id: Id,
+    settingsKeys: string[] = [],
+    additionalFollow?: FollowList<ViewMeeting>
+): any {
     return {
         modelRequest: {
             viewModelCtor: ViewMeeting,
@@ -31,6 +36,7 @@ export function getActiveMeetingSubscriptionConfig(id: Id, settingsKeys: string[
                 ...settingsKeys
             ],
             follow: [
+                ...additionalFollow,
                 ...MEETING_MEDIAFILE_USAGE_ID_KEYS.map(idField => ({
                     idField,
                     fieldset: [`mediafile_id`]

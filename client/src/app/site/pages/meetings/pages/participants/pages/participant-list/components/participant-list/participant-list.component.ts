@@ -10,6 +10,7 @@ import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings'
 import { OsFilterOption } from '@app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
@@ -69,6 +70,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     private route = inject(ActivatedRoute);
     private prompt = inject(PromptService);
     private interactionService = inject(InteractionService);
+    private meetingPollSettingsService = inject(MeetingPollSettingsService);
     private dialog = inject(MatDialog);
 
     /**
@@ -243,17 +245,17 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             this.meetingSettingsService
                 .get(`users_allow_self_set_present`)
                 .subscribe(allowed => (this._allowSelfSetPresent = allowed)),
-            this.meetingSettingsService
-                .get(`assignment_poll_default_group_ids`)
+            this.meetingPollSettingsService
+                .get(`assignment`, `group_ids`)
                 .subscribe(group_ids => (this._poll_default_group_ids = Array.from(group_ids))),
-            this.meetingSettingsService.get(`motion_poll_default_group_ids`).subscribe(group_ids =>
+            this.meetingPollSettingsService.get(`motion`, `group_ids`).subscribe(group_ids =>
                 group_ids?.forEach(id => {
                     if (this._poll_default_group_ids.indexOf(id) === -1) {
                         this._poll_default_group_ids.push(id);
                     }
                 })
             ),
-            this.meetingSettingsService.get(`topic_poll_default_group_ids`).subscribe(group_ids =>
+            this.meetingPollSettingsService.get(`topic`, `group_ids`).subscribe(group_ids =>
                 group_ids?.forEach(id => {
                     if (this._poll_default_group_ids.indexOf(id) === -1) {
                         this._poll_default_group_ids.push(id);
@@ -369,16 +371,13 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             number: user.number(),
             structure_level_ids: user.structure_level_ids(),
             vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
-            vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
+            vote_delegated_to_ids: user.vote_delegated_to_meeting_user_ids()
         });
 
         dialogRef.afterClosed().subscribe(async result => {
             if (result) {
                 if (!result.group_ids?.length) {
                     result.group_ids = [this.activeMeeting!.default_group_id];
-                }
-                if (result.vote_delegated_to_id === 0) {
-                    result.vote_delegated_to_id = null;
                 }
                 if (
                     !(

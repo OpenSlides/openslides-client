@@ -7,7 +7,7 @@ import { overloadJsFunctions } from '@app/infrastructure/utils/overload-js-funct
 
 overloadJsFunctions();
 
-const SOURCE = path.resolve(path.join(__dirname, '../meta/permission.yml'));
+const SOURCE = path.resolve(path.join(__dirname, '../../meta/permission.yml'));
 
 const BASE_PATH = path.resolve(path.join(__dirname, `..`));
 const DOMAIN_DEFINITIONS_PATH = `src/app/domain/definitions`;
@@ -33,21 +33,21 @@ const FILE_TEMPLATE_PERMISSION_RELATIONS = dedent`
     import { PermissionsMap } from './permission.config';
 `;
 
-const permissionMap: { [permission: string]: PermissionNode } = {};
+const permissionMap: Record<string, PermissionNode> = {};
 
 /**
  * Helper class to generate the permission graph. Holds information about its permission as well as
  * its parents and children.
  */
 class PermissionNode {
-    parents: PermissionNode[] = [];
-    children: PermissionNode[] = [];
-    permission: string;
-    enumKey: string;
+    public parents: PermissionNode[] = [];
+    public children: PermissionNode[] = [];
+    public permission: string;
+    public enumKey: string;
 
     public constructor(permission: string) {
         this.permission = permission;
-        this.enumKey = permission.replace(/[_\.]([a-z])/g, (_, c) => c.toUpperCase());
+        this.enumKey = permission.replace(/[_.]([a-z])/g, (_, c) => c.toUpperCase());
     }
 }
 
@@ -137,7 +137,7 @@ function writePermissionRelations(nodes: PermissionNode[]): void {
  * @returns a set of all relatives of the given node in the given direction
  */
 function getPermissionRelatives(node: PermissionNode, field: PermissionNodeRelativesField): Set<PermissionNode> {
-    let relatives = new Set<PermissionNode>();
+    const relatives = new Set<PermissionNode>();
     for (const relative of node[field]) {
         relatives.add(relative);
         relatives.update(getPermissionRelatives(relative, field));

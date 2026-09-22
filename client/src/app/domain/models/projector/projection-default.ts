@@ -14,7 +14,7 @@ export const PROJECTIONDEFAULT = {
     projectorCountdown: `countdown`,
     assignmentPoll: `assignment_poll`,
     motionPoll: `motion_poll`,
-    poll: `poll`
+    topicPoll: `topic_poll`
 } as const;
 
 export type ProjectiondefaultKey = keyof typeof PROJECTIONDEFAULT;
@@ -33,9 +33,9 @@ export const PROJECTIONDEFAULT_VERBOSE: Record<ProjectiondefaultKey, string> = {
     mediafile: _(`Files`),
     projectorMessage: _(`Messages`),
     projectorCountdown: _(`Timers`),
-    assignmentPoll: _(`Ballots`),
-    motionPoll: _(`Motion votes`),
-    poll: _(`Polls`)
+    assignmentPoll: _(`Elections`),
+    motionPoll: _(`Motion polls`),
+    topicPoll: _(`Topic polls`)
 };
 
 export const PROJECTIONDEFAULTS = Object.values(PROJECTIONDEFAULT) as ProjectiondefaultValue[];
