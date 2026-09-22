@@ -397,7 +397,7 @@
     .motion-forward-path {
         border-left: 3px solid #757575;
         @if $is-dark-theme {
-            border-left: 3px solid #fff
+            border-left: 3px solid #fff;
         }
     }
 
