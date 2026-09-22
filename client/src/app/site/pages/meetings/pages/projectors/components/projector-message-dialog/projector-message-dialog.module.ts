@@ -17,7 +17,7 @@ import { ProjectorMessageDialogComponent } from './components/projector-message-
         FormsModule,
         ReactiveFormsModule,
         EditorModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ProjectorMessageDialogModule {

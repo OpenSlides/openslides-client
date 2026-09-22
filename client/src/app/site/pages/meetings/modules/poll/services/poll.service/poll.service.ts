@@ -129,7 +129,7 @@ export abstract class PollService {
     }
 
     public parseNumber(value?: number, maximumFractionDigits = 3): string {
-        let lang = this.translate.getCurrentLang();
+        let lang = this.translate.getCurrentLang() ?? `en`;
         if (this.activeMeeting.meeting) {
             lang = this.activeMeeting.meeting.language;
         }

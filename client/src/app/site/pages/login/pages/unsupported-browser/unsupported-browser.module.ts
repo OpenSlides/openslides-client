@@ -8,6 +8,6 @@ import { UnsupportedBrowserRoutingModule } from './unsupported-browser-routing.m
 
 @NgModule({
     declarations: [UnsupportedBrowserComponent],
-    imports: [CommonModule, MatCardModule, UnsupportedBrowserRoutingModule, OpenSlidesTranslationModule.forChild()]
+    imports: [CommonModule, MatCardModule, UnsupportedBrowserRoutingModule, OpenSlidesTranslationModule]
 })
 export class UnsupportedBrowserModule {}

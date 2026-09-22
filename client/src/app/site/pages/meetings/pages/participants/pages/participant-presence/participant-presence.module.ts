@@ -20,7 +20,7 @@ import { ParticipantPresenceRoutingModule } from './participant-presence-routing
         MatInputModule,
         ReactiveFormsModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ParticipantPresenceModule {}

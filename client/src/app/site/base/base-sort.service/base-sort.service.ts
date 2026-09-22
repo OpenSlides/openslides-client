@@ -29,7 +29,7 @@ export abstract class BaseSortService<T extends Identifiable & Displayable> impl
     protected translate = inject(TranslateService);
 
     public constructor() {
-        this.intl = getIntlCollatorForLang(this.translate.getCurrentLang(), {
+        this.intl = getIntlCollatorForLang(this.translate.getCurrentLang() ?? `en`, {
             numeric: true,
             ignorePunctuation: true,
             sensitivity: `base`

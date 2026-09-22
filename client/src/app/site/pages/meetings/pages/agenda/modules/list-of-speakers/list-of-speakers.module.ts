@@ -31,7 +31,7 @@ import { ListOfSpeakersRoutingModule } from './list-of-speakers-routing.module';
         DirectivesModule,
         HeadBarModule,
         RouterModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ListOfSpeakersModule {}

@@ -26,7 +26,7 @@ import { MeetingInfoRoutingModule } from './meeting-info-routing.module';
         FormsModule,
         ListModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         InfoModule,
         PipesModule
     ]

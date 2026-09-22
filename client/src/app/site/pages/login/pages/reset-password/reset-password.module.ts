@@ -20,7 +20,7 @@ import { ResetPasswordRoutingModule } from './reset-password-routing.module';
         MatInputModule,
         DirectivesModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ResetPasswordModule {}

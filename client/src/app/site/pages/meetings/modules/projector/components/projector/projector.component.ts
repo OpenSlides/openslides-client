@@ -177,7 +177,7 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
                 this.projector.id,
                 () => this.authTokenService.rawAccessToken,
                 {
-                    lang: this.translate.getCurrentLang()
+                    lang: this.translate.getCurrentLang() ?? `en`
                 }
             );
         });

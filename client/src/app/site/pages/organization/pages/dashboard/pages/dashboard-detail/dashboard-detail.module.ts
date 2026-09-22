@@ -29,7 +29,7 @@ import { DashboardDetailRoutingModule } from './dashboard-detail-routing.module'
         ScrollingModule,
         HeadBarModule,
         MeetingTimeComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         IconContainerComponent
     ]
 })

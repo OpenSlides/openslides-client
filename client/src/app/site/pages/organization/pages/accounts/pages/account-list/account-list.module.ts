@@ -45,7 +45,7 @@ import { AccountListServiceModule } from './services/account-list-service.module
         MatMenuModule,
         MatDividerModule,
         MatButtonModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatFormFieldModule,
         IconContainerComponent,
         RouterModule,

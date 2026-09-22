@@ -67,7 +67,7 @@ const DECLARATIONS = [
         ProjectorButtonModule,
         CountdownTimeModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         PipesModule,
         MeetingExportModule
     ]

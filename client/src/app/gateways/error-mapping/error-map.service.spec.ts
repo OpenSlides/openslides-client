@@ -163,7 +163,7 @@ describe(`ErrorMapService`, () => {
     for (const date of testData) {
         const test = date.test;
         it(date.title, () => {
-            expect(service.getCleanErrorMessage(test.message, test.options)).toEqual(date.expect);
+            expect(service.getCleanErrorMessage(test.message, test.options, undefined)).toEqual(date.expect);
         });
         if (date.testConditionCheck !== undefined) {
             it(`Conditions for '${date.title}' are present`, () => {
@@ -181,7 +181,7 @@ describe(`ErrorMapService`, () => {
             ])
         );
 
-        expect(service.getCleanErrorMessage(`1, 2, 3, 4, 5, 6, 7, 8, 9`, { url: `test123456789` })).toBe(
+        expect(service.getCleanErrorMessage(`1, 2, 3, 4, 5, 6, 7, 8, 9`, { url: `test123456789` }, {})).toBe(
             `Error: Number range begins with 1`
         );
         expect(console.warn).toHaveBeenCalledOnceWith(

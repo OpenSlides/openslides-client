@@ -45,7 +45,7 @@ const DECLARATIONS = [
         FormsModule,
         PortalModule,
         ScrollingTableModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ImportListModule {}

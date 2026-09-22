@@ -117,7 +117,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         HeadBarModule,
         AttachmentControlModule,
         MeetingsComponentCollectorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         RouterModule,
         FormsModule,
         ReactiveFormsModule,

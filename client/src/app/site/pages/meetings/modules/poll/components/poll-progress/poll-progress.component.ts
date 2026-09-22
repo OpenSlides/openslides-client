@@ -9,7 +9,7 @@ import { ModelRequestBuilderService } from '@app/site/services/model-request-bui
 import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { distinctUntilChanged, map } from 'rxjs';
 
 import { getParticipantVoteInfoSubscriptionConfig } from '../../../../pages/participants/participants.subscription';
@@ -19,7 +19,7 @@ import { ActiveMeetingService } from '../../../../services/active-meeting.servic
     selector: `os-poll-progress`,
     templateUrl: `./poll-progress.component.html`,
     styleUrls: [`./poll-progress.component.scss`],
-    imports: [MatProgressBarModule, TranslateModule],
+    imports: [MatProgressBarModule, TranslatePipe],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollProgressComponent extends BaseUiComponent implements OnDestroy {

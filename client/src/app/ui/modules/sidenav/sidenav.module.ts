@@ -36,7 +36,7 @@ const EXPORTS = [SidenavComponent, SidenavMainContentDirective, SidenavDrawerCon
         MatTooltipModule,
         EasterEggModule,
         PipesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class SidenavModule {}

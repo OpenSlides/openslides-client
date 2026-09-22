@@ -42,7 +42,7 @@ import { MotionListRoutingModule } from './motion-list-routing.module';
         MatChipsModule,
         MatBadgeModule,
         MatDividerModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         HeadBarModule,
         MeetingsComponentCollectorModule,
         GridModule,

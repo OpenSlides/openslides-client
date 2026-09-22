@@ -263,22 +263,26 @@
             <mat-label>{{ 'Upload to' | translate }}</mat-label>
             <os-list-search-selector
                 formControlName="directory_id"
-                noneTitle="{{ 'Base folder' | translate }}"
                 [includeNone]="true"
                 [inputListValues]="filteredDirectoryBehaviorSubject"
+                [noneTitle]="'Base folder' | translate"
             />
         </mat-form-field>
 
         @if (movingFromPublicFolder && !movingToPublicFolder) {
-            <p class="warn" translate>
-                You are moving a file from a public folder into an not published folder. The file will not be accessible
-                in meetings afterwards.
+            <p class="warn">
+                {{
+                    'You are moving a file from a public folder into an not published folder. The file will not be accessible in meetings afterwards.'
+                        | translate
+                }}
             </p>
         }
         @if (movingToPublicFolder && !movingFromPublicFolder) {
-            <p class="warn" translate>
-                You are moving an unpublished file to a public folder. The file will be accessible in ALL meetings
-                afterwards.
+            <p class="warn">
+                {{
+                    'You are moving an unpublished file to a public folder. The file will be accessible in ALL meetings afterwards.'
+                        | translate
+                }}
             </p>
         }
     </mat-dialog-content>

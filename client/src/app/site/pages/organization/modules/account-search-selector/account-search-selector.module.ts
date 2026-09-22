@@ -26,7 +26,7 @@ const DECLARATIONS = [AccountSearchSelectorComponent];
         MatChipsModule,
         MatTooltipModule,
         ScrollingModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class AccountSearchSelectorModule {}

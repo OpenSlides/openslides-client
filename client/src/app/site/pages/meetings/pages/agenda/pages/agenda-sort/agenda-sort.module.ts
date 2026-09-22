@@ -22,7 +22,7 @@ import { AgendaSortComponent } from './components/agenda-sort/agenda-sort.compon
         FormsModule,
         AgendaSortRoutingModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatSidenavModule,
         MatCheckboxModule,

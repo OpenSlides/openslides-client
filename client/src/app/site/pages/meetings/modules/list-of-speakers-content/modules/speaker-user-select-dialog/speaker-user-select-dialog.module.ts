@@ -18,7 +18,7 @@ import { SpeakerUserSelectDialogComponent } from './components/speaker-user-sele
         MatButtonModule,
         MatSelectModule,
         ParticipantSearchSelectorModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class SpeakerUserSelectDialogModule {

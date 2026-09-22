@@ -60,7 +60,7 @@ import { TopicPollServiceModule } from './services/topic-poll-service.module';
         SortingListModule,
         ProjectorButtonModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     exports: [TopicPollComponent],
     providers: [{ provide: PollService, useClass: TopicPollService }]

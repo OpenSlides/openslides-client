@@ -66,14 +66,24 @@
 
             <mat-form-field>
                 <mat-label>{{ 'Time zone' | translate }}</mat-label>
-                <os-list-search-selector
+                <input
+                    #timeZoneInput
                     formControlName="time_zone"
-                    [getAdditionallySearchedValuesFn]="getAdditionallySearchedValuesFn"
-                    [inputListValues]="time_zones"
-                ></os-list-search-selector>
+                    matInput
+                    type="text"
+                    [matAutocomplete]="timeZoneAuto"
+                    (focus)="filterTimezones()"
+                    (input)="filterTimezones()"
+                />
+
+                <mat-autocomplete #timeZoneAuto="matAutocomplete" requireSelection>
+                    @for (option of filteredTimeZones(); track option) {
+                        <mat-option [value]="option">{{ option | translate }}</mat-option>
+                    }
+                </mat-autocomplete>
             </mat-form-field>
 
-            <os-daterangepicker formControlName="daterange" title="{{ 'Meeting date' }}"></os-daterangepicker>
+            <os-daterangepicker formControlName="daterange" [title]="'Meeting date'"></os-daterangepicker>
 
             <mat-form-field>
                 <mat-label>{{ 'Administrators' | translate }}</mat-label>

@@ -35,7 +35,7 @@ import { AmendmentListMainComponent } from './components/amendment-list-main/ame
         MatIconModule,
         MatChipsModule,
         MatDividerModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class AmendmentsModule {}

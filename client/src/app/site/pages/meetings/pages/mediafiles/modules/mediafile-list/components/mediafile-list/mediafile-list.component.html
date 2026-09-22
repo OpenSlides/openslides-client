@@ -6,7 +6,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Files</h1>
+        <h1 class="mock-h2">{{ 'Files' | translate }}</h1>
     </div>
 
     <!-- Menu -->
@@ -60,10 +60,7 @@
     @if (canEdit && directory && directory.has_inherited_access_groups) {
         <span class="visibility">
             <button class="visible-for" mat-button (click)="onEditFile(directory)">
-                <os-icon-container
-                    icon="group"
-                    matTooltip="{{ 'Allowed access groups for this directory' | translate }}"
-                >
+                <os-icon-container icon="group" [matTooltip]="'Allowed access groups for this directory' | translate">
                     <os-comma-separated-listing [list]="directory.inherited_access_groups" [showElementsAmount]="3">
                         <ng-template let-group>{{ group.getTitle() }}</ng-template>
                     </os-comma-separated-listing>

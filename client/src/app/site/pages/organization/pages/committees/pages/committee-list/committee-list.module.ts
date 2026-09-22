@@ -29,7 +29,7 @@ import { CommitteeListServiceModule } from './services/committee-list-service.mo
         HeadBarModule,
         ChipComponent,
         ChoiceDialogComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatDividerModule,
         MatMenuModule,
         MatIconModule,

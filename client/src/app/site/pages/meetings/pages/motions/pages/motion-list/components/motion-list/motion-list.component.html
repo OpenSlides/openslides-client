@@ -6,7 +6,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Motions</h1>
+        <h1 class="mock-h2">{{ 'Motions' | translate }}</h1>
     </div>
 
     <!-- Menu -->
@@ -28,7 +28,7 @@
                 @if (selectedView === 'list') {
                     <button
                         mat-button
-                        matTooltip="{{ 'Tile view' | translate }}"
+                        [matTooltip]="'Tile view' | translate"
                         [matTooltipShowDelay]="500"
                         (click)="onChangeView('tiles')"
                     >
@@ -38,7 +38,7 @@
                 @if (selectedView === 'tiles') {
                     <button
                         mat-button
-                        matTooltip="{{ 'List view' | translate }}"
+                        [matTooltip]="'List view' | translate"
                         [matTooltipShowDelay]="500"
                         (click)="onChangeView('list')"
                     >

@@ -36,7 +36,7 @@ const DECLARATIONS = [CommitteeMetaInfoComponent, CommitteeMeetingPreviewCompone
         MatTooltipModule,
         MatFormFieldModule,
         RouterModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MeetingTimeComponent,
         DirectivesModule,
         ChipComponent,

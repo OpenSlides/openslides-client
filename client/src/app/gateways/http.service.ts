@@ -94,10 +94,14 @@ export class HttpService {
                     this.snackBar.open(cleanError, this.translate.instant(`Ok`));
                     throw new ProcessError(cleanError);
                 } else if (error.error.message) {
-                    const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
-                        data,
-                        url: error.url
-                    });
+                    const cleanError = this.errorMapper.getCleanErrorMessage(
+                        error.error.message,
+                        {
+                            data,
+                            url: error.url
+                        },
+                        error.error.message_args
+                    );
                     if (typeof cleanError !== `string`) {
                         throw cleanError;
                     }

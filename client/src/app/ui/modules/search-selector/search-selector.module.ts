@@ -34,7 +34,7 @@ const DECLARATIONS = [
         MatButtonModule,
         ScrollingModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class SearchSelectorModule {}

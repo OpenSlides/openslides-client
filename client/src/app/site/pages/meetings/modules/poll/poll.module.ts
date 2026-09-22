@@ -53,7 +53,7 @@ const COMPONENTS = [PollFilteredVotesChartComponent, CheckInputComponent, Entitl
         SearchSelectorModule,
         MatProgressSpinnerModule,
         ...PIPES,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     exports: [...PIPES, ...COMPONENTS, ChartComponent, PollCannotVoteMessageComponent, PollProgressComponent],
     providers: [...PIPES]

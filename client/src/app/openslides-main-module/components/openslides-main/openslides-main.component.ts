@@ -96,7 +96,10 @@ export class OpenSlidesMainComponent implements OnInit {
 
         this.ctService.customTranslationSubject.subscribe(ct => {
             this.translate.setTranslation(`en`, ct || {}, false);
-            if (this.translate.getCurrentLang() !== this.translate.getFallbackLang()) {
+            if (
+                this.translate.getCurrentLang() !== null &&
+                this.translate.getCurrentLang() !== this.translate.getFallbackLang()
+            ) {
                 this.translate.setTranslation(this.translate.getCurrentLang(), {}, true);
             }
         });

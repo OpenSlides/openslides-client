@@ -67,7 +67,7 @@ import { AssignmentPollServiceModule } from './services/assignment-poll-service.
         MeetingsComponentCollectorModule,
         ExpandableContentWrapperComponent,
         IconContainerComponent,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     providers: [{ provide: PollService, useClass: AssignmentPollService }]
 })

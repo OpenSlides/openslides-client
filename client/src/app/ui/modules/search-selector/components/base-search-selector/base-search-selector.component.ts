@@ -43,7 +43,7 @@ export abstract class BaseSearchSelectorComponent
             this._matSelectStateSubscription.unsubscribe();
         }
 
-        value.stateChanges.subscribe(() => {
+        this._matSelectStateSubscription = value.stateChanges.subscribe(() => {
             this.stateChanges.next();
         });
     }

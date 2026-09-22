@@ -8,12 +8,7 @@
         <mat-form-field appearance="fill">
             <mat-label>{{ 'Color' | translate }}</mat-label>
             <input formControlName="color" matInput type="color" [required]="isCreateView" />
-            <button
-                mat-icon-button
-                matSuffix
-                matTooltip="{{ 'Generate new color' | translate }}"
-                (click)="generateColor()"
-            >
+            <button mat-icon-button matSuffix [matTooltip]="'Generate new color' | translate" (click)="generateColor()">
                 <mat-icon>autorenew</mat-icon>
             </button>
             @if (hasColorFormError('pattern')) {

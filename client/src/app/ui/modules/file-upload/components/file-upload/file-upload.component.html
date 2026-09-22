@@ -6,7 +6,7 @@
             <ngx-file-drop
                 contentClassName="file-drop-content-style"
                 dropZoneClassName="file-drop-zone-style"
-                dropZoneLabel="{{ 'Drop files into this area OR click here to select files' | translate }}"
+                [dropZoneLabel]="'Drop files into this area OR click here to select files' | translate"
                 (click)="fileInput.click()"
                 (onFileDrop)="onDropFile($event)"
             ></ngx-file-drop>
@@ -45,7 +45,7 @@
 <ng-template #tableTemplate>
     <os-scrolling-table vScrollFixed="50" [dataSource]="dataSource" [showHeader]="true" [tableHeight]="tableHeight">
         <div *osScrollingTableCell="'remove'; row as file; config: { width: 24 }">
-            <button mat-icon-button matTooltip="{{ 'Remove file' | translate }}" (click)="onRemoveButton(file)">
+            <button mat-icon-button [matTooltip]="'Remove file' | translate" (click)="onRemoveButton(file)">
                 <mat-icon>close</mat-icon>
             </button>
         </div>

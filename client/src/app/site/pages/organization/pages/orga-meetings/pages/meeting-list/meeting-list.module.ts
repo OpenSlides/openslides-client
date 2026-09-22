@@ -31,7 +31,7 @@ import { MeetingListServiceModule } from './services/meeting-list-service.module
         HeadBarModule,
         ChipComponent,
         ChoiceDialogComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatDividerModule,
         MatMenuModule,
         MatIconModule,

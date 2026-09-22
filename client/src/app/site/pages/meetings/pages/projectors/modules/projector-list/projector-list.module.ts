@@ -45,7 +45,7 @@ import { ProjectorListRoutingModule } from './projector-list-routing.module';
         MotionPollServiceModule,
         TopicPollServiceModule,
         IconContainerComponent,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ProjectorListModule {}

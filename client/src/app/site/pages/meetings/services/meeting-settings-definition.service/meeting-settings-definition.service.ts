@@ -48,7 +48,7 @@ export class MeetingSettingsDefinitionService {
     public getDefaultValueForType(setting: SettingsInput): any {
         switch (setting.type) {
             case `integer`:
-                return 0;
+                return null;
             case `boolean`:
                 return false;
             case `translations`:

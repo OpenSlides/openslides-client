@@ -16,7 +16,7 @@ import { OrganizationMediafileUploadRoutingModule } from './organization-mediafi
     imports: [
         CommonModule,
         OrganizationMediafileUploadRoutingModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatMenuModule,
         MediaUploadContentComponent,

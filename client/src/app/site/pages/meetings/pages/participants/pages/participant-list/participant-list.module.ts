@@ -40,7 +40,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
         IconContainerComponent,
         DirectivesModule,
         MeetingsComponentCollectorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatMenuModule,
         MatCheckboxModule,

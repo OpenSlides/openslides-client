@@ -20,7 +20,7 @@ import { MotionBlockEditDialogComponent } from './components/motion-block-edit-d
         MatCheckboxModule,
         MatDialogModule,
         MatFormFieldModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class MotionBlockEditDialogModule {
