@@ -1,3 +1,17 @@
+@use '@angular/material' as mat;
+
+.origin-view {
+    @include mat.paginator-overrides(
+        (
+            container-background-color: transparent
+        )
+    );
+    mat-paginator {
+        display: flex;
+        justify-content: flex-start;
+    }
+}
+
 div.remove-top-margin {
     margin-top: -1.33em;
 }
@@ -8,4 +22,78 @@ div.origin-view {
 
 span.referencelist {
     display: inline-block;
+}
+
+.basic-flex-container {
+    display: flex;
+    align-items: flex-start;
+    padding-bottom: 5px;
+}
+
+.move-text-up {
+    margin-left: 3px;
+    margin-top: -6px;
+}
+
+.status-text {
+    font-size: 85%;
+    margin-top: -7px;
+    margin-left: 8px;
+    font-style: italic;
+}
+
+.status-text-without-icon {
+    margin-left: 13px;
+}
+
+.slider-margin {
+    margin-left: 15px;
+}
+
+.lock-icon {
+    margin-left: 5px;
+}
+
+.indicator-icon {
+    margin-right: 3px;
+}
+
+.last-element-margin {
+    margin-bottom: -5px;
+}
+
+.meeting-name-width {
+    max-width: 60%;
+}
+
+.adjust-icon {
+    transform: scale(0.8);
+}
+
+.move-icon-left {
+    margin-top: -8px;
+    margin-left: -14px;
+}
+
+.hidden-path {
+    border-left: 3px solid transparent;
+}
+
+.icon-overlay {
+    position: relative;
+    display: inline-block;
+}
+
+.icon-front {
+    position: absolute;
+    top: -15px;
+    left: 0;
+    z-index: 2;
+}
+
+.icon-back {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    z-index: 1;
 }

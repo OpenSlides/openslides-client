@@ -302,49 +302,80 @@
     }
 }
 
-<!-- Workflow timestamp -->
-<os-motion-manage-timestamp field="workflow_timestamp" [motion]="motion" [title]="'Submission date' | translate" />
-
-<!-- Created timestamp -->
-@if (motion?.created && perms.isAllowed('change_metadata', motion)) {
-    <div>
-        <h4>{{ 'Creation date' | translate }}</h4>
-        <div>{{ motion.created | localizedDate }}</div>
-    </div>
-}
-
 <!-- Origins - display only -->
-@if (originMotions$ | async; as originMotions) {
-    @if (originMotions.length) {
-        <div>
+@if (originTreeData.length) {
+    <div>
+        @if (displayFutureForward()) {
+            <h4>
+                {{ 'Consultation sequence' | translate }}
+            </h4>
+        } @else {
             <h4>{{ 'Origin' | translate }}</h4>
-            <div class="origin-view">
-                @for (origin of originMotions; track origin.id; let last = $last) {
-                    <div>
-                        <ng-container *ngTemplateOutlet="meetingLink; context: { motion: origin }"></ng-container>
+        }
+        <table class="origin-view">
+            @for (origin of currentOriginPage(); track origin.id; let last = $last; let first = $first) {
+                <tr class="basic-flex-container" [class]="!last ? 'motion-forward-path' : 'hidden-path'">
+                    <td class="indicator-icon">
+                        <div class="icon-overlay">
+                            <mat-icon
+                                class="move-icon-left icon-front"
+                                [color]="origin.id === motion.id ? 'accent' : ''"
+                                [ngClass]="{ 'motion-forward-icon adjust-icon': origin.id !== motion.id }"
+                            >
+                                fiber_manual_record
+                            </mat-icon>
+                            @if (first && !!origin.origin_id) {
+                                <mat-icon class="motion-forward-icon move-icon-left icon-back">north</mat-icon>
+                            }
+                        </div>
+                    </td>
+                    <td class="move-text-up">
+                        <ng-container
+                            *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
+                        ></ng-container>
+                        @if (origin.meeting?.locked_from_inside) {
+                            <mat-icon class="lock-icon motion-forward-icon adjust-icon">lock</mat-icon>
+                        }
                         @if (
+                            canAccess(origin) &&
+                            motion !== origin &&
                             (displayOriginEnabled$ | async) &&
                             (originToggleDefault$ | async) === false &&
                             !motion.isAmendment()
                         ) {
                             <mat-slide-toggle
                                 *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
+                                class="slider-margin"
                                 [aria-label]="'Activate backtracking' | translate"
                                 [checked]="originMotionStatus[origin.id]"
                                 [matTooltip]="'Activate backtracking' | translate"
                                 (change)="toggleOriginMotion($event, origin.id)"
                             ></mat-slide-toggle>
                         }
-                    </div>
-                    <div class="flex-center">
-                        @if (!last) {
-                            <mat-icon>north</mat-icon>
+                    </td>
+                </tr>
+                <tr
+                    class="basic-flex-container"
+                    [ngClass]="{ 'motion-forward-path': !last, 'last-element-margin': last }"
+                >
+                    <td class="status-text move-text-up" [ngClass]="{ 'status-text-without-icon': last }">
+                        {{ origin.state }}
+                        @if (origin.state_extension) {
+                            {{ origin.state_extension }}
                         }
-                    </div>
-                }
-            </div>
-        </div>
-    }
+                    </td>
+                </tr>
+            }
+            @if (originTreeData.length > 1) {
+                <mat-paginator
+                    [hidePageSize]="true"
+                    [length]="originTreeData.length"
+                    [pageSize]="1"
+                    (page)="onPageChange($event)"
+                ></mat-paginator>
+            }
+        </table>
+    </div>
 }
 
 <!-- Amendments -->
@@ -368,14 +399,38 @@
     </div>
 }
 
+<!-- Workflow timestamp -->
+<os-motion-manage-timestamp field="workflow_timestamp" [motion]="motion" [title]="'Submission date' | translate" />
+
+<!-- Created timestamp -->
+@if (motion?.created && perms.isAllowed('change_metadata', motion)) {
+    <div>
+        <h4>{{ 'Creation date' | translate }}</h4>
+        <div>{{ motion.created | localizedDate }}</div>
+    </div>
+}
+
 <!-- motion polls -->
 <os-motion-manage-polls [hideAdd]="true" [motion]="motion" />
 
-<ng-template #meetingLink let-motion="motion">
-    »
+<ng-template #meetingLink let-motion="motion" let-showTooltip="showTooltip || false">
     @if (canAccess(motion)) {
-        <span>
-            <a [routerLink]="getUrl(motion)">
+        <span class="meeting-name-width">
+            <a
+                [matTooltip]="
+                    showTooltip
+                        ? (motion.meeting.location ? motion.meeting.location + ' · ' : '') +
+                          ({
+                              start: meetingController.parseUnixToMeetingTime(motion.meeting?.start_time * 1000),
+                              end: meetingController.parseUnixToMeetingTime(motion.meeting?.end_time * 1000)
+                          }
+                              | localizedDateRange
+                                  : 'PP'
+                                  : motion.meeting?.time_zone ?? timeZoneService.getActiveMeetingTZ())
+                        : ''
+                "
+                [routerLink]="getUrl(motion)"
+            >
                 {{ getMeetingName(motion) }}
             </a>
         </span>
