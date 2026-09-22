@@ -366,8 +366,6 @@
                     </td>
                 </tr>
             }
-        </table>
-    </div>
     @if (originTreeData.length > 1) {
         <mat-paginator
             [hidePageSize]="true"
@@ -376,6 +374,8 @@
             (page)="onPageChange($event)"
         ></mat-paginator>
     }
+        </table>
+    </div>
 }
 
 <!-- Amendments -->
