@@ -164,6 +164,10 @@
         color: mat.m2-get-color-from-palette($foreground, secondary-text);
     }
 
+    .path-line {
+        border-left: 3px solid mat.m2-get-color-from-palette($foreground, secondary-text);
+    }
+
     .mat-mdc-card-header {
         background-color: mat.m2-get-color-from-palette($background, app-bar);
     }

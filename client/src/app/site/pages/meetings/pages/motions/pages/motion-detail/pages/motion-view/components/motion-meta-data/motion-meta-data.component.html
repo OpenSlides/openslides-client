@@ -312,17 +312,18 @@
         } @else {
             <h4>{{ 'Origin' | translate }}</h4>
         }
-        <div class="origin-view">
+        <table class="origin-view">
             @for (origin of currentOriginPage(); track origin.id; let last = $last; let first = $first) {
-                <div class="basic-flex-container">
-                    <span class="indicator-icon">
+                <tr class="basic-flex-container" [class]="!last ? 'path-line' : 'hidden-path'">
+                    <td class="indicator-icon">
                         <mat-icon
+                            class="move-icon-left"
                             [color]="origin.id === motion.id ? 'accent' : ''"
                             [ngClass]="{ 'user-subtitle adjust-icon': origin.id !== motion.id }"
                         >
                             fiber_manual_record
                         </mat-icon>
-                    </span>
+                    </td>
                     <ng-container
                         *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
                     ></ng-container>
@@ -345,33 +346,33 @@
                             (change)="toggleOriginMotion($event, origin.id)"
                         ></mat-slide-toggle>
                     }
-                </div>
-                <div class="basic-flex-container" [class]="last ? 'last-element-margin' : ''">
-                    @if (first && !!origin.origin_id) {
-                        <mat-icon class="user-subtitle">north</mat-icon>
-                    } @else if (!!origin.origin_id) {
-                        <mat-icon class="user-subtitle line-path">horizontal_rule</mat-icon>
-                    } @else {
-                        <mat-icon></mat-icon>
-                    }
-                    <span class="status-text">
+                </tr>
+                <tr class="basic-flex-container" [ngClass]="{ 'path-line': !last, 'last-element-margin': last }">
+                    <td>
+                        @if (first && !!origin.origin_id) {
+                            <mat-icon class="user-subtitle move-icon-left">north</mat-icon>
+                        } @else {
+                            <mat-icon class="move-icon-left"></mat-icon>
+                        }
+                    </td>
+                    <td class="status-text">
                         {{ origin.state }}
                         @if (origin.state_extension) {
                             {{ origin.state_extension }}
                         }
-                    </span>
-                </div>
+                    </td>
+                </tr>
             }
-            @if (originTreeData.length > 1) {
-                <mat-paginator
-                    [hidePageSize]="true"
-                    [length]="originTreeData.length"
-                    [pageSize]="1"
-                    (page)="onPageChange($event)"
-                ></mat-paginator>
-            }
-        </div>
+        </table>
     </div>
+    @if (originTreeData.length > 1) {
+        <mat-paginator
+            [hidePageSize]="true"
+            [length]="originTreeData.length"
+            [pageSize]="1"
+            (page)="onPageChange($event)"
+        ></mat-paginator>
+    }
 }
 
 <!-- Amendments -->

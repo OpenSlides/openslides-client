@@ -27,7 +27,7 @@ span.referencelist {
 .basic-flex-container {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 5px;
+    padding-bottom: 5px;
 }
 
 .status-text {
@@ -57,9 +57,15 @@ span.referencelist {
     max-width: 60%;
 }
 
-.line-path {
-    transform: rotate(90deg);
-}
 .adjust-icon {
-    transform: scale(0.75);
+    transform: scale(0.8);
+}
+
+.move-icon-left {
+    margin-top: -8px;
+    margin-left: -14px;
+}
+
+.hidden-path {
+    border-left: 3px solid transparent;
 }
