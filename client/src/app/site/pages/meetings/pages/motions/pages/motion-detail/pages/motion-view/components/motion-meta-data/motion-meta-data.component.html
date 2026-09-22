@@ -316,49 +316,49 @@
             @for (origin of currentOriginPage(); track origin.id; let last = $last; let first = $first) {
                 <tr class="basic-flex-container" [class]="!last ? 'motion-forward-path' : 'hidden-path'">
                     <td class="indicator-icon">
-                        <mat-icon
-                            class="move-icon-left"
-                            [color]="origin.id === motion.id ? 'accent' : ''"
-                            [ngClass]="{ 'motion-forward-icon adjust-icon': origin.id !== motion.id }"
-                        >
-                            fiber_manual_record
-                        </mat-icon>
+                        <div class="icon-overlay">
+                            <mat-icon
+                                class="move-icon-left icon-front"
+                                [color]="origin.id === motion.id ? 'accent' : ''"
+                                [ngClass]="{ 'motion-forward-icon adjust-icon': origin.id !== motion.id }"
+                            >
+                                fiber_manual_record
+                            </mat-icon>
+                            @if (first && !!origin.origin_id) {
+                                <mat-icon class="motion-forward-icon move-icon-left icon-back">north</mat-icon>
+                            }
+                        </div>
                     </td>
-                    <ng-container
-                        *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
-                    ></ng-container>
-                    @if (origin.meeting?.locked_from_inside) {
-                        <mat-icon class="lock-icon motion-forward-icon adjust-icon">lock</mat-icon>
-                    }
-                    @if (
-                        canAccess(origin) &&
-                        motion !== origin &&
-                        (displayOriginEnabled$ | async) &&
-                        (originToggleDefault$ | async) === false &&
-                        !motion.isAmendment()
-                    ) {
-                        <mat-slide-toggle
-                            *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
-                            class="slider-margin"
-                            [aria-label]="'Activate backtracking' | translate"
-                            [checked]="originMotionStatus[origin.id]"
-                            [matTooltip]="'Activate backtracking' | translate"
-                            (change)="toggleOriginMotion($event, origin.id)"
-                        ></mat-slide-toggle>
-                    }
+                    <td class="move-text-up">
+                        <ng-container
+                            *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
+                        ></ng-container>
+                        @if (origin.meeting?.locked_from_inside) {
+                            <mat-icon class="lock-icon motion-forward-icon adjust-icon">lock</mat-icon>
+                        }
+                        @if (
+                            canAccess(origin) &&
+                            motion !== origin &&
+                            (displayOriginEnabled$ | async) &&
+                            (originToggleDefault$ | async) === false &&
+                            !motion.isAmendment()
+                        ) {
+                            <mat-slide-toggle
+                                *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
+                                class="slider-margin"
+                                [aria-label]="'Activate backtracking' | translate"
+                                [checked]="originMotionStatus[origin.id]"
+                                [matTooltip]="'Activate backtracking' | translate"
+                                (change)="toggleOriginMotion($event, origin.id)"
+                            ></mat-slide-toggle>
+                        }
+                    </td>
                 </tr>
                 <tr
                     class="basic-flex-container"
                     [ngClass]="{ 'motion-forward-path': !last, 'last-element-margin': last }"
                 >
-                    <td>
-                        @if (first && !!origin.origin_id) {
-                            <mat-icon class="motion-forward-icon move-icon-left">north</mat-icon>
-                        } @else {
-                            <mat-icon class="move-icon-left"></mat-icon>
-                        }
-                    </td>
-                    <td class="status-text">
+                    <td class="status-text move-text-up" [ngClass]="{ 'status-text-without-icon': last }">
                         {{ origin.state }}
                         @if (origin.state_extension) {
                             {{ origin.state_extension }}
