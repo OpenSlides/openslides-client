@@ -366,14 +366,14 @@
                     </td>
                 </tr>
             }
-    @if (originTreeData.length > 1) {
-        <mat-paginator
-            [hidePageSize]="true"
-            [length]="originTreeData.length"
-            [pageSize]="1"
-            (page)="onPageChange($event)"
-        ></mat-paginator>
-    }
+            @if (originTreeData.length > 1) {
+                <mat-paginator
+                    [hidePageSize]="true"
+                    [length]="originTreeData.length"
+                    [pageSize]="1"
+                    (page)="onPageChange($event)"
+                ></mat-paginator>
+            }
         </table>
     </div>
 }
