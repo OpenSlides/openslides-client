@@ -1,5 +1,4 @@
 import { Identifiable } from '@app/domain/interfaces';
-import { ViewImportedParticipant } from '@app/site/pages/meetings/pages/participants/pages/participant-import/view-models/view-participant-import';
 
 export enum BackendImportState {
     Error = `error`,
@@ -54,7 +53,7 @@ export interface BackendImportPreview {
     id: number; // id of action_worker to import
     state: BackendImportState; // May be `error`, `warning` or `done`
     headers: BackendImportHeader[];
-    rows: BackendImportIdentifiedRow[] | ViewImportedParticipant[];
+    rows: BackendImportIdentifiedRow[];
     statistics: BackendImportSummary[];
 }
 

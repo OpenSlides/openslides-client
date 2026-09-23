@@ -651,15 +651,6 @@ export class ParticipantImportListPreviewComponent extends ImportListPreview imp
     }
 
     private voteWeightChanged(item: ViewImportedParticipant, user: ViewUser): boolean {
-        console.log(
-            item.username,
-            item.voteWeight,
-            this.getShortenedDecimal(item.voteWeight),
-            user.username,
-            user.voteWeight,
-            this.getShortenedDecimal(user.voteWeight.toString()),
-            this.getShortenedDecimal(item.voteWeight) !== this.getShortenedDecimal(user.voteWeight.toString())
-        );
         if ('vote_weight' in item === false) {
             return false;
         }

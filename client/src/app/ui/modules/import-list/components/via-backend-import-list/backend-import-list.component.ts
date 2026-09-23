@@ -1,6 +1,5 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
     ContentChild,
     ContentChildren,
@@ -8,6 +7,7 @@ import {
     EventEmitter,
     inject,
     Input,
+    OnDestroy,
     OnInit,
     Output,
     QueryList,
@@ -15,20 +15,30 @@ import {
     ViewChild,
     ViewEncapsulation
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { MatTabChangeEvent } from '@angular/material/tabs';
-import { Router } from '@angular/router';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
-import { ParticipantImportCSVReloadService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-reload-file.service';
 import { BackendImportService } from '@app/ui/base/import-service';
-import { firstValueFrom, map, Observable, of } from 'rxjs';
+import { _ } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
+import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
 
+import { ScrollingTableCellDefConfig } from '../../../scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
+import {
+    BackendImportEntryObject,
+    BackendImportHeader,
+    BackendImportIdentifiedRow,
+    BackendImportPreview,
+    BackendImportState,
+    BackendImportSummary
+} from '../../definitions/backend-import-preview';
 import { ImportListHeaderDefinition } from '../../definitions/import-list-header-definition';
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';
-import { ImportListPreview } from '../../import-list-preview';
 
 export enum BackendImportPhase {
     LOADING_PREVIEW,
@@ -47,7 +57,7 @@ export enum BackendImportPhase {
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
-export class BackendImportListComponent extends ImportListPreview implements OnInit {
+export class BackendImportListComponent implements OnInit, OnDestroy {
     public readonly END_POSITION = END_POSITION;
     public readonly START_POSITION = START_POSITION;
 
@@ -70,10 +80,7 @@ export class BackendImportListComponent extends ImportListPreview implements OnI
     public modelName = ``;
 
     @Input()
-    public instructionsForImport = ``;
-
-    @Input()
-    public columnsInformation = ``;
+    public additionalInfo = ``;
 
     @Input()
     public set importer(importer: BackendImportService) {
@@ -116,6 +123,28 @@ export class BackendImportListComponent extends ImportListPreview implements OnI
 
     public get defaultColumns(): ImportListHeaderDefinition[] {
         return this._defaultColumns;
+    }
+
+    /**
+     * The actual headers of the preview, as they were delivered by the backend.
+     */
+    public get previewColumns(): BackendImportHeader[] {
+        return this._previewColumns;
+    }
+
+    /**
+     * The summary of the preview, as it was delivered by the backend.
+     */
+    public get summary(): BackendImportSummary[] {
+        return this._summary;
+    }
+
+    /**
+     * The rows of the preview, which were delivered by the backend.
+     * Affixed with fake ids for the purpose of displaying them correctly.
+     */
+    public get rows(): BackendImportIdentifiedRow[] {
+        return this._rows;
     }
 
     /**
@@ -190,9 +219,40 @@ export class BackendImportListComponent extends ImportListPreview implements OnI
     }
 
     /**
+     * Client side information on the required fields of this import.
+     * Generated from the information in the defaultColumns.
+     */
+    public get requiredFields(): string[] {
+        return this._requiredFields;
+    }
+
+    /**
+     * The Observable from which the views table will be calculated
+     */
+    public get dataSource(): Observable<BackendImportIdentifiedRow[]> {
+        return this._dataSource;
+    }
+
+    private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
+
+    private _summary: BackendImportSummary[];
+    private _rows: BackendImportIdentifiedRow[];
+    private _previewColumns: BackendImportHeader[];
+
+    private _dataSource: Observable<BackendImportIdentifiedRow[]> = of([]);
+    private _requiredFields: string[] = [];
+    private _defaultColumns: ImportListHeaderDefinition[] = [];
+
+    private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
+
+    private dialog = inject(MatDialog);
+    private translate = inject(TranslateService);
+
+    /**
      * Starts with a clean preview (removing any previously existing import previews)
      */
-    public override ngOnInit(): void {
+    public ngOnInit(): void {
+        this._importer.clearAll();
         this._requiredFields = this.createRequiredFields();
         this._importer.currentImportPhaseObservable.subscribe(phase => {
             if (phase === BackendImportPhase.LOADING_PREVIEW && this.fileInput) {
@@ -201,16 +261,19 @@ export class BackendImportListComponent extends ImportListPreview implements OnI
             this._state = phase;
         });
         this._importer.previewsObservable.subscribe(previews => {
-            this._rows = this.calculateRows(previews);
-            this.uploadButton = previews?.some(preview => preview.state === 'error') ? true : false;
             this.fillPreviewData(previews);
-            this.setHeaders({ preview: this._previewColumns });
         });
-        this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
-        this.CSVReloadService.openFileInput$.subscribe(async (newFile: Event) => {
-            this.importer.onSelectFile(newFile);
-        });
-        this.cd.detectChanges();
+        this._dataSource = this.importer.previewsObservable.pipe(
+            map(previews => this.calculateRows(previews)),
+            delay(50)
+        );
+    }
+
+    /**
+     * Resets the importer when leaving the view
+     */
+    public ngOnDestroy(): void {
+        this._importer.clearFile();
     }
 
     /**
@@ -242,10 +305,108 @@ export class BackendImportListComponent extends ImportListPreview implements OnI
     public removeSelectedFile(clearImporter = true): void {
         if (this.fileInput) {
             this.fileInput.nativeElement.value = ``;
-            this.uploadButton = true;
         }
         if (clearImporter) {
             this._importer.clearFile();
+        }
+    }
+
+    /**
+     * Gets the relevant backend header information for a property.
+     */
+    public getHeader(propertyName: string): BackendImportHeader {
+        return this._headers[propertyName]?.preview;
+    }
+
+    /**
+     * Gets the style of the column for the given property.
+     */
+    public getColumnConfig(propertyName: string): ScrollingTableCellDefConfig {
+        const defaultHeader = this._headers[propertyName]?.default;
+        const colWidth = defaultHeader?.width ?? 50;
+        const def: ScrollingTableCellDefConfig = { minWidth: Math.max(150, colWidth) };
+        if (!defaultHeader?.flexible) {
+            def.width = colWidth;
+        }
+        return def;
+    }
+
+    /**
+     * Gets the label of the column for the given property.
+     */
+    public getColumnLabel(propertyName: string): string {
+        return this._headers[propertyName]?.default?.label ?? propertyName;
+    }
+
+    /**
+     * Get the icon for the the item
+     * @param item a row or an entry with a current state
+     * @eturn the icon for the item
+     */
+    public getActionIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
+        switch (item[`state`] ?? item[`info`]) {
+            case BackendImportState.Error: // no import possible
+                return `block`;
+            case BackendImportState.Warning:
+                return `warning`;
+            case BackendImportState.New:
+                return `add`;
+            case BackendImportState.Done: // item will be updated / has been imported
+                return this._state !== BackendImportPhase.FINISHED ? `merge` : `done`;
+            case BackendImportState.Generated:
+                return `autorenew`;
+            case BackendImportState.Remove:
+                return `remove`;
+            default:
+                return `block`; // fallback: Error
+        }
+    }
+
+    public getEntryIcon(item: BackendImportEntryObject): string {
+        if (item.info === BackendImportState.Done || !item) {
+            return undefined;
+        }
+        return this.getActionIcon(item);
+    }
+
+    /**
+     * Get the correct tooltip for the item
+     * @param entry a row with a current state
+     * @eturn the tooltip for the item
+     */
+    public getRowTooltip(row: BackendImportIdentifiedRow): string {
+        switch (row.state) {
+            case BackendImportState.Error: // no import possible
+                return (
+                    this.getErrorDescription(row) ??
+                    _(`There is an unspecified error in this line, which prevents the import.`)
+                );
+            case BackendImportState.Warning:
+                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
+            case BackendImportState.New:
+                return this.translate.instant(this.modelName) + ` ` + this.translate.instant(`will be imported`);
+            case BackendImportState.Done: // item will be updated / has been imported
+                return (
+                    this.translate.instant(this.modelName) +
+                    ` ` +
+                    (this._state !== BackendImportPhase.FINISHED
+                        ? this.translate.instant(`will be updated`)
+                        : this.translate.instant(`has been imported`))
+                );
+            default:
+                return undefined;
+        }
+    }
+
+    public getWarningRowTooltip(row: BackendImportIdentifiedRow): string {
+        switch (row.state) {
+            case BackendImportState.Error: // no import possible
+                return (
+                    this.getErrorDescription(row) ??
+                    _(`There is an unspecified error in this line, which prevents the import.`)
+                );
+            default:
+                return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
         }
     }
 
@@ -290,57 +451,75 @@ export class BackendImportListComponent extends ImportListPreview implements OnI
         this.isInFullscreen = false;
     }
 
-    protected get isParticipantImport(): boolean {
-        return this.router.url.includes('participants');
-    }
-
-    protected selectedNewFile;
-
-    private CSVReloadService = inject(ParticipantImportCSVReloadService);
-
-    public constructor(
-        private cd: ChangeDetectorRef,
-        private router: Router
-    ) {
-        super();
+    /**
+     * Opens an info dialog with the given template as content.
+     */
+    public async openDialog(dialogTemplate: TemplateRef<any>): Promise<void> {
+        const ref = this.dialog.open(dialogTemplate, infoDialogSettings);
+        await firstValueFrom(ref.afterClosed());
     }
 
     /**
-     * triggers the importer's onSelectFile after a file has been chosen
+     * Returns the verbose title for a given summary title.
      */
-    public onSelectedFile(event: Event): void {
-        this._importer.onSelectFile(event);
-        if (this.fileInput.nativeElement.value) {
-            this.uploadButton = false;
-        }
+    public getSummaryPointTitle(title: string): string {
+        return this._importer.getVerboseSummaryPointTitle(title);
     }
 
-    public onDragOver(event: DragEvent): void {
-        event.preventDefault();
-        event.stopPropagation();
+    public getShortenedDecimal(decimalString: string): string {
+        while (decimalString.length && [`0`, `.`].includes(decimalString.charAt(decimalString.length - 1))) {
+            decimalString = decimalString.substring(0, decimalString.length - 1);
+        }
+        return decimalString;
     }
 
-    public onDropSuccess(event: DragEvent): void {
-        event.preventDefault();
-        event.stopPropagation();
-        const files = event.dataTransfer?.files;
-        if (!files || files.length === 0) {
-            return;
-        }
-        const droppedFile = {
-            target: {
-                files: files
+    public isString(value: any): value is string {
+        return typeof value === `string`;
+    }
+
+    private setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
+        for (const key of Object.keys(data)) {
+            for (const header of data[key] ?? []) {
+                if (!this._headers[header.property]) {
+                    this._headers[header.property] = { [key]: header };
+                } else {
+                    this._headers[header.property][key] = header;
+                }
             }
-        };
-        try {
-            this._importer.onSelectFile(droppedFile);
-            this.uploadButton = false;
-        } catch {
-            this.uploadButton = false;
         }
     }
 
-    protected showPreview(): void {
-        this.router.navigateByUrl(this.router.url.concat('/preview'));
+    private getErrorDescription(entry: BackendImportIdentifiedRow): string {
+        return entry.messages?.map(error => this.translate.instant(this._importer.verbose(error))).join(`\n `);
+    }
+
+    private fillPreviewData(previews: BackendImportPreview[]): void {
+        if (!previews || !previews.length) {
+            this._previewColumns = undefined;
+            this._summary = undefined;
+            this._rows = undefined;
+        } else {
+            this._previewColumns = (previews[0].headers ?? this._previewColumns).filter(header => !header[`is_hidden`]);
+            this._summary = previews.some(preview => preview.statistics)
+                ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
+                : [];
+            this._rows = this.calculateRows(previews);
+            this.setHeaders({ preview: this._previewColumns });
+        }
+    }
+
+    private calculateRows(previews: BackendImportPreview[]): BackendImportIdentifiedRow[] {
+        return previews?.flatMap(preview => preview.rows);
+    }
+
+    private createRequiredFields(): string[] {
+        const definitions = this.defaultColumns;
+        if (Array.isArray(definitions) && definitions.length > 0) {
+            return definitions
+                .filter(definition => definition.isRequired as boolean)
+                .map(definition => definition.property as string);
+        } else {
+            return [];
+        }
     }
 }

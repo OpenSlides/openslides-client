@@ -198,7 +198,6 @@ export abstract class ImportListPreview implements OnInit {
     }
 
     protected setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
-        console.log(data);
         for (const key of Object.keys(data)) {
             for (const header of data[key] ?? []) {
                 if (!this._headers[header.property]) {

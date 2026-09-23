@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -8,6 +8,7 @@ import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ParticipantImportListInfoDialogComponent } from '@app/site/pages/meetings/pages/participants/pages/participant-import/components/participant-import-list-info-dialog/participant-import-list-info-dialog.component';
+import { ParticipantImportCSVReloadService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-reload-file.service';
 import { BackendImportService } from '@app/ui/base/import-service';
 import { PipesModule } from '@app/ui/pipes';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -34,7 +35,10 @@ import { BackendImportPhase } from '../backend-import-list.component';
         MatIconButton
     ]
 })
-export class BackendImportParticipantListComponent {
+export class BackendImportParticipantListComponent implements OnInit {
+    @Input()
+    public modelName = '';
+
     @Input()
     public instructionsForImport = ``;
 
@@ -78,10 +82,7 @@ export class BackendImportParticipantListComponent {
     private _defaultColumns: ImportListHeaderDefinition[] = [];
     private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
     private dialog = inject(MatDialog);
-
-    protected get isParticipantImport(): boolean {
-        return this.router.url.includes('participants');
-    }
+    private CSVReloadService = inject(ParticipantImportCSVReloadService);
 
     /**
      * Observable that allows one to monitor the currenty selected file.
@@ -98,6 +99,13 @@ export class BackendImportParticipantListComponent {
     }
 
     public constructor(private router: Router) {}
+
+    public ngOnInit(): void {
+        this.importer.clearAll();
+        this.CSVReloadService.openFileInput$.subscribe(async (newFile: Event) => {
+            this.importer.onSelectFile(newFile);
+        });
+    }
 
     public isString(value: any): value is string {
         return typeof value === `string`;
