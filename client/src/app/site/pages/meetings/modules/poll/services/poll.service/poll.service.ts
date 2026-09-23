@@ -3,7 +3,6 @@ import { OptionData } from '@app/domain/models/poll/generic-poll';
 import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
 import {
     ABSTAIN_KEY,
-    CalculablePollKey,
     isPollTableData,
     NO_KEY,
     PollTableData,
@@ -13,7 +12,6 @@ import {
     VotingResult,
     YES_KEY
 } from '@app/domain/models/poll/poll-constants';
-import { ChartData, ChartDate } from '@app/site/pages/meetings/modules/poll/components/chart/chart.component';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { ThemeService } from '@app/site/services/theme.service';
@@ -22,7 +20,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 
-const PollChartBarThickness = 20;
 const PERCENT_DECIMAL_PLACES = 3;
 
 @Service()
@@ -246,64 +243,6 @@ export abstract class PollService {
     public showPercentOfValidOrCast(poll: ViewPoll): boolean {
         const base: BaseOnehundredPercentBase = poll.config?.onehundred_percent_base;
         return base === `valid` || base === `cast` || base === `entitled` || base === `entitled_present`;
-    }
-
-    public getSumTableKeys(_poll: ViewPoll): VotingResult[] {
-        return [];
-        /*
-        return [
-            {
-                vote: `votesvalid`,
-                hide: poll.votesvalid === VOTE_UNDOCUMENTED,
-                showPercent: this.showPercentOfValidOrCast(poll)
-            },
-            {
-                vote: `votesinvalid`,
-                hide: poll.votesinvalid === VOTE_UNDOCUMENTED || poll.type !== PollType.Analog,
-                showPercent: poll.config?.onehundred_percent_base === PollPercentBase.Cast
-            },
-            {
-                vote: `votescast`,
-                hide: poll.votescast === VOTE_UNDOCUMENTED || poll.type !== PollType.Analog,
-                showPercent: poll.config?.onehundred_percent_base === PollPercentBase.Cast
-            }
-        ];
-        */
-    }
-
-    public generateChartData(poll: ViewPoll): ChartData {
-        let fields = this.getPollDataFields(poll);
-        if (poll.config?.onehundred_percent_base === `yes_no` || !poll.config?.allow_abstain) {
-            fields = fields.filter(key => key === YES_KEY || key === NO_KEY);
-        }
-
-        const data: ChartData = fields
-            .map(
-                key =>
-                    ({
-                        data: this.getResultFromPoll(poll, key), // 0: option, 1: global_option
-                        label: key.toUpperCase(),
-                        backgroundColor: this.themeService.getPollColor(key),
-                        hoverBackgroundColor: this.themeService.getPollColor(key),
-                        barThickness: PollChartBarThickness,
-                        maxBarThickness: PollChartBarThickness
-                    }) as ChartDate
-            )
-            .filter(chartDate => !!chartDate.data[0] || !!chartDate.data[1]);
-
-        return data;
-    }
-
-    /**
-     * Extracts yes-no-abstain such as valid, invalids and totals from Poll and PollData-Objects
-     */
-    protected getResultFromPoll(_poll: ViewPoll, _key: CalculablePollKey): (number | undefined)[] {
-        // return (poll ? [...poll.options, poll.global_option] : []).map(option => (option ? option[key] : undefined));
-        return [];
-    }
-
-    protected getPollDataFields(_poll: ViewPoll): CalculablePollKey[] {
-        throw new Error(`Method not implemented`);
     }
 
     public isVoteDocumented(vote: number): boolean {
