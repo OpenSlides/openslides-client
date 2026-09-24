@@ -162,7 +162,9 @@ export class ParticipantImportListPreviewComponent extends ImportListPreview imp
             this._rows = this.calculateRows(previews);
             this.uploadButton = previews?.some(preview => preview.state === 'error') ? true : false;
             this._totalCountObservable = this.dataSource?.pipe(map(items => items?.length));
-            this.fillPreviewData(previews);
+            if (!(this._state === BackendImportPhase.IMPORTING) && !(this._state === BackendImportPhase.FINISHED)) {
+                this.fillPreviewData(previews);
+            }
             this.setHeaders({ preview: this._previewColumns });
         });
     }
@@ -420,7 +422,6 @@ export class ParticipantImportListPreviewComponent extends ImportListPreview imp
     }
 
     protected async importData(dialogTemplate: TemplateRef<string>, summaryDialog: TemplateRef<string>): Promise<void> {
-        this.tempPreviewsObservable.unsubscribe();
         const customOptions = {
             width: `600px`,
             disableClose: false,
@@ -544,13 +545,13 @@ export class ParticipantImportListPreviewComponent extends ImportListPreview imp
                     }
                     if (
                         item.comment !== user.comment(this.activeMeetingIdService.meetingId) &&
-                        user.comment(this.activeMeetingIdService.meetingId) &&
-                        !(item.comment === undefined)
+                        user.comment(this.activeMeetingIdService.meetingId)
                     ) {
                         changes['comment'] = {
                             old: user.comment(),
                             new: item.comment,
-                            removed: ![null, undefined].includes(user.comment()) && item.comment === undefined
+                            removed:
+                                ![null, undefined].includes(user.comment()) && [null, undefined].includes(item.comment)
                         };
                     }
                     if (item.gender !== user.gender_name && user.gender_name !== '') {

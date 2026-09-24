@@ -18,7 +18,6 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ParticipantImportService } from '../../../services';
 import { CSVEncodingOptionsService } from '../../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
 import { ParticipantImportCSVReloadService } from '../../../services/participant-import-preview.service/participant-import-preview-reload-file.service';
 
@@ -45,9 +44,6 @@ export class CSVOptions implements OnInit {
     private csvEncodingOptions = inject(CSVEncodingOptionsService);
     private CSVReload = inject(ParticipantImportCSVReloadService);
     public toggleCSVOptions: boolean = this.csvEncodingOptions.toggleCSVOptions;
-
-    @Input()
-    public csvReloadFunction: ParticipantImportService;
 
     @Input()
     public csvReloadButton: boolean;
