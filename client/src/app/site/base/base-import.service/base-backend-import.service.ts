@@ -2,13 +2,13 @@ import { Directive } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileReaderProgressEvent, ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
 import { BackendImportService } from '@app/ui/base/import-service';
+import { BackendImportPhase } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 import {
     BackendImportPreview,
     BackendImportRawPreview,
     BackendImportState,
     isBackendImportRawPreview
 } from '@app/ui/modules/import-list/definitions/backend-import-preview';
-import { BackendImportPhase } from '@app/ui/modules/import-list/import-list-preview';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa, ParseConfig } from 'ngx-papaparse';
 import { BehaviorSubject, Observable } from 'rxjs';

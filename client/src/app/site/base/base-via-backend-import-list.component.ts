@@ -1,7 +1,9 @@
 import { Directive, OnInit, ViewChild } from '@angular/core';
 import { BaseComponent } from '@app/site/base/base.component';
-import { BackendImportListComponent } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
-import { BackendImportPhase } from '@app/ui/modules/import-list/import-list-preview';
+import {
+    BackendImportListComponent,
+    BackendImportPhase
+} from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 
 import { getLongPreview, getShortPreview } from '../../infrastructure/utils/functions';
 import { BaseBackendImportService } from './base-import.service/base-backend-import.service';

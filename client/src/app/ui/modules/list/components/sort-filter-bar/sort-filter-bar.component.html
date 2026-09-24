@@ -92,9 +92,7 @@
             <button
                 mat-button
                 style="width: max-content"
-                [class.not-selected-option]=""
-                [class.selected-option]="filterMenu.opened"
-                (click)="openFilterMenu()"
+                (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()"
             >
                 <mat-icon
                     matBadgeColor="accent"
