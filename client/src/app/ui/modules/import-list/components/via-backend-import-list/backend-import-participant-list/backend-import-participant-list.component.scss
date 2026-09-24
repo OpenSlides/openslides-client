@@ -1,0 +1,76 @@
+@use 'src/assets/styles/tables.scss';
+
+:host {
+    --os-row-height: 50px;
+}
+
+.instructions {
+    color: var(--theme-accent-400);
+    margin-bottom: 12px;
+}
+
+.descriptionColumns {
+    margin-top: 13px;
+    margin-left: -20px;
+    max-width: 210px;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+button mat-label {
+    padding-right: 5px;
+}
+
+.import-file-handle {
+    display: flex;
+    align-items: center;
+    margin-left: 8px;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+.table-title-column {
+    vertical-align: top;
+}
+
+.list-field-entry {
+    margin-left: 20px;
+    margin-right: 20px;
+    display: inline-block;
+}
+
+.dropdiv {
+    width: auto;
+    height: 100px;
+    border: dotted 2px var(--theme-accent-400);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background-color: #ccc;
+    }
+
+    &:not(:hover) {
+        background-color: none;
+    }
+
+    .dropdiv-label {
+        color: var(--theme-accent-400);
+    }
+}
+
+.dropdiv.processing {
+    display: none;
+}
