@@ -905,7 +905,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Default voting type`),
                         type: `choice`,
                         choiceI18nPrefix: 'poll_visibility',
-                        choices: ['manually', 'open', 'secret', 'named'],
+                        choices: ['manually', 'named', 'open', 'secret'],
                         restrictionFn: (orgaSettings, value: any): any => {
                             const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
                             if (!isElectronicVotingEnabled && typeof value !== `string`) {
@@ -1002,7 +1002,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Default voting type`),
                         type: `choice`,
                         choiceI18nPrefix: 'poll_visibility',
-                        choices: ['manually', 'open', 'secret', 'named'],
+                        choices: ['manually', 'named', 'open', 'secret'],
                         restrictionFn: (orgaSettings, value: any): any => {
                             const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
                             if (!isElectronicVotingEnabled && typeof value !== `string`) {
@@ -1065,7 +1065,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         label: _(`Default voting type`),
                         type: `choice`,
                         choiceI18nPrefix: 'poll_visibility',
-                        choices: ['manually', 'open', 'secret', 'named'],
+                        choices: ['manually', 'named', 'open', 'secret'],
                         restrictionFn: (orgaSettings, value: any): any => {
                             const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
                             if (!isElectronicVotingEnabled && typeof value !== `string`) {

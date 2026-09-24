@@ -1,5 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
@@ -25,36 +26,36 @@ import { ViewPollOption } from '../../../../pages/polls/view-models/poll-option'
 export class PollMetaComponent {
     public poll = input.required<ViewPoll>();
 
-    public config = computed<
-        Partial<
-            ViewPollConfigApproval &
-                ViewPollConfigRatingApproval &
-                ViewPollConfigRatingScore &
-                ViewPollConfigSelection &
-                ViewPollConfigStvScottish
-        >
-    >(() => {
-        return this.poll().config || {};
+    public config = rxResource<
+        ViewPollConfigApproval &
+            ViewPollConfigRatingApproval &
+            ViewPollConfigRatingScore &
+            ViewPollConfigSelection &
+            ViewPollConfigStvScottish,
+        ViewPoll
+    >({
+        params: () => this.poll(),
+        stream: ({ params }) => params.config$
     });
 
     public hasGlobalOptionEnabled = computed<boolean>(() => {
-        return this.config().allow_nota || this.config().min_options_amount === 0;
+        return this.config.value().allow_nota || this.config.value().min_options_amount === 0;
     });
 
     public generalApprovalAllowed = computed<boolean>(() => {
-        return this.config().allow_nota && this.config().strike_out;
+        return this.config.value().allow_nota && this.config.value().strike_out;
     });
 
     public generalRejectionAllowed = computed<boolean>(() => {
-        return this.config().allow_nota && !this.config().strike_out;
+        return this.config.value().allow_nota && !this.config.value().strike_out;
     });
 
     public generalAbstainAllowed = computed<boolean>(() => {
-        return this.config().min_options_amount === 0;
+        return this.config.value().min_options_amount === 0;
     });
 
     public isListPoll = computed<boolean>(() => {
-        return this.config().collection === PollConfigApproval.COLLECTION && !!this.poll().options?.length;
+        return this.config.value().collection === PollConfigApproval.COLLECTION && !!this.poll().options?.length;
     });
 
     public isPersonPoll = computed<boolean>(() => {

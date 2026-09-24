@@ -1,14 +1,14 @@
 @switch (configType()) {
     @case ('approval') {
-        <os-poll-result-approval [poll]="poll()" />
+        <os-poll-result-approval [config]="config.value()" [poll]="poll()" />
     }
     @case ('rating_approval') {
-        <os-poll-result-rating-approval [poll]="poll()" />
+        <os-poll-result-rating-approval [config]="config.value()" [poll]="poll()" />
     }
     @case ('rating_score') {
-        <os-poll-result-rating-score [poll]="poll()" />
+        <os-poll-result-rating-score [config]="config.value()" [poll]="poll()" />
     }
     @case ('selection') {
-        <os-poll-result-selection [poll]="poll()" />
+        <os-poll-result-selection [config]="config.value()" [poll]="poll()" />
     }
 }

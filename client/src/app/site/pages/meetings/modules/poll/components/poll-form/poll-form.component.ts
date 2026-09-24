@@ -207,12 +207,13 @@ export class PollFormComponent extends BaseComponent {
     private updateData(): void {
         const data = this.data();
         if (data && this.form) {
-            if (data.entitled_group_ids !== undefined)
+            if (data.entitled_group_ids !== undefined && !this.form['entitled_group_ids']().dirty())
                 this.form['entitled_group_ids']().value.set(data.entitled_group_ids);
-            if (data.live_voting_enabled !== undefined)
+            if (data.live_voting_enabled !== undefined && !this.form['live_voting_enabled']().dirty())
                 this.form['live_voting_enabled']().value.set(!!data.live_voting_enabled);
-            if (data.title !== undefined) this.form['title']().value.set(data.title);
-            if (data.visibility !== undefined) this.form['visibility']().value.set(data.visibility);
+            if (data.title !== undefined && !this.form['title']().dirty()) this.form['title']().value.set(data.title);
+            if (data.visibility !== undefined && !this.form['visibility']().dirty())
+                this.form['visibility']().value.set(data.visibility);
             if (data.options !== undefined && !data.options.some(option => option.content_object_id))
                 this.form['options']().value.set(data.options.map(option => option.text));
             if (data.config?.method) {
