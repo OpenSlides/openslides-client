@@ -129,8 +129,8 @@
             <os-rounded-input
                 #searchField
                 iconName="manage_search"
-                placeholder="{{ 'Search' | translate }}"
                 [fullWidth]="false"
+                [placeholder]="'Search' | translate"
                 [size]="'small'"
                 [(ngModel)]="searchFieldInput"
                 (clickIcon)="toggleSearchEdit()"

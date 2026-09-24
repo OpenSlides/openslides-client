@@ -153,8 +153,8 @@
                 <div>
                     <os-icon-container
                         icon="group"
-                        iconTooltip="{{ 'Participants' | translate }}"
                         iconTooltipPosition="right"
+                        [iconTooltip]="'Participants' | translate"
                     >
                         {{ meeting.userAmount }}
                     </os-icon-container>
@@ -164,8 +164,8 @@
                 <div>
                     <os-icon-container
                         icon="assignment"
-                        iconTooltip="{{ 'Motions' | translate }}"
                         iconTooltipPosition="right"
+                        [iconTooltip]="'Motions' | translate"
                     >
                         {{ meeting.motionsAmount }}
                     </os-icon-container>

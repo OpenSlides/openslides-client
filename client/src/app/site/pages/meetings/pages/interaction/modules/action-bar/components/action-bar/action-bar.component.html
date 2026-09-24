@@ -8,7 +8,7 @@
                     animate.leave="fade-out"
                     class="action-bar-shadow background-default"
                     mat-mini-fab
-                    matTooltip="{{ 'Show conference room' | translate }}"
+                    [matTooltip]="'Show conference room' | translate"
                     (click)="maximizeCallDialog()"
                 >
                     <mat-icon class="icon-pulse" color="primary">fullscreen</mat-icon>
@@ -21,7 +21,7 @@
                 <button
                     class="action-bar-shadow background-default"
                     mat-mini-fab
-                    matTooltip="{{ canEnterTooltip | translate }}"
+                    [matTooltip]="canEnterTooltip | translate"
                     (click)="enterConferenceRoom()"
                 >
                     <mat-icon color="primary">phone</mat-icon>
@@ -30,7 +30,7 @@
                 <a
                     class="action-bar-shadow fake-disabled"
                     mat-mini-fab
-                    matTooltip="{{ cannotEnterTooltip | translate }}"
+                    [matTooltip]="cannotEnterTooltip | translate"
                     [routerLink]="['/', activeMeetingId, 'autopilot']"
                 >
                     <mat-icon color="primary">phone</mat-icon>
@@ -44,7 +44,7 @@
                 animate.leave="fade-out"
                 class="action-bar-shadow background-default"
                 mat-mini-fab
-                matTooltip="{{ 'Help desk' | translate }}"
+                [matTooltip]="'Help desk' | translate"
                 (click)="enterSupportRoom()"
             >
                 <mat-icon color="primary">help_outline</mat-icon>
@@ -57,12 +57,12 @@
                 animate.leave="fade-out"
                 class="action-bar-shadow background-default"
                 mat-mini-fab
-                matTooltip="{{ 'Give applause' | translate }}"
                 [attr.aria-hidden]="false"
                 [attr.aria-label]="('Amount of applause' | translate) + ': ' + (applauseLevel | async)"
                 [disabled]="sendsApplause | async"
                 [matBadge]="applauseLevel | async"
                 [matBadgeHidden]="(showApplauseLevel | async) === false"
+                [matTooltip]="'Give applause' | translate"
                 (click)="sendApplause()"
             >
                 <mat-icon class="svg-primary" svgIcon="clapping_hands"></mat-icon>

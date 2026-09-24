@@ -238,7 +238,7 @@
                                                 <span>
                                                     <button
                                                         mat-icon-button
-                                                        matTooltip="{{ 'Remove candidate' | translate }}"
+                                                        [matTooltip]="'Remove candidate' | translate"
                                                         (click)="removeCandidate(item)"
                                                     >
                                                         <mat-icon>clear</mat-icon>
@@ -256,8 +256,8 @@
                             @if (hasPerms('addOthers')) {
                                 <div class="search-new-speaker-form">
                                     <os-participant-search-selector
-                                        placeholder="{{ 'Select participant' | translate }}"
                                         [nonSelectableUserIds]="candidateUserIds"
+                                        [placeholder]="'Select participant' | translate"
                                         (userSelected)="addCandidate($event)"
                                     ></os-participant-search-selector>
                                 </div>

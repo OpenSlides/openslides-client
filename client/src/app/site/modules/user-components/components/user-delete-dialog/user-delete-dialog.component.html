@@ -95,7 +95,7 @@
                 @if (hasRelations(user)) {
                     <mat-icon
                         color="warn"
-                        matTooltip="{{ 'This account has relations to meetings or committees' | translate }}"
+                        [matTooltip]="'This account has relations to meetings or committees' | translate"
                     >
                         warning
                     </mat-icon>
