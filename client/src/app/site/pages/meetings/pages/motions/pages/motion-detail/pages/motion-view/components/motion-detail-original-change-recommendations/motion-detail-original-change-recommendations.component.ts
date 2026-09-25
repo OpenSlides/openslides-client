@@ -385,7 +385,7 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
 
                 lineRange.from = Math.min(newLnRange.from, lineRange.from);
                 lineRange.to = Math.max(newLnRange.to, lineRange.to);
-            } else {
+            } else if (!toLnElement.parentElement.classList.contains(`merge-before`)) {
                 // Expand selected line to deleted content prior and after the selection
                 while (this.element.querySelector(`br.os-line-break + .line-number-${lineRange.from}`)) {
                     lineRange.from--;
