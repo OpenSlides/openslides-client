@@ -10,13 +10,15 @@
 >
     <div class="references">
         <h1 aria-label="Insert/edit external link" mat-dialog-title translate>Insert/edit external link</h1>
-        <button #btn class="arrows" matIconButton>
-            @if (toggleExternalReference) {
-                <mat-icon>keyboard_arrow_up</mat-icon>
-            } @else {
-                <mat-icon>keyboard_arrow_down</mat-icon>
-            }
-        </button>
+        @if (canEmbed) {
+            <button #btn class="arrows" matIconButton>
+                @if (toggleExternalReference) {
+                    <mat-icon>keyboard_arrow_up</mat-icon>
+                } @else {
+                    <mat-icon>keyboard_arrow_down</mat-icon>
+                }
+            </button>
+        }
     </div>
 </div>
 @if (toggleExternalReference || !canEmbed) {
@@ -43,6 +45,11 @@
                     <option translate value="_blank">New window</option>
                 </select>
             </mat-form-field>
+        </div>
+        <div class="clear-button">
+            <button aria-label="Reset" color="gray" mat-icon-button translate (click)="initForm(externalLink)">
+                <mat-icon>clear</mat-icon>
+            </button>
         </div>
     </div>
 }

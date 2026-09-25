@@ -2,15 +2,15 @@ import { ChangeDetectionStrategy, Component, Inject, inject, OnInit } from '@ang
 import { FormBuilder, FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { AssignmentRepositoryService } from '@app/gateways/repositories/assignments/assignment-repository.service';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
+import { TopicRepositoryService } from '@app/gateways/repositories/topics/topic-repository.service';
+import { getAgendaListMinimalSubscriptionConfig } from '@app/site/pages/meetings/pages/agenda/agenda.subscription';
+import { getAssignmentListMinimalSubscriptionConfig } from '@app/site/pages/meetings/pages/assignments/assignments.subscription';
+import { getMotionListMinimalSubscriptionConfig } from '@app/site/pages/meetings/pages/motions/motions.subscription';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { SubscribeToConfig } from '@app/site/services/model-request.service';
 import { TranslateService } from '@ngx-translate/core';
-import { AssignmentRepositoryService } from 'src/app/gateways/repositories/assignments/assignment-repository.service';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { TopicRepositoryService } from 'src/app/gateways/repositories/topics/topic-repository.service';
-import { getAgendaListMinimalSubscriptionConfig } from 'src/app/site/pages/meetings/pages/agenda/agenda.subscription';
-import { getAssignmentListMinimalSubscriptionConfig } from 'src/app/site/pages/meetings/pages/assignments/assignments.subscription';
-import { getMotionListMinimalSubscriptionConfig } from 'src/app/site/pages/meetings/pages/motions/motions.subscription';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { SubscribeToConfig } from 'src/app/site/services/model-request.service';
 
 interface EditorLinkDialogInput {
     link?: { href: string; target?: string };
@@ -200,22 +200,27 @@ export class EditorLinkDialogComponent implements OnInit {
     /**
      * Initializes the form.
      */
-    public initForm(): void {
-        this.internalReferenceForm = new FormGroup({
-            TopicFormControl: new FormControl(this.agendaItemRepo),
-            MotionFormControl: new FormControl(this.motionItemRepo),
-            AssignmentFormControl: new FormControl(this.assignmentItemRepo)
-        });
-        this.internalReferenceForm.valueChanges.subscribe(() => {
-            const controlName = `${this.searchLists[this.selectedRepoValue]}FormControl`;
-            const selectedId = this.internalReferenceForm.get(controlName)?.value;
-            const repo = this.searchRepos[this.selectedRepoValue];
-            this.item = repo.getViewModel(selectedId);
-            const action = this.item ? 'disable' : 'enable';
-            ['extUrl', 'extText', 'extDisplayMode'].forEach(name => this.externalLink.get(name)?.[action]());
+    public initForm(externalLink?: FormGroup<any>): void {
+        const externalControls = ['extUrl', 'extText', 'extDisplayMode'];
+        if (externalLink) {
+            externalControls.forEach(name => this.externalLink.get(name).reset());
+        } else {
+            this.internalReferenceForm = new FormGroup({
+                TopicFormControl: new FormControl(this.agendaItemRepo),
+                MotionFormControl: new FormControl(this.motionItemRepo),
+                AssignmentFormControl: new FormControl(this.assignmentItemRepo)
+            });
+            this.internalReferenceForm.valueChanges.subscribe(() => {
+                const controlName = `${this.searchLists[this.selectedRepoValue]}FormControl`;
+                const selectedId = this.internalReferenceForm.get(controlName)?.value;
+                const repo = this.searchRepos[this.selectedRepoValue];
+                this.item = repo.getViewModel(selectedId);
+                const action = this.item ? 'disable' : 'enable';
+                externalControls.forEach(name => this.externalLink.get(name)?.[action]());
 
-            this.addReference();
-        });
+                this.addReference();
+            });
+        }
     }
 
     /**
