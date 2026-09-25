@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
+import { MEETING_PDF_EXPORT_HEADING_STYLES } from '@app/domain/models/meetings/meeting.constants';
 import { Content, ContentColumns } from 'pdfmake/interfaces';
-import { MEETING_PDF_EXPORT_HEADING_STYLES } from 'src/app/domain/models/meetings/meeting.constants';
 
 export interface ChildNodeParagraphPayload {
     child: Element;
@@ -28,9 +28,7 @@ export interface CreateSpecificParagraphPayload {
  * const dd = htmlToPdfService.convertHtml('<h3>Hello World!</h3>');
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class HtmlToPdfService {
     /**
      * Normal line height for paragraphs
@@ -313,12 +311,20 @@ export class HtmlToPdfService {
      */
     protected createSpanParagraph(data: CreateSpecificParagraphPayload): any {
         const children = this.parseChildren(data.element, data.styles);
+
         const newParagraph = {
             ...this.create(`text`),
             ...this.computeStyle(data.styles)
         };
 
-        newParagraph.text = children;
+        if (data.classes?.includes(`spacer`)) {
+            const lines = +data.element.getAttribute(`data-lines`) || 0;
+            if (lines - 1 > 0) {
+                newParagraph.text = `\n`.repeat(lines - 1);
+            }
+        } else {
+            newParagraph.text = children;
+        }
         return newParagraph;
     }
 

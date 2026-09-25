@@ -1,4 +1,4 @@
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id } from '@app/domain/definitions/key-types';
 
 import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
 import { HttpStream } from '../http/http-stream';
@@ -37,7 +37,6 @@ export class ICCStream extends HttpStream {
 
     public removeUser(): void {
         this.users--;
-        console.log(this.users);
         if (this.users <= 0) {
             this.abort();
         }

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, EventEmitter, OnInit, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, inject, OnInit, Output } from '@angular/core';
 
 export interface ElementSize {
     height: number;
@@ -26,7 +26,7 @@ export class ResizedDirective implements OnInit {
      */
     private oldHeight: number | null = null;
 
-    public constructor(private element: ElementRef) {}
+    private element = inject(ElementRef);
 
     /**
      * Inits the ResizeSensor. triggers initial size change.

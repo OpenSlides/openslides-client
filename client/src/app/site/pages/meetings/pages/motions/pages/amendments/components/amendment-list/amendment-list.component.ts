@@ -1,15 +1,14 @@
-import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { ItemTypeChoices } from '@app/domain/models/agenda/agenda-item';
+import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { ProjectableListComponent } from '@app/site/pages/meetings/modules/meetings-component-collector/projectable-list/components/projectable-list/projectable-list.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, switchMap } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { BaseMeetingListViewComponent } from 'src/app/site/pages/meetings/base/base-meeting-list-view.component';
-import { ProjectableListComponent } from 'src/app/site/pages/meetings/modules/meetings-component-collector/projectable-list/components/projectable-list/projectable-list.component';
 
 import { ChangeRecoMode } from '../../../../../../../../../domain/models/motions/motions.constants';
 import { MotionMultiselectService } from '../../../../components/motion-multiselect/services/motion-multiselect.service';
-import { LineNumberingService } from '../../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
 import { AMENDMENT_LIST_SUBSCRIPTION } from '../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
@@ -17,7 +16,7 @@ import { MotionPdfExportService } from '../../../../services/export/motion-pdf-e
 import { AmendmentListFilterService } from '../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
 import { AmendmentListSortService } from '../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { ViewMotion } from '../../../../view-models';
+import { ViewMotion } from '../../../../view-models/view-motion';
 
 const AMENDMENT_LIST_STORAGE_INDEX = `amendment_list`;
 
@@ -26,6 +25,7 @@ const AMENDMENT_LIST_STORAGE_INDEX = `amendment_list`;
     templateUrl: `./amendment-list.component.html`,
     styleUrls: [`./amendment-list.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMotion> implements OnInit {
@@ -68,7 +68,6 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
         public motionMultiSelectService: MotionMultiselectService,
         public amendmentSortService: AmendmentListSortService,
         public amendmentFilterService: AmendmentListFilterService,
-        private lineNumberingService: LineNumberingService,
         private pdfExport: MotionPdfExportService
     ) {
         super();
@@ -157,7 +156,7 @@ export class AmendmentListComponent extends BaseMeetingListViewComponent<ViewMot
     private getAmendmentDiffLines(amendment: ViewMotion): string {
         const diffLines = amendment.getAmendmentParagraphLines(ChangeRecoMode.Changed);
         if (diffLines.length) {
-            return diffLines.map(diffLine => this.lineNumberingService.stripLineNumbers(diffLine.text)).join(`[...]`);
+            return diffLines.map(diffLine => amendment.services().ln.stripLineNumbers(diffLine.text)).join(`[...]`);
         } else {
             return amendment.text;
         }

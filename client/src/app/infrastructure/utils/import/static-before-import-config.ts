@@ -1,5 +1,5 @@
+import { Ids } from '@app/domain/definitions/key-types';
 import { Observable } from 'rxjs';
-import { Ids } from 'src/app/domain/definitions/key-types';
 
 import { SideImportHandlerConfig } from './side-import-handler-config';
 

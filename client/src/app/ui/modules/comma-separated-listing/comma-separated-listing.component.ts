@@ -33,6 +33,4 @@ export class CommaSeparatedListingComponent<T = unknown> {
     public get shortenedList(): T[] {
         return this.ellipsed ? this.list.slice(0, this.showElementsAmount) : this.list;
     }
-
-    public constructor() {}
 }

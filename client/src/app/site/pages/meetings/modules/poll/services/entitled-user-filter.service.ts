@@ -1,17 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { BaseFilterListService, OsFilter } from '@app/site/base/base-filter.service';
+import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { _ } from '@ngx-translate/core';
-import { BaseFilterListService, OsFilter } from 'src/app/site/base/base-filter.service';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
-import { PollServiceModule } from '../services/poll-service.module';
-
-@Injectable({
-    providedIn: PollServiceModule
-})
+@Service()
 export class EntitledUsersListFilterService extends BaseFilterListService<any> {
     protected storageKey = `EntitledUsersEntry`;
 
-    public constructor(store: ActiveFiltersService) {
+    public constructor() {
+        const store = inject(ActiveFiltersService);
         super(store);
     }
 

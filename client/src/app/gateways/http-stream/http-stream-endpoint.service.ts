@@ -1,16 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { HttpMethod } from '../../infrastructure/definitions/http';
 import { HttpService } from '../http.service';
 import { EndpointConfiguration } from './endpoint-configuration';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class HttpStreamEndpointService {
     private endpointConfigurations: Record<string, EndpointConfiguration> = {};
 
-    public constructor(private http: HttpService) {}
+    private http = inject(HttpService);
 
     public registerEndpoint(name: string, configuration: EndpointConfiguration): void;
     public registerEndpoint(name: string, url: string, healthUrl: string, method: HttpMethod): void;

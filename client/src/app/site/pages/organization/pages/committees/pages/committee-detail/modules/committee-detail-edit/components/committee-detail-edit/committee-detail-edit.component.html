@@ -44,7 +44,7 @@
                     </os-repo-search-selector>
                 </mat-form-field>
                 <mat-form-field>
-                    <mat-label>{{ 'Committee managers' | translate }}</mat-label>
+                    <mat-label>{{ 'Committee admin' | translate }}</mat-label>
                     <os-account-search-selector
                         formControlName="manager_ids"
                         [committeeId]="committeeId"
@@ -86,7 +86,6 @@
                         formControlName="parent_id"
                         [disableOptionWhenFn]="getDisableOptionForCommitteeParentFn()"
                         [includeNone]="isOrgaManager && isCreateView"
-                        [multiple]="false"
                         [repo]="committeeRepo"
                         [required]="!isOrgaManager && isCreateView"
                         [showChips]="false"

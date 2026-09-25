@@ -1,13 +1,13 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET } from 'src/app/domain/fieldsets/misc';
-import { MeetingUserFieldsets } from 'src/app/domain/fieldsets/user';
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
+import { Id } from '@app/domain/definitions/key-types';
+import { FULL_FIELDSET } from '@app/domain/fieldsets/misc';
+import { MeetingUserFieldsets } from '@app/domain/fieldsets/user';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 
 import { listOfSpeakersSpeakerCountSubscription } from '../agenda/agenda.subscription';
 import { pollModelRequest } from '../polls/polls.subscription';
-import { ViewMotionWorkflow } from './modules';
-import { ViewMotion } from './view-models';
+import { ViewMotionWorkflow } from './modules/workflows/view-models/view-motion-workflow';
+import { ViewMotion } from './view-models/view-motion';
 
 export const AMENDMENT_LIST_SUBSCRIPTION = `amendment_list`;
 export const MOTION_ADDITIONAL_DETAIL_SUBSCRIPTION = `motion_additional_detail`;
@@ -65,6 +65,7 @@ export const getMotionListSubscriptionConfig: SubscriptionConfigGenerator = (id:
                     `additional_submitter`,
                     `tag_ids`,
                     `title`,
+                    `diff_version`,
                     `identical_motion_ids`
                 ],
                 follow: [
@@ -186,7 +187,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
                 follow: [{ idField: `mediafile_id`, fieldset: FULL_FIELDSET }]
             },
             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
-            { idField: `lead_motion_id`, fieldset: [`text`] },
+            { idField: `lead_motion_id`, fieldset: [`diff_version`, `text`] },
             {
                 idField: `amendment_ids`,
                 fieldset: [`text`, `modified_final_version`, `amendment_paragraphs`, `marked_forwarded`],
@@ -223,6 +224,7 @@ export const getMotionDetailSubscriptionConfig: SubscriptionConfigGenerator = (.
             }
         ],
         fieldset: [
+            `diff_version`,
             `workflow_timestamp`,
             `reason`,
             `text`,
@@ -355,7 +357,7 @@ export const getAmendmentListSubscriptionConfig: SubscriptionConfigGenerator = (
                         fieldset: [`text`, `amendment_paragraphs`],
                         follow: [
                             { idField: `change_recommendation_ids`, fieldset: FULL_FIELDSET },
-                            { idField: `lead_motion_id`, fieldset: [`text`, `modified_final_version`] }
+                            { idField: `lead_motion_id`, fieldset: [`diff_version`, `text`, `modified_final_version`] }
                         ]
                     }
                 ]

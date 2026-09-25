@@ -1,5 +1,6 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
+    ChangeDetectionStrategy,
     Component,
     ContentChild,
     ContentChildren,
@@ -10,8 +11,8 @@ import {
     TemplateRef
 } from '@angular/core';
 import { MatTab } from '@angular/material/tabs';
+import { ViewPortService } from '@app/site/services/view-port.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
 
 import { VerticalTabGroupContentState } from '../../definitions';
 import { VerticalTabGroupLabelHeaderDirective } from '../../directives/vertical-tab-group-label-header.directive';
@@ -20,6 +21,7 @@ import { VerticalTabGroupLabelHeaderDirective } from '../../directives/vertical-
     selector: `os-vertical-tab-group`,
     templateUrl: `./vertical-tab-group.component.html`,
     styleUrls: [`./vertical-tab-group.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class VerticalTabGroupComponent {

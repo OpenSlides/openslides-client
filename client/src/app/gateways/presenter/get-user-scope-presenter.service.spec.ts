@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { UserScope } from 'src/app/site/services/user.service';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { UserScope } from '@app/site/services/user.service';
 
 import { GetUserScopePresenterService } from './get-user-scope-presenter.service';
 import { Presenter } from './presenter';

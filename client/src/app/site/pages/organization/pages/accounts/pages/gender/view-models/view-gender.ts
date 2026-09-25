@@ -1,7 +1,7 @@
-import { Gender } from 'src/app/domain/models/gender/gender';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
+import { Gender } from '@app/domain/models/gender/gender';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
 
 export class ViewGender extends BaseViewModel<Gender> {
     public static readonly COLLECTION = Gender.COLLECTION;

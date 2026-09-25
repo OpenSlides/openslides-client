@@ -1,12 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { djb2hash } from '@app/infrastructure/utils';
+import { replaceHtmlEntities } from '@app/infrastructure/utils/dom-helpers';
 import { TranslateService } from '@ngx-translate/core';
-import { HtmlDiff } from '@openslides/motion-diff';
-import { djb2hash } from 'src/app/infrastructure/utils';
-import { replaceHtmlEntities } from 'src/app/infrastructure/utils/dom-helpers';
+import { DiffCompat, HtmlDiff, VERSION } from '@openslides/motion-diff';
 
-import { DiffCache, DiffLinesInParagraph, ExtractedContent, LineRange } from '../../../../definitions';
-import { ViewUnifiedChange } from '../../view-models';
-import { LineNumberedString } from '../line-numbering.service';
+import { DiffLinesInParagraph, ExtractedContent, LineRange } from '../../../../definitions';
+import { DiffCache } from '../../../../definitions/cache';
+import { ViewUnifiedChange } from '../../view-models/view-unified-change';
+import { DIFF_VERSION } from '../diff-factory.service';
+import { LineNumberedString } from '../line-numbering.service/line-numbering.service';
 
 /**
  * Functionality regarding diffing, merging and extracting line ranges.
@@ -72,13 +74,21 @@ import { LineNumberedString } from '../line-numbering.service';
  * const merged = this.diffService.replaceLines(lineNumberedText, '<p>Replaced paragraph</p>', 1, 1);
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionDiffService {
     private diffCache = new DiffCache();
+    private htmlDiff: typeof HtmlDiff;
 
-    public constructor(private translate: TranslateService) {}
+    private translate = inject(TranslateService);
+
+    public constructor() {
+        const diffVersion = inject(DIFF_VERSION);
+        if (diffVersion === VERSION) {
+            this.htmlDiff = HtmlDiff;
+        } else {
+            this.htmlDiff = DiffCompat.getForVersion(diffVersion || `0.0.0`)[1];
+        }
+    }
 
     /**
      * Returns the HTML snippet between two given line numbers.
@@ -124,7 +134,7 @@ export class MotionDiffService {
             return cached;
         }
 
-        const extractedRange = HtmlDiff.extractRangeByLineNumbers(html, fromLine, toLine);
+        const extractedRange = this.htmlDiff.extractRangeByLineNumbers(html, fromLine, toLine);
         this.diffCache.put(cacheKey, extractedRange);
 
         return extractedRange;
@@ -137,7 +147,7 @@ export class MotionDiffService {
      * @param {ExtractedContent} diff
      */
     public formatDiff(diff: ExtractedContent): string {
-        return HtmlDiff.formatDiff(diff);
+        return this.htmlDiff.formatDiff(diff);
     }
 
     /**
@@ -157,7 +167,7 @@ export class MotionDiffService {
             return cached;
         }
 
-        const range = HtmlDiff.detectAffectedLineRange(diffHtml);
+        const range = this.htmlDiff.detectAffectedLineRange(diffHtml);
         this.diffCache.put(cacheKey, range);
         return range;
     }
@@ -169,8 +179,8 @@ export class MotionDiffService {
      * @param {string} html
      * @returns {string}
      */
-    public diffHtmlToFinalText(html: string): string {
-        return HtmlDiff.diffHtmlToFinalText(html);
+    public diffHtmlToFinalText(html: string, keepLineNumbers = false): string {
+        return this.htmlDiff.diffHtmlToFinalText(html, keepLineNumbers);
     }
 
     /**
@@ -187,7 +197,7 @@ export class MotionDiffService {
      * @param {number} toLine
      */
     public replaceLines(oldHtml: string, newHTML: string, fromLine: number, toLine: number): string {
-        return HtmlDiff.replaceLines(oldHtml, newHTML, fromLine, toLine);
+        return this.htmlDiff.replaceLines(oldHtml, newHTML, fromLine, toLine);
     }
 
     /**
@@ -212,30 +222,21 @@ export class MotionDiffService {
             return cached;
         }
 
-        const diff = HtmlDiff.diff(htmlOld, htmlNew, lineLength, firstLineNumber);
+        const diff = this.htmlDiff.diff(htmlOld, htmlNew, lineLength, firstLineNumber);
         this.diffCache.put(cacheKey, diff);
 
         return diff;
     }
 
     public readdOsSplit(diff: string, versions: string[], before = false): string {
-        return HtmlDiff.readdOsSplit(diff, versions, before);
+        return this.htmlDiff.readdOsSplit(diff, versions, before);
     }
 
     public changeHasCollissions(change: ViewUnifiedChange, changes: ViewUnifiedChange[]): boolean {
-        return HtmlDiff.changeHasCollissions(
+        return this.htmlDiff.changeHasCollissions(
             this.convertViewUnifiedChange(change),
             this.convertViewUnifiedChanges(changes)
         );
-    }
-
-    public sortChangeRequests(changes: ViewUnifiedChange[]): ViewUnifiedChange[] {
-        return changes.sort((change1, change2): number => {
-            if (change1.getIdentifier() === change2.getIdentifier()) {
-                return change1.getIdentifier() < change2.getIdentifier() ? -1 : 1;
-            }
-            return change1.getLineFrom() - change2.getLineFrom();
-        });
     }
 
     /**
@@ -256,7 +257,7 @@ export class MotionDiffService {
         highlightLine?: number,
         firstLine = 1
     ): string {
-        return HtmlDiff.getTextWithChanges(
+        return this.htmlDiff.getTextWithChanges(
             motionHtml,
             this.convertViewUnifiedChanges(changes),
             lineLength,
@@ -270,13 +271,13 @@ export class MotionDiffService {
         html: string,
         formatter: (el: HTMLDivElement, type: string, identifier: string, title: string, changeId: string) => void
     ): string {
-        const frag = HtmlDiff.htmlToFragment(html);
+        const frag = this.htmlDiff.htmlToFragment(html);
 
         frag.querySelectorAll(`[data-change-is-colliding]`).forEach((el: HTMLElement): void => {
             formatter.bind(this)(el as HTMLDivElement);
         });
 
-        return HtmlDiff.fragmentToHtml(frag);
+        return this.htmlDiff.fragmentToHtml(frag);
     }
 
     public formatOsCollidingChanges_wysiwyg_cb(el: HTMLDivElement): void {
@@ -387,7 +388,7 @@ export class MotionDiffService {
         changeRecos?: ViewUnifiedChange[]
     ): DiffLinesInParagraph | null {
         const changes = this.convertViewUnifiedChanges(changeRecos || []);
-        return HtmlDiff.getAmendmentParagraphsLines(paragraphNo, origText, newText, lineLength, changes);
+        return this.htmlDiff.getAmendmentParagraphsLines(paragraphNo, origText, newText, lineLength, changes);
     }
 
     /**
@@ -424,26 +425,7 @@ export class MotionDiffService {
         lineLength: number,
         highlight?: number
     ): string {
-        const cacheKey =
-            `getChangeDiff` +
-            lineLength +
-            ` ` +
-            djb2hash(html) +
-            ` ` +
-            djb2hash(change.getChangeNewText()) +
-            ` ` +
-            change.getChangeId() +
-            ` ` +
-            change.getChangeType();
-        const cached = this.diffCache.get(cacheKey);
-        if (cached) {
-            return cached;
-        }
-
-        const diff = HtmlDiff.getChangeDiff(html, this.convertViewUnifiedChange(change), lineLength, highlight);
-        this.diffCache.put(cacheKey, diff);
-
-        return diff;
+        return this.htmlDiff.getChangeDiff(html, this.convertViewUnifiedChange(change), lineLength, highlight);
     }
 
     /**
@@ -463,7 +445,7 @@ export class MotionDiffService {
         highlight?: number,
         lineRange?: LineRange
     ): string {
-        return HtmlDiff.getTextRemainderAfterLastChange(
+        return this.htmlDiff.getTextRemainderAfterLastChange(
             motionHtml,
             this.convertViewUnifiedChanges(changes),
             lineLength,
@@ -485,35 +467,10 @@ export class MotionDiffService {
         motionText: LineNumberedString,
         lineRange: LineRange,
         lineNumbers: boolean,
-        lineLength: number,
+        lineLength?: number,
         highlightedLine?: number
     ): string {
-        const cacheKey =
-            `extractMotionLineRange ` +
-            lineLength +
-            ` ` +
-            lineNumbers +
-            ` ` +
-            lineRange.from +
-            ` ` +
-            lineRange.to +
-            ` ` +
-            djb2hash(motionText);
-        const cached = this.diffCache.get(cacheKey);
-        if (cached) {
-            return cached;
-        }
-
-        const extractedLineRange = HtmlDiff.extractMotionLineRange(
-            motionText,
-            lineRange,
-            lineNumbers,
-            lineLength,
-            highlightedLine
-        );
-        this.diffCache.put(cacheKey, extractedLineRange);
-
-        return extractedLineRange;
+        return this.htmlDiff.extractMotionLineRange(motionText, lineRange, lineNumbers, lineLength, highlightedLine);
     }
 
     private convertViewUnifiedChanges(changes: ViewUnifiedChange[]): HtmlDiff.UnifiedChange[] {

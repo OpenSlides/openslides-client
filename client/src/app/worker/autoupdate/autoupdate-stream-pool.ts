@@ -1,4 +1,4 @@
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id } from '@app/domain/definitions/key-types';
 
 import { ModelRequest } from '../../domain/interfaces/model-request';
 import { WorkerHttpAuth } from '../http/auth';

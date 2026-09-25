@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Subject } from 'rxjs';
-
-import { MotionDetailServiceModule } from '../motion-detail-service.module';
 
 export enum ModifiedFinalVersionAction {
     CANCEL = `cancel`,
@@ -9,9 +7,7 @@ export enum ModifiedFinalVersionAction {
     SAVE = `save`
 }
 
-@Injectable({
-    providedIn: MotionDetailServiceModule
-})
+@Service()
 export class MotionDetailViewService {
     public readonly modifiedFinalVersionActionSubject = new Subject<ModifiedFinalVersionAction>();
 }

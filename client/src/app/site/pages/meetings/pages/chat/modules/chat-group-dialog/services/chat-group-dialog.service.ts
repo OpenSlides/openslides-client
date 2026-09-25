@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Ids } from 'src/app/domain/definitions/key-types';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+import { Ids } from '@app/domain/definitions/key-types';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
-import { ChatGroupDialogModule } from '../chat-group-dialog.module';
 import { ChatGroupDialogComponent } from '../components/chat-group-dialog/chat-group-dialog.component';
 
 export interface ChatGroupDialogData {
@@ -19,9 +18,7 @@ interface ChatGroupDialogResult {
     write_group_ids: Ids;
 }
 
-@Injectable({
-    providedIn: ChatGroupDialogModule
-})
+@Service()
 export class ChatGroupDialogService extends BaseDialogService<
     ChatGroupDialogComponent,
     ChatGroupDialogData,

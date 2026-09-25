@@ -1,5 +1,4 @@
-import { _ } from '@ngx-translate/core';
-import { DetailNavigable } from 'src/app/domain/interfaces';
+import { DetailNavigable } from '@app/domain/interfaces';
 import {
     PollClassType,
     PollClassTypeVerbose,
@@ -12,15 +11,16 @@ import {
     PollType,
     PollTypeVerbose,
     VOTE_MAJORITY
-} from 'src/app/domain/models/poll';
-import { Poll } from 'src/app/domain/models/poll/poll';
-import { PROJECTIONDEFAULT, ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { ViewOption } from 'src/app/site/pages/meetings/pages/polls';
-import { BaseProjectableViewModel, ProjectionBuildDescriptor } from 'src/app/site/pages/meetings/view-models';
-import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+} from '@app/domain/models/poll';
+import { Poll } from '@app/domain/models/poll/poll';
+import { PROJECTIONDEFAULT, ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { ViewOption } from '@app/site/pages/meetings/pages/polls';
+import { BaseProjectableViewModel, ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
+import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { _ } from '@ngx-translate/core';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 import { SlideOptions } from '../../../view-models/slide-options';

@@ -1,5 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { langToTimeLocale } from '@app/infrastructure/utils';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { TranslateService } from '@ngx-translate/core';
 import * as cs from 'date-fns/locale/cs';
 import * as de from 'date-fns/locale/de';
@@ -7,8 +9,6 @@ import * as enUS from 'date-fns/locale/en-US';
 import * as es from 'date-fns/locale/es';
 import * as ita from 'date-fns/locale/it';
 import * as ru from 'date-fns/locale/ru';
-import { langToTimeLocale } from 'src/app/infrastructure/utils';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
 
 import { LocalizedDateRangePipe } from './localized-date-range.pipe';
 

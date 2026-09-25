@@ -1,18 +1,18 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
+import { Id } from '@app/domain/definitions/key-types';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
 import {
     getProjectorListMinimalSubscriptionConfig,
     PROJECTOR_LIST_MINIMAL_SUBSCRIPTION
-} from 'src/app/site/pages/meetings/pages/projectors/projectors.subscription';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
+} from '@app/site/pages/meetings/pages/projectors/projectors.subscription';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import {
     isProjectionBuildDescriptor,
+    MultiProjectionBuildDescriptor,
     ProjectionBuildDescriptor
-} from 'src/app/site/pages/meetings/view-models/projection-build-descriptor';
+} from '@app/site/pages/meetings/view-models/projection-build-descriptor';
 import {
     isSlideChoiceOption,
     isSlideDecisionOption,
@@ -20,8 +20,9 @@ import {
     SlideDecisionOption,
     SlideOption,
     SlideOptions
-} from 'src/app/site/pages/meetings/view-models/slide-options';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
+} from '@app/site/pages/meetings/view-models/slide-options';
+import { ModelRequestService } from '@app/site/services/model-request.service';
+import { Subscription } from 'rxjs';
 
 import { ProjectionDialogReturnType } from '../../definitions';
 
@@ -29,12 +30,14 @@ export interface ProjectionDialogConfig {
     descriptor: ProjectionBuildDescriptor;
     allowReferenceProjector: boolean;
     projector?: ViewProjector;
+    hideMainButton?: boolean;
 }
 
 @Component({
     selector: `os-projection-dialog`,
     templateUrl: `./projection-dialog.component.html`,
     styleUrls: [`./projection-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectionDialogComponent implements OnInit, OnDestroy {
@@ -43,7 +46,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     public optionValues: any = {};
     public options!: SlideOptions;
     private _descriptor: ProjectionBuildDescriptor;
-    public get descriptor(): ProjectionBuildDescriptor {
+    public get descriptor(): ProjectionBuildDescriptor | MultiProjectionBuildDescriptor {
         if (this._descriptor.stableToggle && this.optionValues) {
             return Object.assign({}, this._descriptor, {
                 stable: this.optionValues[this._descriptor.stableToggle]
@@ -64,6 +67,8 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
     private currentProjectionOptions: Record<string, any> = {};
     private _projectorSubscription: string;
     private _subscriptions: Subscription[] = [];
+
+    public hideMainButton = false;
 
     public constructor(
         public dialogRef: MatDialogRef<ProjectionDialogComponent, ProjectionDialogReturnType>,
@@ -86,6 +91,9 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
             if (projections.length === 1) {
                 this.currentProjectionOptions = projections[0].options || {};
             }
+        }
+        if (data && !isProjectionBuildDescriptor(data)) {
+            this.hideMainButton = data.hideMainButton;
         }
     }
 
@@ -127,13 +135,15 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
                 }
             }
 
-            // Set option defaults
-            this.descriptor?.slideOptions?.forEach(option => {
-                this.optionValues[option.key] = this.currentProjectionOptions[option.key] || option.default;
-            });
+            if (isProjectionBuildDescriptor(this.descriptor)) {
+                // Set option defaults
+                this.descriptor?.slideOptions?.forEach(option => {
+                    this.optionValues[option.key] = this.currentProjectionOptions[option.key] || option.default;
+                });
 
-            if (this.descriptor) {
-                this.options = this.descriptor.slideOptions!;
+                if (this.descriptor) {
+                    this.options = this.descriptor.slideOptions!;
+                }
             }
 
             this._subscriptions.push(
@@ -181,7 +191,7 @@ export class ProjectionDialogComponent implements OnInit, OnDestroy {
 
     public onAddToPreview(): void {
         this.dialogRef.close({
-            action: `addToPreview`,
+            action: isProjectionBuildDescriptor(this.descriptor) ? `addToPreview` : `bulkAddToPreview`,
             resultDescriptor: this.descriptor,
             projectors: this.selectedProjectors.map(id => this.projectors.find(p => p.id === id)).filter(p => p),
             options: this.optionValues

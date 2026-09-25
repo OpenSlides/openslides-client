@@ -1,8 +1,8 @@
 import { _ } from '@ngx-translate/core';
 
-import { AgendaItemAction } from '../repositories/agenda';
-import { MeetingAction } from '../repositories/meetings';
-import { MotionAction } from '../repositories/motions';
+import { AgendaItemAction } from '../repositories/agenda/agenda-item.action';
+import { MeetingAction } from '../repositories/meetings/meeting-action';
+import { MotionAction } from '../repositories/motions/motion-repository.service/motion.action';
 import { UserAction } from '../repositories/users/user-action';
 
 export class MapError {
@@ -53,13 +53,13 @@ const MeetingCreateErrorMap: ErrorMap = new ErrorMap([
 const MeetingArchiveErrorMap: ErrorMap = new ErrorMap([
     [
         /Cannot archive meeting with active speakers\./,
-        _(`Cannot archive meeting with active speakers. Check who is speaking in > Participants > Contributions.`)
+        _(`Cannot archive meeting with active speakers. Check who is speaking in > [Participants] > [Contributions].`)
     ],
     [/Cannot archive meeting with active polls\./, _(`Cannot archive meeting with active polls.`)],
     [
         /Cannot archive meeting with active speakers and polls\./,
         _(
-            `Cannot archive meeting with active speakers and polls. Check who is speaking in > Participants > Contributions.`
+            `Cannot archive meeting with active speakers and polls. Check who is speaking in > [Participants] > [Contributions].`
         )
     ]
 ]);

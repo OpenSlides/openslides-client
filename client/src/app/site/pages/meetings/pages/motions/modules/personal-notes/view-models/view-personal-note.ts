@@ -1,4 +1,4 @@
-import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { BaseHasMeetingUserViewModel } from '@app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { PersonalNote } from '../../../../../../../../domain/models/motions/personal-note';
 import { BaseViewModel, ViewModelRelations } from '../../../../../../../base/base-view-model';

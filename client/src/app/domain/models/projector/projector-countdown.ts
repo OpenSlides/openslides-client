@@ -1,4 +1,4 @@
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id } from '@app/domain/definitions/key-types';
 
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';

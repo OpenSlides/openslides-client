@@ -11,19 +11,19 @@ import {
 } from '@angular/core';
 import { AbstractControl, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { _ } from '@ngx-translate/core';
-import { auditTime } from 'rxjs';
 import {
     PROJECTIONDEFAULT,
     PROJECTIONDEFAULT_KEYS,
     PROJECTIONDEFAULT_VERBOSE
-} from 'src/app/domain/models/projector/projection-default';
-import { Projector } from 'src/app/domain/models/projector/projector';
-import { HttpService } from 'src/app/gateways/http.service';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+} from '@app/domain/models/projector/projection-default';
+import { Projector } from '@app/domain/models/projector/projector';
+import { HttpService } from '@app/gateways/http.service';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { _ } from '@ngx-translate/core';
+import { auditTime } from 'rxjs';
 
 const ASPECT_RATIO_FORM_KEY = `aspectRatio`;
 

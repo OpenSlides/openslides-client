@@ -1,4 +1,4 @@
-import { HasSequentialNumber } from 'src/app/domain/interfaces';
+import { HasSequentialNumber } from '@app/domain/interfaces';
 
 import { Fqid, Id } from '../../definitions/key-types';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';

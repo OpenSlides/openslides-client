@@ -1,4 +1,4 @@
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
 
 import { ORGANIZATION_ID } from '../../../../services/organization.service';
 import { ViewOrganization } from '../../../../view-models/view-organization';

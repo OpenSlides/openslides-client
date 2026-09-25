@@ -1,4 +1,9 @@
 <mat-toolbar class="global-headbar background-headbar">
+    @if (showCommitteeLink) {
+        <a aria-label="Committee" class="adjust-icon" mat-icon-button role="button" [routerLink]="committeeLink">
+            <mat-icon [matTooltip]="'Go to committee' | translate">layers</mat-icon>
+        </a>
+    }
     <div class="one-line display-name">
         {{ displayName }}
     </div>
@@ -6,16 +11,21 @@
     <div class="flex-center">
         <!-- Button to open the global search -->
         @if (isSearchEnabled) {
-            <button aria-label="Global Search" mat-icon-button role="Search" (click)="openSearch()">
-                <mat-icon>search</mat-icon>
+            <button
+                mat-icon-button
+                role="Search"
+                [attr.aria-label]="'Global search' | translate"
+                (click)="openSearch()"
+            >
+                <mat-icon [matTooltip]="'Global search' | translate">search</mat-icon>
             </button>
         }
         <!-- Button to view the own account -->
         <os-account-button></os-account-button>
         @if (showLongpollingIcon) {
             <div class="fake-fab-button flex-center">
-                <div class="longpolling-adjust-icon">
-                    <mat-icon color="white" matTooltip="Fallback Mode">sync_problem</mat-icon>
+                <div class="adjust-icon">
+                    <mat-icon color="white" [matTooltip]="'Fallback Mode' | translate">sync_problem</mat-icon>
                 </div>
             </div>
         }

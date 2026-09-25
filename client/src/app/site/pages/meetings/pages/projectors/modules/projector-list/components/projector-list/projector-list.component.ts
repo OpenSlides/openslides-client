@@ -10,16 +10,16 @@ import {
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { Permission } from '@app/domain/definitions/permission';
+import { Projector } from '@app/domain/models/projector/projector';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { OpenSlidesStatusService } from '@app/site/services/openslides-status.service';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, timer } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { Projector } from 'src/app/domain/models/projector/projector';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewProjector } from 'src/app/site/pages/meetings/pages/projectors';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
-import { OpenSlidesStatusService } from 'src/app/site/services/openslides-status.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
     selector: `os-projector-list`,

@@ -6,9 +6,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { ListModule } from 'src/app/ui/modules/list';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { ListModule } from '@app/ui/modules/list';
 
 import { TagListComponent } from './components/tag-list/tag-list.component';
 import { TagsRoutingModule } from './tags-routing.module';
@@ -23,10 +24,11 @@ import { TagsRoutingModule } from './tags-routing.module';
         MatButtonModule,
         MatInputModule,
         MatDialogModule,
+        MatTooltipModule,
         ReactiveFormsModule,
         HeadBarModule,
         ListModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class TagsModule {}

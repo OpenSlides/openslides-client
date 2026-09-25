@@ -1,16 +1,16 @@
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
+import { Committee } from '@app/domain/models/comittees/committee';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { ListComponent } from '@app/ui/modules/list';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable, Subscription } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
-import { Committee } from 'src/app/domain/models/comittees/committee';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
-import { ListComponent } from 'src/app/ui/modules/list';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { CommitteeControllerService } from '../../../../../../services/committee-controller.service';
 import { ViewCommittee } from '../../../../../../view-models/view-committee';
@@ -21,6 +21,7 @@ import { CommitteeSortService } from '../../../../../committee-list/services/com
     selector: `os-committee-detail-view`,
     templateUrl: `./committee-detail-view.component.html`,
     styleUrls: [`./committee-detail-view.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommitteeDetailViewComponent extends BaseUiComponent implements OnDestroy {
@@ -187,7 +188,12 @@ export class CommitteeDetailViewComponent extends BaseUiComponent implements OnD
         this.agendaReceiveExpanded = !this.agendaReceiveExpanded;
     }
 
-    public sortCommitteesByName(committees: ViewCommittee[]): ViewCommittee[] {
+    public sortCommitteesByName(ids: number[]): ViewCommittee[] {
+        const committees: ViewCommittee[] = [];
+        for (const id of ids) {
+            committees.push(this.committeeRepo.getViewModelUnsafe(id));
+        }
+
         return committees.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
 

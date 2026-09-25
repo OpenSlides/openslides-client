@@ -1,26 +1,20 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionWorkflow } from 'src/app/domain/models/motions/motion-workflow';
-import { Action } from 'src/app/gateways/actions';
-import { MotionWorkflowRepositoryService } from 'src/app/gateways/repositories/motions';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
+import { Action } from '@app/gateways/actions';
+import { MotionWorkflowRepositoryService } from '@app/gateways/repositories/motions/motion-workflow-repository.service';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 
-import { ViewMotion } from '../../../../view-models';
-import { ViewMotionState } from '../../../states';
-import { ViewMotionWorkflow } from '../../view-models';
+import { ViewMotion } from '../../../../view-models/view-motion';
+import { ViewMotionState } from '../../../states/view-models/view-motion-state';
+import { ViewMotionWorkflow } from '../../view-models/view-motion-workflow';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionWorkflowControllerService extends BaseMeetingControllerService<ViewMotionWorkflow, MotionWorkflow> {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionWorkflowRepositoryService
-    ) {
-        super(controllerServiceCollector, MotionWorkflow, repo);
-    }
+    protected repo: MotionWorkflowRepositoryService = inject(MotionWorkflowRepositoryService);
+
+    public baseModelCtor = MotionWorkflow;
 
     public create(workflow: Partial<MotionWorkflow>): Promise<Identifiable> {
         return this.repo.create(workflow);

@@ -47,7 +47,7 @@
                         <button
                             mat-stroked-button
                             [disabled]="stateChangePendingObservable | async"
-                            [ngClass]="pollStateActions[poll.state]?.css"
+                            [ngClass]="$safeNavigationMigration(pollStateActions[poll.state]?.css)"
                             (click)="nextPollState()"
                         >
                             <mat-icon>{{ pollStateActions[poll.state]?.icon }}</mat-icon>

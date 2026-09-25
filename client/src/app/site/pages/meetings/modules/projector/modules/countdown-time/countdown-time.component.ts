@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
-import { ServerTimeService } from 'src/app/gateways/server-time.service';
+import { ServerTimeService } from '@app/gateways/server-time.service';
 
 export interface CountdownData {
     running: boolean;

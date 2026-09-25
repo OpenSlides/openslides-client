@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output } from '@angular/core';
+import { UnsafeHtml } from '@app/domain/definitions/key-types';
+import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/motions.constants';
+import { LineRange } from '@app/site/pages/meetings/pages/motions/definitions';
+import { ViewUnifiedChange } from '@app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 import { TranslateService } from '@ngx-translate/core';
-import { UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { LineRange } from 'src/app/site/pages/meetings/pages/motions/definitions';
-import { ViewUnifiedChange } from 'src/app/site/pages/meetings/pages/motions/modules/change-recommendations/view-models/view-unified-change';
 
-import { DiffLinesInParagraph } from '../../../../../../definitions/index';
-import { LineNumberingService } from '../../../../../../modules/change-recommendations/services';
+import { DiffLinesInParagraph } from '../../../../../../definitions';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 
 @Component({
@@ -69,8 +68,7 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
 
     public constructor(
         protected override translate: TranslateService,
-        private el: ElementRef,
-        private lineNumberingService: LineNumberingService
+        private el: ElementRef
     ) {
         super();
     }
@@ -113,8 +111,8 @@ export class ParagraphBasedAmendmentComponent extends BaseMotionDetailChildCompo
     }
 
     public getLastNumber(): number {
-        return this.lineNumberingService.getLineNumberRange(
-            this.lineNumberingService.insertLineNumbers({
+        return this.motion.services().ln.getLineNumberRange(
+            this.motion.services().ln.insertLineNumbers({
                 html: this.motion?.lead_motion.text,
                 lineLength: this.lineLength,
                 firstLine: this.motion?.lead_motion.firstLine

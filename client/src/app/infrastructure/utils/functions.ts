@@ -1,6 +1,6 @@
-import { Identifiable } from 'src/app/domain/interfaces';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
+import { Identifiable } from '@app/domain/interfaces';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { BaseViewModel } from '@app/site/base/base-view-model';
 
 import { Decimal, Id } from '../../domain/definitions/key-types';
 

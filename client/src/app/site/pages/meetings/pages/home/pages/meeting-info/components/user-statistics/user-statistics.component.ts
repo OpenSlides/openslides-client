@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { BaseComponent } from '@app/site/base/base.component';
+import { SpeakerControllerService } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
+import { DurationService } from '@app/site/services/duration.service';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { SpeakerControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services/speaker-controller.service';
-import { DurationService } from 'src/app/site/services/duration.service';
 
 import {
     ListOfSpeakersControllerService,

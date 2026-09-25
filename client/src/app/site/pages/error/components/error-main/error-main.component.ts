@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from 'src/app/site/services/auth.service';
-import { FallbackRoutesService } from 'src/app/site/services/fallback-routes.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
+import { AuthService } from '@app/site/services/auth.service';
+import { FallbackRoutesService } from '@app/site/services/fallback-routes.service';
+import { OperatorService } from '@app/site/services/operator.service';
 
 @Component({
     selector: `os-error-main`,
     templateUrl: `./error-main.component.html`,
     styleUrls: [`./error-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ErrorMainComponent implements OnInit {

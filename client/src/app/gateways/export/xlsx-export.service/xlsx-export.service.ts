@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Workbook, Worksheet } from 'exceljs';
 import { saveAs } from 'file-saver';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class XlsxExportService {
     /**
      * Correction factor for cell width alignment

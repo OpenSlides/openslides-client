@@ -10,18 +10,17 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Settings } from '@app/domain/models/meetings/meeting';
+import { BaseComponent } from '@app/site/base/base.component';
+import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
+import { MeetingSettingsDefinitionService } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
+import { SettingsInput } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { ParentErrorStateMatcher } from '@app/ui/modules/search-selector/validators';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { fromUnixTime, getHours, getMinutes, getUnixTime, setHours, setMinutes } from 'date-fns';
 import { distinctUntilChanged, filter, map, Observable } from 'rxjs';
-import { Settings } from 'src/app/domain/models/meetings/meeting';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { ViewGroup } from 'src/app/site/pages/meetings/pages/participants';
-import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
-import { SettingsInput } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { ParentErrorStateMatcher } from 'src/app/ui/modules/search-selector/validators';
 
 import { GroupControllerService } from '../../../../../participants/modules/groups/services/group-controller.service';
 import { AllocationListConfig } from '../allocation-list/allocation-list.component';
@@ -110,11 +109,6 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
 
     public get currentValue(): any {
         const value = this.form.get(`value`);
-        if (this.setting.type === `datetime` || this.setting.type === `date`) {
-            const date = this.form.get(`date`)!.value;
-            const time = this.form.get(`time`)!.value;
-            return this.dateAndTimeToUnix(date, time);
-        }
         return value.value;
     }
 
@@ -218,7 +212,6 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
 
         this.form = this.formBuilder.group({
             value: [``, this.setting.validators ?? []],
-            date: [``],
             time: [``],
             daterange: [
                 {
@@ -231,10 +224,6 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             this.form.disable();
         }
         this.internalValue = this.value ?? this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting);
-        if ((this.setting.type === `datetime` || this.setting.type === `date`) && this.value) {
-            const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(this.value as number));
-            this.form.patchValue(datetimeObj);
-        }
         if (this.setting.type === `daterange` && this.value) {
             const daterangeObj = {
                 start: this.getRestrictedValue(this.value[0] ? new Date(this.value[0] * 1000) : null),
@@ -298,10 +287,6 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     }
 
     public updateValue(newValue: any): void {
-        if ((this.setting.type === `datetime` || this.setting.type === `date`) && newValue) {
-            const datetimeObj = this.getRestrictedValue(this.unixToDateAndTime(newValue as number));
-            this.form.patchValue(datetimeObj);
-        }
         if (this.setting.type === `daterange` && newValue) {
             const daterangeObj = {
                 start: this.getRestrictedValue(newValue[0] ? new Date(newValue[0]) : null),
@@ -322,41 +307,6 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
     }
 
     /**
-     * Helper function to split a unix timestamp into a date as a date object and a time string in the form of HH:SS
-     *
-     * @param unix the timestamp
-     *
-     * @return an object with a date and a time field
-     */
-    private unixToDateAndTime(unix: number): { date: Date; time: string } {
-        const date = fromUnixTime(unix);
-        const time = getHours(date) + `:` + getMinutes(date);
-        return { date, time };
-    }
-
-    /**
-     * Helper function to fuse a date object as the date part and a time string (HH:SS) as the time part.
-     *
-     * @param date the date object
-     * @param time the time string
-     *
-     * @return a unix timestamp
-     */
-    private dateAndTimeToUnix(date: Date, time: string): number | null {
-        if (date) {
-            if (time) {
-                const timeSplit = time.split(`:`);
-                // + is faster than parseint and number(). ~~ would be fastest but prevented by linter...
-                setHours(date, +timeSplit[0]);
-                setMinutes(date, +timeSplit[1]);
-            }
-            return getUnixTime(date);
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Trigger an update of the data
      */
     private onChange(value: any): void {
@@ -364,11 +314,6 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
             case `markupText`:
                 // tinyMCE markuptext does not autoupdate on change, only when entering or leaving
                 return;
-            case `date`:
-            case `datetime`:
-                // datetime has to be converted
-                value = this.dateAndTimeToUnix(this.form.get(`date`)!.value, this.form.get(`time`)!.value);
-                break;
             case `daterange`:
                 // daterange has to be formatted
                 value = [this.form.get(`daterange`)!.value.start, this.form.get(`daterange`)!.value.end];
@@ -399,10 +344,6 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      */
     public onResetButton(): void {
         this.form.controls[`value`].setValue(this.meetingSettingsDefinitionProvider.getDefaultValue(this.setting));
-    }
-
-    public onClearDate(): void {
-        this.form.controls[`date`].setValue(null);
     }
 
     /**
@@ -440,7 +381,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
      * @returns wheather it should be excluded or not
      */
     public isExcludedType(type: string): boolean {
-        const excluded = [`boolean`, `markupText`, `text`, `translations`, `ranking`, `datetime`, `date`, `daterange`];
+        const excluded = [`boolean`, `markupText`, `text`, `translations`, `ranking`, `daterange`];
         return excluded.includes(type);
     }
 

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
+import { ProjectableTitleComponent } from '@app/site/pages/meetings/modules/meetings-component-collector/detail-view/components/projectable-title/projectable-title.component';
+import { ViewMotionChangeRecommendation } from '@app/site/pages/meetings/pages/motions';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable, Subscription } from 'rxjs';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { ProjectableTitleComponent } from 'src/app/site/pages/meetings/modules/meetings-component-collector/detail-view/components/projectable-title/projectable-title.component';
-import { ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
 
 import { PersonalNoteControllerService } from '../../../../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';

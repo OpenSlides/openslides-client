@@ -1,4 +1,4 @@
-import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
 import { Organization } from '../../../domain/models/organizations/organization';
 import { OrganizationRepositoryService } from '../../../gateways/repositories/organization-repository.service';

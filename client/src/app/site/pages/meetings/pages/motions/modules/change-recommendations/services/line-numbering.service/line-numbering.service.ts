@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import { LineNumbering } from '@openslides/motion-diff';
-import { djb2hash } from 'src/app/infrastructure/utils';
+import { inject, Service } from '@angular/core';
+import { djb2hash } from '@app/infrastructure/utils';
+import { DiffCompat, LineNumbering, VERSION } from '@openslides/motion-diff';
 
-import { DiffCache } from '../../../../definitions';
+import { DiffCache } from '../../../../definitions/cache';
+import { DIFF_VERSION } from '../diff-factory.service';
 
 /**
  * A helper to indicate that certain functions expect the provided HTML strings to contain line numbers
@@ -69,10 +70,10 @@ interface InsertLineNumbersConfig {
  * const headings = this.lineNumbering.getHeadingsWithLineNumbers(html);
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class LineNumberingService {
+    private ln: typeof LineNumbering;
+
     /**
      * @TODO Decide on a more sophisticated implementation
      * This is just a stub for a caching system. The original code from Angular1 was:
@@ -80,6 +81,15 @@ export class LineNumberingService {
      * This should be replaced by a real cache once we have decided on a caching service for OpenSlides 3
      */
     private lineNumberCache = new DiffCache();
+
+    public constructor() {
+        const diffVersion = inject(DIFF_VERSION);
+        if (diffVersion === VERSION) {
+            this.ln = LineNumbering;
+        } else {
+            this.ln = DiffCompat.getForVersion(diffVersion || `0.0.0`)[0];
+        }
+    }
 
     /**
      * Given a HTML string augmented with line number nodes, this function detects the line number range of this text.
@@ -89,7 +99,7 @@ export class LineNumberingService {
      * @returns {LineNumberRange}
      */
     public getLineNumberRange(html: string): LineNumberRange {
-        return LineNumbering.getRange(html);
+        return this.ln.getRange(html);
     }
 
     /**
@@ -107,7 +117,7 @@ export class LineNumberingService {
         const cacheKey = djb2hash(html);
         let cachedParagraphs = this.lineNumberCache.get(cacheKey);
         if (!cachedParagraphs) {
-            cachedParagraphs = LineNumbering.splitToParagraphs(html);
+            cachedParagraphs = this.ln.splitToParagraphs(html);
 
             this.lineNumberCache.put(cacheKey, cachedParagraphs);
         }
@@ -126,12 +136,12 @@ export class LineNumberingService {
         const cacheKey = djb2hash(firstLineStr + `-` + config.lineLength.toString() + config.html);
         newHtml = this.lineNumberCache.get(cacheKey);
         if (!newHtml) {
-            newHtml = LineNumbering.insert(config);
+            newHtml = this.ln.insert(config);
             this.lineNumberCache.put(cacheKey, newHtml);
         }
 
         if ((config.highlight as number) > 0) {
-            return LineNumbering.highlightLine(newHtml, config.highlight);
+            return this.ln.highlightLine(newHtml, config.highlight);
         }
 
         return newHtml;
@@ -149,7 +159,7 @@ export class LineNumberingService {
      * @returns {string}
      */
     public insertLineBreaksWithoutNumbers(html: string, lineLength: number, countInserted = false): string {
-        return LineNumbering.insertLineBreaks(html, lineLength, countInserted);
+        return this.ln.insertLineBreaks(html, lineLength, countInserted);
     }
 
     /**
@@ -159,7 +169,7 @@ export class LineNumberingService {
      * @returns {string}
      */
     public stripLineNumbers(html: string): string {
-        return LineNumbering.strip(html);
+        return this.ln.strip(html);
     }
 
     /**
@@ -175,6 +185,6 @@ export class LineNumberingService {
      * @returns {string}
      */
     public splitInlineElementsAtLineBreaks(html: string): string {
-        return LineNumbering.splitInlineElementsAtLineBreaks(html);
+        return this.ln.splitInlineElementsAtLineBreaks(html);
     }
 }

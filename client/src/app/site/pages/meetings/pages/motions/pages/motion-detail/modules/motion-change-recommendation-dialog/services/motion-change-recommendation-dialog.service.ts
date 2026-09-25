@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { infoDialogSettings, mediumDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
+import { infoDialogSettings, mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 
 import {
     MotionContentChangeRecommendationDialogComponent,
@@ -10,13 +10,10 @@ import {
     MotionTitleChangeRecommendationDialogComponent,
     MotionTitleChangeRecommendationDialogComponentData
 } from '../components/motion-title-change-recommendation-dialog/motion-title-change-recommendation-dialog.component';
-import { MotionChangeRecommendationDialogModule } from '../motion-change-recommendation-dialog.module';
 
-@Injectable({
-    providedIn: MotionChangeRecommendationDialogModule
-})
+@Service()
 export class MotionChangeRecommendationDialogService {
-    public constructor(private dialog: MatDialog) {}
+    private dialog = inject(MatDialog);
 
     public async openTitleChangeRecommendationDialog(
         data: MotionTitleChangeRecommendationDialogComponentData

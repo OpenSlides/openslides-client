@@ -1,20 +1,20 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { MotionFormattingRepresentation } from '@app/domain/models/motions/motion';
+import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/motions.constants';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MotionFormattingRepresentation } from 'src/app/domain/models/motions/motion';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
-import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../modules';
-import {
-    LineNumberingService,
-    MotionChangeRecommendationControllerService,
-    MotionDiffService
-} from '../../../modules/change-recommendations/services';
-import { ViewMotion } from '../../../view-models';
+import { ViewUnifiedChangeType } from '../../../modules';
+import { DiffServiceFactory } from '../../../modules/change-recommendations/services/diff-factory.service';
+import { LineNumberingService } from '../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
+import { MotionDiffService } from '../../../modules/change-recommendations/services/motion-diff.service/motion-diff.service';
+import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
+import { ViewMotion } from '../../../view-models/view-motion';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
-import { AmendmentControllerService } from '../amendment-controller.service';
-import { MotionLineNumberingService } from '../motion-line-numbering.service';
+import { AmendmentControllerService } from '../amendment-controller.service/amendment-controller.service';
+import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
 
 export interface MotionFormatResult {
     origin_id: Id;
@@ -64,19 +64,18 @@ interface FormatMotionConfig extends Arguments {
     brokenTextChangesAmount?: number;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+interface MotionFormatDiffServices {
+    diffService: MotionDiffService;
+    lineNumberingService: LineNumberingService;
+}
+
+@Service()
 export class MotionFormatService {
-    public constructor(
-        private lineNumberingService: LineNumberingService,
-        private motionLineNumbering: MotionLineNumberingService,
-        private diffService: MotionDiffService,
-        private amendmentController: AmendmentControllerService,
-        private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private settings: MeetingSettingsService,
-        private translate: TranslateService
-    ) {}
+    private diffFactory = inject(DiffServiceFactory);
+    private amendmentController = inject(AmendmentControllerService);
+    private changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    private settings = inject(MeetingSettingsService);
+    private translate = inject(TranslateService);
 
     /**
      * Format the motion text using the line numbering and change
@@ -85,6 +84,11 @@ export class MotionFormatService {
      * Can be called from detail view and exporter
      */
     public formatMotion({ targetMotion, crMode, ...args }: FormatMotionConfig): string {
+        const services: MotionFormatDiffServices = {
+            diffService: this.diffFactory.createService(MotionDiffService, targetMotion.diff_version),
+            lineNumberingService: this.diffFactory.createService(LineNumberingService, targetMotion.diff_version)
+        };
+
         if (!targetMotion?.text) {
             return ``;
         }
@@ -101,17 +105,23 @@ export class MotionFormatService {
             throw new Error(`unrecognized ChangeRecoMode option (${crMode})`);
         }
 
-        return fn(targetMotion, {
-            ...args,
-            firstLine: args.firstLine || targetMotion.start_line_number
-        });
+        return fn(
+            targetMotion,
+            {
+                ...args,
+                firstLine: args.firstLine || targetMotion.start_line_number
+            },
+            services
+        );
     }
 
     public getUnifiedChanges(motion: ViewMotion, lineLength: number): ViewUnifiedChange[] {
+        const motionLineNumbering = this.diffFactory.createService(MotionLineNumberingService, motion.diffVersion);
+
         const changeRecommendation = this.changeRecoRepo.getChangeRecoOfMotion(motion.id);
         const amendeds = this.amendmentController.getViewModelListFor(motion);
 
-        const sortedChangingObjects = this.motionLineNumbering.recalcUnifiedChanges(
+        const sortedChangingObjects = motionLineNumbering.recalcUnifiedChanges(
             lineLength,
             changeRecommendation,
             amendeds
@@ -125,13 +135,15 @@ export class MotionFormatService {
      * final version with all unified changes
      */
     public formatMotionForForward(motion: ViewMotion, useOriginal?: boolean): MotionFormatResult {
+        const lineNumberingService = this.diffFactory.createService(LineNumberingService, motion.diff_version);
+
         const lineLength = this.settings.instant(`motions_line_length`);
         let title = motion.title;
         let text = motion.text;
         if (!useOriginal) {
             title = this.getFinalTitle(motion, lineLength);
             const finalMotionText = this.getFinalMotionText(motion, lineLength!);
-            text = this.lineNumberingService.stripLineNumbers(finalMotionText);
+            text = lineNumberingService.stripLineNumbers(finalMotionText);
         }
 
         return {
@@ -165,10 +177,14 @@ export class MotionFormatService {
         return this.formatMotion({ targetMotion: motion, crMode, changes, lineLength, firstLine: motion.firstLine });
     }
 
-    private getFinalView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
+    private getFinalView = (
+        targetMotion: MotionFormattingRepresentation,
+        args: DifferedViewArguments,
+        diffService: MotionFormatDiffServices
+    ): string => {
         const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
         const appliedChanges: ViewUnifiedChange[] = changes.filter(change => change.showInFinalView());
-        return this.diffService.getTextWithChanges(
+        return diffService.diffService.getTextWithChanges(
             targetMotion.text,
             appliedChanges,
             lineLength,
@@ -180,11 +196,12 @@ export class MotionFormatService {
 
     private getModifiedFinalView = (
         targetMotion: MotionFormattingRepresentation,
-        args: DifferedViewArguments
+        args: DifferedViewArguments,
+        diffService: MotionFormatDiffServices
     ): string => {
         const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
         if (targetMotion.modified_final_version) {
-            return this.lineNumberingService.insertLineNumbers({
+            return diffService.lineNumberingService.insertLineNumbers({
                 html: targetMotion.modified_final_version,
                 lineLength,
                 highlight: highlightedLine,
@@ -203,9 +220,13 @@ export class MotionFormatService {
         }
     };
 
-    private getOriginalView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
+    private getOriginalView = (
+        targetMotion: MotionFormattingRepresentation,
+        args: DifferedViewArguments,
+        diffService: MotionFormatDiffServices
+    ): string => {
         const { lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
-        return this.lineNumberingService.insertLineNumbers({
+        return diffService.lineNumberingService.insertLineNumbers({
             html: targetMotion.text,
             lineLength,
             highlight: highlightedLine,
@@ -213,12 +234,16 @@ export class MotionFormatService {
         });
     };
 
-    private getChangedView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
+    private getChangedView = (
+        targetMotion: MotionFormattingRepresentation,
+        args: DifferedViewArguments,
+        diffService: MotionFormatDiffServices
+    ): string => {
         const { changes, lineLength, highlightedLine, firstLine }: DifferedViewArguments = args;
         const filteredChangeRecommendations = changes.filter(
             change => change.getChangeType() === ViewUnifiedChangeType.TYPE_CHANGE_RECOMMENDATION
         );
-        return this.diffService.getTextWithChanges(
+        return diffService.diffService.getTextWithChanges(
             targetMotion.text,
             filteredChangeRecommendations,
             lineLength,
@@ -228,7 +253,11 @@ export class MotionFormatService {
         );
     };
 
-    private getDiffView = (targetMotion: MotionFormattingRepresentation, args: DifferedViewArguments): string => {
+    private getDiffView = (
+        targetMotion: MotionFormattingRepresentation,
+        args: DifferedViewArguments,
+        diffService: MotionFormatDiffServices
+    ): string => {
         const {
             changes,
             lineLength,
@@ -239,7 +268,7 @@ export class MotionFormatService {
         }: DifferedViewArguments = args;
         const text: string[] = [];
         const changesToShow = showAllChanges ? changes : changes.filter(change => change.showInDiffView());
-        const motionText = this.lineNumberingService.insertLineNumbers({
+        const motionText = diffService.lineNumberingService.insertLineNumbers({
             html: targetMotion.text,
             lineLength,
             firstLine
@@ -250,7 +279,7 @@ export class MotionFormatService {
             if (changesToShow[i].getLineFrom() > lastLineTo + 1 && changesToShow[i].getLineFrom() > firstLine) {
                 const changeFrom = changesToShow[i - 1] ? lastLineTo + 1 : firstLine;
                 text.push(
-                    this.diffService.extractMotionLineRange(
+                    diffService.diffService.extractMotionLineRange(
                         motionText,
                         {
                             from: i === 0 ? firstLine : changeFrom,
@@ -262,17 +291,22 @@ export class MotionFormatService {
                     )
                 );
             }
-            const amendmentNr = this.addAmendmentNr(changesToShow, changesToShow[i]);
+            const amendmentNr = this.addAmendmentNr(changesToShow, changesToShow[i], diffService.diffService);
             if (amendmentNr) {
                 text.push(amendmentNr);
             }
-            text.push(this.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
+            text.push(diffService.diffService.getChangeDiff(motionText, changesToShow[i], lineLength, highlightedLine));
 
             lastLineTo = changesToShow[i].getLineTo();
         }
 
         text.push(
-            this.diffService.getTextRemainderAfterLastChange(motionText, changesToShow, lineLength, highlightedLine)
+            diffService.diffService.getTextRemainderAfterLastChange(
+                motionText,
+                changesToShow,
+                lineLength,
+                highlightedLine
+            )
         );
         if (brokenTextChangesAmount > 0) {
             const msg =
@@ -286,12 +320,16 @@ export class MotionFormatService {
         return this.adjustDiffClasses(text).join(``);
     };
 
-    private addAmendmentNr(changesToShow: ViewUnifiedChange[], current_text: ViewUnifiedChange): string {
+    private addAmendmentNr(
+        changesToShow: ViewUnifiedChange[],
+        current_text: ViewUnifiedChange,
+        diffService: MotionDiffService
+    ): string {
         const lineNumbering = this.settings.instant(`motions_default_line_numbering`);
 
         let warning = ``;
         let additionClasses = ``;
-        if (this.diffService.changeHasCollissions(current_text, changesToShow)) {
+        if (diffService.changeHasCollissions(current_text, changesToShow)) {
             let iconMargin = `margin-left-40`;
             if (lineNumbering === LineNumberingMode.Outside) {
                 iconMargin = `margin-right-10`;

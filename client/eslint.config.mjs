@@ -32,6 +32,7 @@ export default tseslint.config({
     },
     processor: angular.processInlineTemplates,
     rules: {
+        "@angular-eslint/prefer-on-push-component-change-detection": ["off"],
         "@angular-eslint/prefer-standalone": ["off"],
         "@angular-eslint/prefer-inject": ["off"],
         "@angular-eslint/component-selector": ["error", {
@@ -100,7 +101,9 @@ export default tseslint.config({
         "no-useless-escape": ["error"],
         "no-case-declarations": ["error"],
 
-        "@typescript-eslint/no-empty-object-type": ["warn"],
+        "@typescript-eslint/no-empty-object-type": ["error" ,{
+            allowInterfaces: 'with-single-extends'
+        }],
         "no-async-promise-executor": ["warn"],
         // TODO: Disable - empty catch should contain at least an description comment
         "no-empty": ["error", { "allowEmptyCatch": true }],
@@ -138,7 +141,9 @@ export default tseslint.config({
         "@angular-eslint/template/attributes-order": ["error", {
             alphabetical: true,
         }],
-
+        "@angular-eslint/template/no-interpolation-in-attributes": ["error", {
+            allowSubstringInterpolation: true,
+        }],
         "@angular-eslint/template/prefer-control-flow": ["error"],
     },
 }, {

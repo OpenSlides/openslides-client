@@ -1,7 +1,7 @@
 export const participantsExportExample: any = [
     {
         first_name: `Max`,
-        last_name: `Mustermann`,
+        last_name: `Musterhuman`,
         email: `max@example.com`,
         member_number: `12345678`,
         is_active: true,
@@ -9,7 +9,7 @@ export const participantsExportExample: any = [
         structure_level: `Berlin`,
         groups: `Delegates`,
         number: `D001`,
-        gender: `male`,
-        pronoun: `he`
+        gender: `diverse`,
+        pronoun: `they`
     }
 ];

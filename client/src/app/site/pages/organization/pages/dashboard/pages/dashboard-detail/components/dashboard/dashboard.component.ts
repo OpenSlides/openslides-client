@@ -1,12 +1,11 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, inject, ViewEncapsulation } from '@angular/core';
+import { BaseComponent } from '@app/site/base/base.component';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { RelatedTime, ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { OrganizationService } from '@app/site/pages/organization/services/organization.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ThemeService } from '@app/site/services/theme.service';
 import { Observable } from 'rxjs';
-import { BaseComponent } from 'src/app/site/base/base.component';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { RelatedTime, ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { OrganizationService } from 'src/app/site/pages/organization/services/organization.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ThemeService } from 'src/app/site/services/theme.service';
 
 import { DASHBOARD_MEETING_LIST_SUBSCRIPTION } from '../../../../dashboard.subscription';
 
@@ -15,6 +14,7 @@ import { DASHBOARD_MEETING_LIST_SUBSCRIPTION } from '../../../../dashboard.subsc
     templateUrl: `./dashboard.component.html`,
     styleUrls: [`./dashboard.component.scss`],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class DashboardComponent extends BaseComponent {
@@ -46,13 +46,12 @@ export class DashboardComponent extends BaseComponent {
     public futureMeetings: ViewMeeting[] = [];
     public noDateMeetings: ViewMeeting[] = [];
 
-    public constructor(
-        protected override translate: TranslateService,
-        private orgaService: OrganizationService,
-        private meetingRepo: MeetingControllerService,
-        private themeService: ThemeService,
-        public operator: OperatorService
-    ) {
+    public operator = inject(OperatorService);
+    private orgaService = inject(OrganizationService);
+    private meetingRepo = inject(MeetingControllerService);
+    private themeService = inject(ThemeService);
+
+    public constructor() {
         super();
         super.setTitle(`Calendar`);
         this.loadMeetings();
@@ -95,12 +94,22 @@ export class DashboardComponent extends BaseComponent {
                 this.noDateMeetings = filteredMeetings.filter(meeting => meeting.relatedTime === RelatedTime.Dateless);
                 this.previousMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Past)
-                    .sort((a, b) => b.end_time - a.end_time);
+                    .sort((a, b) => this.sortMeeting(a, b))
+                    .reverse();
                 this.futureMeetings = filteredMeetings
                     .filter(meeting => meeting.relatedTime === RelatedTime.Future)
-                    .sort((a, b) => a.end_time - b.end_time);
-                this.currentMeetings = filteredMeetings.filter(meeting => meeting.relatedTime === RelatedTime.Current);
+                    .sort((a, b) => this.sortMeeting(a, b));
+                this.currentMeetings = filteredMeetings
+                    .filter(meeting => meeting.relatedTime === RelatedTime.Current)
+                    .sort((a, b) => this.sortMeeting(a, b));
             })
         );
+    }
+
+    private sortMeeting(a: ViewMeeting, b: ViewMeeting): number {
+        if (a.start_time !== b.start_time) {
+            return a.start_time - b.start_time;
+        }
+        return a.end_time - b.end_time;
     }
 }

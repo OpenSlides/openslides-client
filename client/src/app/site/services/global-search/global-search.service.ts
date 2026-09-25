@@ -1,29 +1,25 @@
-import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Fqid, Id } from 'src/app/domain/definitions/key-types';
-import { Meeting } from 'src/app/domain/models/meetings/meeting';
-import { Motion } from 'src/app/domain/models/motions';
-import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
-import { HttpService } from 'src/app/gateways/http.service';
+import { inject, Service } from '@angular/core';
+import { Fqid, Id } from '@app/domain/definitions/key-types';
+import { Meeting } from '@app/domain/models/meetings/meeting';
+import { Motion } from '@app/domain/models/motions';
+import { MotionChangeRecommendation } from '@app/domain/models/motions/motion-change-recommendation';
+import { HttpService } from '@app/gateways/http.service';
 import {
     collectionFromFqid,
     collectionIdFromFqid,
     fqidFromCollectionAndId,
     idFromFqid
-} from 'src/app/infrastructure/utils/transform-functions';
+} from '@app/infrastructure/utils/transform-functions';
+import { TranslateService } from '@ngx-translate/core';
 
 import { ActiveMeetingService } from '../../pages/meetings/services/active-meeting.service';
 import { GlobalSearchEntry, GlobalSearchResponse, GlobalSearchResponseEntry } from './definitions';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GlobalSearchService {
-    public constructor(
-        private translate: TranslateService,
-        private http: HttpService,
-        private activeMeeting: ActiveMeetingService
-    ) {}
+    private translate = inject(TranslateService);
+    private http = inject(HttpService);
+    private activeMeeting = inject(ActiveMeetingService);
 
     public async searchChange(
         searchTerm: string,

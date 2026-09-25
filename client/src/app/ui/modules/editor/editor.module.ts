@@ -10,8 +10,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { MotionEditorComponent } from 'src/app/site/pages/meetings/pages/motions/components/motion-editor/motion-editor.component';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { MotionEditorComponent } from '@app/site/pages/meetings/pages/motions/components/motion-editor/motion-editor.component';
 
 import { SearchSelectorModule } from '../search-selector';
 import { EditorComponent } from './components/editor/editor.component';
@@ -45,7 +45,7 @@ const DECLARATIONS = [
         MatTooltipModule,
         FormsModule,
         ArrowNavigationDirective,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         SearchSelectorModule,
         MatRadioButton,
         MatRadioGroup

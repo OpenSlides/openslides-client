@@ -1,4 +1,3 @@
-import { LineNumbering } from "..";
 import { ELEMENT_NODE, TEXT_NODE } from "../utils/definitions";
 import { addCSSClass, isValidInlineHtml } from "../utils/dom-helpers";
 import { serializeDom } from "./internal";
@@ -89,24 +88,13 @@ export function diffDetectBrokenDiffHtml(html: string): boolean {
  *
  * @param {string} oldText
  * @param {string} newText
- * @param {number|null} lineLength
- * @param {number|null} firstLineNumber
  * @returns {string}
  */
-export function diffParagraphs(oldText: string, newText: string, lineLength: number, firstLineNumber: number): string {
+export function diffParagraphs(oldText: string, newText: string): string {
     let oldTextWithBreaks: Element = document.createElement(`div`);
     let currChild: Element;
 
-    if (lineLength !== null) {
-        oldTextWithBreaks.innerHTML = LineNumbering.insert({
-            html: oldText,
-            lineLength,
-            firstLine: firstLineNumber
-        });
-        newText = LineNumbering.insertLineBreaks(newText, lineLength);
-    } else {
-        oldTextWithBreaks.innerHTML = oldText;
-    }
+    oldTextWithBreaks.innerHTML = oldText;
     newText = newText.replace(/^\s+/g, ``).replace(/\s+$/g, ``);
     const newTextWithBreaks = document.createElement(`div`);
     newTextWithBreaks.innerHTML = newText;

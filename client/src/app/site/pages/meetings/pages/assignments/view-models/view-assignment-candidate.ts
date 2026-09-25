@@ -1,4 +1,4 @@
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { AssignmentCandidate } from '../../../../../../domain/models/assignments/assignment-candidate';
 import { BaseHasMeetingUserViewModel } from '../../../base/base-has-meeting-user-view-model';

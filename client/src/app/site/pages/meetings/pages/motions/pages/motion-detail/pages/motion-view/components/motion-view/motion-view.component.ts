@@ -3,12 +3,24 @@ import {
     ChangeDetectorRef,
     Component,
     HostListener,
+    inject,
     OnDestroy,
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, RoutesRecognized } from '@angular/router';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from '@app/domain/models/motions/motions.constants';
+import { MeetingRepositoryService } from '@app/gateways/repositories/meeting-repository.service';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion, ViewMotionChangeRecommendation, ViewUnifiedChange } from '@app/site/pages/meetings/pages/motions';
+import { AutoupdateService } from '@app/site/services/autoupdate';
+import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import {
     auditTime,
@@ -23,25 +35,11 @@ import {
     Subscription,
     switchMap
 } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
-import { MeetingRepositoryService } from 'src/app/gateways/repositories/meeting-repository.service';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import {
-    ViewMotion,
-    ViewMotionChangeRecommendation,
-    ViewUnifiedChange
-} from 'src/app/site/pages/meetings/pages/motions';
-import { AutoupdateService } from 'src/app/site/services/autoupdate';
-import { ModelRequestBuilderService } from 'src/app/site/services/model-request-builder';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { AgendaItemControllerService } from '../../../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
-import { MotionChangeRecommendationControllerService } from '../../../../../../modules/change-recommendations/services';
+import { DiffServiceFactory } from '../../../../../../modules/change-recommendations/services/diff-factory.service';
+import { MotionChangeRecommendationControllerService } from '../../../../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
 import {
     getMotionOriginDetailSubscriptionConfig,
     MOTION_DETAIL_SUBSCRIPTION,
@@ -49,7 +47,7 @@ import {
 } from '../../../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
-import { MotionLineNumberingService } from '../../../../../../services/common/motion-line-numbering.service';
+import { MotionLineNumberingService } from '../../../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { MotionPdfExportService } from '../../../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
 import { AmendmentListFilterService } from '../../../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
@@ -162,6 +160,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
 
     private _navigatedFromAmendmentList = false;
 
+    private motionLineNumbering = inject(MotionLineNumberingService);
+
     public constructor(
         protected override translate: TranslateService,
         public vp: ViewPortService,
@@ -175,7 +175,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
         private motionSortService: MotionListSortService,
         private motionFilterService: MotionListFilterService,
         private motionForwardingService: MotionForwardDialogService,
-        private motionLineNumbering: MotionLineNumberingService,
+        private diffFactory: DiffServiceFactory,
         private amendmentRepo: AmendmentControllerService,
         private amendmentSortService: AmendmentListSortService,
         private amendmentFilterService: AmendmentListFilterService,
@@ -266,6 +266,8 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             if (motion.id !== id) {
                 return;
             }
+
+            this.motionLineNumbering = this.diffFactory.createService(MotionLineNumberingService, motion.diffVersion);
             this.onMotionLoaded();
 
             motion = await firstValueFrom(motionSubscription);
@@ -589,6 +591,16 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
              * the regular amendment changes are shown in the "original" view.
              */
             return ChangeRecoMode.Original;
+        } else if (
+            mode === ChangeRecoMode.Original &&
+            this.hasChangeRecommendations &&
+            this.motion?.isParagraphBasedAmendment()
+        ) {
+            /**
+             * Paragraph-based amendments with change recommendations should display
+             * the Diff view.
+             */
+            return ChangeRecoMode.Diff;
         }
         return mode;
     }

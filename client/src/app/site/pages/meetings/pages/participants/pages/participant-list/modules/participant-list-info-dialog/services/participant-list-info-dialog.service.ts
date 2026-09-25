@@ -1,12 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { ParticipantListInfoDialogComponent } from '../components/participant-list-info-dialog/participant-list-info-dialog.component';
-import { ParticipantListInfoDialogModule } from '../participant-list-info-dialog.module';
 
 /**
  * Interface for the short editing dialog.
@@ -45,9 +44,7 @@ export interface InfoDialog {
     vote_delegated_to_id: number;
 }
 
-@Injectable({
-    providedIn: ParticipantListInfoDialogModule
-})
+@Service()
 export class ParticipantListInfoDialogService extends BaseDialogService<
     ParticipantListInfoDialogComponent,
     Partial<InfoDialog>,

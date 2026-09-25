@@ -1,5 +1,5 @@
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 /**
@@ -20,9 +20,7 @@ import { BehaviorSubject } from 'rxjs';
  *
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ViewPortService {
     /**
      * Simple boolean to determine whether the client is in mobile view or not
@@ -46,7 +44,9 @@ export class ViewPortService {
      *
      * @param breakpointObserver
      */
-    public constructor(private breakpointObserver: BreakpointObserver) {
+    private breakpointObserver = inject(BreakpointObserver);
+
+    public constructor() {
         this.checkForChange();
     }
 

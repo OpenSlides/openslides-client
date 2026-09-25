@@ -1,12 +1,13 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
 @Component({
     selector: `os-check-input`,
     templateUrl: `./check-input.component.html`,
     styleUrls: [`./check-input.component.scss`],
     providers: [{ provide: NG_VALUE_ACCESSOR, multi: true, useExisting: forwardRef(() => CheckInputComponent) }],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CheckInputComponent extends BaseUiComponent implements OnInit, ControlValueAccessor {

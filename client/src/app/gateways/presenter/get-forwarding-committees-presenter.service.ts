@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
 
 import { Presenter } from './presenter';
 import { PresenterService } from './presenter.service';
@@ -10,11 +10,9 @@ interface GetForwardCommitteesPresenterPayload {
 
 type GetForwardingCommitteesPresenterResult = string[];
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GetForwardingCommitteesPresenterService {
-    public constructor(private presenter: PresenterService) {}
+    private presenter = inject(PresenterService);
 
     public async call(payload: GetForwardCommitteesPresenterPayload): Promise<GetForwardingCommitteesPresenterResult> {
         return await this.presenter.call<GetForwardingCommitteesPresenterResult>(

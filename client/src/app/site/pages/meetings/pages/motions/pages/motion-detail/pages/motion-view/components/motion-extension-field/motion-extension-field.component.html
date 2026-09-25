@@ -8,7 +8,7 @@
     </mat-menu>
     <os-icon-container
         icon="create"
-        iconTooltip="{{ 'Edit' | translate }}"
+        [iconTooltip]="'Edit' | translate"
         [noFill]="true"
         [showIcon]="!editMode && canBeEdited && hasExtension"
         [swap]="true"
@@ -47,8 +47,8 @@
             <mat-form-field [formGroup]="extensionFieldForm">
                 <mat-label>{{ list.label ?? '' | translate }}</mat-label>
                 <os-list-search-selector
-                    formControlName="{{ 'list' + i + '' }}"
                     [disableOptionWhenFn]="getIsDisabled(i)"
+                    [formControlName]="'list' + i + ''"
                     [inputListValues]="list.observable"
                     [keepOpen]="list.keepOpen"
                     [wider]="list.wider"

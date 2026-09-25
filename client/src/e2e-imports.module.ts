@@ -1,11 +1,10 @@
 import { APP_BASE_HREF, CommonModule } from '@angular/common';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { OpenSlidesMainModule } from './app/openslides-main-module/openslides-main.module';
 import { OpenSlidesMainRoutingModule } from './app/openslides-main-module/openslides-main-routing.module';
-import { OpenSlidesTranslationModule } from './app/site/modules/translations';
+import { OpenSlidesTranslationModule } from './app/site/modules/translations/openslides-translation.module';
 
 /**
  * Share Module for all "dumb" components and pipes.
@@ -19,13 +18,7 @@ import { OpenSlidesTranslationModule } from './app/site/modules/translations';
 
 @NgModule({
     exports: [CommonModule, OpenSlidesTranslationModule, OpenSlidesMainRoutingModule],
-    imports: [
-        OpenSlidesMainModule,
-        CommonModule,
-        OpenSlidesTranslationModule.forRoot(),
-        BrowserAnimationsModule,
-        OpenSlidesMainRoutingModule
-    ],
-    providers: [{ provide: APP_BASE_HREF, useValue: `/` }, provideHttpClient(withInterceptorsFromDi())]
+    imports: [OpenSlidesMainModule, CommonModule, OpenSlidesTranslationModule, OpenSlidesMainRoutingModule],
+    providers: [{ provide: APP_BASE_HREF, useValue: `/` }, provideHttpClient(withXhr(), withInterceptorsFromDi())]
 })
 export class E2EImportsModule {}

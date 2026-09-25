@@ -1,27 +1,18 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { ViewAgendaItem, ViewTopic } from 'src/app/site/pages/meetings/pages/agenda';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
+import { Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Topic } from '@app/domain/models/topics/topic';
+import { ViewAgendaItem, ViewTopic } from '@app/site/pages/meetings/pages/agenda';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 
-import { Action } from '../../actions';
-import { createAgendaItem } from '../agenda';
-import { AgendaItemRepositoryService } from '../agenda/agenda-item-repository.service';
+import { Action } from '../../actions/action';
+import { createAgendaItem } from '../agenda/functions';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../base-agenda-item-and-list-of-speakers-content-object-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { TopicAction } from './topic.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class TopicRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<ViewTopic, Topic> {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, Topic, agendaItemRepo);
-    }
+    protected baseModelCtor = Topic;
 
     public create(...topics: any[]): Promise<Identifiable[]> {
         const payload: any[] = topics.map(partialTopic => this.getCreatePayload(partialTopic));

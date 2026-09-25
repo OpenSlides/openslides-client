@@ -53,7 +53,7 @@ export function getNodeByName(node: Node, searchName: string, last = false): Ele
  * @param {Node} node
  * @returns {Node[]}
  */
-export function getNodeContextTrace(node: Node): Node[] {
+export function getNodeContextTrace(node: Node | null): Node[] {
     if (node) {
         const context = [node];
         while (context[0].parentNode) {
@@ -503,7 +503,7 @@ export interface CommonAncestorData {
   * @param {Node} node2
   * @returns {CommonAncestorData}
   */
-export function getCommonAncestor(node1: Node, node2: Node): CommonAncestorData {
+export function getCommonAncestor(node1: Node | null, node2: Node | null): CommonAncestorData {
     const trace1 = getNodeContextTrace(node1);
     const trace2 = getNodeContextTrace(node2);
     const childTrace1 = [];

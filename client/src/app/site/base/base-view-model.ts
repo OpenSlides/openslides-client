@@ -1,5 +1,5 @@
+import { Collection } from '@app/domain/definitions/key-types';
 import { Observable } from 'rxjs';
-import { Collection } from 'src/app/domain/definitions/key-types';
 
 import { Fqid, Id } from '../../domain/definitions/key-types';
 import { DetailNavigable } from '../../domain/interfaces/detail-navigable';

@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Identifiable } from '@app/domain/interfaces';
+import { ViewMediafile } from '@app/site/pages/meetings/pages/mediafiles';
+import { MediafileCommonService } from '@app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
+import { MediafileControllerService } from '@app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
+import { UploadSuccessEvent } from '@app/ui/modules/media-upload-content/media-upload-content.component';
 import { Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ViewMediafile } from 'src/app/site/pages/meetings/pages/mediafiles';
-import { MediafileCommonService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-common.service';
-import { MediafileControllerService } from 'src/app/site/pages/meetings/pages/mediafiles/services/mediafile-controller.service';
-import { UploadSuccessEvent } from 'src/app/ui/modules/media-upload-content/media-upload-content.component';
 
 @Component({
     selector: `os-organization-mediafile-upload`,

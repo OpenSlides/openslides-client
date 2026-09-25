@@ -1,4 +1,4 @@
-import { Component, Inject, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -27,6 +27,7 @@ export interface EditorLinkDialogOutput {
     selector: `os-editor-link-dialog`,
     templateUrl: `./editor-link-dialog.component.html`,
     styleUrls: [`editor-link-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EditorLinkDialogComponent implements OnInit {

@@ -1,25 +1,21 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FileData } from '@app/ui/modules/file-upload/components/file-upload/file-upload.component';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { FileData } from 'src/app/ui/modules/file-upload/components/file-upload/file-upload.component';
 
 export const WRONG_JSON_IMPORT_FORMAT_ERROR_MSG = _(`Import data needs to have the JSON format`);
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class UploadFileJsonProcessorService {
-    public constructor(
-        private snackbar: MatSnackBar,
-        private translate: TranslateService
-    ) {}
+    private snackbar = inject(MatSnackBar);
+    private translate = inject(TranslateService);
 
     public async getUploadFileJson<ExpectType>(file: FileData): Promise<ExpectType> {
         const json = await new Promise<ExpectType>(resolve => {
             const reader = new FileReader();
             reader.addEventListener(`load`, progress => {
-                let result;
+                let result: any;
                 try {
                     result = JSON.parse(progress.target!.result as string);
                 } catch (e) {

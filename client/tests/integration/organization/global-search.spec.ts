@@ -1,4 +1,5 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+
 import { login, logout } from '../helpers/auth';
 import { createAccount, createMeeting, deleteAccounts, deleteCommittees, deleteMeetings } from '../helpers/request';
 
@@ -28,7 +29,7 @@ test.describe('Testing global search', () => {
     test('search for demo meeting', async ({ context, page }) => {
         await login(context);
         await page.goto('/');
-        await page.locator('button[aria-label="Global Search"]').click();
+        await page.locator('button[aria-label="Global search"]').click();
         await page.getByPlaceholder('Search').fill('Demo');
         await page.locator('input[value="meetings"]').click();
         await page.getByPlaceholder('Search').press('Enter');
@@ -39,7 +40,7 @@ test.describe('Testing global search', () => {
     test('search for blup meeting and find nothing', async ({ context, page }) => {
         await login(context);
         await page.goto('/');
-        await page.locator('button[aria-label="Global Search"]').click();
+        await page.locator('button[aria-label="Global search"]').click();
         await page.getByPlaceholder('Search').fill('blup');
         await page.locator('input[value="meetings"]').click();
         await page.getByPlaceholder('Search').press('Enter');

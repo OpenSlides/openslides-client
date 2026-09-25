@@ -1,5 +1,5 @@
-import { HasPersonalNoteIds } from 'src/app/domain/interfaces';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
+import { HasPersonalNoteIds } from '@app/domain/interfaces';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
 
 import { ViewPersonalNote } from './view-personal-note';
 

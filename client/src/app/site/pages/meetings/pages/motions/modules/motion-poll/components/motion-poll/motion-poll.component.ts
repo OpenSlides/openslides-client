@@ -1,20 +1,21 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { PollState, VOTE_MAJORITY } from '@app/domain/models/poll';
+import { BasePollComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll.component';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { PollState, VOTE_MAJORITY } from 'src/app/domain/models/poll';
-import { BasePollComponent } from 'src/app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { VotingPrivacyWarningDialogService } from '../../../../../../modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { ViewPoll } from '../../../../../polls';
-import { MotionPollService } from '../../services';
+import { ViewPoll } from '../../../../../polls/view-models/view-poll';
+import { MotionPollService } from '../../services/motion-poll.service/motion-poll.service';
 import { MotionPollPdfService } from '../../services/motion-poll-pdf.service/motion-poll-pdf.service';
 
 @Component({
     selector: `os-motion-poll`,
     templateUrl: `./motion-poll.component.html`,
     styleUrls: [`./motion-poll.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class MotionPollComponent extends BasePollComponent {

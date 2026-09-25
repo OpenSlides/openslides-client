@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CollectionMapperService } from './collection-mapper.service';
+import { CollectionMapperService } from './collection-mapper.service/collection-mapper.service';
 import { ViewModelStoreService } from './view-model-store.service';
 
 class MockCollection {

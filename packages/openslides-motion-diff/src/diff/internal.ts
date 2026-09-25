@@ -396,17 +396,3 @@ export function insertLines(oldHtml: string, atLineNumber: number, insertedHtml:
 export function removeLines(oldHtml: string, fromLine: number, toLine: number): string {
     return replaceLines(oldHtml, ``, fromLine, toLine);
 }
-
-/**
- * Convenience method that takes the html-attribute from an extractRangeByLineNumbers()-method,
- * wraps it with the context and adds line numbers.
- *
- * @param {ExtractedContent} diff
- * @param {number} lineLength
- * @param {number} firstLine
- */
-export function formatDiffWithLineNumbers(diff: ExtractedContent, lineLength: number, firstLine: number): string {
-    let text = formatDiff(diff);
-    text = LineNumbering.insert({ html: text, lineLength, firstLine });
-    return text;
-}

@@ -1,4 +1,4 @@
-import { joinTypedArrays, splitTypedArray } from 'src/app/infrastructure/utils';
+import { joinTypedArrays, splitTypedArray } from '@app/infrastructure/utils';
 
 import { HttpSubscription } from './http-subscription';
 

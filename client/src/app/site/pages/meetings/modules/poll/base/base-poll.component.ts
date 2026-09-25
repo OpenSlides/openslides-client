@@ -1,13 +1,13 @@
 import { Directive, inject } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { PollContentObject } from '@app/domain/models/poll';
+import { PollState, PollType } from '@app/domain/models/poll/poll-constants';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ChoiceService } from '@app/ui/modules/choice-dialog';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { PollContentObject } from 'src/app/domain/models/poll';
-import { PollState, PollType } from 'src/app/domain/models/poll/poll-constants';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { PollControllerService } from '../services/poll-controller.service/poll-controller.service';
 

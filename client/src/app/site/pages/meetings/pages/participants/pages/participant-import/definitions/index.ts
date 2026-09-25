@@ -1,5 +1,5 @@
-import { GeneralUser } from 'src/app/gateways/repositories/users';
-import { userHeadersAndVerboseNames } from 'src/app/site/pages/organization/pages/accounts/pages/account-import/definitions';
+import { GeneralUser } from '@app/gateways/repositories/users';
+import { userHeadersAndVerboseNames } from '@app/site/pages/organization/pages/accounts/pages/account-import/definitions';
 
 export const participantHeadersAndVerboseNames: { [key in keyof GeneralUser]?: any } = {
     ...userHeadersAndVerboseNames,

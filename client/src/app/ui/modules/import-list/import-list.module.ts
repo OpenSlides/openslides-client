@@ -10,11 +10,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { EditorModule } from 'src/app/ui/modules/editor/editor.module';
-import { ScrollingTableModule } from 'src/app/ui/modules/scrolling-table';
-import { PipesModule } from 'src/app/ui/pipes/pipes.module';
+import { EditorModule } from '@app/ui/modules/editor/editor.module';
+import { ScrollingTableModule } from '@app/ui/modules/scrolling-table';
+import { PipesModule } from '@app/ui/pipes/pipes.module';
 
-import { OpenSlidesTranslationModule } from '../../../site/modules/translations';
+import { OpenSlidesTranslationModule } from '../../../site/modules/translations/openslides-translation.module';
 import { BackendImportListComponent } from './components/via-backend-import-list/backend-import-list.component';
 import { ImportListFirstTabDirective } from './directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from './directives/import-list-last-tab.directive';
@@ -45,7 +45,7 @@ const DECLARATIONS = [
         FormsModule,
         PortalModule,
         ScrollingTableModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class ImportListModule {}

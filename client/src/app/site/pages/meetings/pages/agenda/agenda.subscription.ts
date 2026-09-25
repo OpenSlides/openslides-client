@@ -1,13 +1,14 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from 'src/app/domain/fieldsets/misc';
-import { MeetingUserFieldsets, UserFieldsets } from 'src/app/domain/fieldsets/user';
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { FollowList } from 'src/app/site/services/model-request-builder';
+import { Id } from '@app/domain/definitions/key-types';
+import { FULL_FIELDSET, MEETING_ROUTING_FIELDS } from '@app/domain/fieldsets/misc';
+import { MeetingUserFieldsets, UserFieldsets } from '@app/domain/fieldsets/user';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { FollowList } from '@app/site/services/model-request-builder';
 
 import { pollModelRequest } from '../polls/polls.subscription';
-import { ViewListOfSpeakers, ViewTopic } from './modules';
-import { ViewAgendaItem } from './view-models';
+import { ViewListOfSpeakers } from './modules/list-of-speakers/view-models/view-list-of-speakers';
+import { ViewTopic } from './modules/topics/view-models/view-topic';
+import { ViewAgendaItem } from './view-models/view-agenda-item';
 
 export const AGENDA_LIST_ITEM_SUBSCRIPTION = `agenda_list`;
 export const AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION = `agenda_list_minimal`;
