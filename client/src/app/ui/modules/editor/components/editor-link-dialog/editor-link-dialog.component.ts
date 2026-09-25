@@ -203,24 +203,35 @@ export class EditorLinkDialogComponent implements OnInit {
     public initForm(externalLink?: FormGroup<any>): void {
         const externalControls = ['extUrl', 'extText', 'extDisplayMode'];
         if (externalLink) {
-            externalControls.forEach(name => this.externalLink.get(name).reset());
-        } else {
-            this.internalReferenceForm = new FormGroup({
-                TopicFormControl: new FormControl(this.agendaItemRepo),
-                MotionFormControl: new FormControl(this.motionItemRepo),
-                AssignmentFormControl: new FormControl(this.assignmentItemRepo)
-            });
-            this.internalReferenceForm.valueChanges.subscribe(() => {
-                const controlName = `${this.searchLists[this.selectedRepoValue]}FormControl`;
-                const selectedId = this.internalReferenceForm.get(controlName)?.value;
-                const repo = this.searchRepos[this.selectedRepoValue];
-                this.item = repo.getViewModel(selectedId);
-                const action = this.item ? 'disable' : 'enable';
-                externalControls.forEach(name => this.externalLink.get(name)?.[action]());
-
-                this.addReference();
-            });
+            externalControls.forEach(name => this.externalLink.get(name)?.reset());
+            return;
         }
+        const disabled = !!this.externalUrl;
+        this.internalReferenceForm = new FormGroup({
+            TopicFormControl: new FormControl({
+                value: this.agendaItemRepo,
+                disabled
+            }),
+            MotionFormControl: new FormControl({
+                value: this.motionItemRepo,
+                disabled
+            }),
+            AssignmentFormControl: new FormControl({
+                value: this.assignmentItemRepo,
+                disabled
+            })
+        });
+        this.internalReferenceForm.valueChanges.subscribe(() => {
+            const controlName = `${this.searchLists[this.selectedRepoValue]}FormControl`;
+            const selectedId = this.internalReferenceForm.get(controlName)?.value;
+            const repo = this.searchRepos[this.selectedRepoValue];
+            this.item = repo.getViewModel(selectedId);
+            const action = this.item ? 'disable' : 'enable';
+            externalControls.forEach(name => {
+                this.externalLink.get(name)?.[action]();
+            });
+            this.addReference();
+        });
     }
 
     /**

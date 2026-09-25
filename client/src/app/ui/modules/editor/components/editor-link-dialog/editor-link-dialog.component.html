@@ -9,7 +9,7 @@
     (keydown.space)="toggleArrow('toggleExternalReference')"
 >
     <div class="references">
-        <h1 aria-label="Insert/edit external link" mat-dialog-title translate>Insert/edit external link</h1>
+        <h1 aria-label="Insert/edit external link" mat-dialog-title>{{ 'Insert/edit external link' | translate }}</h1>
         @if (canEmbed) {
             <button #btn class="arrows" matIconButton>
                 @if (toggleExternalReference) {
@@ -25,29 +25,29 @@
     <div mat-dialog-content [formGroup]="externalLink">
         <div class="card-grid">
             <mat-form-field>
-                <mat-label translate>URL</mat-label>
+                <mat-label>{{ 'URL' | translate }}</mat-label>
                 <input formControlName="extUrl" matInput />
             </mat-form-field>
         </div>
         <div>
             @if (data.needsText) {
                 <mat-form-field>
-                    <mat-label translate>Text to display</mat-label>
+                    <mat-label>{{ 'Text to display' | translate }}</mat-label>
                     <input formControlName="extText" matInput />
                 </mat-form-field>
             }
         </div>
         <div>
             <mat-form-field>
-                <mat-label translate>Open link in ...</mat-label>
+                <mat-label>{{ 'Open link in ...' | translate }}</mat-label>
                 <select formControlName="extDisplayMode" matNativeControl>
-                    <option translate value="_self">Current window</option>
-                    <option translate value="_blank">New window</option>
+                    <option value="_self">{{ 'Current window' | translate }}</option>
+                    <option value="_blank">{{ 'New window' | translate }}</option>
                 </select>
             </mat-form-field>
         </div>
         <div class="clear-button">
-            <button aria-label="Reset" color="gray" mat-icon-button translate (click)="initForm(externalLink)">
+            <button aria-label="Reset" color="gray" mat-icon-button (click)="initForm(externalLink)">
                 <mat-icon>clear</mat-icon>
             </button>
         </div>
@@ -64,8 +64,8 @@
         (keydown.space)="toggleArrow('toggleInternalReference')"
     >
         <div class="references">
-            <h1 aria-label="Link a topic/motion/assignment" mat-dialog-title translate>
-                Link a topic/motion/assignment
+            <h1 aria-label="Link a topic/motion/assignment" mat-dialog-title>
+                {{ 'Link a topic/motion/assignment' | translate }}
             </h1>
             <button class="arrows" matIconButton>
                 @if (toggleInternalReference) {
@@ -82,7 +82,6 @@
                 <mat-radio-group aria-label="Select an option" class="radio-group" formControlName="options">
                     <mat-radio-button
                         aria-label="Topics"
-                        translate
                         [disabled]="!!externalUrl"
                         [value]="0"
                         (click)="changeEditMode()"
@@ -91,7 +90,6 @@
                     </mat-radio-button>
                     <mat-radio-button
                         aria-label="Motions"
-                        translate
                         [disabled]="!!externalUrl"
                         [value]="1"
                         (click)="changeEditMode()"
@@ -100,7 +98,6 @@
                     </mat-radio-button>
                     <mat-radio-button
                         aria-label="Assignments"
-                        translate
                         [disabled]="!!externalUrl"
                         [value]="2"
                         (click)="changeEditMode()"
@@ -109,14 +106,13 @@
                     </mat-radio-button>
                 </mat-radio-group>
                 <mat-form-field [formGroup]="internalReferenceForm">
-                    <mat-label translate>
+                    <mat-label>
                         {{ this.translate.instant(searchLists[selectedRepoValue]) }}
                     </mat-label>
                     @for (searchRepo of searchRepos; track $index) {
                         @if (selectedRepoValue === $index) {
                             <os-repo-search-selector
                                 formControlName="{{ searchLists[$index] }}FormControl"
-                                [disabled]="!!externalUrl"
                                 [keepOpen]="searchRepo.keepOpen"
                                 [repo]="searchRepo"
                                 [subscriptionConfig]="searchSubscriptionConfig[$index]"
@@ -127,7 +123,7 @@
                 </mat-form-field>
             </div>
             <div class="clear-button">
-                <button aria-label="Reset" color="gray" mat-icon-button translate (click)="initForm()">
+                <button aria-label="Reset" color="gray" mat-icon-button (click)="initForm()">
                     <mat-icon>clear</mat-icon>
                 </button>
             </div>
@@ -136,18 +132,13 @@
 }
 
 <div class="matDialogActions" mat-dialog-actions>
-    <button
-        aria-label="Ok"
-        color="accent"
-        mat-button
-        translate
-        [disabled]="!externalUrl && !this.item"
-        (click)="save()"
-    >
-        Ok
+    <button aria-label="Ok" color="accent" mat-button [disabled]="!externalUrl && !this.item" (click)="save()">
+        {{ 'Ok' | translate }}
     </button>
     @if (isUpdate) {
-        <button aria-label="Remove link" color="warn" mat-button translate (click)="removeLink()">Remove link</button>
+        <button aria-label="Remove link" color="warn" mat-button (click)="removeLink()">
+            {{ 'Remove link ' | translate }}
+        </button>
     }
-    <button aria-label="Cancel" mat-button translate (click)="cancel()">Cancel</button>
+    <button aria-label="Cancel" mat-button (click)="cancel()">{{ 'Cancel' | translate }}</button>
 </div>
