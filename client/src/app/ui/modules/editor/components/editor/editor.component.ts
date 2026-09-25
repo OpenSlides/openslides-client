@@ -378,6 +378,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                                         }
                                     ]
                                 })
+                                .insertContent({ type: `text`, text: ` ` })
                                 .run();
                         } else {
                             chain.setLink(result.link).run();
