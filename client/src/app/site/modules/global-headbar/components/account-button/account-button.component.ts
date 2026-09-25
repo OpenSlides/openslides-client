@@ -272,6 +272,9 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
                 if (!result.group_ids?.length) {
                     result.group_ids = [this.activeMeeting.meeting!.default_group_id];
                 }
+                if (result.vote_delegated_to_id === 0) {
+                    result.vote_delegated_to_id = null;
+                }
                 if (
                     !(
                         user.id === this.operator.operatorId &&
