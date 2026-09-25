@@ -28,7 +28,7 @@ import {
     SKIPPED_SETTINGS
 } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
-import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service/collection-mapper.service';
 import { ensureIdField } from '@app/site/services/relation-manager.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';

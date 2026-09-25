@@ -18,7 +18,7 @@ import { PollsAppConfig } from '@app/site/pages/meetings/pages/polls/polls.confi
 import { ProjectorAppConfig } from '@app/site/pages/meetings/pages/projectors/projector.config';
 import { MainMenuService } from '@app/site/pages/meetings/services/main-menu.service';
 import { GendersAppConfig } from '@app/site/pages/organization/pages/accounts/pages/gender/genders.config';
-import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service/collection-mapper.service';
 import { FallbackRoutesService } from '@app/site/services/fallback-routes.service';
 import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
 

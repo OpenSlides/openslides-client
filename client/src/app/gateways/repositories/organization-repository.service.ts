@@ -1,9 +1,9 @@
 import { Service } from '@angular/core';
-import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { ORGANIZATION_ID } from '@app/domain/definitions/organization-id';
 
 import { Organization, OrganizationAction, OrganizationSetting } from '../../domain/models/organizations/organization';
-import { ViewOrganization } from '../../site/pages/organization/view-models/view-organization';
-import { Fieldsets } from '../../site/services/model-request-builder/model-request-builder.service';
+import type { ViewOrganization } from '../../site/pages/organization/view-models/view-organization';
+import type { Fieldsets } from '../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from './base-repository';
 
 @Service()
