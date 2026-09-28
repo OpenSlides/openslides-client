@@ -89,6 +89,8 @@ export class EditorLinkDialogComponent implements OnInit {
     public externalUrl: string;
     public externalText: string;
 
+    private meetingId = this.activeMeetingIdService.meetingId;
+
     public constructor(
         @Inject(MAT_DIALOG_DATA) public data: EditorLinkDialogInput,
         private dialogRef: MatDialogRef<EditorLinkDialogComponent>,
@@ -127,21 +129,28 @@ export class EditorLinkDialogComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        if ((this.canEmbed = !this.router.url.includes('motions') ? true : false)) {
+        if ((this.canEmbed = this.embedAllowed(this.meetingId))) {
             this.searchRepos = [this.agendaItemRepo, this.motionItemRepo, this.assignmentItemRepo];
             this.searchSubscriptionConfig = [
-                (this.subscriptionTopicConfig = getAgendaListMinimalSubscriptionConfig(
-                    this.activeMeetingIdService.meetingId
-                )),
-                (this.subscriptionMotionConfig = getMotionListMinimalSubscriptionConfig(
-                    this.activeMeetingIdService.meetingId
-                )),
-                (this.subscriptionAssignmentConfig = getAssignmentListMinimalSubscriptionConfig(
-                    this.activeMeetingIdService.meetingId
-                ))
+                (this.subscriptionTopicConfig = getAgendaListMinimalSubscriptionConfig(this.meetingId)),
+                (this.subscriptionMotionConfig = getMotionListMinimalSubscriptionConfig(this.meetingId)),
+                (this.subscriptionAssignmentConfig = getAssignmentListMinimalSubscriptionConfig(this.meetingId))
             ];
             this.initForm();
         }
+    }
+
+    private embedAllowed(meetingId: number): boolean {
+        const url = this.router.url;
+        return this.isHome(meetingId, url) || this.isTopic(url);
+    }
+
+    private isHome(meetingId: number, url: string): boolean {
+        return url === `/${meetingId}`;
+    }
+
+    private isTopic(url: string): boolean {
+        return url.includes('agenda/topics');
     }
 
     public removeLink(): void {
@@ -245,7 +254,7 @@ export class EditorLinkDialogComponent implements OnInit {
     public urlBuilder(item): string {
         const setCollection: string = item.collection === 'topic' ? 'agenda/topic' : item.collection;
         const setId: number = item.collection === 'assignment' ? item.id : item.sequential_number;
-        const builtUrl = `${this.activeMeetingIdService.meetingId}/${setCollection}s/${setId}`;
+        const builtUrl = `${this.meetingId}/${setCollection}s/${setId}`;
         const url = this.router.url.replace(/^\/.*$/, `/${builtUrl}`);
         return url;
     }

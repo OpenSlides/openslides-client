@@ -111,6 +111,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     @Input()
     public allowEmbeds = false;
 
+    @Input()
+    public isModerationNote;
+
     @Output()
     public leaveFocus = new EventEmitter<void>();
 

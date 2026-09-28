@@ -53,7 +53,7 @@
             }
             @if (isEditing) {
                 <form [formGroup]="moderatorNoteForm">
-                    <os-editor formControlName="moderator_notes"></os-editor>
+                    <os-editor formControlName="moderator_notes" [isModerationNote]="true"></os-editor>
                 </form>
             }
         </mat-card-content>
