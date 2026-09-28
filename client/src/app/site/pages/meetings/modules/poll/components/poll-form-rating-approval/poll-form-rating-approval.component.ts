@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import { Component, effect, inject, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -34,8 +34,7 @@ export interface PollFormRatingApproval {
         TranslateKeyPipe
     ],
     templateUrl: './poll-form-rating-approval.component.html',
-    styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-approval.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-approval.component.scss`]
 })
 export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
     public validPercentBases: [RatingApprovalOnehundredPercentBase, string][] = [
@@ -44,7 +43,7 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         [`valid`, _('All valid ballots')],
         [`cast`, _('All casted ballots')],
         [`entitled`, _('All entitled users')],
-        // [`entitled_present`, _('Present entitled users')],
+        [`entitled_present`, _('Present entitled users')],
         [`disabled`, _('Disabled (no percents)')]
     ];
 

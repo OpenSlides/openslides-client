@@ -177,7 +177,7 @@ export class PollFormComponent extends BaseComponent {
     }
 
     public getValues(): Partial<{ [place in keyof ViewPoll]: any }> {
-        return { ...this.data, ...this.serializeForm() };
+        return { ...this.data, ...this.serializeForm(), ...this.methodForm().getSerialzedAdditionalData() };
     }
 
     public openVotingWarning(event: MouseEvent): void {

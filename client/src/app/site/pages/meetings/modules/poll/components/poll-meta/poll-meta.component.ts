@@ -39,7 +39,7 @@ export class PollMetaComponent {
     });
 
     public hasGlobalOptionEnabled = computed<boolean>(() => {
-        return this.config.value().allow_nota || this.config.value().min_options_amount === 0;
+        return this.config.value().allow_nota || this.poll().allow_empty;
     });
 
     public generalApprovalAllowed = computed<boolean>(() => {
@@ -51,7 +51,7 @@ export class PollMetaComponent {
     });
 
     public generalAbstainAllowed = computed<boolean>(() => {
-        return this.config.value().min_options_amount === 0;
+        return this.poll().allow_empty;
     });
 
     public isListPoll = computed<boolean>(() => {

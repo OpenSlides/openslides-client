@@ -57,20 +57,46 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
     public dialogRef = inject(MatDialogRef<BasePollDialogComponent>);
     public pollData: ViewPoll = inject(MAT_DIALOG_DATA);
 
+    public currentPollData: ViewPoll = this.pollData;
+
     public constructor() {
         super();
         this.addKeyListener();
+    }
+
+    public toggleAnalogPollForm(): void {
+        const payload = this.getPayload();
+        if (payload.result && !(payload.result instanceof String)) {
+            payload.result = JSON.stringify(payload.result);
+        }
+        this.currentPollData = Object.assign(this.currentPollData, payload);
+        this.analogPollFormOpen.set(!this.analogPollFormOpen());
     }
 
     /**
      * Submits the values from dialog.
      */
     public submitPoll(): void {
+        this.dialogRef.close(this.getPayload());
+    }
+
+    /**
+     * Returns the poll method related part of the payload
+     */
+    public abstract methodPayload(): PollMethodPayload;
+
+    /**
+     * Returns the poll options related part of the payload
+     */
+    public abstract optionsPayload(): PollOptionsPayload;
+
+    protected getPayload(): PollUpdatePayload {
         const formValues = this.pollForm().getValues();
         const visibility: PollVisibility = formValues?.visibility;
 
         const payload: PollUpdatePayload = {
             title: formValues?.title,
+            allow_empty: formValues?.allow_empty,
             ...this.methodPayload(),
             ...this.optionsPayload(),
             visibility,
@@ -87,18 +113,8 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
             }
         }
 
-        this.dialogRef.close(payload);
+        return payload;
     }
-
-    /**
-     * Returns the poll method related part of the payload
-     */
-    public abstract methodPayload(): PollMethodPayload;
-
-    /**
-     * Returns the poll options related part of the payload
-     */
-    public abstract optionsPayload(): PollOptionsPayload;
 
     private addKeyListener(): void {
         if (!this.dialogRef) {

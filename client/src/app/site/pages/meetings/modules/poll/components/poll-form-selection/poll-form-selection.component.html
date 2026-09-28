@@ -14,22 +14,18 @@
     <div class="poll-preview-meta-info-form">
         @if (!pollStarted()) {
             <div class="info-grid">
-                @if (!form.get('allow_general_abstain').value) {
-                    <mat-form-field>
-                        <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
-                        <input formControlName="min_options_amount" matInput required type="number" />
-                        @if (form.get('min_options_amount').hasError('min')) {
-                            <mat-error>{{ 'Amount needs to be at least 1' | translate }}</mat-error>
-                        }
-                        @if (form.get('min_options_amount').hasError('minGreaterThanMax')) {
-                            <mat-error>
-                                {{ 'Amount must not exceed amount of max amount of votes' | translate }}
-                            </mat-error>
-                        }
-                    </mat-form-field>
-                } @else {
-                    <div></div>
-                }
+                <mat-form-field>
+                    <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
+                    <input formControlName="min_options_amount" matInput required type="number" />
+                    @if (form.get('min_options_amount').hasError('min')) {
+                        <mat-error>{{ 'Amount needs to be at least 1' | translate }}</mat-error>
+                    }
+                    @if (form.get('min_options_amount').hasError('minGreaterThanMax')) {
+                        <mat-error>
+                            {{ 'Amount must not exceed amount of max amount of votes' | translate }}
+                        </mat-error>
+                    }
+                </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>{{ 'Max amount of votes' | translate }}</mat-label>
@@ -44,7 +40,7 @@
             </div>
 
             <div class="margin-bottom-15">
-                <mat-checkbox formControlName="allow_general_abstain">
+                <mat-checkbox formControlName="allow_empty">
                     {{ 'General abstain' | translate }}
                 </mat-checkbox>
 
@@ -66,7 +62,7 @@
                         @if (
                             option[0] !== 'no_general' ||
                             form.get('allow_nota').getRawValue() ||
-                            form.get('allow_general_abstain').getRawValue() ||
+                            form.get('allow_empty').getRawValue() ||
                             form.get('min_options_amount').getRawValue() === 0
                         ) {
                             <mat-option [value]="option[0]">

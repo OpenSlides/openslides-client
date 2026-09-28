@@ -208,11 +208,11 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public generalAbstain = computed<number | null>(() => {
-        if (this.config().min_options_amount !== 0) {
+        if (!this.poll().allow_empty) {
             return null;
         }
 
-        return +this.config().parsedResult()?.abstain || 0;
+        return +this.config().parsedResult()?.empty || 0;
     });
 
     public generalAbstainPercent = computed<string | null>(() => {
