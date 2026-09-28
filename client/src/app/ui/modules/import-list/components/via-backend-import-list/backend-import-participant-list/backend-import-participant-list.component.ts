@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, inject, input, OnInit, viewChild } from '@angular/core';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -21,7 +21,6 @@ import { BackendImportPhase } from '../backend-import-list.component';
     selector: `os-backend-import-participant-list`,
     templateUrl: `./backend-import-participant-list.component.html`,
     styleUrls: [`./backend-import-participant-list.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         MatDialogModule,
         MatIcon,
@@ -36,50 +35,25 @@ import { BackendImportPhase } from '../backend-import-list.component';
     ]
 })
 export class BackendImportParticipantListComponent implements OnInit {
-    @Input()
-    public modelName = '';
-
-    @Input()
-    public instructionsForImport = ``;
-
-    @Input()
-    public columnsInformation = ``;
+    public modelName = input.required<string>();
+    public instructionsForImport = input<string>();
+    public columnsInformation = input<string>();
 
     /**
      * Client-side definition of required/accepted columns.
      * Ensures that the client can display information about how the import works.
      */
-    @Input()
-    public set defaultColumns(cols: ImportListHeaderDefinition[]) {
-        this._defaultColumns = cols;
-    }
-
-    public get defaultColumns(): ImportListHeaderDefinition[] {
-        return this._defaultColumns;
-    }
+    public defaultColumns = input<ImportListHeaderDefinition[]>([]);
 
     /**
      * Defines all necessary and optional fields, that a .csv-file can contain.
      */
-    @Input()
-    public possibleFields: string[] = [];
-
-    @Input()
-    public set importer(importer: BackendImportService) {
-        this._importer = importer;
-    }
-
-    public get importer(): BackendImportService {
-        return this._importer;
-    }
-
-    @ViewChild(`fileInput`)
-    private fileInput!: ElementRef<HTMLInputElement>;
+    public possibleFields = input<string[]>([]);
+    public importer = input.required<BackendImportService>();
 
     protected uploadButton = true;
 
-    private _importer!: BackendImportService;
-    private _defaultColumns: ImportListHeaderDefinition[] = [];
+    private fileInput = viewChild<ElementRef<HTMLInputElement>>(`fileInput`);
     private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
     private dialog = inject(MatDialog);
     private CSVReloadService = inject(ParticipantImportCSVReloadService);
@@ -88,7 +62,7 @@ export class BackendImportParticipantListComponent implements OnInit {
      * Observable that allows one to monitor the currenty selected file.
      */
     public get rawFileObservable(): Observable<File | null> {
-        return this._importer?.rawFileObservable || of(null);
+        return this.importer()?.rawFileObservable || of(null);
     }
 
     /**
@@ -101,9 +75,9 @@ export class BackendImportParticipantListComponent implements OnInit {
     public constructor(private router: Router) {}
 
     public ngOnInit(): void {
-        this.importer.clearAll();
+        this.importer().clearAll();
         this.CSVReloadService.openFileInput$.subscribe(async (newFile: Event) => {
-            this.importer.onSelectFile(newFile);
+            this.importer().onSelectFile(newFile);
         });
     }
 
@@ -115,12 +89,12 @@ export class BackendImportParticipantListComponent implements OnInit {
      * Removes the selected file and also empties the preview.
      */
     public removeSelectedFile(clearImporter = true): void {
-        if (this.fileInput) {
-            this.fileInput.nativeElement.value = ``;
+        if (this.fileInput()) {
+            this.fileInput().nativeElement.value = ``;
             this.uploadButton = true;
         }
         if (clearImporter) {
-            this._importer.clearFile();
+            this.importer().clearFile();
         }
     }
 
@@ -138,8 +112,8 @@ export class BackendImportParticipantListComponent implements OnInit {
      * triggers the importer's onSelectFile after a file has been chosen
      */
     public onSelectedFile(event: Event): void {
-        this._importer.onSelectFile(event);
-        if (this.fileInput.nativeElement.value) {
+        this.importer().onSelectFile(event);
+        if (this.fileInput().nativeElement.value) {
             this.uploadButton = false;
         }
     }
@@ -148,7 +122,7 @@ export class BackendImportParticipantListComponent implements OnInit {
      * A function to trigger the csv example download.
      */
     public downloadCsvExample(): void {
-        this._importer.downloadCsvExample();
+        this.importer().downloadCsvExample();
     }
 
     public onDragOver(event: DragEvent): void {
@@ -169,7 +143,7 @@ export class BackendImportParticipantListComponent implements OnInit {
             }
         };
         try {
-            this._importer.onSelectFile(droppedFile);
+            this.importer().onSelectFile(droppedFile);
             this.uploadButton = false;
         } catch {
             this.uploadButton = false;

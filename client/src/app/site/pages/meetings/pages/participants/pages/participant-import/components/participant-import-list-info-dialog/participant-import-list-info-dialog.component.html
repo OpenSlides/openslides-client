@@ -5,15 +5,14 @@
         </h1>
     </div>
     <mat-dialog-content class="fix-size">
-        <table>
-            <br />
-            <tr style="display: table-row-group">
+        <table class="padding-left-20">
+            <tr>
                 <td>{{ 'Column Name' | translate }}</td>
                 <td class="padding-left-20">{{ 'Meaning' | translate }}</td>
                 <td>{{ 'Notes' | translate }}</td>
             </tr>
 
-            @for (column of defaultColumns; track column) {
+            @for (column of defaultColumns; track column.property) {
                 <tr>
                     <td class="table-title-column">{{ column.property }}:</td>
                     <td class="table-title-column fix-table-column-size">
@@ -21,8 +20,7 @@
                         @if (column.customInfo) {
                             @if (isString(column.customInfo)) {
                                 {{ column.customInfo | translate }}
-                            }
-                            @if (!isString(column.customInfo)) {
+                            } @else {
                                 {{ column.customInfo | async }}
                             }
                         }

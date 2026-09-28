@@ -1,14 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    inject,
-    Input,
-    OnInit,
-    ViewChild,
-    ViewEncapsulation
-} from '@angular/core';
+import { Component, ElementRef, inject, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
@@ -36,23 +27,18 @@ import { ParticipantImportCSVReloadService } from '../../../services/participant
         MatDrawer,
         FormsModule
     ],
-    encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager
+    encapsulation: ViewEncapsulation.None
 })
 export class CSVOptions implements OnInit {
     public vp = inject(ViewPortService);
     private csvEncodingOptions = inject(CSVEncodingOptionsService);
     private CSVReload = inject(ParticipantImportCSVReloadService);
-    public toggleCSVOptions: boolean = this.csvEncodingOptions.toggleCSVOptions;
-
-    @Input()
-    public csvReloadButton: boolean;
+    public enabled: boolean = this.csvEncodingOptions.toggleCSVOptions;
 
     /**
      * The CSV-Configuration side drawer
      */
-    @ViewChild(MatDrawer, { static: true })
-    public csvConfigMenu: MatDrawer;
+    public csvConfigMenu = viewChild(MatDrawer);
 
     public selectedEncoding = 'utf-8';
     public selectedColumnSeparator = '';
@@ -63,25 +49,24 @@ export class CSVOptions implements OnInit {
         this.CSVReload.reload(event);
     }
 
-    @ViewChild(`reloadFileInput`)
-    public reloadFileInput?: ElementRef<HTMLInputElement>;
+    public reloadFileInput = viewChild<ElementRef<HTMLInputElement>>(`reloadFileInput`);
 
     public ngOnInit(): void {
         this.csvEncodingOptions.drawer$.subscribe(drawer => {
-            if (drawer === 'filterMenu' && this.csvConfigMenu.opened) {
-                this.csvConfigMenu.close();
+            if (drawer === 'filterMenu' && this.csvConfigMenu().opened) {
+                this.csvConfigMenu().close();
             }
         });
     }
 
     public openCsvConfig(): void {
-        if (this.csvConfigMenu.opened) {
+        if (this.csvConfigMenu().opened) {
             this.csvEncodingOptions.open('filterMenu');
-            this.csvConfigMenu.close();
+            this.csvConfigMenu().close();
             return;
         } else {
             this.csvEncodingOptions.open('csvConfigMenu');
-            this.csvConfigMenu.open();
+            this.csvConfigMenu().open();
         }
     }
 

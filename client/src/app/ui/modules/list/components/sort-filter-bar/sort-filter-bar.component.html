@@ -84,9 +84,8 @@
                 </button>
             }
         }
-        @if (csvEncodingOptions?.toggleCSVOptions) {
-            <os-participant-import-csv-options />
-        }
+        <!-- CSV Option buttons (Reload & Encoding) -->
+        <os-participant-import-csv-options [hidden]="!csvEncodingOptions.toggleCSVOptions" />
         <!-- Filter button -->
         @if (hasFilters) {
             <button

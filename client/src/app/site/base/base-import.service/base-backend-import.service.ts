@@ -306,7 +306,8 @@ export abstract class BaseBackendImportService implements BackendImportService {
             .catch(e => e);
 
         if (typeof results !== `boolean`) {
-            this._currentImportPhaseSubject.next(BackendImportPhase.FINISHED);
+            this._currentImportPhaseSubject.next(BackendImportPhase.LOADING_PREVIEW);
+            this.clearAll();
             this.matSnackbar.open(
                 this.translate.instant(results.error?.message ?? results?.message ?? results),
                 this.translate.instant(`Ok`)

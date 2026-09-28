@@ -1,11 +1,10 @@
 import { AsyncPipe, NgClass } from '@angular/common';
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     EventEmitter,
     inject,
-    Input,
+    input,
     OnDestroy,
     OnInit,
     Output,
@@ -53,7 +52,6 @@ import { ParticipantImportListInfoDialogComponent } from '../participant-import-
     selector: `os-participant-import-list-preview`,
     templateUrl: `./participant-import-list-preview.component.html`,
     styleUrls: [`./participant-import-list-preview.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         HeadBarModule,
         ListModule,
@@ -119,8 +117,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return this._dataSource;
     }
 
-    @Input()
-    public searchFieldInput = ``;
+    public searchFieldInput = input<string>('');
 
     @Output()
     public searchFilterUpdated = new EventEmitter<string>();

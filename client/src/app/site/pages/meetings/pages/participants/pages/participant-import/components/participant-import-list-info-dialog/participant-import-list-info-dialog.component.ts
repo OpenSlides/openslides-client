@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
@@ -16,7 +16,6 @@ import {
     selector: `os-participant-import-list-info-dialog`,
     templateUrl: `./participant-import-list-info-dialog.component.html`,
     styleUrls: [`./participant-import-list-info-dialog.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [HeadBarModule, ListModule, AsyncPipe, TranslatePipe, MatDialogModule]
 })
 export class ParticipantImportListInfoDialogComponent {

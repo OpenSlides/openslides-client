@@ -38,11 +38,11 @@
                         <mat-label>{{ 'INFO' | translate }}</mat-label>
                     </button>
                 </div>
-                <span class="descriptionColumns" [innerHTML]="columnsInformation | trust: 'html'"></span>
+                <span class="descriptionColumns" [innerHTML]="columnsInformation() | trust: 'html'"></span>
             </div>
             <div style="display: flex; flex-direction: column">
                 <h3 class="instructions">{{ 'Instructions for import file' | translate }}</h3>
-                <span [innerHTML]="instructionsForImport | trust: 'html'"></span>
+                <span [innerHTML]="instructionsForImport() | trust: 'html'"></span>
             </div>
         </div>
     </mat-card-content>
