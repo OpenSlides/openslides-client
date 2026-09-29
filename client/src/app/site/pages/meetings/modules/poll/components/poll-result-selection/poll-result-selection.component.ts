@@ -205,6 +205,13 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
             return Math.ceil(this.config().onehundredPercentBaseNum / 2 + 1);
         } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
             return Math.ceil((this.config().onehundredPercentBaseNum * 2) / 3);
+        } else if (this.config().required_majority === PollRequiredMajority.SimpleMajority) {
+            const result = this.config().parsedResult();
+            return Math.max(
+                ...Object.keys({ ...result, 0: 1 })
+                    .filter(k => !isNaN(+k) && !isNaN(+result[k]))
+                    .map(k => +result[k])
+            );
         }
 
         return null;
