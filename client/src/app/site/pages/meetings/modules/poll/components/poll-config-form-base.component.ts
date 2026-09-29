@@ -29,6 +29,10 @@ export abstract class PollFormBaseComponent {
     protected abstract getPatchedFormData(data: Partial<ViewPoll>): Record<string, unknown>;
     public abstract getSerialzedForm(): Record<string, unknown>;
 
+    public getSerialzedAdditionalData(): Record<string, unknown> {
+        return {};
+    }
+
     private onDataUpdated(): void {
         if (!this.data() || !this.form) {
             return;

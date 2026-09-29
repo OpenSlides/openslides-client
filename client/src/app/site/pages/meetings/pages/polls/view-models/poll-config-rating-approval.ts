@@ -35,7 +35,7 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
             case 'entitled':
                 return this.poll.entitled_user_ids?.length;
             case 'entitled_present':
-                return null;
+                return this.poll?.entitled_users.filter(u => u.present).length ?? null;
         }
 
         return null;
@@ -64,7 +64,7 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
             case 'entitled':
                 return this.poll.entitled_user_ids?.length;
             case 'entitled_present':
-                return null;
+                return this.poll?.entitled_users.filter(u => u.present).length ?? null;
         }
 
         return null;

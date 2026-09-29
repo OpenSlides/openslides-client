@@ -83,6 +83,9 @@
                     <mat-option value="absolute_majority">
                         {{ 'absolute_majority' | translateKey: 'poll_required_majority' }}
                     </mat-option>
+                    <mat-option value="simple_majority">
+                        {{ 'simple_majority' | translateKey: 'poll_required_majority' }}
+                    </mat-option>
                 </mat-select>
                 @if (form.get('required_majority').getRawValue() === 'absolute_majority') {
                     <mat-hint

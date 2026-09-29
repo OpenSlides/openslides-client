@@ -4,7 +4,7 @@
             [data]="pollData"
             [isEVotingEnabled]="isEVotingEnabled"
             [optionAmount]="options().length"
-            [optionEdit]="selectedTab() === 0"
+            [optionEdit]="true"
         ></os-poll-form>
     </div>
 
@@ -14,7 +14,7 @@
                 [configType]="pollForm().selectedMethod()"
                 [options]="analogPollOptions()"
                 [pollConfigData]="pollForm().methodConfig()"
-                [pollData]="pollData"
+                [pollData]="currentPollData"
             />
         </div>
     }
@@ -36,11 +36,11 @@
         <div>
             @if (isAnalogPoll()) {
                 @if (analogPollFormOpen()) {
-                    <button mat-button (click)="analogPollFormOpen.set(false)">
+                    <button mat-button (click)="toggleAnalogPollForm()">
                         <span>{{ 'Edit Poll' | translate }}</span>
                     </button>
                 } @else {
-                    <button mat-button (click)="analogPollFormOpen.set(true)">
+                    <button mat-button (click)="toggleAnalogPollForm()">
                         <span>{{ 'Edit Result' | translate }}</span>
                     </button>
                 }
