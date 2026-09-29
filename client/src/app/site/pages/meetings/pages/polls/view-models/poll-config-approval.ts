@@ -21,7 +21,11 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
     public get onehundredPercentBaseNum(): number | null {
         switch (this.onehundred_percent_base) {
             case 'yes_no':
-                return !this.allow_abstain ? this.totalVotes : null;
+                return !this.allow_abstain
+                    ? this.totalVotes
+                    : Big(this.parsedResult().yes || 0)
+                          .plus(Big(this.parsedResult().no || 0))
+                          .toNumber();
             case 'yes_no_abstain':
                 return this.totalVotes;
             case 'valid':

@@ -154,7 +154,11 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public validBallotsPercent = computed<string | null>(() => {
-        if (!this.config().onehundredPercentBaseNum) {
+        if (
+            !this.config().onehundredPercentBaseNum ||
+            this.onehundredPercentBase() === `yes_no` ||
+            this.onehundredPercentBase() === `disabled`
+        ) {
             return null;
         }
 
