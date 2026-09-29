@@ -194,8 +194,11 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public presentEntitledUsers = computed<number | null>(() => {
-        // TODO: Implement if available
-        return null;
+        if (this.config().onehundred_percent_base !== `entitled_present`) {
+            return null;
+        }
+
+        return this.poll().entitled_users?.filter(u => u.present).length;
     });
 
     public majorityReached = computed<boolean | undefined>(() => {

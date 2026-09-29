@@ -28,9 +28,9 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
             case 'cast':
                 return this.poll.ballot_user_ids?.length || 0;
             case 'entitled':
-                return null;
+                return this.poll.entitled_user_ids?.length;
             case 'entitled_present':
-                return null;
+                return this.poll?.entitled_users.filter(u => u.present).length ?? null;
         }
 
         return null;
