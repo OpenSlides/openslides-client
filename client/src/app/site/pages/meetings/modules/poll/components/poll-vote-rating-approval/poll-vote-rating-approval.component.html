@@ -1,6 +1,6 @@
 <div class="option-list">
     <div class="option-list-caption" role="row">
-        <ng-template #optionAmount>
+        <div>
             @if (poll().option_ids.length > 1) {
                 <div>
                     <b>
@@ -15,10 +15,7 @@
             } @else {
                 <div></div>
             }
-        </ng-template>
 
-        <div>
-            <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
             <div class="available-votes">
                 {{ 'Available votes' | translate }}:
                 <b>{{ availableVotes() }}/{{ config()?.max_vote_sum }}</b>
