@@ -214,7 +214,8 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
 
     protected vp = inject(ViewPortService);
     protected cd = inject(ChangeDetectorRef);
-    protected scrollingTableManager = inject(ScrollingTableManageService);
+    protected managerService = inject(ScrollingTableManageService);
+
     public constructor() {
         this.vp.isMobileSubject.subscribe(mobile => {
             if (mobile !== this.isMobile) {
@@ -259,11 +260,11 @@ export class BaseListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public selectAll(): void {
-        this.scrollingTableManager.currentScrollingTableComponent?.selectAll();
+        this.managerService.currentScrollingTableComponent?.selectAll();
     }
 
     public deselectAll(): void {
-        this.scrollingTableManager.currentScrollingTableComponent?.deselectAll();
+        this.managerService.currentScrollingTableComponent?.deselectAll();
     }
 
     public clearSearchField(): void {

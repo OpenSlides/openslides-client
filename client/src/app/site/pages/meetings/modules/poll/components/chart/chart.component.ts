@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { ChartData as NgChartData, ChartOptions, ChartType } from 'chart.js';
 
@@ -25,7 +26,7 @@ type Label = SingleLineLabel | MultiLineLabel;
     templateUrl: `./chart.component.html`,
     styleUrls: [`./chart.component.scss`],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ChartjsComponent]
+    imports: [ChartjsComponent, MatIcon]
 })
 export class ChartComponent {
     /**
@@ -59,6 +60,9 @@ export class ChartComponent {
     private _circleColors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];
 
     public colors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];
+
+    @Input()
+    public majority: boolean | undefined;
 
     /**
      * The general data for the chart.

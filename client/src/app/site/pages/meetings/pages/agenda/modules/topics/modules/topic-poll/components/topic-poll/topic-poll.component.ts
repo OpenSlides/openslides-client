@@ -1,107 +1,44 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Component, computed, inject, input, output } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { MatCardModule } from '@angular/material/card';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
-import { BasePollComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll.component';
-import { VotingPrivacyWarningDialogService } from '@app/site/pages/meetings/modules/poll/modules/voting-privacy-dialog/services/voting-privacy-warning-dialog.service';
-import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/poll/poll.component';
+import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
-
-import { ViewTopic } from '../../../../view-models/view-topic';
-import { TopicPollPdfService } from '../../services/topic-poll-pdf.service/topic-poll-pdf.service';
 
 @Component({
     selector: `os-topic-poll`,
     templateUrl: `./topic-poll.component.html`,
     styleUrls: [`./topic-poll.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [PollComponent, MatCardModule]
 })
-export class TopicPollComponent extends BasePollComponent<ViewTopic> implements OnInit {
-    @Input()
-    public set pollId(id: Id) {
-        this.initializePoll(id);
-    }
+export class TopicPollComponent extends BaseMeetingComponent {
+    public pollId = input.required<Id>();
 
-    @Output()
-    public readonly dialogOpened = new EventEmitter<void>();
+    public dialogOpened = output();
 
-    public candidatesLabels: string[] = [];
+    private operator = inject(OperatorService);
+    protected repo = inject(PollControllerService);
 
-    /**
-     * Form for updating the poll's description
-     */
-    public descriptionForm: UntypedFormGroup;
+    public poll = rxResource<ViewPoll, Id>({
+        params: () => this.pollId(),
+        stream: ({ params }) => this.repo.getViewModelObservable(params)
+    });
 
-    /**
-     * @returns true if the description on the form differs from the poll's description
-     */
-    public get isDescriptionDirty(): boolean {
-        return this.descriptionForm.get(`description`).value !== this.poll.description;
-    }
-
-    public get shouldShowPoll(): boolean {
-        if (this.poll) {
+    public showPoll = computed<boolean>(() => {
+        if (this.poll.hasValue()) {
+            const poll = this.poll.value();
             if (
-                this.operator.hasPerms(Permission.pollCanManage) ||
-                this.poll.isPublished ||
-                (this.poll.isEVoting && !this.poll.isCreated)
+                this.operator.hasPerms(Permission.agendaItemCanSeePolls) ||
+                poll.isPublished ||
+                (poll.isEVoting && !poll.isCreated)
             ) {
                 return true;
             }
         }
         return false;
-    }
-
-    public get showMetaInfo(): boolean {
-        return !this.poll.stateHasVotes && this.operator.hasPerms(Permission.pollCanManage);
-    }
-
-    public get showCandidatesInMetaInfo(): boolean {
-        return !this.poll.stateHasVotes && !this.votingService.canVote(this.poll);
-    }
-
-    public get canManagePoll(): boolean {
-        return this.operator.hasPerms(Permission.pollCanManage);
-    }
-
-    public constructor(
-        private formBuilder: UntypedFormBuilder,
-        private operator: OperatorService,
-        private votingService: VotingService,
-        private votingPrivacyDialog: VotingPrivacyWarningDialogService,
-        private pdfService: TopicPollPdfService
-    ) {
-        super();
-    }
-
-    public ngOnInit(): void {
-        this.descriptionForm = this.formBuilder.group({
-            description: this.poll ? this.poll.description : ``
-        });
-    }
-
-    /**
-     * Print the PDF of this poll with the corresponding options and numbers
-     */
-    public printBallot(): void {
-        try {
-            console.log(`Can't print ballots (yet)`);
-        } catch (e) {
-            console.error(e);
-            this.raiseError(e);
-        }
-    }
-
-    public downloadPdf(): void {
-        this.pdfService.printBallots(this.poll);
-    }
-
-    public openVotingWarning(): void {
-        this.votingPrivacyDialog.open();
-    }
-
-    public getDetailLink(): string {
-        return `/${this.poll.meeting_id}/topics/polls/${this.poll.sequential_number}`;
-    }
+    });
 }

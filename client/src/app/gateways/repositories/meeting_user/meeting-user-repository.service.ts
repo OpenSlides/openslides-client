@@ -21,7 +21,7 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
     public override getFieldsets(): Fieldsets<MeetingUser> {
         const groupFields: TypedFieldset<MeetingUser> = [`group_ids`, `meeting_id`, `user_id`];
         const participantListFieldsMinimal: TypedFieldset<MeetingUser> = groupFields.concat([
-            `vote_delegated_to_id`,
+            `vote_delegated_to_ids`,
             `vote_delegations_from_ids`,
             `structure_level_ids`,
             `vote_weight`,
@@ -49,7 +49,7 @@ export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<V
                 about_me: partialUser.about_me,
                 vote_weight: toDecimal(partialUser.vote_weight, false) as any,
                 comment: partialUser.comment,
-                vote_delegated_to_id: partialUser.vote_delegated_to_id,
+                vote_delegated_to_ids: partialUser.vote_delegated_to_ids,
                 vote_delegations_from_ids: partialUser.vote_delegations_from_ids,
                 structure_level_ids: partialUser.structure_level_ids,
                 group_ids: partialUser.group_ids,

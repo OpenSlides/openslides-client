@@ -13,7 +13,7 @@ import { PollControllerService } from '@app/site/pages/meetings/modules/poll/ser
 import { ViewTopic } from '@app/site/pages/meetings/pages/agenda';
 import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda/view-models';
 import { ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
@@ -409,15 +409,16 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         this.pollDialog.open(this.getDialogData(pollId));
     }
 
-    private getDialogData(pollId?: Id): Partial<PollDialogData> | ViewPoll {
+    private getDialogData(pollId?: Id): Partial<ViewPoll> | ViewPoll {
         if (pollId) {
             return this.pollController.getViewModel(pollId)!;
         } else {
             return {
                 collection: ViewPoll.COLLECTION,
                 content_object_id: this.topic.fqid,
+                content_object: this.topic,
                 ...this.topicPollService.getDefaultPollData(this.topic)
-            } as Partial<PollDialogData>;
+            } as unknown as PollDialogData;
         }
     }
 }

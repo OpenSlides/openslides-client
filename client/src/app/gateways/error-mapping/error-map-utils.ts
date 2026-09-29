@@ -38,7 +38,7 @@ const VoteServiceErrorMap: ErrorMap = new ErrorMap([
     [/The input data is invalid/, _(`The input data for voting is invalid.`)],
     [/The vote is not open for votes/, _(`You can not vote right now because the voting has not yet started.`)],
     [/You are not allowed to vote/, _(`You do not have the permission to vote.`)],
-    [/Ups, something went wrong!/, _(`An error occurred while voting.`)],
+    [/Ups, something went wrong!/, _(`An internal server error occurred in the vote service.`)],
     [/is not allowed to vote/, _(`You do not have the permission to vote.`)]
 ]);
 

@@ -16,7 +16,7 @@ import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 import { ViewAssignment, ViewAssignmentCandidate } from '@app/site/pages/meetings/pages/assignments';
 import { ViewMediafile, ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
 import { ViewTag } from '@app/site/pages/meetings/pages/motions';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
@@ -272,7 +272,18 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     /**
-     * Creates a new Poll
+     * Save the current state of the assignment
+     */
+    private async saveAssignment(): Promise<void> {
+        if (this.isCreating) {
+            this.createAssignment();
+        } else {
+            await this.updateAssignmentFromForm();
+        }
+    }
+
+    /**
+     * Updates an existing Poll
      */
     public openDialog(pollId?: Id): void {
         this.pollDialog.open(this.getDialogData(pollId));
@@ -419,17 +430,6 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     /**
-     * Save the current state of the assignment
-     */
-    private async saveAssignment(): Promise<void> {
-        if (this.isCreating) {
-            this.createAssignment();
-        } else {
-            await this.updateAssignmentFromForm();
-        }
-    }
-
-    /**
      * Creates an assignment. Calls the "patchValues" function
      */
     private async createAssignment(): Promise<void> {
@@ -481,7 +481,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
                 content_object_id: this.assignment.fqid,
                 content_object: this.assignment,
                 ...this.assignmentPollService.getDefaultPollData(this.assignment)
-            } as PollDialogData;
+            } as unknown as PollDialogData;
         }
     }
 
