@@ -8,7 +8,7 @@ import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ParticipantImportListInfoDialogComponent } from '@app/site/pages/meetings/pages/participants/pages/participant-import/components/participant-import-list-info-dialog/participant-import-list-info-dialog.component';
-import { ParticipantImportCSVReloadService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-reload-file.service';
+import { CSVOptionsService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
 import { BackendImportService } from '@app/ui/base/import-service';
 import { PipesModule } from '@app/ui/pipes';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -56,7 +56,7 @@ export class BackendImportParticipantListComponent implements OnInit {
     private fileInput = viewChild<ElementRef<HTMLInputElement>>(`fileInput`);
     private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
     private dialog = inject(MatDialog);
-    private CSVReloadService = inject(ParticipantImportCSVReloadService);
+    private CSVReloadService = inject(CSVOptionsService);
 
     /**
      * Observable that allows one to monitor the currenty selected file.

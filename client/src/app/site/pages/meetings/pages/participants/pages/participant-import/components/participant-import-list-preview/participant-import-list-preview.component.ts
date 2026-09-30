@@ -43,10 +43,11 @@ import { ViewGroup } from '../../../../modules';
 import { ViewStructureLevel } from '../../../structure-levels/view-models';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
-import { CSVEncodingOptionsService } from '../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
+import { CSVOptionsService } from '../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
 import { ViewImportedParticipant } from '../../view-models/view-participant-import';
 import { ParticipantImportListInfoDialogComponent } from '../participant-import-list-info-dialog/participant-import-list-info-dialog.component';
+import { CSVOptionsComponent } from './participant-import-csv-options/participant-import-csv-options.component';
 
 @Component({
     selector: `os-participant-import-list-preview`,
@@ -63,7 +64,8 @@ import { ParticipantImportListInfoDialogComponent } from '../participant-import-
         NgClass,
         MatDialogModule,
         MatProgressSpinner,
-        MatLabel
+        MatLabel,
+        CSVOptionsComponent
     ]
 })
 export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
@@ -73,10 +75,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     public importer = inject(ParticipantImportService);
     public filterService = inject(ParticipantImportFilterService);
     public searchService = inject(ParticipantImportPreviewSearchService);
+    public csvOptions: CSVOptionsComponent;
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
     protected dialog = inject(MatDialog);
     protected translate = inject(TranslateService);
-    private CSVEncodingOptions = inject(CSVEncodingOptionsService);
+    protected CSVOptionsService = inject(CSVOptionsService);
     private accountsControllerService = inject(AccountControllerService);
     private userAccounts = this.accountsControllerService.getViewModelList();
 
@@ -186,9 +189,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this._state = phase;
             this.importDone = [BackendImportPhase.FINISHED, BackendImportPhase.FINISHED_WITH_WARNING].includes(phase);
         });
-        this.CSVEncodingOptions.toggleCSVOptions = true;
-        let previousConfig = this.CSVEncodingOptions?.SelectedConfig$.value;
-        this.CSVEncodingOptions?.SelectedConfig$.subscribe(options => {
+        this.CSVOptionsService.toggleCSVOptions = true;
+        let previousConfig = this.CSVOptionsService?.SelectedConfig$.value;
+        this.CSVOptionsService?.SelectedConfig$.subscribe(options => {
             if (
                 options.columnSeparator !== previousConfig?.columnSeparator ||
                 options.encoding !== previousConfig?.encoding ||
@@ -216,7 +219,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Resets the importer when leaving the view
      */
     public ngOnDestroy(): void {
-        this.CSVEncodingOptions.toggleCSVOptions = false;
+        this.CSVOptionsService.toggleCSVOptions = false;
         this.importDone = undefined;
         this.tempPreviewsObservable.unsubscribe();
         this.importer.clearPreview();

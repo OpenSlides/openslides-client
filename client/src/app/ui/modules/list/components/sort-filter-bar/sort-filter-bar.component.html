@@ -85,7 +85,7 @@
             }
         }
         <!-- CSV Option buttons (Reload & Encoding) -->
-        <os-participant-import-csv-options [hidden]="!csvEncodingOptions.toggleCSVOptions" />
+        <ng-template [cdkPortalOutlet]="csvOptionsService.csvOptions" />
         <!-- Filter button -->
         @if (hasFilters) {
             <button
@@ -146,7 +146,7 @@
     autoFocus="false"
     mode="push"
     position="end"
-    [class.mat-drawer-placement]="csvEncodingOptions?.toggleCSVOptions"
+    [class.mat-drawer-placement]="csvOptionsService?.toggleCSVOptions"
 >
     <div
         class="custom-table-header filter-menu-head"

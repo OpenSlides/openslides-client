@@ -1,5 +1,16 @@
+import { TemplatePortal } from '@angular/cdk/portal';
 import { AsyncPipe } from '@angular/common';
-import { Component, ElementRef, inject, OnInit, viewChild, ViewEncapsulation } from '@angular/core';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    inject,
+    OnInit,
+    TemplateRef,
+    viewChild,
+    ViewContainerRef,
+    ViewEncapsulation
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
@@ -9,8 +20,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { CSVEncodingOptionsService } from '../../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
-import { ParticipantImportCSVReloadService } from '../../../services/participant-import-preview.service/participant-import-preview-reload-file.service';
+import { CSVOptionsService } from '../../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
 
 @Component({
     selector: 'os-participant-import-csv-options',
@@ -29,64 +39,69 @@ import { ParticipantImportCSVReloadService } from '../../../services/participant
     ],
     encapsulation: ViewEncapsulation.None
 })
-export class CSVOptions implements OnInit {
+export class CSVOptionsComponent implements OnInit, AfterViewInit {
     public vp = inject(ViewPortService);
-    private csvEncodingOptions = inject(CSVEncodingOptionsService);
-    private CSVReload = inject(ParticipantImportCSVReloadService);
-    public enabled: boolean = this.csvEncodingOptions.toggleCSVOptions;
+    private csvOptionsService = inject(CSVOptionsService);
+    public enabled: boolean = this.csvOptionsService.toggleCSVOptions;
+    public _viewContainerRef = inject(ViewContainerRef);
 
     /**
      * The CSV-Configuration side drawer
      */
-    public csvConfigMenu = viewChild(MatDrawer);
+    public csvConfigMenu = viewChild.required<MatDrawer>(MatDrawer);
 
     public selectedEncoding = 'utf-8';
     public selectedColumnSeparator = '';
     public selectedTextSeparator = '"';
 
+    public reloadFileInput = viewChild.required<ElementRef<HTMLInputElement>>(`reloadFileInput`);
+    public csvOptionsTemplate = viewChild.required<TemplateRef<unknown>>(`CSVOptions`);
+
     // csvReload
     public selectNewFile(event: Event): void {
-        this.CSVReload.reload(event);
+        this.csvOptionsService.reload(event);
     }
 
-    public reloadFileInput = viewChild<ElementRef<HTMLInputElement>>(`reloadFileInput`);
-
     public ngOnInit(): void {
-        this.csvEncodingOptions.drawer$.subscribe(drawer => {
+        this.csvOptionsService.drawer$.subscribe(drawer => {
             if (drawer === 'filterMenu' && this.csvConfigMenu().opened) {
                 this.csvConfigMenu().close();
             }
         });
     }
 
+    public ngAfterViewInit(): void {
+        this.csvOptionsService.csvOptions = new TemplatePortal(this.csvOptionsTemplate(), this._viewContainerRef);
+    }
+
     public openCsvConfig(): void {
         if (this.csvConfigMenu().opened) {
-            this.csvEncodingOptions.open('filterMenu');
+            this.csvOptionsService.open('filterMenu');
             this.csvConfigMenu().close();
             return;
         } else {
-            this.csvEncodingOptions.open('csvConfigMenu');
+            this.csvOptionsService.open('csvConfigMenu');
             this.csvConfigMenu().open();
         }
     }
 
     public onEncodingChange(value: string): void {
-        this.csvEncodingOptions.SelectedConfig$.next({
-            ...this.csvEncodingOptions.SelectedConfig$.value,
+        this.csvOptionsService.SelectedConfig$.next({
+            ...this.csvOptionsService.SelectedConfig$.value,
             encoding: value
         });
     }
 
     public onTextSeparatorChange(value): void {
-        this.csvEncodingOptions.SelectedConfig$.next({
-            ...this.csvEncodingOptions.SelectedConfig$.value,
+        this.csvOptionsService.SelectedConfig$.next({
+            ...this.csvOptionsService.SelectedConfig$.value,
             textSeparator: value
         });
     }
 
     public onColumnSeparatorChange(value): void {
-        this.csvEncodingOptions.SelectedConfig$.next({
-            ...this.csvEncodingOptions.SelectedConfig$.value,
+        this.csvOptionsService.SelectedConfig$.next({
+            ...this.csvOptionsService.SelectedConfig$.value,
             columnSeparator: value
         });
     }
