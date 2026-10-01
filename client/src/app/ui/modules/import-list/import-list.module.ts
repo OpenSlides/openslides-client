@@ -16,6 +16,7 @@ import { PipesModule } from '@app/ui/pipes/pipes.module';
 
 import { OpenSlidesTranslationModule } from '../../../site/modules/translations/openslides-translation.module';
 import { BackendImportListComponent } from './components/via-backend-import-list/backend-import-list.component';
+import { BackendImportParticipantListComponent } from './components/via-backend-import-list/backend-import-participant-list/backend-import-participant-list.component';
 import { ImportListFirstTabDirective } from './directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from './directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from './directives/import-list-status-template.directive';
@@ -45,7 +46,8 @@ const DECLARATIONS = [
         FormsModule,
         PortalModule,
         ScrollingTableModule,
-        OpenSlidesTranslationModule
+        OpenSlidesTranslationModule,
+        BackendImportParticipantListComponent
     ]
 })
 export class ImportListModule {}

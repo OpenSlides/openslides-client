@@ -16,6 +16,7 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { Identifiable } from '@app/domain/interfaces';
 import { OsFilterIndicator } from '@app/site/base/base-filter.service';
 import { OsSortingOption } from '@app/site/base/base-sort.service';
+import { CSVOptionsService } from '@app/site/pages/meetings/pages/participants/pages/participant-import/services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { FilterListService } from '@app/ui/modules/list/definitions/filter-service';
 import { OsSortOption, SortListService } from '@app/ui/modules/list/definitions/sort-service';
@@ -205,12 +206,18 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
 
     public vp = inject(ViewPortService);
     protected translate = inject(TranslateService);
+    protected csvOptionsService = inject(CSVOptionsService);
     private bottomSheet = inject(MatBottomSheet);
 
     public ngOnInit(): void {
         this.mobileSubscription = this.vp.isMobileSubject.subscribe(v => {
             if (v) {
                 this.searchEdit = false;
+            }
+        });
+        this.csvOptionsService.drawer$.subscribe(drawer => {
+            if (drawer === 'csvConfigMenu' && this.filterMenu.opened) {
+                this.filterMenu.close();
             }
         });
     }
@@ -220,6 +227,7 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
             this.mobileSubscription.unsubscribe();
             this.mobileSubscription = null;
         }
+        this.csvOptionsService.csvOptions = null;
     }
 
     /**
@@ -302,6 +310,17 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
 
     public clearSearchField(): void {
         this._searchFieldComponent?.clear();
+    }
+
+    public openFilterMenu(): void {
+        if (this.filterMenu.opened) {
+            this.csvOptionsService.open('csvConfigMenu');
+            this.filterMenu.close();
+            return;
+        } else {
+            this.csvOptionsService.open('filterMenu');
+            this.filterMenu.open();
+        }
     }
 
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {
