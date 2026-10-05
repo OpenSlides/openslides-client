@@ -27,6 +27,32 @@
         [vScrollFixed]="50"
         (searchFilterUpdated)="searchFilterUpdated.emit($event)"
     >
+        <!-- CSV-Reload Button -->
+        <div class="filter-bar-button-slot button-positions">
+            <div>
+                <button mat-button type="button" (click)="reloadFileInput.click()">
+                    <mat-icon>autorenew</mat-icon>
+                    @if ((vp.isMobileSubject | async) === false) {
+                        <span class="upper">
+                            {{ 'CSV-Reload' | translate }}
+                        </span>
+                    }
+                </button>
+                <input #reloadFileInput accept="text" hidden type="file" (change)="selectNewFile($event)" />
+            </div>
+            <!-- CSV-Encoding Button -->
+            <div>
+                <button mat-button (click)="openCsvConfig()">
+                    <mat-icon>settings</mat-icon>
+                    @if ((vp.isMobileSubject | async) === false) {
+                        <span class="upper">
+                            {{ 'CSV-Configuration' | translate }}
+                        </span>
+                    }
+                </button>
+            </div>
+        </div>
+
         @if (dataSource | async) {
             @for (column of previewColumns; track column) {
                 <div

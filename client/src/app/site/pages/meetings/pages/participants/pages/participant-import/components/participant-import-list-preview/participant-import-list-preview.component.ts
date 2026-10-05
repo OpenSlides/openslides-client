@@ -8,7 +8,8 @@ import {
     OnDestroy,
     OnInit,
     Output,
-    TemplateRef
+    TemplateRef,
+    viewChild
 } from '@angular/core';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
@@ -18,7 +19,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
 import { infoDialogSettings, mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
-import { AccountControllerService } from '@app/site/pages/organization/pages/accounts/services/common/account-controller.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { BackendImportPhase } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
@@ -31,6 +32,7 @@ import {
     BackendImportSummary
 } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { ListModule } from '@app/ui/modules/list';
+import { ViewListComponent } from '@app/ui/modules/list/components/view-list/view-list.component';
 import { ScrollingTableCellDefConfig } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import { START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -66,6 +68,8 @@ import { CSVOptionsComponent } from './participant-import-csv-options/participan
 export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
     public readonly START_POSITION = START_POSITION;
 
+    public readonly viewList = viewChild.required(ViewListComponent);
+
     public modelName = `Participant`;
     public importer = inject(ParticipantImportService);
     public filterService = inject(ParticipantImportFilterService);
@@ -74,9 +78,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
     protected dialog = inject(MatDialog);
     protected translate = inject(TranslateService);
-    protected CSVOptionsService = inject(CSVOptionsService);
-    private accountsControllerService = inject(AccountControllerService);
-    private userAccounts = this.accountsControllerService.getViewModelList();
+    protected csvOptionsService = inject(CSVOptionsService);
+    public vp = inject(ViewPortService);
 
     /**
      * The actual headers of the preview, as they were delivered by the backend.
@@ -184,9 +187,9 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this._state = phase;
             this.importDone = [BackendImportPhase.FINISHED, BackendImportPhase.FINISHED_WITH_WARNING].includes(phase);
         });
-        this.CSVOptionsService.toggleCSVOptions = true;
-        let previousConfig = this.CSVOptionsService?.SelectedConfig$.value;
-        this.CSVOptionsService?.SelectedConfig$.subscribe(options => {
+        this.csvOptionsService.toggleCSVOptions = true;
+        let previousConfig = this.csvOptionsService?.selectedConfig$.value;
+        this.csvOptionsService?.selectedConfig$.subscribe(options => {
             if (
                 options.columnSeparator !== previousConfig?.columnSeparator ||
                 options.encoding !== previousConfig?.encoding ||
@@ -214,12 +217,33 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * Resets the importer when leaving the view
      */
     public ngOnDestroy(): void {
-        this.CSVOptionsService.toggleCSVOptions = false;
+        this.csvOptionsService.toggleCSVOptions = false;
         this.importDone = undefined;
         this.tempPreviewsObservable.unsubscribe();
         this.importer.clearPreview();
         this.importer.clearFile();
         this.importer.clearAll();
+    }
+
+    // csvReload
+    public selectNewFile(event: Event): void {
+        this.csvOptionsService.reload(event);
+    }
+
+    public openCsvConfig(): void {
+        this.viewList().sortFilterBarComponent.closeFilterMenu();
+        //
+        // TODO:
+        /*
+        if (this.csvConfigMenu().opened) {
+            this.csvOptionsService.open('filterMenu');
+            this.csvConfigMenu().close();
+            return;
+        } else {
+            this.csvOptionsService.open('csvConfigMenu');
+            this.csvConfigMenu().open();
+        }
+        */
     }
 
     /**

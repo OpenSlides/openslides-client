@@ -57,11 +57,6 @@ export class CSVOptionsComponent implements OnInit, AfterViewInit {
     public reloadFileInput = viewChild.required<ElementRef<HTMLInputElement>>(`reloadFileInput`);
     public csvOptionsTemplate = viewChild.required<TemplateRef<unknown>>(`CSVOptions`);
 
-    // csvReload
-    public selectNewFile(event: Event): void {
-        this.csvOptionsService.reload(event);
-    }
-
     public ngOnInit(): void {
         this.csvOptionsService.drawer$.subscribe(drawer => {
             if (drawer === 'filterMenu' && this.csvConfigMenu().opened) {
@@ -74,34 +69,23 @@ export class CSVOptionsComponent implements OnInit, AfterViewInit {
         this.csvOptionsService.csvOptions = new TemplatePortal(this.csvOptionsTemplate(), this._viewContainerRef);
     }
 
-    public openCsvConfig(): void {
-        if (this.csvConfigMenu().opened) {
-            this.csvOptionsService.open('filterMenu');
-            this.csvConfigMenu().close();
-            return;
-        } else {
-            this.csvOptionsService.open('csvConfigMenu');
-            this.csvConfigMenu().open();
-        }
-    }
-
     public onEncodingChange(value: string): void {
-        this.csvOptionsService.SelectedConfig$.next({
-            ...this.csvOptionsService.SelectedConfig$.value,
+        this.csvOptionsService.selectedConfig$.next({
+            ...this.csvOptionsService.selectedConfig$.value,
             encoding: value
         });
     }
 
     public onTextSeparatorChange(value): void {
-        this.csvOptionsService.SelectedConfig$.next({
-            ...this.csvOptionsService.SelectedConfig$.value,
+        this.csvOptionsService.selectedConfig$.next({
+            ...this.csvOptionsService.selectedConfig$.value,
             textSeparator: value
         });
     }
 
     public onColumnSeparatorChange(value): void {
-        this.csvOptionsService.SelectedConfig$.next({
-            ...this.csvOptionsService.SelectedConfig$.value,
+        this.csvOptionsService.selectedConfig$.next({
+            ...this.csvOptionsService.selectedConfig$.value,
             columnSeparator: value
         });
     }

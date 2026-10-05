@@ -30,7 +30,7 @@ export class CSVOptionsService {
         this.sideNav.next(drawer);
     }
 
-    public SelectedConfig$ = new BehaviorSubject<{ encoding: string; columnSeparator: string; textSeparator: string }>({
+    public selectedConfig$ = new BehaviorSubject<{ encoding: string; columnSeparator: string; textSeparator: string }>({
         encoding: 'utf-8',
         columnSeparator: '',
         textSeparator: '"'

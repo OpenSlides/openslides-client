@@ -33,7 +33,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     private readonly _scrollingTableComponent: ScrollingTableComponent<V> | undefined;
 
     @ViewChild(SortFilterBarComponent)
-    private readonly _sortFilterBarComponent: SortFilterBarComponent<V> | undefined;
+    public readonly sortFilterBarComponent: SortFilterBarComponent<V> | undefined;
 
     /**
      * The required repository (prioritized over listObservable)
@@ -274,6 +274,6 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public clearSearchField(): void {
-        this._sortFilterBarComponent?.clearSearchField();
+        this.sortFilterBarComponent?.clearSearchField();
     }
 }
