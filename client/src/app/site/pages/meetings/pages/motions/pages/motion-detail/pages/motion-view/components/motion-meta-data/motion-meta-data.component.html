@@ -320,7 +320,10 @@
                             <mat-icon
                                 class="move-icon-left icon-front adjust-icon"
                                 [color]="origin.id === motion.id ? 'accent' : ''"
-                                [ngClass]="{ 'motion-forward-icon': origin.id !== motion.id }"
+                                [ngClass]="{
+                                    'motion-forward-icon': origin.id !== motion.id,
+                                    'move-icon-less-left': last
+                                }"
                             >
                                 fiber_manual_record
                             </mat-icon>
@@ -331,9 +334,13 @@
                     </td>
                     <td class="move-text-up">
                         <div>
-                            <ng-container
-                                *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
-                            ></ng-container>
+                            @if (motion.meeting_id === origin.meeting_id) {
+                                {{ getMeetingName(motion) }}
+                            } @else {
+                                <ng-container
+                                    *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
+                                ></ng-container>
+                            }
                             @if (origin.meeting?.locked_from_inside) {
                                 <mat-icon class="lock-icon motion-forward-icon adjust-icon">lock</mat-icon>
                             }
