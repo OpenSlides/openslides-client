@@ -3,8 +3,8 @@ import { AbstractPollData, BasePollPdfService } from '@app/site/pages/meetings/m
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { TranslateService } from '@ngx-translate/core';
 
-import { TopicControllerService } from '../../../../services/topic-controller.service';
-import { ViewTopic } from '../../../../view-models';
+import { TopicControllerService } from '../../../../services/topic-controller.service/topic-controller.service';
+import { ViewTopic } from '../../../../view-models/view-topic';
 import { TopicPollService } from '../topic-poll.service';
 
 @Service()

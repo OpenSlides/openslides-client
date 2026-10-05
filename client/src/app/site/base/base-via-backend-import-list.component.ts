@@ -5,7 +5,7 @@ import {
     BackendImportPhase
 } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 
-import { getLongPreview, getShortPreview } from '../../infrastructure/utils';
+import { getLongPreview, getShortPreview } from '../../infrastructure/utils/functions';
 import { BaseBackendImportService } from './base-import.service/base-backend-import.service';
 
 @Directive()

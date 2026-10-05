@@ -27,8 +27,9 @@ import {
     ChatGroupDialogData,
     ChatGroupDialogService
 } from '../../../../modules/chat-group-dialog/services/chat-group-dialog.service';
-import { ChatGroupControllerService, ChatNotificationService } from '../../../../services';
+import { ChatGroupControllerService } from '../../../../services/chat-group-controller.service';
 import { ChatMessageControllerService } from '../../../../services/chat-message-controller.service';
+import { ChatNotificationService } from '../../../../services/chat-notification.service';
 
 @Component({
     selector: `os-chat-group-detail`,

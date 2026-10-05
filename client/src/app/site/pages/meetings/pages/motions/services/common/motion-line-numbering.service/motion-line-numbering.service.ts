@@ -4,13 +4,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 import { DiffLinesInParagraph } from '../../../definitions';
-import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../../modules';
 import {
     LineNumberedString,
-    LineNumberRange,
-    MotionChangeRecommendationControllerService
-} from '../../../modules/change-recommendations/services';
-import { ViewMotion } from '../../../view-models';
+    LineNumberRange
+} from '../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
+import { ViewMotionChangeRecommendation } from '../../../modules/change-recommendations/view-models/view-motion-change-recommendation';
+import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
+import { ViewMotion } from '../../../view-models/view-motion';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
 
 /**

@@ -2,7 +2,7 @@ import { inject, Service } from '@angular/core';
 
 import { BaseRepository } from '../../gateways/repositories/base-repository';
 import { BaseViewModel, ViewModelConstructor } from '../base/base-view-model';
-import { CollectionMapperService } from './collection-mapper.service';
+import { CollectionMapperService } from './collection-mapper.service/collection-mapper.service';
 
 @Service()
 export class ViewModelStoreService {

@@ -17,7 +17,7 @@ import { AccountImportServiceModule } from './services/account-import-service.mo
         AccountImportServiceModule,
         AccountCommonServiceModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         ImportListModule
     ]
 })

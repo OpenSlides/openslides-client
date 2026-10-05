@@ -38,7 +38,7 @@ import { MeetingSettingsGroupDetailRoutingModule } from './meeting-settings-grou
         EditorModule,
         HeadBarModule,
         PipesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         OpenSlidesDateAdapterModule,
         MeetingSettingsGroupDetailRoutingModule,
         MatCheckboxModule,

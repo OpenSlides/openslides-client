@@ -27,7 +27,6 @@ import { delay, firstValueFrom, map, Observable, of } from 'rxjs';
 
 import { ScrollingTableCellDefConfig } from '../../../scrolling-table/directives/scrolling-table-cell-config';
 import { END_POSITION, START_POSITION } from '../../../scrolling-table/directives/scrolling-table-cell-position';
-import { ImportListHeaderDefinition } from '../../definitions';
 import {
     BackendImportEntryObject,
     BackendImportHeader,
@@ -36,6 +35,7 @@ import {
     BackendImportState,
     BackendImportSummary
 } from '../../definitions/backend-import-preview';
+import { ImportListHeaderDefinition } from '../../definitions/import-list-header-definition';
 import { ImportListFirstTabDirective } from '../../directives/import-list-first-tab.directive';
 import { ImportListLastTabDirective } from '../../directives/import-list-last-tab.directive';
 import { ImportListStatusTemplateDirective } from '../../directives/import-list-status-template.directive';

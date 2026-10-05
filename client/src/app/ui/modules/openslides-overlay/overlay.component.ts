@@ -12,7 +12,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 
-import { OverlayPosition } from './definitions';
+import { OverlayPosition } from './definitions/overlay-config';
 
 @Component({
     selector: `os-overlay`,

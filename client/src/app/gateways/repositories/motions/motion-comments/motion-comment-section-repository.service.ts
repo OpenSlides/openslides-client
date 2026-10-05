@@ -1,10 +1,9 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionCommentSection } from '@app/domain/models/motions/motion-comment-section';
 import { ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionCommentSectionAction } from './motion-comment-section.action';
 
 @Service()
@@ -12,9 +11,10 @@ export class MotionCommentSectionRepositoryService extends BaseMeetingRelatedRep
     ViewMotionCommentSection,
     MotionCommentSection
 > {
+    public baseModelCtor = MotionCommentSection;
+
     public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, MotionCommentSection);
+        super();
 
         this.viewModelSortFn = (a: ViewMotionCommentSection, b: ViewMotionCommentSection): number => {
             if (a.weight === b.weight) {

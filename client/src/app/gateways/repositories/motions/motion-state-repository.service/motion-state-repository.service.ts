@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionState } from '@app/domain/models/motions/motion-state';
 import { Action } from '@app/gateways/actions';
@@ -6,15 +6,11 @@ import { ViewMotionState } from '@app/site/pages/meetings/pages/motions';
 import { map, Observable } from 'rxjs';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { MotionStateAction } from './motion-state.action';
 
 @Service()
 export class MotionStateRepositoryService extends BaseMeetingRelatedRepository<ViewMotionState, MotionState> {
-    public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, MotionState);
-    }
+    public baseModelCtor = MotionState;
 
     public getTitle = (viewMotionState: ViewMotionState): string => viewMotionState.name;
 

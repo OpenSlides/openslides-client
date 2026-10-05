@@ -71,8 +71,7 @@
                                 [type]="formType(setting.type!)"
                                 [value]="internalValue"
                             />
-                        }
-                        @if (setting.type !== 'email') {
+                        } @else {
                             <input
                                 formControlName="value"
                                 matInput

@@ -21,7 +21,7 @@ import { SortingListModule } from '@app/ui/modules/sorting/modules/sorting-list/
 import { PipesModule } from '@app/ui/pipes/pipes.module';
 
 import { MeetingsComponentCollectorModule } from '../../../../modules/meetings-component-collector/meetings-component-collector.module';
-import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector';
+import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector/participant-search-selector.module';
 import { AgendaItemCommonServiceModule } from '../../../agenda/services/agenda-item-common-service.module';
 import { ParticipantCommonServiceModule } from '../../../participants/services/common/participant-common-service.module';
 import { AssignmentPollModule } from '../../modules/assignment-poll/assignment-poll.module';
@@ -58,7 +58,7 @@ import { AssignmentDetailServiceModule } from './services/assignment-detail-serv
         EditorModule,
         SearchSelectorModule,
         SortingListModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         ParticipantSearchSelectorModule,
         AgendaItemCommonServiceModule,
         ChipSelectModule,

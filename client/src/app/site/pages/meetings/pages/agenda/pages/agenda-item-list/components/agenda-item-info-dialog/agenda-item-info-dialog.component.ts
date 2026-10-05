@@ -4,10 +4,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ItemTypeChoices } from '@app/domain/models/agenda/agenda-item';
 import { DurationService } from '@app/site/services/duration.service';
 
-import { ViewTag } from '../../../../../motions';
-import { TagControllerService } from '../../../../../motions/modules/tags/services';
+import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
+import { ViewTag } from '../../../../../motions/modules/tags/view-models/view-tag';
 import { DurationValidator } from '../../../../validators/duration.validator';
-import { ViewAgendaItem } from '../../../../view-models';
+import { ViewAgendaItem } from '../../../../view-models/view-agenda-item';
 
 /**
  * Dialog component to change agenda item details

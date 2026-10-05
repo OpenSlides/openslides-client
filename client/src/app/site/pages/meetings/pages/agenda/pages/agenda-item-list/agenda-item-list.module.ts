@@ -41,7 +41,7 @@ const OS_MODULES = [
     IconContainerComponent,
     DirectivesModule,
     ChoiceDialogComponent,
-    OpenSlidesTranslationModule.forChild(),
+    OpenSlidesTranslationModule,
     AgendaForwardDialogComponent
 ];
 

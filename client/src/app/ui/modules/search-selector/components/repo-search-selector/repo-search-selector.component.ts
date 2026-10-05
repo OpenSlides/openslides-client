@@ -17,7 +17,7 @@ import { map, OperatorFunction } from 'rxjs';
 import { Settings } from '../../../../../domain/models/meetings/meeting';
 import { MeetingSettingsService } from '../../../../../site/pages/meetings/services/meeting-settings.service';
 import { ViewModelListProvider } from '../../../../base/view-model-list-provider';
-import { SortListService } from '../../../list';
+import { SortListService } from '../../../list/definitions/sort-service';
 import { BaseSearchSelectorComponent } from '../base-search-selector/base-search-selector.component';
 
 @Component({

@@ -6,7 +6,7 @@ import { MeetingSettingsService } from '@app/site/pages/meetings/services/meetin
 import { TranslateService } from '@ngx-translate/core';
 
 import { AssignmentControllerService } from '../../../../services/assignment-controller.service';
-import { ViewAssignment } from '../../../../view-models';
+import { ViewAssignment } from '../../../../view-models/view-assignment';
 import { AssignmentPollService } from '../assignment-poll.service';
 
 @Service()

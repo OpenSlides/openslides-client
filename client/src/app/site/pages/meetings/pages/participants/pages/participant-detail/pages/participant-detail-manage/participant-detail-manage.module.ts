@@ -27,7 +27,7 @@ import { ParticipantDetailManageRoutingModule } from './participant-detail-manag
         UserComponentsModule,
         SearchSelectorModule,
         EditorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatStepperModule,
         MatCardModule,
         MatCheckboxModule,

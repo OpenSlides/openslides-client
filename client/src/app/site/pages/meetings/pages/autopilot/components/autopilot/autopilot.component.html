@@ -86,8 +86,8 @@
                         <ng-container *osPerms="permission.listOfSpeakersCanManage; complement: true">
                             @if (isLosClosed) {
                                 <mat-icon
-                                    matTooltip="{{ 'The list of speakers is closed.' | translate }}"
                                     matTooltipPosition="above"
+                                    [matTooltip]="'The list of speakers is closed.' | translate"
                                 >
                                     lock
                                 </mat-icon>
@@ -98,16 +98,16 @@
                             <button class="title-action" mat-icon-button (click)="toggleListOfSpeakersOpen()">
                                 @if (isLosClosed) {
                                     <mat-icon
-                                        matTooltip="{{ 'Open list of speakers' | translate }}"
                                         matTooltipPosition="above"
+                                        [matTooltip]="'Open list of speakers' | translate"
                                     >
                                         lock
                                     </mat-icon>
                                 }
                                 @if (!isLosClosed) {
                                     <mat-icon
-                                        matTooltip="{{ 'Close list of speakers' | translate }}"
                                         matTooltipPosition="above"
+                                        [matTooltip]="'Close list of speakers' | translate"
                                     >
                                         lock_open
                                     </mat-icon>
@@ -117,9 +117,9 @@
                             <button
                                 class="title-action"
                                 mat-icon-button
-                                matTooltip="{{ 'Re-add last speaker' | translate }}"
                                 matTooltipPosition="above"
                                 [disabled]="!canReaddLastSpeaker"
+                                [matTooltip]="'Re-add last speaker' | translate"
                                 (click)="readdLastSpeaker()"
                             >
                                 <mat-icon>undo</mat-icon>

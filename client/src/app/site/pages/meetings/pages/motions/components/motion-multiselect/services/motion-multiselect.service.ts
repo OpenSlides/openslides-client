@@ -19,20 +19,20 @@ import {
     AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION,
     getAgendaListMinimalSubscriptionConfig
 } from '../../../../agenda/agenda.subscription';
-import { AgendaItemControllerService } from '../../../../agenda/services';
+import { AgendaItemControllerService } from '../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
 } from '../../../../participants/participants.subscription';
-import { ParticipantControllerService } from '../../../../participants/services/common/participant-controller.service';
-import { MotionCategoryControllerService } from '../../../modules/categories/services';
-import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
-import { PersonalNoteControllerService } from '../../../modules/personal-notes/services';
-import { MotionSubmitterControllerService } from '../../../modules/submitters/services';
-import { TagControllerService } from '../../../modules/tags/services';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
-import { MotionControllerService } from '../../../services/common/motion-controller.service';
-import { ViewMotion } from '../../../view-models';
+import { ParticipantControllerService } from '../../../../participants/services/common/participant-controller.service/participant-controller.service';
+import { MotionCategoryControllerService } from '../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionBlockControllerService } from '../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
+import { PersonalNoteControllerService } from '../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
+import { MotionSubmitterControllerService } from '../../../modules/submitters/services/motion-submitter-controller/motion-submitter-controller.service';
+import { TagControllerService } from '../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { MotionWorkflowControllerService } from '../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
+import { MotionControllerService } from '../../../services/common/motion-controller.service/motion-controller.service';
+import { ViewMotion } from '../../../view-models/view-motion';
 
 @Service()
 export class MotionMultiselectService {

@@ -125,7 +125,6 @@ span {
         }
 
         .os-card {
-            display: grid;
             max-width: 900px;
             min-width: 400px;
             margin-left: 0 !important;
@@ -164,9 +163,9 @@ span {
     margin-top: 4px;
 }
 
-.show-entire-text-check {
-    font-size: 70%;
-    float: right;
+.show-entire-text-container {
+    display: flex;
+    justify-content: flex-end;
 }
 
 button.motion-detail-nav-button {

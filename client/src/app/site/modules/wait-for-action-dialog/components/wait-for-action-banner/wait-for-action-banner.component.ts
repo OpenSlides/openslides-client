@@ -3,7 +3,7 @@ import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { BehaviorSubject } from 'rxjs';
 
 import { titleVerbose, WaitForActionData, WaitForActionReason, waitForActionReason } from '../../definitions';
-import { WaitForActionDialogService } from '../../services';
+import { WaitForActionDialogService } from '../../services/wait-for-action-dialog.service';
 
 @Component({
     selector: `os-wait-for-action-banner`,

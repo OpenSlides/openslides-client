@@ -21,7 +21,7 @@ export class OpenSlidesDateAdapter extends DateFnsAdapter {
         });
     }
 
-    private async updateLocaleByName(name: string): Promise<void> {
-        this.setLocale(await langToTimeLocale(name));
+    private async updateLocaleByName(name: string | null): Promise<void> {
+        this.setLocale(await langToTimeLocale(name ?? `en`));
     }
 }

@@ -14,9 +14,9 @@ import { map, Observable } from 'rxjs';
 
 import { AgendaItemControllerService } from '../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { ProjectorControllerService } from '../../../../../projectors/services/projector-controller.service';
-import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services';
+import { MotionBlockControllerService } from '../../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
-import { MotionBlockDetailFilterListService } from '../../services/motion-block-detail-filter-list.service';
+import { MotionBlockDetailFilterListService } from '../../services/motion-block-detail-filter-list.service/motion-block-detail-filter-list.service';
 import { MotionBlockEditDialogComponent } from '../motion-block-edit-dialog/components/motion-block-edit-dialog/motion-block-edit-dialog.component';
 import { MotionBlockEditDialogService } from '../motion-block-edit-dialog/services/motion-block-edit-dialog.service';
 

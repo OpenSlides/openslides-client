@@ -28,7 +28,7 @@ const DECLARATIONS = [MotionMultiselectActionsComponent];
         DirectivesModule,
         ProjectableListModule,
         ProjectorButtonModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         AgendaItemCommonServiceModule
     ]
 })

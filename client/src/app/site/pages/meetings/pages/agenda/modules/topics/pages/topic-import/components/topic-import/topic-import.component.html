@@ -1,7 +1,7 @@
 <os-head-bar prevUrl="../.." [nav]="false">
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Import topics</h1>
+        <h1 class="mock-h2">{{ 'Import topics' | translate }}</h1>
     </div>
 
     <ng-container class="menu-slot">
@@ -13,13 +13,13 @@
         @if (finishedSuccessfully || hasErrors) {
             <div style="padding-top: 6px">
                 @if (finishedSuccessfully) {
-                    <mat-icon matTooltip="{{ 'Import successful' | translate }}">done</mat-icon>
+                    <mat-icon [matTooltip]="'Import successful' | translate">done</mat-icon>
                 }
                 @if (finishedWithWarnings) {
-                    <mat-icon matTooltip="{{ 'Import successful with some warnings' | translate }}">done</mat-icon>
+                    <mat-icon [matTooltip]="'Import successful with some warnings' | translate">done</mat-icon>
                 }
                 @if (hasErrors) {
-                    <mat-icon matTooltip="{{ 'Can not import because of errors' | translate }}">block</mat-icon>
+                    <mat-icon [matTooltip]="'Can not import because of errors' | translate">block</mat-icon>
                 }
             </div>
         }

@@ -26,7 +26,7 @@ import { MotionForwardDialogComponent } from './components/motion-forward-dialog
         IconContainerComponent,
         MeetingTimeComponent,
         CommaSeparatedListingComponent,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class MotionForwardDialogModule {

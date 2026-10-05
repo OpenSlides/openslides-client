@@ -4,7 +4,7 @@ import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { TranslateService } from '@ngx-translate/core';
 import { Content } from 'pdfmake/interfaces';
 
-import { ParticipantPdfService } from '../participant-pdf.service';
+import { ParticipantPdfService } from '../participant-pdf.service/participant-pdf.service';
 
 /**
  * Export service to handle various kind of exporting necessities for participants.

@@ -33,7 +33,7 @@ import { ViewGroup } from '../../../../../participants/modules/groups/view-model
 import { MEDIAFILES_SUBSCRIPTION } from '../../../../mediafiles.subscription';
 import { MediafileCommonService } from '../../../../services/mediafile-common.service';
 import { MediafileListExportService } from '../../services/mediafile-list-export.service/mediafile-list-export.service';
-import { MediafileListGroupService } from '../../services/mediafile-list-group.service';
+import { MediafileListGroupService } from '../../services/mediafile-list-group.service/mediafile-list-group.service';
 
 @Component({
     selector: `os-mediafile-list`,

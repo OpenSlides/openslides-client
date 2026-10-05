@@ -2,16 +2,17 @@ import { Id } from '@app/domain/definitions/key-types';
 import { MeetingUser } from '@app/domain/models/meeting-users/meeting-user';
 import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
 
-import { ViewSpeaker } from '../pages/agenda';
-import { ViewAssignmentCandidate } from '../pages/assignments';
-import { ViewChatMessage } from '../pages/chat';
-import { ViewMotionSubmitter, ViewPersonalNote } from '../pages/motions';
-import { ViewMotionEditor } from '../pages/motions/modules/editors';
+import { ViewSpeaker } from '../pages/agenda/modules/list-of-speakers/view-models/view-speaker';
+import { ViewAssignmentCandidate } from '../pages/assignments/view-models/view-assignment-candidate';
+import { ViewChatMessage } from '../pages/chat/view-models/view-chat-message';
+import { ViewMotionEditor } from '../pages/motions/modules/editors/view-models/view-motion-editor';
+import { ViewPersonalNote } from '../pages/motions/modules/personal-notes/view-models/view-personal-note';
+import { ViewMotionSubmitter } from '../pages/motions/modules/submitters/view-models/view-motion-submitter';
 import { ViewMotionSupporter } from '../pages/motions/modules/supporters/view-models/view-motion-supporter';
-import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers';
-import { ViewGroup } from '../pages/participants';
-import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models';
-import { ViewVote } from '../pages/polls';
+import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-group-speakers/view-models/view-motion-working-group-speaker';
+import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
+import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models/view-structure-level';
+import { ViewVote } from '../pages/polls/view-models/view-vote';
 import { ViewMeeting } from './view-meeting';
 import { ViewUser } from './view-user';
 

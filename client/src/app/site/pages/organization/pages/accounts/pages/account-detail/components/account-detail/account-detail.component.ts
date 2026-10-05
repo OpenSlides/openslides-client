@@ -13,10 +13,10 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 
-import { ViewCommittee } from '../../../../../committees';
 import { getCommitteeListMinimalSubscriptionConfig } from '../../../../../committees/committees.subscription';
 import { CommitteeSortService } from '../../../../../committees/pages/committee-list/services/committee-list-sort.service/committee-sort.service';
 import { CommitteeControllerService } from '../../../../../committees/services/committee-controller.service';
+import { ViewCommittee } from '../../../../../committees/view-models/view-committee';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
 type ParticipationTableData = Record<Id, ParticipationTableDataRow>;
@@ -58,7 +58,7 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get orgaManagementLevelChangeDisabled(): boolean {
         return (
             this.user?.id === this.operator.operatorId &&
-            (this.operator.isSuperAdmin || this.operator.isOrgaManager || this.operator.isAccountAdmin)
+            this.operator.hasOrganizationPermissions(OML.superadmin, OML.can_manage_organization, OML.can_manage_users)
         );
     }
 
@@ -107,32 +107,42 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
     public get canManageHomeCommittee(): boolean {
         return this.home_committee_id
             ? this.operator.hasCommitteePermissions(this.home_committee_id, CML.can_manage)
-            : this.operator.hasOrganizationPermissions(OML.can_manage_users) || this.operator.isAnyCommitteeManager;
+            : this.operator.hasOrganizationPermissions(OML.can_manage_organization) ||
+                  this.operator.isAnyCommitteeManager;
     }
 
     public get comitteeAdministrationAmount(): number {
         return Object.values(this._tableData).filter(row => row[`is_manager`] === true).length;
     }
 
-    public get userOML(): OML {
-        return this.user?.organization_management_level as OML;
-    }
-
     public get canEdit(): boolean {
-        if (!this.userOML) {
+        const userOML = this.user?.organization_management_level;
+        if (
+            this.operator.hasOrganizationPermissions(OML.superadmin) ||
+            (this.operator.hasOrganizationPermissions(OML.can_manage_organization) && userOML !== OML.superadmin) ||
+            (this.operator.hasOrganizationPermissions(OML.can_manage_users) &&
+                userOML !== OML.superadmin &&
+                userOML !== OML.can_manage_organization)
+        ) {
             return true;
+        } else if (
+            userOML === OML.superadmin ||
+            userOML === OML.can_manage_organization ||
+            userOML === OML.can_manage_users
+        ) {
+            return false;
         }
-        return this.operator.hasOrganizationPermissions(this.userOML);
+        return this.operator.isAnyManager;
     }
 
     public shouldEnableFormControl(): boolean {
         if (
-            !this.userOML &&
+            !this.operator.hasOrganizationPermissions(OML.can_manage_organization) &&
             (!this.home_committee_id || this.operator.hasCommitteePermissions(this.home_committee_id, CML.can_manage))
         ) {
             return true;
         }
-        return this.operator.hasOrganizationPermissions(this.userOML);
+        return this.operator.hasOrganizationPermissions(OML.can_manage_users);
     }
 
     public shouldEnableFormControlFn: (_: string) => boolean = (_: string) => this.shouldEnableFormControl();
@@ -148,9 +158,9 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     public readonly committeeController = inject(CommitteeControllerService);
     public readonly committeeSortService = inject(CommitteeSortService);
+    public readonly operator = inject(OperatorService);
     private route = inject(ActivatedRoute);
     private osRouter = inject(OpenSlidesRouterService);
-    private operator = inject(OperatorService);
     private accountController = inject(AccountControllerService);
     private userController = inject(UserControllerService);
     private promptService = inject(PromptService);
@@ -364,9 +374,22 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
 
     private getPartialUserPayload(isCreate: boolean): any {
         const payload = this.personalInfoFormValue;
-        if (!this.operator.hasOrganizationPermissions(OML.can_manage_organization)) {
+        if (!this.operator.hasOrganizationPermissions(OML.can_manage_users)) {
             payload[`committee_management_ids`] = undefined;
             payload[`organization_management_level`] = undefined;
+        }
+        if (
+            this.operator.hasOrganizationPermissions(OML.can_manage_users) &&
+            !this.operator.hasOrganizationPermissions(OML.can_manage_organization)
+        ) {
+            delete payload.home_committee_id;
+        }
+        if (payload.home_committee_id === 0) {
+            if (isCreate) {
+                delete payload.home_committee_id;
+            } else {
+                payload.home_committee_id = null;
+            }
         }
         if (payload.member_number === ``) {
             if (isCreate) {
@@ -380,13 +403,6 @@ export class AccountDetailComponent extends BaseComponent implements OnInit {
                 delete payload.gender_id;
             } else {
                 payload.gender_id = null;
-            }
-        }
-        if (payload.home_committee_id === 0) {
-            if (isCreate) {
-                delete payload.home_committee_id;
-            } else {
-                payload.home_committee_id = null;
             }
         }
         return payload;

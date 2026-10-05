@@ -4,7 +4,7 @@ import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
 import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import { OperatorService } from '@app/site/services/operator.service';
 
-import { Dimension } from '../../../../definitions';
+import { Dimension } from '../../../../definitions/dimension';
 
 @Component({
     selector: `os-fullscreen-projector`,

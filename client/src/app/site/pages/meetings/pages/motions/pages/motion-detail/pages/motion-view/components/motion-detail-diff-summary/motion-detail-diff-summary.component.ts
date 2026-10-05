@@ -6,8 +6,8 @@ import { ViewUnifiedChange } from '@app/site/pages/meetings/pages/motions/module
 
 import { getRecommendationTypeName } from '../../../../../../definitions/recommendation-type-names';
 import { ViewUnifiedChangeType } from '../../../../../../modules/change-recommendations/definitions/index';
-import { MotionControllerService } from '../../../../../../services/common/motion-controller.service';
-import { ViewMotion } from '../../../../../../view-models';
+import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
+import { ViewMotion } from '../../../../../../view-models/view-motion';
 import { ViewMotionAmendedParagraph } from '../../../../../../view-models/view-motion-amended-paragraph';
 
 /**

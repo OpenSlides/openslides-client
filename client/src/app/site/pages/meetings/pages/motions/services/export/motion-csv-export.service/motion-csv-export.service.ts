@@ -6,10 +6,10 @@ import { MeetingCsvExportService } from '@app/site/pages/meetings/services/expor
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 
-import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
-import { ViewMotion } from '../../../view-models';
-import { MotionControllerService } from '../../common/motion-controller.service';
-import { MotionFormatService } from '../../common/motion-format.service';
+import { MotionCommentSectionControllerService } from '../../../modules/comments/services/motion-comment-section-controller.service';
+import { ViewMotion } from '../../../view-models/view-motion';
+import { MotionControllerService } from '../../common/motion-controller.service/motion-controller.service';
+import { MotionFormatService } from '../../common/motion-format.service/motion-format.service';
 import { getMotionExportHeadersAndVerboseNames, sortMotionPropertyList } from '../definitions';
 
 interface MotionCsvExport {
@@ -158,7 +158,7 @@ export class MotionCsvExportService {
                 label: `Referring motions`,
                 map: motion =>
                     motion.referenced_in_motion_recommendation_extensions
-                        .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
+                        .naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`])
                         .map(motion => motion.getNumberOrTitle())
                         .join(`, `)
             });

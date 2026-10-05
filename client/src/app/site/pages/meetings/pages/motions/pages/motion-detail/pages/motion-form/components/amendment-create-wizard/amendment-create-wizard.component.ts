@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 import { AmendmentParagraphs } from '../../../../../../../../../../../domain/models/motions/motion';
-import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service';
+import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
 import {
     MotionLineNumberingService,

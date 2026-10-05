@@ -29,7 +29,7 @@ const DECLARATIONS = [
         CommonModule,
         RouterModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatCardModule,
         MatIconModule,
         MatTooltipModule,

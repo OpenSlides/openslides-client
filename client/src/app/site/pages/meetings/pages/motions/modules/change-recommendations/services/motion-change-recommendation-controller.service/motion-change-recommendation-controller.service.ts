@@ -3,32 +3,28 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { MotionChangeRecommendation } from '@app/domain/models/motions/motion-change-recommendation';
 import { ChangeRecoMode, ModificationType } from '@app/domain/models/motions/motions.constants';
-import { MotionChangeRecommendationRepositoryService } from '@app/gateways/repositories/motions';
+import { MotionChangeRecommendationRepositoryService } from '@app/gateways/repositories/motions/motion-change-recommendation-repository.service';
 import { viewModelListEqual } from '@app/infrastructure/utils';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { distinctUntilChanged, map, Observable } from 'rxjs';
 
 import { LineRange } from '../../../../definitions';
-import { ViewMotion } from '../../../../view-models';
-import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
+import { ViewMotion } from '../../../../view-models/view-motion';
+import { ViewMotionChangeRecommendation } from '../../view-models/view-motion-change-recommendation';
+import { ViewUnifiedChange } from '../../view-models/view-unified-change';
 import { DiffServiceFactory } from '../diff-factory.service';
-import { MotionDiffService } from '../motion-diff.service';
+import { MotionDiffService } from '../motion-diff.service/motion-diff.service';
 
 @Service()
 export class MotionChangeRecommendationControllerService extends BaseMeetingControllerService<
     ViewMotionChangeRecommendation,
     MotionChangeRecommendation
 > {
-    protected override repo: MotionChangeRecommendationRepositoryService;
+    protected repo: MotionChangeRecommendationRepositoryService = inject(MotionChangeRecommendationRepositoryService);
     private diffServiceFactory = inject(DiffServiceFactory);
 
-    public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(MotionChangeRecommendationRepositoryService);
-        super(controllerServiceCollector, MotionChangeRecommendation, repo);
-    }
+    public baseModelCtor = MotionChangeRecommendation;
 
     public create(changeRecommendation: Partial<MotionChangeRecommendation>, firstLine = 1): Promise<Identifiable> {
         return this.repo.create(changeRecommendation, firstLine);

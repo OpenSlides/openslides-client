@@ -20,7 +20,7 @@ const DECLARATIONS = [ProjectorButtonComponent];
         MatButtonModule,
         MatMenuModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         ProjectionDialogModule
     ]
 })

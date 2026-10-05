@@ -25,8 +25,10 @@ import { PollFilteredVotesChartComponent } from './components/poll-filtered-vote
 import { PollProgressComponent } from './components/poll-progress/poll-progress.component';
 import { SingleOptionChartTableComponent } from './components/single-option-chart-table/single-option-chart-table.component';
 import { VotesTableComponent } from './components/votes-table/votes-table.component';
-import { VotingPrivacyDialogModule } from './modules/voting-privacy-dialog';
-import { PollKeyVerbosePipe, PollParseNumberPipe, PollPercentBaseAltPipe, PollPercentBasePipe } from './pipes';
+import { VotingPrivacyDialogModule } from './modules/voting-privacy-dialog/voting-privacy-dialog.module';
+import { PollKeyVerbosePipe } from './pipes/poll-key-verbose/poll-key-verbose.pipe';
+import { PollParseNumberPipe } from './pipes/poll-parse-number/poll-parse-number.pipe';
+import { PollPercentBaseAltPipe, PollPercentBasePipe } from './pipes/poll-percent-base/poll-percent-base.pipe';
 import { PollServiceModule } from './services/poll-service.module';
 
 const MODULES = [PollServiceModule, VotingPrivacyDialogModule];
@@ -64,7 +66,7 @@ const COMPONENTS = [
         SearchSelectorModule,
         MatProgressSpinnerModule,
         ...PIPES,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     exports: [...PIPES, ...MODULES, ...COMPONENTS, ChartComponent],
     providers: [...PIPES]

@@ -7,7 +7,7 @@ import { ImportServiceCollectorService } from '@app/site/services/import-service
 import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
 
-import { TopicExportService } from '../topic-export.service';
+import { TopicExportService } from '../topic-export.service/topic-export.service';
 
 @Service()
 export class TopicImportService extends BaseBackendImportService {

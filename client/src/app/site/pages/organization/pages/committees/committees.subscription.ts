@@ -4,7 +4,7 @@ import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organizat
 import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
 
 import { ViewMeeting } from '../../../meetings/view-models/view-meeting';
-import { ViewCommittee } from './view-models';
+import { ViewCommittee } from './view-models/view-committee';
 
 export const COMMITTEE_LIST_SUBSCRIPTION = `committee_list`;
 export const COMMITTEE_LIST_MINIMAL_SUBSCRIPTION = `committee_list_minimal`;

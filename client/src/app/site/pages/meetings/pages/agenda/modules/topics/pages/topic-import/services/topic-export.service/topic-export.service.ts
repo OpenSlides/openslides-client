@@ -2,7 +2,7 @@ import { inject, Service } from '@angular/core';
 import { CsvExportForBackendService } from '@app/gateways/export/csv-export.service/csv-export-for-backend.service';
 import { TranslateService } from '@ngx-translate/core';
 
-import { topicHeadersAndVerboseNames } from '../../../../definitions';
+import { topicHeadersAndVerboseNames } from '../../../../definitions/topics.constants';
 
 interface TopicExport {
     title?: string;

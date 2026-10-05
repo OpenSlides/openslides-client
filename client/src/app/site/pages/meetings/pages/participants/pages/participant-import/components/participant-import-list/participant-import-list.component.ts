@@ -4,7 +4,7 @@ import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { TranslateService } from '@ngx-translate/core';
 
 import { participantColumns, participantHeadersAndVerboseNames } from '../../definitions';
-import { ParticipantImportService } from '../../services';
+import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 
 @Component({
     selector: `os-participant-import-list`,

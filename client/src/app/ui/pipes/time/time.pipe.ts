@@ -10,6 +10,6 @@ export class TimePipe implements PipeTransform {
     private translate = inject(TranslateService);
 
     public transform(timestamp: number): string {
-        return new Date(timestamp * 1000).toLocaleString(this.translate.getCurrentLang());
+        return new Date(timestamp * 1000).toLocaleString(this.translate.getCurrentLang() ?? `en`);
     }
 }

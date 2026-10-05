@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UploadFileJsonProcessorService } from '@app/infrastructure/utils/import/json-import-file-utils';
 import { FileData } from '@app/ui/modules/file-upload/components/file-upload/file-upload.component';
 
-import { MotionWorkflowControllerService } from '../../../../modules/workflows/services';
+import { MotionWorkflowControllerService } from '../../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
 
 @Component({
     selector: `os-workflow-import`,

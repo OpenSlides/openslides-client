@@ -16,7 +16,7 @@ import { ParticipantListInfoDialogComponent } from './components/participant-lis
     imports: [
         CommonModule,
         SearchSelectorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatFormFieldModule,
         MatSelectModule,
         MatButtonModule,

@@ -1,7 +1,7 @@
 import { Id } from '../../definitions/key-types';
-import { HasSequentialNumber } from '../../interfaces';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProperties } from '../../interfaces/has-properties';
+import { HasSequentialNumber } from '../../interfaces/has-sequential-number';
 import { BaseModel } from '../base/base-model';
 import { ProjectiondefaultValue } from './projection-default';
 import { ProjectorMeetingUsageIdKey } from './projector.constants';

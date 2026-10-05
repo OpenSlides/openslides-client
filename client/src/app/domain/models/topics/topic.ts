@@ -1,10 +1,10 @@
 import { HasPollIds } from '@app/domain/interfaces/has-poll-ids';
 
-import { HasSequentialNumber } from '../../interfaces';
 import { HasAgendaItemId } from '../../interfaces/has-agenda-item-id';
 import { HasAttachmentMeetingMediafileIds } from '../../interfaces/has-attachment-ids';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { HasSequentialNumber } from '../../interfaces/has-sequential-number';
 import { BaseModel } from '../base/base-model';
 
 /**

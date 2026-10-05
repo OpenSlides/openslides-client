@@ -8,8 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
 
 import { InteractionService } from '../../../../../interaction/services/interaction.service';
-import { ViewTag } from '../../../../modules';
-import { TagControllerService } from '../../../../modules/tags/services';
+import { TagControllerService } from '../../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { ViewTag } from '../../../../modules/tags/view-models/view-tag';
 
 @Component({
     selector: `os-tag-list`,

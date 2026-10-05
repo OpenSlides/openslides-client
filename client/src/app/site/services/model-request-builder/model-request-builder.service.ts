@@ -8,12 +8,12 @@ import {
 
 import { Collection, Field, Id } from '../../../domain/definitions/key-types';
 import { BaseModel } from '../../../domain/models/base/base-model';
-import { Relation } from '../../../infrastructure/definitions/relations';
-import { Deferred } from '../../../infrastructure/utils/promises';
+import { Relation } from '../../../infrastructure/definitions/relations/utils';
+import { Deferred } from '../../../infrastructure/utils/promises/deferred';
 import { BaseViewModel, ViewModelConstructor } from '../../base/base-view-model';
-import { CollectionMapperService } from '../collection-mapper.service';
+import { CollectionMapperService } from '../collection-mapper.service/collection-mapper.service';
 import { RelationManagerService } from '../relation-manager.service';
-import { ModelRequestObject } from '.';
+import { ModelRequestObject } from './model-request-object';
 
 export type TypedFieldset<M> = (keyof M)[];
 

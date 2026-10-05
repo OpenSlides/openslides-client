@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 
-import { ViewPoll } from '../../../../../../../polls';
-import { MotionPollDialogService } from '../../../../../../modules/motion-poll/services/motion-poll-dialog.service';
+import { ViewPoll } from '../../../../../../../polls/view-models/view-poll';
+import { MotionPollDialogService } from '../../../../../../modules/motion-poll/services/motion-poll-dialog.service/motion-poll-dialog.service';
 
 @Component({
     selector: `os-motion-manage-polls`,

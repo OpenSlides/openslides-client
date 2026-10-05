@@ -23,7 +23,7 @@ import { OrganizationTagListRoutingModule } from './organization-tag-list-routin
         HeadBarModule,
         ListModule,
         ChipComponent,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatMenuModule,
         MatButtonModule,

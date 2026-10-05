@@ -12,7 +12,7 @@ import {
 import { Observable } from 'rxjs';
 
 import { PollService } from '../../services/poll.service';
-import { PollServiceMapperService } from '../../services/poll-service-mapper.service';
+import { PollServiceMapperService } from '../../services/poll-service-mapper.service/poll-service-mapper.service';
 import { PollPercentBasePipe } from './poll-percent-base.pipe';
 
 class MockPollServiceMapperService {

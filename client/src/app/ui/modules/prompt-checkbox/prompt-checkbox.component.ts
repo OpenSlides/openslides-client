@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MAT_CHECKBOX_DEFAULT_OPTIONS, MatCheckboxDefaultOptions, MatCheckboxModule } from '@angular/material/checkbox';
 
-import { PromptService } from '../prompt-dialog';
+import { PromptService } from '../prompt-dialog/services/prompt.service';
 
 @Component({
     selector: `os-prompt-checkbox`,

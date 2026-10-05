@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from '@angular/core';
 import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 
-import { DirectivesModule } from '../../directives';
+import { DirectivesModule } from '../../directives/directives.module';
 
 @Component({
     selector: `os-expandable-content-wrapper`,

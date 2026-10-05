@@ -10,9 +10,11 @@ import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-rep
 import { VoteRepositoryService } from '@app/gateways/repositories/polls/vote-repository.service';
 
 import { AppConfig } from '../../../../../infrastructure/definitions/app-config';
-import { ViewOption, ViewPoll, ViewVote } from './view-models';
+import { ViewOption } from './view-models/view-option';
+import { ViewPoll } from './view-models/view-poll';
 import { ViewPollCandidate } from './view-models/view-poll-candidate';
 import { ViewPollCandidateList } from './view-models/view-poll-candidate-list';
+import { ViewVote } from './view-models/view-vote';
 
 export const PollsAppConfig: AppConfig = {
     name: `poll`,

@@ -24,9 +24,9 @@ import { filter, merge, mergeMap, Subscription, tap } from 'rxjs';
 
 import { CurrentSpeakingStructureLevelSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-speaking-structure-level-slide.service';
 import { CurrentStructureLevelListSlideService } from '../../../../pages/agenda/modules/list-of-speakers/services/current-structure-level-list-slide.service';
-import { ViewStructureLevelListOfSpeakers } from '../../../../pages/participants/pages/structure-levels/view-models';
+import { ViewStructureLevelListOfSpeakers } from '../../../../pages/participants/pages/structure-levels/view-models/view-structure-level-list-of-speakers';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
-import { ProjectionBuildDescriptor } from '../../../../view-models';
+import { ProjectionBuildDescriptor } from '../../../../view-models/projection-build-descriptor';
 import { CountdownData } from '../../../projector/modules/countdown-time/countdown-time.component';
 
 @Component({

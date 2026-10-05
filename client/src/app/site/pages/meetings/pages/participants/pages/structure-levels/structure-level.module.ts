@@ -39,7 +39,7 @@ import { StructureLevelRoutingModule } from './structure-level-routing.module';
         MatButtonModule,
         MatCheckboxModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         RouterModule,
         DirectivesModule,
         ChoiceDialogComponent,

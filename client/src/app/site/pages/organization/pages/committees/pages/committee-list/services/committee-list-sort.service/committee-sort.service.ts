@@ -4,7 +4,7 @@ import { CommitteeRepositoryService } from '@app/gateways/repositories/committee
 import { BaseSortListService, OsSortingOption } from '@app/site/base/base-sort.service';
 import { _ } from '@ngx-translate/core';
 
-import { ViewCommittee } from '../../../../view-models';
+import { ViewCommittee } from '../../../../view-models/view-committee';
 
 @Service()
 export class CommitteeSortService extends BaseSortListService<ViewCommittee> {

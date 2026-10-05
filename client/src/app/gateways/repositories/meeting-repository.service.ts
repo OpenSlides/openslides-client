@@ -10,17 +10,16 @@ import { Projection } from '../../domain/models/projector/projection';
 import { MeetingSettingsDefinitionService } from '../../site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { ViewMeeting } from '../../site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '../../site/pages/meetings/view-models/view-user';
-import { Fieldsets } from '../../site/services/model-request-builder';
+import { Fieldsets } from '../../site/services/model-request-builder/model-request-builder.service';
 import { TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
 import { BaseRepository } from './base-repository';
-import { MeetingAction } from './meetings';
-import { RepositoryServiceCollectorService } from './repository-service-collector.service';
+import { MeetingAction } from './meetings/meeting-action';
 import { UserAction } from './users/user-action';
 
 export enum MeetingProjectionType {
     CurrentListOfSpeakers = `current_los`,
     CurrentSpeakerChyron = `current_speaker_chyron`,
-    CurrentSpeakingStructureLevel = `current_speaking_structure_level`,
+    CurrentSpeaker = `current_speaker`,
     CurrentStructureLevelList = `current_structure_level_list`,
     AgendaItemList = `agenda_item_list`,
     Home = `home`,
@@ -41,10 +40,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
     private meetingSettingsDefinitionProvider = inject(MeetingSettingsDefinitionService);
     private orgaSettingsService = inject(OrganizationSettingsService);
 
-    public constructor() {
-        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
-        super(repositoryServiceCollector, Meeting);
-    }
+    public baseModelCtor = Meeting;
 
     public override getFieldsets(): Fieldsets<Meeting> {
         // This field is used to determine, if a user can access a meeting: It is restricted for non-authorized users
@@ -117,7 +113,7 @@ export class MeetingRepositoryService extends BaseRepository<ViewMeeting, Meetin
             case MeetingProjectionType.CurrentStructureLevelList:
                 title = this.translate.instant(`All structure levels`);
                 break;
-            case MeetingProjectionType.CurrentSpeakingStructureLevel:
+            case MeetingProjectionType.CurrentSpeaker:
                 title = this.translate.instant(`Current speaker`);
                 break;
             case MeetingProjectionType.AgendaItemList:

@@ -56,7 +56,7 @@ import { PollCollectionComponent } from './components/poll-collection/poll-colle
         ListOfSpeakersContentModule,
         HeadBarModule,
         CountdownTimeModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         PollModule,
         MotionPollModule,
         MatMenuModule,

@@ -6,7 +6,7 @@ import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 
 import { listOfSpeakersSpeakerCountSubscription } from '../agenda/agenda.subscription';
 import { pollModelRequest } from '../polls/polls.subscription';
-import { ViewAssignment } from './view-models';
+import { ViewAssignment } from './view-models/view-assignment';
 
 export const ASSIGNMENT_LIST_SUBSCRIPTION = `assignment_list`;
 export const ASSIGNMENT_LIST_MINIMAL_SUBSCRIPTION = `assignment_list_minimal`;

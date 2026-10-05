@@ -3,22 +3,18 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Vote } from '@app/domain/models/poll/vote';
 import { VoteRepositoryService } from '@app/gateways/repositories/polls/vote-repository.service';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { Observable } from 'rxjs';
 
-import { ViewPoll, ViewVote } from '../../../../pages/polls';
+import { ViewPoll } from '../../../../pages/polls/view-models/view-poll';
+import { ViewVote } from '../../../../pages/polls/view-models/view-vote';
 
 @Service()
 export class VoteControllerService extends BaseMeetingControllerService<ViewVote, Vote> {
-    protected override repo: VoteRepositoryService;
+    protected repo: VoteRepositoryService = inject(VoteRepositoryService);
     private operator = inject(OperatorService);
 
-    public constructor() {
-        const controllerServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(VoteRepositoryService);
-        super(controllerServiceCollector, Vote, repo);
-    }
+    public baseModelCtor = Vote;
 
     public subscribeVoted(...viewPolls: ViewPoll[]): Observable<Record<Id, Id[]>> {
         return new Observable<Record<Id, Id[]>>(subscriber => {

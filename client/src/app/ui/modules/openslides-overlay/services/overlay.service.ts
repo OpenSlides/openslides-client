@@ -1,7 +1,8 @@
 import { inject, Service, Type } from '@angular/core';
 import { DomService } from '@app/openslides-main-module/services/dom.service';
 
-import { CustomOverlayConfig, OverlayInstance } from '../definitions';
+import { CustomOverlayConfig } from '../definitions/overlay-config';
+import { OverlayInstance } from '../definitions/overlay-instance';
 import { OverlayComponent } from '../overlay.component';
 
 @Service()
