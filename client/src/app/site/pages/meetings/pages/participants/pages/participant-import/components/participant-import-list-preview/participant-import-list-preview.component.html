@@ -100,9 +100,9 @@
                                 @if (!getHeader(def).is_list && entry[def] !== undefined) {
                                     @if (getHeader(def).is_object) {
                                         @let icon =
-                                            getActionIconEntry(entry[def]) === 'error_outline'
+                                            getActionIconEntry(entry?.[def]) === 'error_outline'
                                                 ? 'error_outline'
-                                                : changes[0] === 'autorenew'
+                                                : changes?.[0] === 'autorenew'
                                                   ? 'autorenew'
                                                   : getActionIconEntry(entry[def]);
                                         <div class="cell-wrapper">
@@ -143,29 +143,6 @@
                                 }
                             </span>
                         </div>
-                    }
-                    @if (
-                        changes[1]?.[column.property]?.removed === true &&
-                        [undefined, null].includes(changes[1]?.[column.property]?.new)
-                    ) {
-                        <span>
-                            &nbsp;
-                            <mat-icon class="os-yellow" inline style="margin-bottom: -3px">
-                                {{ changes[0] }}
-                            </mat-icon>
-                        </span>
-                    }
-                    @if (
-                        changes[1]?.[column.property]?.old === 'true' &&
-                        changes[1]?.[column?.property]?.removed === false &&
-                        getHeader(def)?.type === 'boolean'
-                    ) {
-                        <span>
-                            &nbsp;
-                            <mat-icon class="os-yellow" inline style="margin-bottom: -3px">
-                                {{ changes[0] }}
-                            </mat-icon>
-                        </span>
                     }
                 </div>
             }

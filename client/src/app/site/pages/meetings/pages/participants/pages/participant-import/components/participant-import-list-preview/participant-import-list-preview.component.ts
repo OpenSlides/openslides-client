@@ -16,16 +16,13 @@ import { MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
-import { toDecimal } from '@app/infrastructure/utils';
 import { infoDialogSettings, mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
-import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { AccountControllerService } from '@app/site/pages/organization/pages/accounts/services/common/account-controller.service';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { BackendImportPhase } from '@app/ui/modules/import-list/components/via-backend-import-list/backend-import-list.component';
 import {
-    BackendImportEntry,
     BackendImportEntryObject,
     BackendImportHeader,
     BackendImportIdentifiedRow,
@@ -39,8 +36,6 @@ import { START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrol
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
 
-import { ViewGroup } from '../../../../modules';
-import { ViewStructureLevel } from '../../../structure-levels/view-models';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
 import { CSVOptionsService } from '../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
@@ -457,7 +452,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     protected getEntryIcon(item: BackendImportEntryObject): string {
-        if (item.info === BackendImportState.Done || !item) {
+        if ((item.info === BackendImportState.Done && item['changed'] === undefined) || !item) {
             return undefined;
         }
         return this.getActionIconEntry(item);
@@ -592,18 +587,22 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 }
             }
         };
-        addIfMissing(['updated', counts[0]], ['referenced', counts[1]]);
         this._summary.map(item => {
             if (item.name === 'created') {
                 item.name = 'new';
             }
             if (counts[0] > 0 && item.name === 'updated') {
                 item.value = counts[0];
+            } else {
+                this._summary = this.summary.filter(item => item.name !== 'updated');
             }
             if (counts[1] > 0 && item.name === 'referenced') {
                 item.value = counts[1];
+            } else {
+                this._summary = this.summary.filter(item => item.name !== 'referenced');
             }
         });
+        addIfMissing(['updated', counts[0]], ['referenced', counts[1]]);
         this._summary = this._summary.filter(item => item.name !== 'error');
         this._summary.push({ name: error?.name, value: error?.value });
     }
@@ -682,200 +681,31 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return false;
     }
 
-    protected checkChanges(
-        item: ViewImportedParticipant,
-        headerName?: string
-    ): boolean | (string | Partial<Record<keyof ViewUser, { old?: unknown; new: unknown }>>)[] {
-        for (const user of this.userAccounts) {
-            if (
-                (user.meeting_ids.includes(item.meeting_id) && item.username && item.username === user.username) ||
-                (item.member_number && item.member_number === user.member_number) ||
-                (item.saml_id && item.saml_id === user.saml_id)
-            ) {
-                const updatedUser = user.getModel();
-                const changes: Partial<
-                    Record<keyof ViewUser, { old?: unknown; new: unknown | unknown[]; removed?: boolean }>
-                > = {};
-                const changedStructureLevels = this.checkArrayFields(
-                    Array.isArray(item.data?.['structure_level']) ? item.data?.['structure_level'] : [],
-                    user?.structure_levels(this.activeMeetingIdService.meetingId)
-                );
-                const userGroups: ViewGroup[] = user?.groups(this.activeMeetingIdService.meetingId) || [];
-                const itemGroups = item?.data['groups'] || [];
-                const changedGroups = this.checkArrayFields(itemGroups as BackendImportEntry[], userGroups);
-                for (const key of Object.keys(updatedUser) as (keyof ViewUser)[]) {
-                    if (key in item) {
-                        const importedValue = item[key as keyof ViewImportedParticipant];
-                        if (key === 'id') {
-                            continue;
-                        }
-                        if (updatedUser[key] !== importedValue) {
-                            changes[key] = {
-                                old: updatedUser[key],
-                                new: importedValue,
-                                removed: ![null, undefined].includes(updatedUser[key]) && importedValue === undefined
-                            };
-                        }
+    protected checkChanges(participant: ViewImportedParticipant, headerName?: string): boolean | [string, {}] {
+        const changes = {};
+        for (const key of Object.keys(participant.data)) {
+            if (Array.isArray(participant.data[key])) {
+                participant.data[key].map(item => {
+                    if (item?.['changed'] === true) {
+                        changes[key] = item;
                     }
-                    if (
-                        item.home_committee !== user.home_committee?.getModel()?.name &&
-                        !(item.home_committee === null && user.home_committee?.getModel()?.name === undefined)
-                    ) {
-                        changes['home_committee'] = {
-                            old: user.home_committee?.getModel()?.name,
-                            new: item.home_committee,
-                            removed: this.homeCommitteeRemovalCheck(item, user)
-                        };
-                    }
-                    if (item.isLockedOut !== user.is_locked_out && user.is_locked_out !== undefined) {
-                        changes['locked_out'] = {
-                            old: user.is_locked_out,
-                            new: item.isLockedOut,
-                            removed: ![null, undefined].includes(user.is_locked_out) && item.isLockedOut === undefined
-                        };
-                    }
-                    if (item.isPresent !== user.isPresentInMeeting() && user.isPresentInMeeting() !== undefined) {
-                        changes['is_present'] = {
-                            old: user.isPresentInMeeting(),
-                            new: item.isPresent,
-                            removed:
-                                ![null, undefined].includes(user.isPresentInMeeting()) && item.isPresent === undefined
-                        };
-                    }
-                    if (item.saml_id !== user.saml_id) {
-                        changes['saml_id'] = {
-                            old: user.saml_id,
-                            new: item.saml_id,
-                            removed: ![null, undefined].includes(user.saml_id) && item.saml_id === undefined
-                        };
-                    }
-                    if (item.number !== user.number() && user.number() !== '') {
-                        changes['number'] = {
-                            old: user.number(),
-                            new: item.number,
-                            removed: ![null, undefined].includes(user.number()) && item.number === undefined
-                        };
-                    }
-                    if (
-                        item.comment !== user.comment(this.activeMeetingIdService.meetingId) &&
-                        user.comment(this.activeMeetingIdService.meetingId)
-                    ) {
-                        changes['comment'] = {
-                            old: user.comment(),
-                            new: item.comment,
-                            removed:
-                                ![null, undefined].includes(user.comment()) && [null, undefined].includes(item.comment)
-                        };
-                    }
-                    if (item.gender !== user.gender_name && user.gender_name !== '') {
-                        changes['gender'] = {
-                            old: user.gender_name,
-                            new: item.gender,
-                            removed: ![null, undefined].includes(user.gender_name) && item.gender === undefined
-                        };
-                    }
-                    if (this.voteWeightChanged(item, user)) {
-                        changes['vote_weight'] = {
-                            old: user.voteWeight,
-                            new: item.voteWeight,
-                            removed: ![null, undefined].includes(user.voteWeight) && item.voteWeight === undefined
-                        };
-                    }
-                    if (item.isExternal !== user.external && user.external !== undefined) {
-                        changes['external'] = {
-                            old: user.external,
-                            new: item.external,
-                            removed: ![null, undefined].includes(user.external) && item.external === undefined
-                        };
-                    }
-                    if (changedGroups?.new !== changedGroups?.old) {
-                        changes['groups'] = {
-                            old: changedGroups.old,
-                            new: changedGroups.new,
-                            removed: changedGroups.removed
-                        };
-                    }
-                    if (changedStructureLevels?.new !== changedStructureLevels?.old) {
-                        changes['structure_level'] = {
-                            old: changedStructureLevels.old,
-                            new: changedStructureLevels.new,
-                            removed: changedStructureLevels.removed
-                        };
-                    }
-                }
-                // check for displaying the icon on every entry and provide context if an entry is removed
-                if (Object.keys(changes).includes(headerName)) {
-                    return ['autorenew', changes];
-                }
-                // check for unchanged users
-                if (Object.keys(changes).length === 0) {
-                    return false;
-                }
-                // check for displaying the updated icon if participant is referenced
-                if (item.state === 'referenced' && Object.keys(changes).length > 0) {
-                    return true;
+                });
+            } else {
+                if (participant.data[key]?.['changed'] === true) {
+                    changes[key] = participant.data[key];
                 }
             }
         }
-        // new user
-        return ['', {}];
-    }
-
-    private checkArrayFields(
-        addedItems: BackendImportEntry[],
-        oldItems: ViewGroup[] | ViewStructureLevel[]
-    ): {
-        old?: number[];
-        new: BackendImportEntry[];
-        removed?: boolean;
-    } {
-        const oldItemIds = oldItems.map((oldItem: ViewGroup | ViewStructureLevel) => oldItem.id).sort();
-        if (addedItems.every(item => oldItemIds.includes(item['id'])) && addedItems.length === oldItemIds.length) {
-            return { new: undefined };
+        // check for displaying the icon on every entry and provide context if an entry is removed
+        if (Object.keys(changes).includes(headerName)) {
+            return ['autorenew', changes];
         }
-        const diffItemNames = addedItems
-            .filter(
-                addedItem =>
-                    addedItem['info'] === 'new' ||
-                    oldItemIds.includes(addedItem['id']) ||
-                    addedItem['info'] === 'done' ||
-                    addedItem['info'] === 'updated'
-            )
-            .sort();
-        diffItemNames.forEach(item => {
-            if (item['id'] && !oldItemIds.includes(item['id'])) {
-                item['info'] = 'updated';
-            }
-        });
-        return {
-            old: oldItemIds,
-            new: diffItemNames,
-            removed: this.removedArrayItem(oldItemIds, diffItemNames)
-        };
-    }
-
-    protected removedArrayItem(oldItemIds: number[], diffItemNames: BackendImportEntry[]): boolean {
-        return oldItemIds.every(
-            id =>
-                !diffItemNames
-                    .map(item => item['id'])
-                    .filter((id): id is number => id !== undefined)
-                    .includes(id)
-        );
-    }
-
-    private voteWeightChanged(item: ViewImportedParticipant, user: ViewUser): boolean {
-        if ('vote_weight' in item === false) {
+        // check for unchanged users
+        if (Object.keys(changes).length === 0) {
             return false;
         }
-        if (item.voteWeight === undefined && user.voteWeight !== undefined) {
-            item.vote_weight = toDecimal(1);
-        }
-        return this.getShortenedDecimal(item.voteWeight) !== this.getShortenedDecimal(user.voteWeight.toString());
-    }
-
-    private homeCommitteeRemovalCheck(item: ViewImportedParticipant, user: ViewUser): boolean {
-        if (!(item.home_committee === null && user.home_committee?.getModel()?.name)) {
+        // check for displaying the updated icon if participant is referenced
+        if (participant.state === 'referenced' && Object.keys(changes).length > 0) {
             return true;
         }
         return false;
