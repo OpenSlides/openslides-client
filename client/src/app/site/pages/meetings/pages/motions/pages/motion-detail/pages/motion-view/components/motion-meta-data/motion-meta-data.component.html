@@ -303,7 +303,7 @@
 }
 
 <!-- Origins - display only -->
-@if (originTreeData.length) {
+@if (originTreeData().length) {
     <div>
         @if (displayFutureForward()) {
             <h4>
@@ -363,10 +363,10 @@
                     </td>
                 </tr>
             }
-            @if (originTreeData.length > 1) {
+            @if (originTreeData().length > 1) {
                 <mat-paginator
                     [hidePageSize]="true"
-                    [length]="originTreeData.length"
+                    [length]="originTreeData().length"
                     [pageSize]="1"
                     (page)="onPageChange($event)"
                 ></mat-paginator>

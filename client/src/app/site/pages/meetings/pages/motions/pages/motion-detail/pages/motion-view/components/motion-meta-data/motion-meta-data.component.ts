@@ -127,7 +127,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public currentOriginPage = signal<ViewMotion[]>([]);
     private currentPageIndex = 0;
-    public originTreeData: ViewMotion[][] = [];
+    public originTreeData = signal<ViewMotion[][]>([]);
 
     public refreshOriginMotions(): void {
         this.displayFutureForward.set(true); // TODO: waiting for new setting, also see TODO in ngOnInit
@@ -154,9 +154,9 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                 }
             }
         }
-        this.originTreeData = this.createForwardTree(futureList, pastList);
-        if (this.originTreeData.length > 0) {
-            this.currentOriginPage.set(this.originTreeData[this.currentPageIndex]);
+        this.originTreeData.set(this.createForwardTree(futureList, pastList));
+        if (this.originTreeData().length > 0) {
+            this.currentOriginPage.set(this.originTreeData()[this.currentPageIndex]);
         }
     }
 
@@ -177,6 +177,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
      * The subscription to the recommender config variable.
      */
     private recommenderSubscription: Subscription | null = null;
+    private derivedMotionSubscriptions: Subscription[] = [];
 
     public perms = inject(MotionPermissionService);
     public meetingController = inject(MeetingControllerService);
@@ -213,8 +214,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
             });
         }
     }
-
-    private derivedMotionSubscriptions: Subscription[] = [];
 
     public ngOnInit(): void {
         for (const motion of this.activeOriginMotions) {
@@ -330,7 +329,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public onPageChange(event: PageEvent): void {
         this.currentPageIndex = event.pageIndex;
-        const page = this.originTreeData[event.pageIndex];
+        const page = this.originTreeData()[event.pageIndex];
         if (page) {
             this.currentOriginPage.set(page);
         }
