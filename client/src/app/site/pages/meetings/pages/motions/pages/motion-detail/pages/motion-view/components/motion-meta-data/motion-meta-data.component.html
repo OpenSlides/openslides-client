@@ -330,39 +330,36 @@
                         </div>
                     </td>
                     <td class="move-text-up">
-                        <ng-container
-                            *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
-                        ></ng-container>
-                        @if (origin.meeting?.locked_from_inside) {
-                            <mat-icon class="lock-icon motion-forward-icon adjust-icon">lock</mat-icon>
-                        }
-                        @if (
-                            canAccess(origin) &&
-                            motion !== origin &&
-                            (displayOriginEnabled$ | async) &&
-                            (originToggleDefault$ | async) === false &&
-                            !motion.isAmendment()
-                        ) {
-                            <mat-slide-toggle
-                                *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
-                                class="slider-margin"
-                                [aria-label]="'Activate backtracking' | translate"
-                                [checked]="originMotionStatus[origin.id]"
-                                [matTooltip]="'Activate backtracking' | translate"
-                                (change)="toggleOriginMotion($event, origin.id)"
-                            ></mat-slide-toggle>
-                        }
-                    </td>
-                </tr>
-                <tr
-                    class="basic-flex-container"
-                    [ngClass]="{ 'motion-forward-path': !last, 'last-element-margin': last }"
-                >
-                    <td class="status-text move-text-up" [ngClass]="{ 'status-text-without-icon': last }">
-                        {{ origin.state }}
-                        @if (origin.state_extension) {
-                            {{ origin.state_extension }}
-                        }
+                        <div>
+                            <ng-container
+                                *ngTemplateOutlet="meetingLink; context: { motion: origin, showTooltip: true }"
+                            ></ng-container>
+                            @if (origin.meeting?.locked_from_inside) {
+                                <mat-icon class="lock-icon motion-forward-icon adjust-icon">lock</mat-icon>
+                            }
+                            @if (
+                                canAccess(origin) &&
+                                motion !== origin &&
+                                (displayOriginEnabled$ | async) &&
+                                (originToggleDefault$ | async) === false &&
+                                !motion.isAmendment()
+                            ) {
+                                <mat-slide-toggle
+                                    *osPerms="permission.motionCanSeeOrigin; and: canView(origin)"
+                                    class="slider-margin"
+                                    [aria-label]="'Activate backtracking' | translate"
+                                    [checked]="originMotionStatus[origin.id]"
+                                    [matTooltip]="'Activate backtracking' | translate"
+                                    (change)="toggleOriginMotion($event, origin.id)"
+                                ></mat-slide-toggle>
+                            }
+                        </div>
+                        <div class="status-text">
+                            {{ origin.state }}
+                            @if (origin.state_extension) {
+                                {{ origin.state_extension }}
+                            }
+                        </div>
                     </td>
                 </tr>
             }
