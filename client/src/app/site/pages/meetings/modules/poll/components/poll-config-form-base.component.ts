@@ -4,11 +4,14 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { PollState } from '@app/domain/models/poll';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
+import { ViewMeetingPollSetting } from '../../../view-models/view-meeting-poll-setting';
+
 @Component({ template: `` })
 export abstract class PollFormBaseComponent {
     public form: UntypedFormGroup;
 
     public data = input.required<Partial<ViewPoll>>();
+    public settings = input.required<ViewMeetingPollSetting>();
 
     public formValid = signal<boolean>(false);
 

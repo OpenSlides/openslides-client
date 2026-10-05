@@ -24,14 +24,7 @@ const PERCENT_DECIMAL_PLACES = 3;
 
 @Service()
 export abstract class PollService {
-    protected sortByVote = false;
     protected enableMaxVotesPerOption = false;
-
-    public get defaultPollLiveVotingEnabled(): boolean {
-        return this._defaultPollLiveVotingEnabled;
-    }
-
-    private _defaultPollLiveVotingEnabled = false;
 
     public get isElectronicVotingEnabled(): boolean {
         return this._isElectronicVotingEnabled;
@@ -49,10 +42,6 @@ export abstract class PollService {
         this.organizationSettingsService
             .get(`enable_electronic_voting`)
             .subscribe(is => (this._isElectronicVotingEnabled = is));
-
-        this.meetingSettingsService
-            .get(`poll_default_live_voting_enabled`)
-            .subscribe(is => (this._defaultPollLiveVotingEnabled = is));
     }
 
     public generateTableData(_poll: ViewPoll): PollTableData[] {

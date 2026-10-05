@@ -53,6 +53,11 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
         };
         delete data[`allow_empty`];
 
+        if (!this.settings().enable_max_options_limit) {
+            delete data[`min_options_amount`];
+            delete data[`max_options_amount`];
+        }
+
         return data;
     }
 

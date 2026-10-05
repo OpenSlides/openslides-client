@@ -15,22 +15,20 @@ export class MotionPollService extends PollService {
     private repo = inject(MotionPollControllerService);
     private meetingPollSettingsService = inject(MeetingPollSettingsService);
 
-    private defaultPercentBase = this.meetingPollSettingsService.signal(`motion`, `onehundred_percent_base`);
     private defaultPollVisibility = this.meetingPollSettingsService.signal(`motion`, `visibility`);
     private defaultGroupIds = this.meetingPollSettingsService.signal(`motion`, `group_ids`);
-    private defaultAllowAbstain = this.meetingPollSettingsService.signal(`motion`, `allow_abstain`);
-    private defaultRequiredMajority = this.meetingSettingsService.signal(`poll_default_required_majority`);
+    private defaultMethod = this.meetingPollSettingsService.signal(`motion`, `method`);
+    private defaultLiveVoting = this.meetingPollSettingsService.signal(`motion`, `enable_live_voting`);
+    private defaultRequiredMajority = this.meetingPollSettingsService.signal(`motion`, `required_majority`);
+    private defaultPercentBase = this.meetingPollSettingsService.signal(`motion`, `onehundred_percent_base`);
 
-    public constructor() {
-        super();
-    }
-
-    public getDefaultPollData(contentObject?: Motion): Partial<ViewPoll> {
-        const poll: Partial<ViewPoll> = {
-            entitled_group_ids: Object.values(this.defaultGroupIds() ?? []),
+    public getDefaultPollData(contentObject?: Motion): Partial<ViewPoll> & { method_preselection?: string } {
+        const poll: Partial<ViewPoll> & { method_preselection?: string } = {
             visibility: this.isElectronicVotingEnabled ? this.defaultPollVisibility() : PollVisibility.Manually,
+            entitled_group_ids: Object.values(this.defaultGroupIds() ?? []),
+            live_voting_enabled: this.defaultLiveVoting(),
             config: {
-                allow_abstain: this.defaultAllowAbstain(),
+                allow_abstain: this.defaultMethod().endsWith(`yes_no_abstain`),
                 onehundred_percent_base: this.defaultPercentBase(),
                 required_majority: this.defaultRequiredMajority()
             }

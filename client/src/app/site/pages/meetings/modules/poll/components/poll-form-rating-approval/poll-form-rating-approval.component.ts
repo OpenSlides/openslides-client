@@ -1,4 +1,4 @@
-import { Component, effect, inject, input } from '@angular/core';
+import { Component, effect, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -8,7 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { RatingApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-approval';
 import { RatingScoreOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-score';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
-import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
 import { _, TranslatePipe } from '@ngx-translate/core';
 
@@ -50,9 +49,14 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
     public hideMethod = input<boolean>(false);
     public optionAmount = input<number>(null);
 
-    private meetingSettingsService = inject(MeetingSettingsService);
+    public getSerialzedForm(): Record<string, unknown> {
+        const formValue = this.form.value;
+        if (!this.settings().enable_max_yes_votes) {
+            delete formValue.max_yes_amount;
+        }
 
-    public maxYesVotesEnabled = this.meetingSettingsService.signal(`poll_enable_max_yes_votes`);
+        return formValue;
+    }
 
     protected initForm(): void {
         const fields = {
@@ -60,14 +64,13 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
             allow_abstain: [false],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]],
-            required_majority: [`no_majority`]
+            required_majority: [`no_majority`],
+            max_yes_amount: [1]
         };
-        if (inject(MeetingSettingsService).instant(`poll_enable_max_yes_votes`)) {
-            fields[`max_yes_amount`] = [1, [Validators.required, Validators.min(1)]];
-        }
         this.form = this.fb.group(fields);
 
         effect(this.onOptionAmountUpdate.bind(this));
+        effect(this.onSettingsUpdated.bind(this));
 
         this.form
             .get(`max_options_amount`)
@@ -92,15 +95,6 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         }
 
         return patch;
-    }
-
-    public getSerialzedForm(): Record<string, unknown> {
-        const formValue = this.form.value;
-        if (!this.maxYesVotesEnabled()) {
-            delete formValue.max_yes_amount;
-        }
-
-        return formValue;
     }
 
     private minOptionsAmountValidator(): ValidatorFn {
@@ -136,5 +130,13 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         }
         maxCtrl?.updateValueAndValidity({ emitEvent: false });
         maxYesCtrl?.updateValueAndValidity({ emitEvent: false });
+    }
+
+    private onSettingsUpdated(): void {
+        if (this.settings().enable_max_yes_votes) {
+            this.form.get(`max_yes_amount`).setValidators([Validators.required, Validators.min(1)]);
+        } else {
+            this.form.get(`max_yes_amount`).setValidators([]);
+        }
     }
 }
