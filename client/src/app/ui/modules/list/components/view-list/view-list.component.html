@@ -42,4 +42,7 @@
             <div *osScrollingTableNoData class="no-data-placeholder subtitle">{{ 'No data' | translate }}</div>
         </os-scrolling-table>
     </div>
+    <div class="extra-footer-slot">
+        <ng-content select=".footer-slot"></ng-content>
+    </div>
 </mat-drawer-container>

@@ -69,12 +69,12 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     public readonly START_POSITION = START_POSITION;
 
     public readonly viewList = viewChild.required(ViewListComponent);
+    public readonly csvOptions = viewChild.required(CSVOptionsComponent);
 
     public modelName = `Participant`;
     public importer = inject(ParticipantImportService);
     public filterService = inject(ParticipantImportFilterService);
     public searchService = inject(ParticipantImportPreviewSearchService);
-    public csvOptions: CSVOptionsComponent;
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
     protected dialog = inject(MatDialog);
     protected translate = inject(TranslateService);
@@ -231,19 +231,13 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     public openCsvConfig(): void {
+        const menu = this.csvOptions().csvConfigMenu();
         this.viewList().sortFilterBarComponent.closeFilterMenu();
-        //
-        // TODO:
-        /*
-        if (this.csvConfigMenu().opened) {
-            this.csvOptionsService.open('filterMenu');
-            this.csvConfigMenu().close();
-            return;
+        if (menu.opened) {
+            menu.close();
         } else {
-            this.csvOptionsService.open('csvConfigMenu');
-            this.csvConfigMenu().open();
+            menu.open();
         }
-        */
     }
 
     /**
@@ -728,7 +722,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         if (Object.keys(changes).length > 0) {
             return true;
         } else {
-            //unchanged
+            // unchanged
             return false;
         }
     }

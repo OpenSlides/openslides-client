@@ -2,7 +2,6 @@
     <div class="title-slot">
         <h1 class="mock-h2">{{ 'Import participants' | translate }}</h1>
     </div>
-    <os-participant-import-csv-options></os-participant-import-csv-options>
     <ng-container class="menu-slot">
         <button
             mat-button
@@ -51,6 +50,9 @@
                     }
                 </button>
             </div>
+        </div>
+        <div class="filter-bar-drawer-slot">
+            <os-participant-import-csv-options></os-participant-import-csv-options>
         </div>
 
         @if (dataSource | async) {
@@ -217,26 +219,29 @@
                 }
             </div>
         }
+
+        <footer class="footer-slot footer">
+            @let cols = shortenSummary(summary);
+            @for (col of cols; track col; let i = $index) {
+                @let colInfo = getSummaryInformation(col.name);
+                <mat-icon inline style="margin-top: 13px; font-size: x-large" [ngClass]="colInfo[1]">
+                    {{ colInfo[0] }}
+                </mat-icon>
+                <div style="margin-bottom: 0px">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
+            }
+            @if (importDone) {
+                <div class="import-successful">
+                    {{ 'Import successful' | translate }}
+                </div>
+            }
+            <div style="margin-left: auto; margin-right: 15px">
+                <button matButton (click)="openDialog()">
+                    <mat-icon color="accent">info</mat-icon>
+                    <mat-label>{{ 'INFO' | translate }}</mat-label>
+                </button>
+            </div>
+        </footer>
     </os-view-list>
-    <footer class="footer">
-        @let cols = shortenSummary(summary);
-        @for (col of cols; track col; let i = $index) {
-            @let colInfo = getSummaryInformation(col.name);
-            <mat-icon inline style="margin-top: 5px; font-size: x-large" [ngClass]="colInfo[1]">
-                {{ colInfo[0] }}
-            </mat-icon>
-            <div style="margin-bottom: 8px">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
-        }
-        <div class="import-successful" [hidden]="!importDone">
-            {{ 'Import successful' | translate }}
-        </div>
-        <div style="margin-left: auto; margin-right: 15px">
-            <button matButton (click)="openDialog()">
-                <mat-icon color="accent">info</mat-icon>
-                <mat-label>{{ 'INFO' | translate }}</mat-label>
-            </button>
-        </div>
-    </footer>
 </div>
 
 <ng-template #ImportDialog>
