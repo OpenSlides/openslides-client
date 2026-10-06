@@ -1,5 +1,4 @@
 import { TemplatePortal } from '@angular/cdk/portal';
-import { AsyncPipe } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -12,7 +11,6 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
@@ -26,17 +24,7 @@ import { CSVOptionsService } from '../../../services/participant-import-preview.
     selector: 'os-participant-import-csv-options',
     templateUrl: './participant-import-csv-options.component.html',
     styleUrl: './participant-import-csv-options.component.scss',
-    imports: [
-        MatIcon,
-        TranslatePipe,
-        AsyncPipe,
-        MatButton,
-        MatRadioButton,
-        MatRadioGroup,
-        MatDivider,
-        MatDrawer,
-        FormsModule
-    ],
+    imports: [MatIcon, TranslatePipe, MatRadioButton, MatRadioGroup, MatDivider, MatDrawer, FormsModule],
     encapsulation: ViewEncapsulation.None
 })
 export class CSVOptionsComponent implements OnInit, AfterViewInit {

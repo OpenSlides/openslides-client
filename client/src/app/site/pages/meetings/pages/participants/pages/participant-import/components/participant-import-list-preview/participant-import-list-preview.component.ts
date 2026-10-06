@@ -705,7 +705,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return false;
     }
 
-    protected checkChanges(participant: ViewImportedParticipant, headerName?: string): boolean | [string, {}] {
+    protected checkChanges(participant: ViewImportedParticipant, headerName?: string): boolean | object {
         const changes = {};
         for (const key of Object.keys(participant.data)) {
             if (Array.isArray(participant.data[key])) {
@@ -725,13 +725,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             return ['autorenew', changes];
         }
         // check for unchanged users
-        if (Object.keys(changes).length === 0) {
+        if (Object.keys(changes).length > 0) {
+            return true;
+        } else {
+            //unchanged
             return false;
         }
-        // check for displaying the updated icon if participant is referenced
-        if (participant.state === 'referenced' && Object.keys(changes).length > 0) {
-            return true;
-        }
-        return false;
     }
 }
