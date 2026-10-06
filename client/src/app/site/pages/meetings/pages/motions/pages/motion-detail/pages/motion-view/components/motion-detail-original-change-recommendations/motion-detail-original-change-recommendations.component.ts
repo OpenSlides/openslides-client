@@ -388,8 +388,9 @@ export class MotionDetailOriginalChangeRecommendationsComponent implements OnIni
             } else {
                 // Expand selected line to deleted content prior and after the selection
                 while (this.element.querySelector(`br.os-line-break + .line-number-${lineRange.from}`)) {
-                    lineRange.from--;
-                    if (!this.element.querySelector(`.line-number-${lineRange.from - 1} + del + br.os-line-break`)) {
+                    if (this.element.querySelector(`.line-number-${lineRange.from - 1} + del + br.os-line-break`)) {
+                        lineRange.from--;
+                    } else {
                         break;
                     }
                 }
