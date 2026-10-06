@@ -108,7 +108,7 @@
     "@angular/language-server": "^22.2.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@types/file-saver": "^2.0.7",
-    "@types/jasmine": "~7.0.0",
+    "@types/jasmine": "~5.1.15",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^24.10.14",
     "@types/pdfmake": "^0.3.3",
