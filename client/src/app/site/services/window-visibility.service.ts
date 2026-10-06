@@ -7,6 +7,10 @@ import { LifecycleService } from './lifecycle.service';
 export class WindowVisibilityService {
     private lifecycle = inject(LifecycleService);
 
+    public visible(): boolean {
+        return document.visibilityState === `visible`;
+    }
+
     public async waitUntilVisible(): Promise<void> {
         if (document.visibilityState !== `visible`) {
             await firstValueFrom(
