@@ -67,6 +67,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
 
     protected participantSubscriptionConfig: SubscriptionConfig<ViewUser>;
     protected structureLevelConfig: SubscriptionConfig<ViewStructureLevel>;
+    protected isSelf: boolean;
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
     private readonly _otherParticipantsSubject = new BehaviorSubject<ViewMeetingUser[]>([]);
@@ -82,6 +83,7 @@ export class ParticipantListInfoDialogComponent extends BaseUiComponent implemen
         );
         this.structureLevelConfig = getStructureLevelListSubscriptionConfig(this.activeMeetingIdService.meetingId);
         this._currentUser = this.participantRepo.getViewModel(this.infoDialog.id);
+        this.isSelf = this._currentUser.id === this.operator.operatorId;
         this.subscriptions.push(
             this.userRepo
                 .getGeneralViewModelObservable()

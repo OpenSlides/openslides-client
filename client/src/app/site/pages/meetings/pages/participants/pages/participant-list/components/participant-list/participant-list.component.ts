@@ -635,7 +635,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     public canSeeItemMenu(): boolean {
         return (
-            this.hasOptions() &&
+            this.operator.hasPermsInMeeting(this.activeMeetingId, ...[this.permission.userCanUpdate]) &&
             (this.operator.hasPerms(Permission.userCanUpdate) ||
                 this.operator.hasPerms(Permission.userCanEditOwnDelegation))
         );
@@ -731,9 +731,5 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     public goToEditUser(userId: number): void {
         this.router.navigate([userId, `edit`], { relativeTo: this.route });
-    }
-
-    protected hasOptions(): boolean {
-        return this.operator.hasPermsInMeeting(this.activeMeetingId, ...[this.permission.userCanUpdate]);
     }
 }

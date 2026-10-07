@@ -111,9 +111,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     public constructor(chessChallengeService: ChessChallengeService) {
         super();
         chessChallengeService.startListening();
-        this.meetingSettingsService
-            .get(`users_enable_vote_delegations`)
-            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
     }
 
     public ngOnInit(): void {
@@ -122,6 +119,9 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         this.meetingSettingsService
             .get(`users_allow_self_set_present`)
             .subscribe(allowed => (this._isAllowedSelfSetPresent = allowed));
+        this.meetingSettingsService
+            .get(`users_enable_vote_delegations`)
+            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
 
         this.onOperatorUpdate(); // initially trigger the update manually to set initial values
     }
@@ -246,10 +246,10 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public canEditOwnDelegation(): boolean {
-        return this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+        return (
+            this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
             this.activeMeeting.meeting.user_ids.includes(this.operator.operatorId)
-            ? true
-            : false;
+        );
     }
 
     public async openEditInfo(user: ViewUser): Promise<void> {

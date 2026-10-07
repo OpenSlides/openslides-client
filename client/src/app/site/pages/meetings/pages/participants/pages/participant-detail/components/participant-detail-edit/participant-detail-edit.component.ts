@@ -18,7 +18,6 @@ import { CommitteeControllerService } from '@app/site/pages/organization/pages/c
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { UserService } from '@app/site/services/user.service';
-import { UserControllerService } from '@app/site/services/user-controller.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
@@ -44,8 +43,6 @@ import { ViewStructureLevel } from '../../../structure-levels/view-models/view-s
 export class ParticipantDetailEditComponent extends BaseMeetingComponent implements OnInit {
     @ViewChild(UserDetailViewComponent)
     private infoDialog = inject(ParticipantListInfoDialogService);
-
-    private userRepo = inject(UserControllerService);
 
     private userDetailView;
 

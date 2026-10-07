@@ -1,5 +1,9 @@
 <h1 mat-dialog-title>
-    <span>{{ 'Edit your own delegation' | translate }}</span>
+    @if (isSelf && showVoteDelegations) {
+        <span>{{ 'Edit your own delegation' | translate }}</span>
+    } @else {
+        <span>{{ 'Edit details for' | translate }} {{ infoDialog.name }}</span>
+    }
 </h1>
 <mat-dialog-content class="os-form-card-mobile">
     @if (!canOnlyEditOwnDelegation) {
