@@ -1,13 +1,11 @@
-import { Component, inject, viewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
+import { Component, viewChild, ViewEncapsulation } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDivider } from '@angular/material/divider';
 import { MatIcon } from '@angular/material/icon';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
 import { MatDrawer } from '@angular/material/sidenav';
-import { ViewPortService } from '@app/site/services/view-port.service';
 import { TranslatePipe } from '@ngx-translate/core';
-
-import { CSVOptionsService } from '../../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Component({
     selector: 'os-participant-import-csv-options',
@@ -17,37 +15,38 @@ import { CSVOptionsService } from '../../../services/participant-import-preview.
     encapsulation: ViewEncapsulation.None
 })
 export class CSVOptionsComponent {
-    public vp = inject(ViewPortService);
-    private csvOptionsService = inject(CSVOptionsService);
-    public enabled: boolean = this.csvOptionsService.toggleCSVOptions;
-    public _viewContainerRef = inject(ViewContainerRef);
-
     /**
      * The CSV-Configuration side drawer
      */
     public readonly csvConfigMenu = viewChild.required<MatDrawer>(MatDrawer);
+
+    public selectedConfig$ = new BehaviorSubject<{ encoding: string; columnSeparator: string; textSeparator: string }>({
+        encoding: 'utf-8',
+        columnSeparator: '',
+        textSeparator: '"'
+    });
 
     public selectedEncoding = 'utf-8';
     public selectedColumnSeparator = '';
     public selectedTextSeparator = '"';
 
     public onEncodingChange(value: string): void {
-        this.csvOptionsService.selectedConfig$.next({
-            ...this.csvOptionsService.selectedConfig$.value,
+        this.selectedConfig$.next({
+            ...this.selectedConfig$.value,
             encoding: value
         });
     }
 
     public onTextSeparatorChange(value): void {
-        this.csvOptionsService.selectedConfig$.next({
-            ...this.csvOptionsService.selectedConfig$.value,
+        this.selectedConfig$.next({
+            ...this.selectedConfig$.value,
             textSeparator: value
         });
     }
 
     public onColumnSeparatorChange(value): void {
-        this.csvOptionsService.selectedConfig$.next({
-            ...this.csvOptionsService.selectedConfig$.value,
+        this.selectedConfig$.next({
+            ...this.selectedConfig$.value,
             columnSeparator: value
         });
     }

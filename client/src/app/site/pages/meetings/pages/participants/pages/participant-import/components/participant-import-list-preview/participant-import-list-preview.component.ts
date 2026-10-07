@@ -1,5 +1,6 @@
 import { AsyncPipe, NgClass } from '@angular/common';
 import {
+    AfterViewInit,
     ChangeDetectorRef,
     Component,
     EventEmitter,
@@ -40,7 +41,6 @@ import { firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
 
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
-import { CSVOptionsService } from '../../services/participant-import-preview.service/participant-import-preview-csv-encoding-options.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
 import { ViewImportedParticipant } from '../../view-models/view-participant-import';
 import { ParticipantImportListInfoDialogComponent } from '../participant-import-list-info-dialog/participant-import-list-info-dialog.component';
@@ -65,7 +65,7 @@ import { CSVOptionsComponent } from './participant-import-csv-options/participan
         CSVOptionsComponent
     ]
 })
-export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
+export class ParticipantImportListPreviewComponent implements OnInit, AfterViewInit, OnDestroy {
     public readonly START_POSITION = START_POSITION;
 
     public readonly viewList = viewChild.required(ViewListComponent);
@@ -78,7 +78,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
     protected dialog = inject(MatDialog);
     protected translate = inject(TranslateService);
-    protected csvOptionsService = inject(CSVOptionsService);
     public vp = inject(ViewPortService);
 
     /**
@@ -187,9 +186,20 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             this._state = phase;
             this.importDone = [BackendImportPhase.FINISHED, BackendImportPhase.FINISHED_WITH_WARNING].includes(phase);
         });
-        this.csvOptionsService.toggleCSVOptions = true;
-        let previousConfig = this.csvOptionsService?.selectedConfig$.value;
-        this.csvOptionsService?.selectedConfig$.subscribe(options => {
+        this.tempPreviewsObservable = this.importer.previewsObservable.subscribe(previews => {
+            this._rows = this.calculateRows(previews);
+            this.uploadButton = previews?.some(preview => preview.state === 'error') ? true : false;
+            this._totalCountObservable = this.dataSource?.pipe(map(items => items?.length));
+            if (!(this._state === BackendImportPhase.IMPORTING) && !(this._state === BackendImportPhase.FINISHED)) {
+                this.fillPreviewData(previews);
+            }
+            this.setHeaders({ preview: this._previewColumns });
+        });
+    }
+
+    public ngAfterViewInit(): void {
+        let previousConfig = this.csvOptions().selectedConfig$.value;
+        this.csvOptions().selectedConfig$.subscribe(options => {
             if (
                 options.columnSeparator !== previousConfig?.columnSeparator ||
                 options.encoding !== previousConfig?.encoding ||
@@ -202,32 +212,17 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 previousConfig = options;
             }
         });
-        this.tempPreviewsObservable = this.importer.previewsObservable.subscribe(previews => {
-            this._rows = this.calculateRows(previews);
-            this.uploadButton = previews?.some(preview => preview.state === 'error') ? true : false;
-            this._totalCountObservable = this.dataSource?.pipe(map(items => items?.length));
-            if (!(this._state === BackendImportPhase.IMPORTING) && !(this._state === BackendImportPhase.FINISHED)) {
-                this.fillPreviewData(previews);
-            }
-            this.setHeaders({ preview: this._previewColumns });
-        });
     }
 
     /**
      * Resets the importer when leaving the view
      */
     public ngOnDestroy(): void {
-        this.csvOptionsService.toggleCSVOptions = false;
         this.importDone = undefined;
         this.tempPreviewsObservable.unsubscribe();
         this.importer.clearPreview();
         this.importer.clearFile();
         this.importer.clearAll();
-    }
-
-    // csvReload
-    public selectNewFile(event: Event): void {
-        this.csvOptionsService.reload(event);
     }
 
     public openCsvConfig(): void {
@@ -261,30 +256,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return this._headers[propertyName]?.default?.label ?? propertyName;
     }
 
-    /**
-     * Get the icon for the the item
-     * @param item a row or an entry with a current state
-     * @eturn the icon for the item
-     */
-    protected getActionIcon(item: BackendImportIdentifiedRow | BackendImportEntryObject): string {
-        switch (item[`state`] ?? item[`info`]) {
-            case BackendImportState.Error: // no import possible
-                return `block`;
-            case BackendImportState.Warning:
-                return `warning`;
-            case BackendImportState.New:
-                return `add`;
-            case BackendImportState.Done: // item will be updated / has been imported
-                return this._state !== BackendImportPhase.FINISHED ? `merge` : `done`;
-            case BackendImportState.Generated:
-                return `autorenew`;
-            case BackendImportState.Remove:
-                return `remove`;
-            default:
-                return `block`; // fallback: Error
-        }
-    }
-
     public getWarningRowTooltip(row: BackendImportIdentifiedRow): string {
         switch (row.state) {
             case BackendImportState.Error: // no import possible
@@ -308,17 +279,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         await firstValueFrom(ref.afterClosed());
     }
 
-    /**
-     * Returns the verbose title for a given summary title.
-     */
-    protected getSummaryPointTitle(title: string): string {
-        return this.importer.getVerboseSummaryPointTitle(title);
-    }
-
-    protected isString(value: any): value is string {
-        return typeof value === `string`;
-    }
-
     protected setHeaders(data: { default?: ImportListHeaderDefinition[]; preview?: BackendImportHeader[] }): void {
         for (const key of Object.keys(data)) {
             for (const header of data[key] ?? []) {
@@ -333,17 +293,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
 
     protected getErrorDescription(entry: BackendImportIdentifiedRow): string {
         return entry.messages?.map(error => this.translate.instant(this.importer.verbose(error))).join(`\n `);
-    }
-
-    protected createRequiredFields(): string[] {
-        const definitions = this._defaultColumns;
-        if (Array.isArray(definitions) && definitions.length > 0) {
-            return definitions
-                .filter(definition => definition.isRequired as boolean)
-                .map(definition => definition.property as string);
-        } else {
-            return [];
-        }
     }
 
     /**
@@ -539,30 +488,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
                 ? this.translate.instant(`will be updated`) // item will be updated
                 : this.translate.instant(`has been updated`))
         ); // item has been updated
-    }
-
-    /**
-     * The column separator selection.
-     */
-    protected onColSepChanged(label: string): void {
-        this.importer.columnSeparator = this.importer.columnSeparators.find(col => col.label === label)?.value;
-        this.importer.refreshFile();
-    }
-
-    /**
-     * The text separator selection
-     */
-    protected onTextSeparatorChanged(value: string): void {
-        this.importer.textSeparator = value;
-        this.importer.refreshFile();
-    }
-
-    /**
-     * The encoding selection.
-     */
-    protected onEncodingChanged(value: string): void {
-        this.importer.encoding = value;
-        this.importer.refreshFile();
     }
 
     protected fillPreviewData(previews: BackendImportPreview[]): void {
