@@ -5,15 +5,14 @@ import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions
 
 import { Id } from '../../domain/definitions/key-types';
 import { CML, OML } from '../../domain/definitions/organization-permission';
-import { Identifiable } from '../../domain/interfaces';
+import { Identifiable } from '../../domain/interfaces/identifiable';
 import { Committee } from '../../domain/models/comittees/committee';
-import { ViewCommittee } from '../../site/pages/organization/pages/committees';
-import { Fieldsets, TypedFieldset } from '../../site/services/model-request-builder';
+import { ViewCommittee } from '../../site/pages/organization/pages/committees/view-models/view-committee';
+import { Fieldsets, TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
 import { OperatorService } from '../../site/services/operator.service';
-import { Action } from '../actions';
+import { Action } from '../actions/action';
 import { BaseRepository } from './base-repository';
 import { CommitteeAction } from './committees/committee.action';
-import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 import { UserRepositoryService } from './users/user-repository.service';
 
 @Service()
@@ -21,10 +20,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
     private operator = inject(OperatorService);
     private userRepo = inject(UserRepositoryService);
 
-    public constructor() {
-        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
-        super(repositoryServiceCollector, Committee);
-    }
+    public baseModelCtor = Committee;
 
     public getTitle = (viewCommittee: ViewCommittee): string => viewCommittee.name;
 

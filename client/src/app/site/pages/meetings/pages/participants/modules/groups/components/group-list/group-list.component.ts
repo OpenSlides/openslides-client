@@ -14,7 +14,7 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
 
-import { GroupControllerService } from '../../services';
+import { GroupControllerService } from '../../services/group-controller.service';
 
 @Component({
     selector: `os-group-list`,

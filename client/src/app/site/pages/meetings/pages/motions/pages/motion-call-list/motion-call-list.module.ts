@@ -26,7 +26,7 @@ import { MotionCallListRoutingModule } from './motion-call-list-routing.module';
         MatBadgeModule,
         HeadBarModule,
         SortingModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class MotionCallListModule {}

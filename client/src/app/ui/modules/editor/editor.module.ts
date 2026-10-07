@@ -43,7 +43,7 @@ const DECLARATIONS = [
         MatTooltipModule,
         FormsModule,
         ArrowNavigationDirective,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     exports: DECLARATIONS
 })

@@ -4,7 +4,8 @@ import { ChatGroupRepositoryService } from '@app/gateways/repositories/chat/chat
 import { ChatMessageRepositoryService } from '@app/gateways/repositories/chat/chat-message-repository.service';
 import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
-import { ViewChatGroup, ViewChatMessage } from './view-models';
+import { ViewChatGroup } from './view-models/view-chat-group';
+import { ViewChatMessage } from './view-models/view-chat-message';
 
 export const ChatAppConfig: AppConfig = {
     name: `Chat`,

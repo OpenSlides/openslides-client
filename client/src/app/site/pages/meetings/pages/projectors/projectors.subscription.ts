@@ -5,7 +5,7 @@ import { MEETING_DEFAULT_PROJECTOR_IDS_KEYS } from '@app/domain/models/meetings/
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { DEFAULT_FIELDSET } from '@app/site/services/model-request-builder';
 
-import { ViewProjector } from './view-models';
+import { ViewProjector } from './view-models/view-projector';
 
 export const projectionContentObjectFieldset = [
     `number`,

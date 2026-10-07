@@ -21,7 +21,7 @@ import { SiteWrapperServiceModule } from './services/site-wrapper-service.module
         MatButtonModule,
         MatIconModule,
         SiteWrapperServiceModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class SiteWrapperModule {}

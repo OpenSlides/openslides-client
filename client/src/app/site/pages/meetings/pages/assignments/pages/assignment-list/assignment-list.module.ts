@@ -24,7 +24,7 @@ import { AssignmentListServiceModule } from './services/assignment-list-service.
         AssignmentListServiceModule,
         AssignmentCommonServiceModule,
         AssignmentExportServiceModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MeetingsComponentCollectorModule,
         HeadBarModule,
         DirectivesModule,

@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import { Theme } from '@app/domain/models/theme/theme';
@@ -6,15 +6,11 @@ import { BaseRepository } from '@app/gateways/repositories/base-repository';
 import { ViewTheme } from '@app/site/pages/organization/pages/designs';
 import { Fieldsets } from '@app/site/services/model-request-builder';
 
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 import { ThemeAction } from './theme.action';
 
 @Service()
 export class ThemeRepositoryService extends BaseRepository<ViewTheme, Theme> {
-    public constructor() {
-        const repositoryServiceCollector = inject(RepositoryServiceCollectorService);
-        super(repositoryServiceCollector, Theme);
-    }
+    public baseModelCtor = Theme;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Themes` : `Theme`);
     public getTitle = (viewModel: ViewTheme): string => viewModel.name;

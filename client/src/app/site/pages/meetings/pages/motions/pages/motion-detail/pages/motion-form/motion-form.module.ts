@@ -45,7 +45,7 @@ import { MotionFormRoutingModule } from './motion-form-routing.module';
         MatInputModule,
         FormsModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
 
         // Amendment create wizard
         ScrollingModule,

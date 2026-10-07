@@ -127,7 +127,7 @@ jobs:
         working-directory: client/
 
       - name: Check generated defaults are up to date
-        run: npm run generate-defaults && git diff --exit-code -- src/app/domain/models
+        run: npm run generate-defaults && git diff --exit-code -- src/app/domain/definitions
         working-directory: client/
 
       - uses: browser-actions/setup-chrome@v2

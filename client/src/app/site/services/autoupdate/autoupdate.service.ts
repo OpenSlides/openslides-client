@@ -3,12 +3,12 @@ import { ModelRequest } from '@app/domain/interfaces/model-request';
 import { _ } from '@ngx-translate/core';
 
 import { Collection, Id, Ids } from '../../../domain/definitions/key-types';
-import { HttpStreamEndpointService } from '../../../gateways/http-stream';
 import { EndpointConfiguration } from '../../../gateways/http-stream/endpoint-configuration';
+import { HttpStreamEndpointService } from '../../../gateways/http-stream/http-stream-endpoint.service';
 import { HttpMethod, QueryParams } from '../../../infrastructure/definitions/http';
-import { Mutex } from '../../../infrastructure/utils/promises';
+import { Mutex } from '../../../infrastructure/utils/promises/mutex';
 import { BannerDefinition, BannerService } from '../../modules/site-wrapper/services/banner.service';
-import { ModelRequestObject } from '../model-request-builder';
+import { ModelRequestObject } from '../model-request-builder/model-request-object';
 import { ViewModelStoreUpdateService } from '../view-model-store-update.service';
 import { WindowVisibilityService } from '../window-visibility.service';
 import { AutoupdateCommunicationService } from './autoupdate-communication.service';

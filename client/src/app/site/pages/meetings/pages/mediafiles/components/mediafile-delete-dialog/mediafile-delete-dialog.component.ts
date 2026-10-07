@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ViewMediafile } from '../../view-models';
+import { ViewMediafile } from '../../view-models/view-mediafile';
 
 interface MediafileDeleteDialogData {
     file: ViewMediafile;

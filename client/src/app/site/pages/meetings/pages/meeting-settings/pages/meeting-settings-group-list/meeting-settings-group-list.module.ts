@@ -20,7 +20,7 @@ import { MeetingSettingsGroupListRoutingModule } from './meeting-settings-group-
         MatMenuModule,
         MatCardModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         GridModule,
         HeadBarModule
     ]

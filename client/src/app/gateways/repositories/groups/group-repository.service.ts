@@ -1,19 +1,15 @@
-import { inject, Service } from '@angular/core';
+import { Service } from '@angular/core';
 import { Identifiable } from '@app/domain/interfaces';
 import { Group } from '@app/domain/models/users/group';
 import { BaseMeetingRelatedRepository } from '@app/gateways/repositories/base-meeting-related-repository';
 import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
 import { Fieldsets } from '@app/site/services/model-request-builder';
 
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { GroupAction } from './group.action';
 
 @Service()
 export class GroupRepositoryService extends BaseMeetingRelatedRepository<ViewGroup, Group> {
-    public constructor() {
-        const repositoryServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repositoryServiceCollector, Group);
-    }
+    public baseModelCtor = Group;
 
     public override getFieldsets(): Fieldsets<Group> {
         const titleFields: (keyof Group)[] = [`name`];

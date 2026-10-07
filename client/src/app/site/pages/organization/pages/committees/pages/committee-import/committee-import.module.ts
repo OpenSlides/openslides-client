@@ -16,7 +16,7 @@ import { CommitteeImportServiceModule } from './services/committee-import-servic
         CommitteeImportServiceModule,
         HeadBarModule,
         ImportListModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class CommitteeImportModule {}

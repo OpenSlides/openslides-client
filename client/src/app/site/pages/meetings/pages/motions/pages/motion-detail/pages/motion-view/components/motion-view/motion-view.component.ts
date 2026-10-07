@@ -38,8 +38,8 @@ import {
 
 import { AgendaItemControllerService } from '../../../../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import { MotionForwardDialogService } from '../../../../../../components/motion-forward-dialog/services/motion-forward-dialog.service';
-import { MotionChangeRecommendationControllerService } from '../../../../../../modules/change-recommendations/services';
 import { DiffServiceFactory } from '../../../../../../modules/change-recommendations/services/diff-factory.service';
+import { MotionChangeRecommendationControllerService } from '../../../../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
 import {
     getMotionOriginDetailSubscriptionConfig,
     MOTION_DETAIL_SUBSCRIPTION,
@@ -47,7 +47,7 @@ import {
 } from '../../../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
-import { MotionLineNumberingService } from '../../../../../../services/common/motion-line-numbering.service';
+import { MotionLineNumberingService } from '../../../../../../services/common/motion-line-numbering.service/motion-line-numbering.service';
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
 import { MotionPdfExportService } from '../../../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';
 import { AmendmentListFilterService } from '../../../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';

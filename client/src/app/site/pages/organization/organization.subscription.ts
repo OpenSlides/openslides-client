@@ -7,7 +7,7 @@ import {
 import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
 
-import { DEFAULT_FIELDSET } from '../../services/model-request-builder';
+import { DEFAULT_FIELDSET } from '../../services/model-request-builder/model-request-builder.service';
 
 export const ORGANIZATION_SUBSCRIPTION = `organization_detail`;
 

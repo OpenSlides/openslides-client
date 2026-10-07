@@ -25,7 +25,7 @@ const MODULES = [ScrollingTableModule];
         MatTooltipModule,
         MatButtonModule,
         NgxFileDropModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         ...MODULES
     ]
 })

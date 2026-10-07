@@ -40,7 +40,7 @@ import { ChatGroupListComponent } from './components/chat-group-list/chat-group-
         IconContainerComponent,
         VerticalTabGroupModule,
         HeadBarModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatBadgeModule,
         MatIconModule,
         MatInputModule,

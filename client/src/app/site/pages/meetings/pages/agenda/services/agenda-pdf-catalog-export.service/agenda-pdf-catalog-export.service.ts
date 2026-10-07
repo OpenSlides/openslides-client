@@ -8,13 +8,13 @@ import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/servic
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, TableCell } from 'pdfmake/interfaces';
 
-import { MeetingPdfExportService } from '../../../../services/export';
+import { MeetingPdfExportService } from '../../../../services/export/meeting-pdf-export.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
-import { MotionHtmlToPdfService } from '../../../motions/services/export/motion-html-to-pdf.service';
-import { ViewPoll } from '../../../polls';
+import { MotionHtmlToPdfService } from '../../../motions/services/export/motion-html-to-pdf.service/motion-html-to-pdf.service';
+import { ViewPoll } from '../../../polls/view-models/view-poll';
 import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
-import { ViewTopic } from '../../modules/topics/view-models';
-import { ViewAgendaItem } from '../../view-models';
+import { ViewTopic } from '../../modules/topics/view-models/view-topic';
+import { ViewAgendaItem } from '../../view-models/view-agenda-item';
 
 const PDF_A4_POINTS_WIDTH = 595.296;
 const PDF_A5_POINTS_WIDTH = 419.544;
@@ -339,7 +339,7 @@ export class AgendaPdfCatalogExportService {
                 },
                 {
                     border: extraBorder,
-                    text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang),
+                    text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang() ?? `en`),
                     fillColor: backgroundColor
                 }
             ]);

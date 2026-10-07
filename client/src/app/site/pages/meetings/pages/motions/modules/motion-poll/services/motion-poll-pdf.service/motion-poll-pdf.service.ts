@@ -4,8 +4,8 @@ import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
 import { TranslateService } from '@ngx-translate/core';
 
 import { MotionControllerService } from '../../../../services/common/motion-controller.service/motion-controller.service';
-import { ViewMotion } from '../../../../view-models';
-import { MotionPollService } from '../motion-poll.service';
+import { ViewMotion } from '../../../../view-models/view-motion';
+import { MotionPollService } from '../motion-poll.service/motion-poll.service';
 
 @Service()
 export class MotionPollPdfService extends BasePollPdfService {

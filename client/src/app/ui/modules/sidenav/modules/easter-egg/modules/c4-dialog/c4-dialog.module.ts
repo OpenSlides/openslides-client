@@ -9,7 +9,7 @@ import { C4DialogComponent } from './components/c4-dialog/c4-dialog.component';
 
 @NgModule({
     declarations: [C4DialogComponent],
-    imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogModule, OpenSlidesTranslationModule.forChild()]
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogModule, OpenSlidesTranslationModule]
 })
 export class C4DialogModule {
     public static readonly label = `Play "Collect 4"`;

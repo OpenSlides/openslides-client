@@ -37,7 +37,7 @@ import { MotionBlockServiceModule } from './services/motion-block-service.module
         MatDividerModule,
         MatChipsModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class MotionBlocksModule {}

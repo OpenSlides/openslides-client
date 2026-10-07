@@ -13,10 +13,12 @@ import { StructureLevelListOfSpeakersRepositoryService } from '@app/gateways/rep
 import { TopicRepositoryService } from '@app/gateways/repositories/topics/topic-repository.service';
 import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
-import { ViewStructureLevelListOfSpeakers } from '../participants/pages/structure-levels/view-models';
-import { ViewListOfSpeakers, ViewSpeaker, ViewTopic } from './modules';
+import { ViewStructureLevelListOfSpeakers } from '../participants/pages/structure-levels/view-models/view-structure-level-list-of-speakers';
+import { ViewListOfSpeakers } from './modules/list-of-speakers/view-models/view-list-of-speakers';
 import { ViewPointOfOrderCategory } from './modules/list-of-speakers/view-models/view-point-of-order-category';
-import { ViewAgendaItem } from './view-models';
+import { ViewSpeaker } from './modules/list-of-speakers/view-models/view-speaker';
+import { ViewTopic } from './modules/topics/view-models/view-topic';
+import { ViewAgendaItem } from './view-models/view-agenda-item';
 
 export const AgendaAppConfig: AppConfig = {
     name: `agenda`,

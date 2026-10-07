@@ -12,9 +12,9 @@ import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, StyleDictionary, TDocumentDefinitions } from 'pdfmake/interfaces';
 
-import { ViewAssignment } from '../../../pages/assignments';
+import { ViewAssignment } from '../../../pages/assignments/view-models/view-assignment';
 import { ViewUser } from '../../../view-models/view-user';
-import { EntitledUsersTableEntry } from '../definitions';
+import { EntitledUsersTableEntry } from '../definitions/entitled-users-table-entry';
 import { PollService } from '../services/poll.service';
 import { BaseVoteData } from './base-poll-detail.component';
 

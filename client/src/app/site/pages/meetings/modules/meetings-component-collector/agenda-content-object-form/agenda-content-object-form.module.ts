@@ -24,7 +24,7 @@ const DECLARATIONS = [AgendaContentObjectFormComponent];
         ReactiveFormsModule,
         DirectivesModule,
         SearchSelectorModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ],
     providers: [AgendaContentObjectFormService]
 })

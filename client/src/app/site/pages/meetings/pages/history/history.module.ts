@@ -34,7 +34,7 @@ import { HistoryRoutingModule } from './history-routing.module';
         MatOptionModule,
         MatSelectModule,
         ReactiveFormsModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         HeadBarModule,
         SearchSelectorModule,
         ParticipantCommonServiceModule,

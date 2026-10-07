@@ -4,10 +4,9 @@ import { Identifiable } from '@app/domain/interfaces';
 import { Group } from '@app/domain/models/users/group';
 import { GroupRepositoryService } from '@app/gateways/repositories/groups';
 import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from '@app/site/pages/meetings/services/meeting-controller-service-collector.service';
 import { map, Observable, OperatorFunction } from 'rxjs';
 
-import { ViewGroup } from '../view-models';
+import { ViewGroup } from '../view-models/view-group';
 
 export class MeetingGroupsObject {
     public readonly groups: Record<string, ViewGroup>;
@@ -29,13 +28,9 @@ export class MeetingGroupsObject {
 
 @Service()
 export class GroupControllerService extends BaseMeetingControllerService<ViewGroup, Group> {
-    protected override repo: GroupRepositoryService;
+    protected repo: GroupRepositoryService = inject(GroupRepositoryService);
 
-    public constructor() {
-        const repositoryServiceCollector = inject(MeetingControllerServiceCollectorService);
-        const repo = inject(GroupRepositoryService);
-        super(repositoryServiceCollector, ViewGroup, repo);
-    }
+    public baseModelCtor = Group;
 
     public create(...groups: Partial<Group>[]): Promise<Identifiable[]> {
         return this.repo.create(...groups);

@@ -1,9 +1,9 @@
 import { Id } from '../../definitions/key-types';
-import { HasSequentialNumber } from '../../interfaces';
 import { HasAgendaItemId } from '../../interfaces/has-agenda-item-id';
 import { HasListOfSpeakersId } from '../../interfaces/has-list-of-speakers-id';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
 import { HasProjectionIds } from '../../interfaces/has-projectable-ids';
+import { HasSequentialNumber } from '../../interfaces/has-sequential-number';
 import { BaseModel } from '../base/base-model';
 
 /**

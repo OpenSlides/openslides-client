@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { availableTranslations } from '@app/domain/definitions/languages';
 import { Selectable } from '@app/domain/interfaces';
@@ -20,10 +20,10 @@ import { _ } from '@ngx-translate/core';
     standalone: false
 })
 export class OrganizationSettingsComponent extends BaseComponent {
+    public timeZoneInput = viewChild<ElementRef<HTMLInputElement>>('timeZoneInput');
+
     public readonly pageTitle = _(`Settings`);
     public readonly translations = availableTranslations;
-
-    public timeZones = signal<Selectable[]>([]);
 
     public orgaSettingsForm: UntypedFormGroup | null = null;
 
@@ -44,15 +44,59 @@ export class OrganizationSettingsComponent extends BaseComponent {
     private operator = inject(OperatorService);
     private timeZone = inject(TimeZoneService);
 
+    private timeZones = this.timeZone.getAvailableTimeZones();
+    public filteredTimeZones = signal<string[]>(this.timeZones.slice());
+
     public constructor() {
         super();
         super.setTitle(this.pageTitle);
 
+        this.subscribeOrganizationData();
+    }
+
+    public revertChanges(): void {
+        if (this.orgaSettingsForm) {
+            this.updateForm(this._currentOrgaSettings!);
+            this.markFormAsClean();
+        }
+    }
+
+    public filterTimezones(): void {
+        const filterValue = this.timeZoneInput()?.nativeElement.value ?? ``;
+        if (filterValue !== this.orgaSettingsForm.get(`time_zone`).getRawValue()) {
+            this.filteredTimeZones.set(this.timeZones.filter(o => o.toLowerCase().includes(filterValue.toLowerCase())));
+        } else {
+            this.filteredTimeZones.set(this.timeZones);
+        }
+    }
+
+    public getAdditionallySearchedValuesFn(item: Selectable): string[] {
+        return [item.getTitle()];
+    }
+
+    public onSubmit(): void {
+        const { ...payload }: any = this.orgaSettingsForm!.value;
+        if (this.operator.isSuperAdmin) {
+            payload.saml_attr_mapping = payload.saml_attr_mapping
+                ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
+                : null;
+        }
+        for (const key of Object.keys(payload)) {
+            if (this.orgaSettingsForm.get(key).pristine) {
+                delete payload[key];
+            }
+        }
+        this.controller
+            .update(payload)
+            .then(() => this.markFormAsClean())
+            .catch(this.raiseError);
+    }
+
+    private subscribeOrganizationData(): void {
         this.subscriptions.push(
             this.controller.getViewModelObservable(ORGANIZATION_ID).subscribe(orga => {
                 this._currentOrgaSettings = orga;
                 if (orga) {
-                    this.initTimezones();
                     if (!this.orgaSettingsForm) {
                         this.orgaSettingsForm = this.createForm();
                     }
@@ -115,13 +159,6 @@ export class OrganizationSettingsComponent extends BaseComponent {
         return this.formBuilder.group(rawSettingsForm);
     }
 
-    public revertChanges(): void {
-        if (this.orgaSettingsForm) {
-            this.updateForm(this._currentOrgaSettings!);
-            this.markFormAsClean();
-        }
-    }
-
     private markFormAsClean(): void {
         if (this.orgaSettingsForm) {
             this.orgaSettingsForm.markAsUntouched();
@@ -131,53 +168,15 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     private updateForm(viewOrganization: ViewOrganization): void {
         if (!this.orgaSettingsForm) {
-            this.orgaSettingsForm = this.createForm();
+            return;
         }
-        const { time_zone, ...patchMeeting }: any = viewOrganization.organization;
+        const { ...patchMeeting }: any = viewOrganization.organization;
         if (patchMeeting.saml_attr_mapping) {
             const attrMapping = objectToFormattedString(patchMeeting.saml_attr_mapping);
             patchMeeting.saml_attr_mapping = attrMapping;
             this._ssoConfigRows = attrMapping.split(`\n`).length;
         }
-        patchMeeting.time_zone = this.timeZone.getTimezoneIdByName(time_zone);
+
         this.orgaSettingsForm!.patchValue(patchMeeting);
-    }
-
-    private async initTimezones(): Promise<void> {
-        this.timeZone.getTZForSearchSelector().then(values => {
-            this.timeZones.set(values);
-            this.patchTimezoneInForm();
-        });
-    }
-
-    private patchTimezoneInForm(): void {
-        if (!this.orgaSettingsForm?.get('time_zone').value) {
-            this.orgaSettingsForm
-                .get('time_zone')
-                .setValue(this.timeZone.getTimezoneIdByName(this.timeZone.getOrganizationTimeZone()));
-        }
-    }
-
-    public getAdditionallySearchedValuesFn(item: Selectable): string[] {
-        return [item.getTitle()];
-    }
-
-    public onSubmit(): void {
-        const { time_zone, ...payload }: any = this.orgaSettingsForm!.value;
-        payload.time_zone = this.timeZone.getTimezoneNameById(time_zone);
-        if (this.operator.isSuperAdmin) {
-            payload.saml_attr_mapping = payload.saml_attr_mapping
-                ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
-                : null;
-        }
-        for (const key of Object.keys(payload)) {
-            if (this.orgaSettingsForm.get(key).pristine) {
-                delete payload[key];
-            }
-        }
-        this.controller
-            .update(payload)
-            .then(() => this.markFormAsClean())
-            .catch(this.raiseError);
     }
 }

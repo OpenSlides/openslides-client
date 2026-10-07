@@ -17,8 +17,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { endOfDay, fromUnixTime } from 'date-fns';
 import { BehaviorSubject, firstValueFrom, Observable, Subscription } from 'rxjs';
 
-import { AgendaItemControllerService } from '../../../services';
-import { ViewAgendaItem } from '../../../view-models';
+import { AgendaItemControllerService } from '../../../services/agenda-item-controller.service/agenda-item-controller.service';
+import { ViewAgendaItem } from '../../../view-models/view-agenda-item';
 import {
     AgendaForwardDialogComponent,
     AgendaForwardDialogReturnData

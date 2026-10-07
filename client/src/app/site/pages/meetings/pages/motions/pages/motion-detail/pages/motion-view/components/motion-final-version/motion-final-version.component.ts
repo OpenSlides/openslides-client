@@ -6,7 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
-import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-view.service';
+import { ModifiedFinalVersionAction } from '../../../../services/motion-detail-view.service/motion-detail-view.service';
 
 @Component({
     selector: `os-motion-final-version`,

@@ -32,7 +32,7 @@ import { MotionPollDialogComponent } from './components/motion-poll-dialog/motio
 import { MotionPollFormComponent } from './components/motion-poll-form/motion-poll-form.component';
 import { MotionPollMetaInformationComponent } from './components/motion-poll-meta-information/motion-poll-meta-information.component';
 import { MotionPollVoteComponent } from './components/motion-poll-vote/motion-poll-vote.component';
-import { MotionPollService } from './services';
+import { MotionPollService } from './services/motion-poll.service/motion-poll.service';
 import { MotionPollServiceModule } from './services/motion-poll-service.module';
 
 const DECLARATIONS = [
@@ -70,7 +70,7 @@ const MODULES = [MotionPollServiceModule];
         DirectivesModule,
         PollModule,
         MeetingsComponentCollectorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         IconContainerComponent
     ],
     exports: [...MODULES, ...DECLARATIONS, PollModule],

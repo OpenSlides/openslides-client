@@ -23,10 +23,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { filter, map, Observable } from 'rxjs';
 
 import { AgendaForwardDialogService } from '../../../../../../components/agenda-forward-dialog/services/agenda-forward-dialog.service';
-import { AgendaItemControllerService } from '../../../../../../services';
+import { AgendaItemControllerService } from '../../../../../../services/agenda-item-controller.service/agenda-item-controller.service';
 import { TopicPollService } from '../../../../modules/topic-poll/services/topic-poll.service';
 import { TopicPollDialogService } from '../../../../modules/topic-poll/services/topic-poll-dialog.service';
-import { TopicControllerService } from '../../../../services/topic-controller.service';
+import { TopicControllerService } from '../../../../services/topic-controller.service/topic-controller.service';
 import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pdf.service';
 
 @Component({

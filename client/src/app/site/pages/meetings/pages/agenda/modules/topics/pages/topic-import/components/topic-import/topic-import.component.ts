@@ -6,8 +6,8 @@ import { DurationService } from '@app/site/services/duration.service';
 import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { TranslateService } from '@ngx-translate/core';
 
-import { topicHeadersAndVerboseNames } from '../../../../definitions';
-import { TopicImportService } from '../../services/topic-import.service';
+import { topicHeadersAndVerboseNames } from '../../../../definitions/topics.constants';
+import { TopicImportService } from '../../services/topic-import.service/topic-import.service';
 
 const TEXT_IMPORT_TAB_INDEX = 0;
 

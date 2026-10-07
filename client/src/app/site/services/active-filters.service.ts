@@ -3,7 +3,7 @@ import { StorageService } from '@app/gateways/storage.service';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ActiveFiltersStoreService } from '@app/ui/modules/list/definitions';
 
-import { OsFilter } from '../base/base-filter.service';
+import { OsFilter } from '../base/base-filter.service/os-filter';
 
 @Service()
 export class ActiveFiltersService implements ActiveFiltersStoreService {

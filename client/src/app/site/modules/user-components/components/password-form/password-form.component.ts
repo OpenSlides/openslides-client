@@ -4,7 +4,7 @@ import { BaseComponent } from '@app/site/base/base.component';
 import { _ } from '@ngx-translate/core';
 
 import { PasswordForm } from '../../definitions';
-import { PasswordValidator } from '../../validators';
+import { PasswordValidator } from '../../validators/password.validator';
 
 const UndesiredPasswords = [
     `123456`,

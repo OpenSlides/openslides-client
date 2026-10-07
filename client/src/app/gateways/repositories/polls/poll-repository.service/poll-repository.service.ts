@@ -9,8 +9,7 @@ import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
-import { VoteRepositoryService } from '../vote-repository.service';
+import { VoteRepositoryService } from '../vote-repository.service/vote-repository.service';
 import { PollAction } from './poll.action';
 
 interface AnalogPollVotesValues {
@@ -30,10 +29,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     private voteController = inject(VoteControllerService);
     private voteRepo = inject(VoteRepositoryService);
 
-    public constructor() {
-        const repoServiceCollector = inject(RepositoryMeetingServiceCollectorService);
-        super(repoServiceCollector, Poll);
-    }
+    public baseModelCtor = Poll;
 
     public getVerboseName = (plural?: boolean): string => (plural ? `Polls` : `Poll`);
     public getTitle = (viewModel: ViewPoll): string => viewModel.title;

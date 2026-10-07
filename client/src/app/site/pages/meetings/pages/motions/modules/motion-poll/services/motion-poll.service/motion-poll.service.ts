@@ -20,7 +20,7 @@ import { MeetingSettingsService } from '@app/site/pages/meetings/services/meetin
 import { TranslateService } from '@ngx-translate/core';
 import { map, merge, Observable, of } from 'rxjs';
 
-import { MotionPollControllerService } from '../motion-poll-controller.service';
+import { MotionPollControllerService } from '../motion-poll-controller.service/motion-poll-controller.service';
 
 export interface TableDataEntryCreationInput {
     poll: PollData;

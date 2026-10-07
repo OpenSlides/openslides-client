@@ -9,6 +9,6 @@ const DECLARATIONS = [SpinnerComponent];
 @NgModule({
     exports: [...DECLARATIONS],
     declarations: DECLARATIONS,
-    imports: [CommonModule, OpenSlidesTranslationModule.forChild()]
+    imports: [CommonModule, OpenSlidesTranslationModule]
 })
 export class SpinnerModule {}

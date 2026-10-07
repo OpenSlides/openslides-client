@@ -9,7 +9,7 @@ import { BaseProjectableViewModel, isProjectable } from '@app/site/pages/meeting
 import { ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models/projection-build-descriptor';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 
-import { HasTags } from '../../motions';
+import { HasTags } from '../../motions/modules/tags/view-models/has-tags';
 
 export class ViewAgendaItem extends BaseProjectableViewModel<AgendaItem> {
     public static COLLECTION = AgendaItem.COLLECTION;

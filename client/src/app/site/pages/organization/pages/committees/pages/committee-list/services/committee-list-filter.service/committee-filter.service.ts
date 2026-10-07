@@ -4,7 +4,7 @@ import { OrganizationTagControllerService } from '@app/site/pages/organization/p
 import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { _ } from '@ngx-translate/core';
 
-import { ViewCommittee } from '../../../../view-models';
+import { ViewCommittee } from '../../../../view-models/view-committee';
 
 @Service()
 export class CommitteeFilterService extends BaseFilterListService<ViewCommittee> {

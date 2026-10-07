@@ -1,7 +1,7 @@
 import { Service } from '@angular/core';
 import { BasePollDialogService } from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.service';
 
-import { ViewTopic } from '../../../view-models';
+import { ViewTopic } from '../../../view-models/view-topic';
 import { TopicPollDialogComponent } from '../components/topic-poll-dialog/topic-poll-dialog.component';
 
 /**

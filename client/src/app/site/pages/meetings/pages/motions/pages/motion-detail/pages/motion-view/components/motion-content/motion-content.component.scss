@@ -5,10 +5,8 @@
     margin-top: 10px;
 }
 
-.motion-content {
-    h3 {
-        font-weight: bold;
-    }
+.motion-h3 {
+    font-weight: bold;
 }
 
 .attachment-entry {
@@ -24,4 +22,9 @@
     .attachment-icon {
         vertical-align: text-bottom;
     }
+}
+
+.reason-text {
+    word-wrap: break-word;
+    overflow: hidden;
 }

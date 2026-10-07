@@ -4,10 +4,11 @@ import { replaceHtmlEntities } from '@app/infrastructure/utils/dom-helpers';
 import { TranslateService } from '@ngx-translate/core';
 import { DiffCompat, HtmlDiff, VERSION } from '@openslides/motion-diff';
 
-import { DiffCache, DiffLinesInParagraph, ExtractedContent, LineRange } from '../../../../definitions';
-import { ViewUnifiedChange } from '../../view-models';
+import { DiffLinesInParagraph, ExtractedContent, LineRange } from '../../../../definitions';
+import { DiffCache } from '../../../../definitions/cache';
+import { ViewUnifiedChange } from '../../view-models/view-unified-change';
 import { DIFF_VERSION } from '../diff-factory.service';
-import { LineNumberedString } from '../line-numbering.service';
+import { LineNumberedString } from '../line-numbering.service/line-numbering.service';
 
 /**
  * Functionality regarding diffing, merging and extracting line ranges.

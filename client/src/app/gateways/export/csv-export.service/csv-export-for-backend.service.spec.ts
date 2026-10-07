@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 
-import { FileExportService } from '../file-export.service';
+import { FileExportService } from '../file-export.service/file-export.service';
 import { CsvExportForBackendService } from './csv-export-for-backend.service';
 
 class MockFileExportService {

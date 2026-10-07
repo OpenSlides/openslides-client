@@ -16,7 +16,7 @@ import { MotionPdfExportService } from '../../../../services/export/motion-pdf-e
 import { AmendmentListFilterService } from '../../../../services/list/amendment-list-filter.service/amendment-list-filter.service';
 import { AmendmentListSortService } from '../../../../services/list/amendment-list-sort.service/amendment-list-sort.service';
 import { MotionListSortService } from '../../../../services/list/motion-list-sort.service/motion-list-sort.service';
-import { ViewMotion } from '../../../../view-models';
+import { ViewMotion } from '../../../../view-models/view-motion';
 
 const AMENDMENT_LIST_STORAGE_INDEX = `amendment_list`;
 

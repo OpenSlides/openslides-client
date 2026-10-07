@@ -4,7 +4,7 @@ import { ImportServiceCollectorService } from '@app/site/services/import-service
 import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
 
-import { AccountExportService } from '../../../../services/account-export.service';
+import { AccountExportService } from '../../../../services/account-export.service/account-export.service';
 import { AccountControllerService } from '../../../../services/common/account-controller.service';
 
 @Service()

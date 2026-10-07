@@ -24,7 +24,7 @@ import { TopicImportRoutingModule } from './topic-import-routing.module';
         TopicImportServiceModule,
         HeadBarModule,
         ImportListModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatFormFieldModule,
         MatInputModule,
         MatIconModule,

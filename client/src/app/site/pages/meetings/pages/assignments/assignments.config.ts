@@ -5,7 +5,8 @@ import { AssignmentCandidateRepositoryService } from '@app/gateways/repositories
 import { AssignmentRepositoryService } from '@app/gateways/repositories/assignments/assignment-repository.service';
 import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
-import { ViewAssignment, ViewAssignmentCandidate } from './view-models';
+import { ViewAssignment } from './view-models/view-assignment';
+import { ViewAssignmentCandidate } from './view-models/view-assignment-candidate';
 
 export const AssignmentsAppConfig: AppConfig = {
     name: `assignments`,

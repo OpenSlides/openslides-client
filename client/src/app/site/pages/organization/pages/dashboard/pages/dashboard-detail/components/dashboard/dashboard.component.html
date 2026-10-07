@@ -1,7 +1,7 @@
 <os-head-bar>
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Calendar</h1>
+        <h1 class="mock-h2">{{ 'Calendar' | translate }}</h1>
     </div>
 </os-head-bar>
 
@@ -177,16 +177,16 @@
             </div>
         }
         @if (meeting.isArchived) {
-            <mat-icon matTooltip="{{ 'This meeting is archived' | translate }}">archive</mat-icon>
+            <mat-icon [matTooltip]="'This meeting is archived' | translate">archive</mat-icon>
         }
         @if (meeting.publicAccessPossible() && !operator.isAnonymous) {
-            <mat-icon matTooltip="{{ 'This meeting is public' | translate }}">public</mat-icon>
+            <mat-icon [matTooltip]="'This meeting is public' | translate">public</mat-icon>
         }
         @if (meeting.committee_id) {
             <a
                 class="show-committee-link"
                 mat-icon-button
-                matTooltip="{{ 'Show committee' | translate }}"
+                [matTooltip]="'Show committee' | translate"
                 [routerLink]="['/', 'committees', meeting.committee_id]"
             >
                 <mat-icon class="show-committee-icon">layers</mat-icon>

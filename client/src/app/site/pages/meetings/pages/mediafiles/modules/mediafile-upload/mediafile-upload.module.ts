@@ -28,7 +28,7 @@ import { MediafileUploadRoutingModule } from './mediafile-upload-routing.module'
         ScrollingTableModule,
         MediaUploadContentComponent,
         SearchSelectorModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class MediafileUploadModule {}

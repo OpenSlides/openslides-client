@@ -21,8 +21,8 @@ import { _ } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, Observable, Subscription } from 'rxjs';
 
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
-import { VoteControllerService } from '../../services/vote-controller.service';
-import { VotingProhibition, VotingService } from '../../services/voting.service';
+import { VoteControllerService } from '../../services/vote-controller.service/vote-controller.service';
+import { VotingProhibition, VotingService } from '../../services/voting.service/voting.service';
 
 export interface VoteOption {
     vote?: VoteValue;

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@a
 import { Permission } from '@app/domain/definitions/permission';
 import { map, Observable } from 'rxjs';
 
-import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service';
+import { ParticipantControllerService } from '../../../../pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { EntitledUsersTableEntry } from '../../definitions/entitled-users-table-entry';
 import { EntitledUsersListFilterService } from '../../services/entitled-user-filter.service';
 

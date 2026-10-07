@@ -33,21 +33,21 @@
 
     <ng-container class="meta-text-block-action-row">
         @if (isEditing) {
-            <button color="warn" mat-icon-button matTooltip="{{ 'Save' | translate }}" (click)="saveComment()">
+            <button color="warn" mat-icon-button [matTooltip]="'Save' | translate" (click)="saveComment()">
                 <mat-icon>done</mat-icon>
             </button>
 
-            <button mat-icon-button matTooltip="{{ 'Cancel edit' | translate }}" (click)="leaveEditMode()">
+            <button mat-icon-button [matTooltip]="'Cancel edit' | translate" (click)="leaveEditMode()">
                 <mat-icon>close</mat-icon>
             </button>
         } @else {
             @if (canBeEdited || hasSubmitterEditRights) {
-                <button mat-icon-button matTooltip="{{ 'Edit' | translate }}" (click)="editComment()">
+                <button mat-icon-button [matTooltip]="'Edit' | translate" (click)="editComment()">
                     <mat-icon>edit</mat-icon>
                 </button>
             }
             @if (hasComment()) {
-                <button mat-icon-button matTooltip="{{ 'Export comment' | translate }}" (click)="exportCommentAsPDf()">
+                <button mat-icon-button [matTooltip]="'Export comment' | translate" (click)="exportCommentAsPDf()">
                     <mat-icon>picture_as_pdf</mat-icon>
                 </button>
             }

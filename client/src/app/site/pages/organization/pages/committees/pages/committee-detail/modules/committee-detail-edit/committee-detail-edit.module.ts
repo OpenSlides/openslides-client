@@ -28,7 +28,7 @@ import { CommitteeDetailEditComponent } from './components/committee-detail-edit
         MatInputModule,
         SearchSelectorModule,
         DirectivesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class CommitteeDetailEditModule {}

@@ -11,7 +11,7 @@ import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { _ } from '@ngx-translate/core';
 
-import { ViewTopic } from '../../../../view-models';
+import { ViewTopic } from '../../../../view-models/view-topic';
 
 @Component({
     selector: `os-topic-poll-vote`,

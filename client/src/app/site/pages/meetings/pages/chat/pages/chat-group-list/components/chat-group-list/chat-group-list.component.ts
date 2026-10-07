@@ -9,7 +9,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 
 import { ChatGroupDialogService } from '../../../../modules/chat-group-dialog/services/chat-group-dialog.service';
-import { ChatGroupControllerService, ChatNotificationService } from '../../../../services';
+import { ChatGroupControllerService } from '../../../../services/chat-group-controller.service';
+import { ChatNotificationService } from '../../../../services/chat-notification.service';
 
 @Component({
     selector: `os-chat-group-list`,

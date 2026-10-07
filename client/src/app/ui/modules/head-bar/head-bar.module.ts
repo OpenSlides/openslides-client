@@ -7,7 +7,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SpinnerModule } from '@app/ui/modules/spinner';
 
-import { OpenSlidesTranslationModule } from '../../../site/modules/translations';
+import { OpenSlidesTranslationModule } from '../../../site/modules/translations/openslides-translation.module';
 import { HeadBarComponent } from './components/head-bar/head-bar.component';
 
 const DECLARATIONS = [HeadBarComponent];
@@ -22,7 +22,7 @@ const DECLARATIONS = [HeadBarComponent];
         MatTooltipModule,
         MatToolbarModule,
         MatButtonModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         SpinnerModule
     ]
 })

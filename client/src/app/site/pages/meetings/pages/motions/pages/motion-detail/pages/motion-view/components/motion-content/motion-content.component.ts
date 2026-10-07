@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
 
 import { MotionPermissionService } from '../../../../../../services/common/motion-permission.service/motion-permission.service';
-import { ViewMotion } from '../../../../../../view-models';
+import { ViewMotion } from '../../../../../../view-models/view-motion';
 import { BaseMotionDetailChildComponent } from '../../../../base/base-motion-detail-child.component';
 import { MotionContentChangeRecommendationDialogComponentData } from '../../../../modules/motion-change-recommendation-dialog/components/motion-content-change-recommendation-dialog/motion-content-change-recommendation-dialog.component';
 import { MotionChangeRecommendationDialogService } from '../../../../modules/motion-change-recommendation-dialog/services/motion-change-recommendation-dialog.service';

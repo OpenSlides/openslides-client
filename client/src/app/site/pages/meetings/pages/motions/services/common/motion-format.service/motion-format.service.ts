@@ -5,17 +5,16 @@ import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/mo
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
 
-import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../modules';
-import {
-    LineNumberingService,
-    MotionChangeRecommendationControllerService,
-    MotionDiffService
-} from '../../../modules/change-recommendations/services';
+import { ViewUnifiedChangeType } from '../../../modules';
 import { DiffServiceFactory } from '../../../modules/change-recommendations/services/diff-factory.service';
-import { ViewMotion } from '../../../view-models';
+import { LineNumberingService } from '../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
+import { MotionDiffService } from '../../../modules/change-recommendations/services/motion-diff.service/motion-diff.service';
+import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
+import { ViewMotion } from '../../../view-models/view-motion';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
-import { AmendmentControllerService } from '../amendment-controller.service';
-import { MotionLineNumberingService } from '../motion-line-numbering.service';
+import { AmendmentControllerService } from '../amendment-controller.service/amendment-controller.service';
+import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
 
 export interface MotionFormatResult {
     origin_id: Id;
