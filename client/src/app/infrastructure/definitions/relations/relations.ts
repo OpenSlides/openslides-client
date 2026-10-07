@@ -24,7 +24,7 @@ import {
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ViewPollBallotUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-ballot-user';
 import { ViewPollEntitledUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-entitled-user';
-import { ViewMeetingPollDefault } from '@app/site/pages/meetings/view-models/view-meeting-poll-default';
+import { ViewMeetingPollSetting } from '@app/site/pages/meetings/view-models/view-meeting-poll-setting';
 import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewGender } from '@app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
 import { ViewResource } from '@app/site/pages/organization/pages/resources/view-models';
@@ -196,19 +196,19 @@ export const RELATIONS: Relation[] = [
     // ########## Meetings
     ...makeO2O({
         AViewModel: ViewMeeting,
-        BViewModel: ViewMeetingPollDefault,
+        BViewModel: ViewMeetingPollSetting,
         AField: `assignment_poll_config`,
         BField: `meeting`
     }),
     ...makeO2O({
         AViewModel: ViewMeeting,
-        BViewModel: ViewMeetingPollDefault,
+        BViewModel: ViewMeetingPollSetting,
         AField: `motion_poll_config`,
         BField: `meeting`
     }),
     ...makeO2O({
         AViewModel: ViewMeeting,
-        BViewModel: ViewMeetingPollDefault,
+        BViewModel: ViewMeetingPollSetting,
         AField: `topic_poll_config`,
         BField: `meeting`
     }),

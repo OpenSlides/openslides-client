@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,8 +26,7 @@ export interface PollFormApproval {
         TranslateKeyPipe
     ],
     templateUrl: './poll-form-approval.component.html',
-    styleUrl: './poll-form-approval.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './poll-form-approval.component.scss'
 })
 export class PollFormApprovalComponent extends PollFormBaseComponent {
     public hideMethod = input<boolean>(false);
@@ -38,7 +37,7 @@ export class PollFormApprovalComponent extends PollFormBaseComponent {
         [`valid`, _('All valid ballots')],
         [`cast`, _('All casted ballots')],
         [`entitled`, _('All entitled users')],
-        // [`entitled_present`, _('Present entitled users')],
+        [`entitled_present`, _('Present entitled users')],
         [`disabled`, _('Disabled (no percents)')]
     ];
 

@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { Permission } from '@app/domain/definitions/permission';
 import { PollDialogData } from '@app/site/pages/meetings/modules/poll/definitions';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
 import { map, Observable } from 'rxjs';
 
 import { MotionPollService } from '../../../../../../modules/motion-poll/services/motion-poll.service/motion-poll.service';
@@ -24,10 +25,9 @@ export class MotionAddPollButtonComponent {
         return this.motion.state$.pipe(map(state => state?.allow_create_poll || false));
     }
 
-    public constructor(
-        private motionPollService: MotionPollService,
-        private pollDialog: MotionPollDialogService
-    ) {}
+    private motionPollService = inject(MotionPollService);
+    private pollDialog = inject(MotionPollDialogService);
+    private meetingPollSettingsService = inject(MeetingPollSettingsService);
 
     public async openDialog(): Promise<void> {
         const defaultPollData = this.motionPollService.getDefaultPollData(this.motion);
@@ -35,7 +35,7 @@ export class MotionAddPollButtonComponent {
             content_object_id: this.motion.fqid,
             content_object: this.motion,
             ...defaultPollData,
-            live_voting_enabled: this.motionPollService.defaultPollLiveVotingEnabled
+            live_voting_enabled: this.meetingPollSettingsService.instant(`motion`, `enable_live_voting`)
         };
 
         this.pollDialog.open(dialogData);

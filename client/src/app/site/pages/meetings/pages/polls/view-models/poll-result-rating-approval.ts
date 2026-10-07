@@ -8,5 +8,5 @@ export class RatingApprovalPollResult extends BasePollResult<ViewPollConfigRatin
         abstain?: string;
     };
 
-    public abstain?: string;
+    public empty?: string;
 }

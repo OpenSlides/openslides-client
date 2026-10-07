@@ -92,7 +92,7 @@
     }
 </div>
 
-@if (config()?.min_vote_sum === 0 && config()?.min_options_amount === 0) {
+@if (poll().allow_empty) {
     <div class="or-divider">
         <div class="hr-wrapper"><hr /></div>
         <div>{{ 'OR' | translate }}</div>

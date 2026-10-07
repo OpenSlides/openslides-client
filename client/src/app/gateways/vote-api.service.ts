@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { Id } from '../domain/definitions/key-types';
 import { PollVisibility } from '../domain/models/poll/poll-constants';
@@ -20,13 +20,14 @@ export interface PollUpdatePayload {
     option_type?: 'text' | 'meeting_user';
     result?: unknown;
     allow_vote_split: boolean;
+    allow_empty?: boolean;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class VoteApiService {
     private readonly BASE = '/system/vote';
 
-    public constructor(private http: HttpService) {}
+    private http = inject(HttpService);
 
     public create(payload: PollCreatePayload): Promise<any> {
         return this.http.post(`${this.BASE}/poll`, payload);

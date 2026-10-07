@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, computed, inject, viewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -11,7 +12,10 @@ import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/c
 import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { PollFormApprovalComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form-approval/poll-form-approval.component';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ViewMeetingPollSetting } from '@app/site/pages/meetings/view-models/view-meeting-poll-setting';
 import { TranslatePipe } from '@ngx-translate/core';
+import { Observable, switchMap } from 'rxjs';
 
 @Component({
     selector: `os-motion-poll-dialog`,
@@ -22,7 +26,8 @@ import { TranslatePipe } from '@ngx-translate/core';
         PollFormApprovalComponent,
         MatDialogModule,
         MatButtonModule,
-        TranslatePipe
+        TranslatePipe,
+        AsyncPipe
     ],
     styleUrls: [`./motion-poll-dialog.component.scss`]
 })
@@ -41,7 +46,12 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
         return this.approvalForm().form.value;
     }
 
+    public get pollSettings(): Observable<ViewMeetingPollSetting> {
+        return this.activeMeetingService.meetingObservable.pipe(switchMap(m => m.motion_poll_config$));
+    }
+
     private pollService = inject(PollService);
+    private activeMeetingService = inject(ActiveMeetingService);
 
     public override methodPayload(): PollMethodPayload {
         const config = { ...this.approvalFormValue };

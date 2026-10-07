@@ -13,7 +13,7 @@ import { PollVisibility } from '@app/domain/models/poll';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from '@app/site/base/base.component';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
-import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewMeetingPollSetting } from '@app/site/pages/meetings/view-models/view-meeting-poll-setting';
 import { DirectivesModule } from '@app/ui/directives';
 import { EditableListComponent } from '@app/ui/modules/editable-list';
 import { SearchSelectorModule } from '@app/ui/modules/search-selector';
@@ -81,9 +81,11 @@ export class PollFormComponent extends BaseComponent {
     public optionEdit = input<boolean>(false);
     public isEVotingEnabled = input.required<boolean>();
 
+    public pollSettings = input.required<ViewMeetingPollSetting>();
+
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
-    public readonly data = input<Partial<ViewPoll>>({});
+    public readonly data = input<Partial<ViewPoll> & { method_preselection?: string }>({});
 
     private pollModel = signal<PollForm>({
         title: ``,
@@ -149,14 +151,19 @@ export class PollFormComponent extends BaseComponent {
     });
 
     public isLiveVotingAvailable = computed(() => {
-        return this.isEVotingSelected() && (this.isNamedVotingSelected() || this.isOpenVotingSelected());
+        return (
+            this.isEVotingSelected() &&
+            (this.isNamedVotingSelected() || this.isOpenVotingSelected()) &&
+            this.pollSettings().allow_live_voting
+        );
     });
 
     public groupRepo = inject(GroupControllerService);
     private dialog = inject(MatDialog);
-    private meetingSettingsService = inject(MeetingSettingsService);
 
-    public allowCumulative = this.meetingSettingsService.signal(`poll_enable_max_votes_per_option`);
+    public allowCumulative = computed(() => {
+        return this.pollSettings().enable_cumulative_voting;
+    });
 
     public constructor() {
         super();
@@ -177,7 +184,12 @@ export class PollFormComponent extends BaseComponent {
     }
 
     public getValues(): Partial<{ [place in keyof ViewPoll]: any }> {
-        return { ...this.data, ...this.serializeForm() };
+        let additional = {};
+        if (this.methodForm()) {
+            additional = this.methodForm().getSerialzedAdditionalData();
+        }
+
+        return { ...this.data, ...this.serializeForm(), ...additional };
     }
 
     public openVotingWarning(event: MouseEvent): void {
@@ -207,12 +219,15 @@ export class PollFormComponent extends BaseComponent {
     private updateData(): void {
         const data = this.data();
         if (data && this.form) {
-            if (data.entitled_group_ids !== undefined)
+            if (data.method_preselection !== undefined && !this.form['method_preselection']().dirty())
+                this.form['method_preselection']().value.set(data.method_preselection);
+            if (data.entitled_group_ids !== undefined && !this.form['entitled_group_ids']().dirty())
                 this.form['entitled_group_ids']().value.set(data.entitled_group_ids);
-            if (data.live_voting_enabled !== undefined)
+            if (data.live_voting_enabled !== undefined && !this.form['live_voting_enabled']().dirty())
                 this.form['live_voting_enabled']().value.set(!!data.live_voting_enabled);
-            if (data.title !== undefined) this.form['title']().value.set(data.title);
-            if (data.visibility !== undefined) this.form['visibility']().value.set(data.visibility);
+            if (data.title !== undefined && !this.form['title']().dirty()) this.form['title']().value.set(data.title);
+            if (data.visibility !== undefined && !this.form['visibility']().dirty())
+                this.form['visibility']().value.set(data.visibility);
             if (data.options !== undefined && !data.options.some(option => option.content_object_id))
                 this.form['options']().value.set(data.options.map(option => option.text));
             if (data.config?.method) {

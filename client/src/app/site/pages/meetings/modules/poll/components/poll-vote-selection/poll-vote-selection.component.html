@@ -83,7 +83,7 @@
     }
 </div>
 
-@if (config()?.min_vote_sum === 0 || config()?.allow_nota) {
+@if (config()?.allow_nota || poll().allow_empty) {
     <div class="or-divider">
         <div class="hr-wrapper"><hr /></div>
         <div>{{ 'OR' | translate }}</div>
@@ -110,7 +110,7 @@
             </div>
         }
 
-        @if (config().min_vote_sum === 0) {
+        @if (poll().allow_empty) {
             <div class="option-row general-option" role="row">
                 <div class="vote-option-title grid-name-area" role="rowheader">
                     {{ 'General abstain' | translate }}

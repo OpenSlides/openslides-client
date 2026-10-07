@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import { Component, effect, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -8,7 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { RatingApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-approval';
 import { RatingScoreOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-score';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
-import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
 import { _, TranslatePipe } from '@ngx-translate/core';
 
@@ -34,8 +33,7 @@ export interface PollFormRatingApproval {
         TranslateKeyPipe
     ],
     templateUrl: './poll-form-rating-approval.component.html',
-    styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-approval.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-approval.component.scss`]
 })
 export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
     public validPercentBases: [RatingApprovalOnehundredPercentBase, string][] = [
@@ -44,28 +42,35 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         [`valid`, _('All valid ballots')],
         [`cast`, _('All casted ballots')],
         [`entitled`, _('All entitled users')],
-        // [`entitled_present`, _('Present entitled users')],
+        [`entitled_present`, _('Present entitled users')],
         [`disabled`, _('Disabled (no percents)')]
     ];
 
     public hideMethod = input<boolean>(false);
     public optionAmount = input<number>(null);
 
-    private meetingSettingsService = inject(MeetingSettingsService);
+    public getSerialzedForm(): Record<string, unknown> {
+        const formValue = this.form.value;
+        if (!this.settings().enable_max_yes_votes) {
+            delete formValue.max_yes_amount;
+        }
 
-    public maxYesVotesEnabled = this.meetingSettingsService.signal(`poll_enable_max_yes_votes`);
+        return formValue;
+    }
 
     protected initForm(): void {
-        this.form = this.fb.group({
+        const fields = {
             onehundred_percent_base: [`valid`],
             allow_abstain: [false],
-            max_yes_amount: [1, [Validators.required, Validators.min(1)]],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [1, [Validators.required, Validators.min(0), this.minOptionsAmountValidator()]],
-            required_majority: [`no_majority`]
-        });
+            required_majority: [`no_majority`],
+            max_yes_amount: [1]
+        };
+        this.form = this.fb.group(fields);
 
         effect(this.onOptionAmountUpdate.bind(this));
+        effect(this.onSettingsUpdated.bind(this));
 
         this.form
             .get(`max_options_amount`)
@@ -90,15 +95,6 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         }
 
         return patch;
-    }
-
-    public getSerialzedForm(): Record<string, unknown> {
-        const formValue = this.form.value;
-        if (!this.maxYesVotesEnabled()) {
-            delete formValue.max_yes_amount;
-        }
-
-        return formValue;
     }
 
     private minOptionsAmountValidator(): ValidatorFn {
@@ -134,5 +130,13 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent {
         }
         maxCtrl?.updateValueAndValidity({ emitEvent: false });
         maxYesCtrl?.updateValueAndValidity({ emitEvent: false });
+    }
+
+    private onSettingsUpdated(): void {
+        if (this.settings().enable_max_yes_votes) {
+            this.form.get(`max_yes_amount`).setValidators([Validators.required, Validators.min(1)]);
+        } else {
+            this.form.get(`max_yes_amount`).setValidators([]);
+        }
     }
 }

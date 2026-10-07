@@ -1,7 +1,12 @@
 <mat-dialog-content>
     <div class="poll-config" [class.hidden]="analogPollFormOpen()">
-        <os-poll-form [customConfigForm]="true" [data]="pollData" [isEVotingEnabled]="isEVotingEnabled">
-            <os-poll-form-approval [data]="pollData" />
+        <os-poll-form
+            [customConfigForm]="true"
+            [data]="pollData"
+            [isEVotingEnabled]="isEVotingEnabled"
+            [pollSettings]="pollSettings | async"
+        >
+            <os-poll-form-approval [data]="pollData" [settings]="pollSettings | async" />
         </os-poll-form>
     </div>
 
@@ -11,7 +16,7 @@
                 configType="approval"
                 [options]="analogPollOptions()"
                 [pollConfigData]="approvalFormValue"
-                [pollData]="pollData"
+                [pollData]="currentPollData"
             />
         </div>
     }
@@ -32,11 +37,11 @@
         <div>
             @if (isAnalogPoll()) {
                 @if (analogPollFormOpen()) {
-                    <button mat-button (click)="analogPollFormOpen.set(false)">
+                    <button mat-button (click)="toggleAnalogPollForm()">
                         <span>{{ 'Edit Poll' | translate }}</span>
                     </button>
                 } @else {
-                    <button mat-button (click)="analogPollFormOpen.set(true)">
+                    <button mat-button (click)="toggleAnalogPollForm()">
                         <span>{{ 'Edit Result' | translate }}</span>
                     </button>
                 }

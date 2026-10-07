@@ -4,11 +4,14 @@ import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { PollState } from '@app/domain/models/poll';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
+import { ViewMeetingPollSetting } from '../../../view-models/view-meeting-poll-setting';
+
 @Component({ template: `` })
 export abstract class PollFormBaseComponent {
     public form: UntypedFormGroup;
 
     public data = input.required<Partial<ViewPoll>>();
+    public settings = input.required<ViewMeetingPollSetting>();
 
     public formValid = signal<boolean>(false);
 
@@ -28,6 +31,10 @@ export abstract class PollFormBaseComponent {
     protected abstract initForm(): void;
     protected abstract getPatchedFormData(data: Partial<ViewPoll>): Record<string, unknown>;
     public abstract getSerialzedForm(): Record<string, unknown>;
+
+    public getSerialzedAdditionalData(): Record<string, unknown> {
+        return {};
+    }
 
     private onDataUpdated(): void {
         if (!this.data() || !this.form) {

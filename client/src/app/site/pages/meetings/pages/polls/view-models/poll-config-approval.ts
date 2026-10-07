@@ -21,7 +21,11 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
     public get onehundredPercentBaseNum(): number | null {
         switch (this.onehundred_percent_base) {
             case 'yes_no':
-                return !this.allow_abstain ? this.totalVotes : null;
+                return !this.allow_abstain
+                    ? this.totalVotes
+                    : Big(this.parsedResult().yes || 0)
+                          .plus(Big(this.parsedResult().no || 0))
+                          .toNumber();
             case 'yes_no_abstain':
                 return this.totalVotes;
             case 'valid':
@@ -31,7 +35,7 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
             case 'entitled':
                 return this.poll?.entitled_user_ids?.length ?? null;
             case 'entitled_present':
-                return null;
+                return this.poll?.entitled_users.filter(u => u.present).length ?? null;
         }
 
         return null;
@@ -40,8 +44,8 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
     private _totalVotes: number;
     public get totalVotes(): number | null {
         if (!this._totalVotes) {
-            this._totalVotes = Big(this.parsedResult().yes)
-                .plus(Big(this.parsedResult().no))
+            this._totalVotes = Big(this.parsedResult().yes || 0)
+                .plus(Big(this.parsedResult().no || 0))
                 .plus(Big(this.parsedResult().abstain || 0))
                 .toNumber();
         }

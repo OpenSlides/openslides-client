@@ -65,102 +65,102 @@
         </div>
     }
 
-    @if (config().strike_out !== undefined || config().allow_abstain !== undefined) {
+    @if (config.value().strike_out !== undefined || config.value().allow_abstain !== undefined) {
         <div>
             {{ 'Voting method' | translate }}:
-            @if (config().strike_out === true) {
+            @if (config.value().strike_out === true) {
                 @if (isPersonPoll()) {
                     <span>{{ 'No per candidate' | translate }}</span>
                 } @else {
                     <span>{{ 'No per option' | translate }}</span>
                 }
-            } @else if (config().strike_out === false) {
+            } @else if (config.value().strike_out === false) {
                 @if (isPersonPoll()) {
                     <span>{{ 'Yes per candidate' | translate }}</span>
                 } @else {
                     <span>{{ 'Yes per option' | translate }}</span>
                 }
-            } @else if (config().allow_abstain === true) {
+            } @else if (config.value().allow_abstain === true) {
                 <span>{{ 'Yes/No/Abstain' | translate }}</span>
-            } @else if (config().allow_abstain === false) {
+            } @else if (config.value().allow_abstain === false) {
                 <span>{{ 'Yes/No' | translate }}</span>
             }
         </div>
     }
 
-    @if (config().COLLECTION === `poll_config_selection`) {
-        @if (config().min_options_amount > 1 || config().max_options_amount > 1) {
-            @if (config().min_options_amount === config().max_options_amount) {
+    @if (config.value().COLLECTION === `poll_config_selection`) {
+        @if (config.value().min_options_amount > 1 || config.value().max_options_amount > 1) {
+            @if (config.value().min_options_amount === config.value().max_options_amount) {
                 <div>
                     {{ 'Votes on different options' | translate }}:
-                    <span>{{ config().min_options_amount }}</span>
+                    <span>{{ config.value().min_options_amount }}</span>
                 </div>
             } @else {
-                @if (config().min_options_amount > 1) {
+                @if (config.value().min_options_amount > 1) {
                     <div>
                         {{ 'Minimum amount of options selected' | translate }}:
-                        <span>{{ config().min_options_amount }}</span>
+                        <span>{{ config.value().min_options_amount }}</span>
                     </div>
                 }
 
-                @if (config().max_options_amount > 1) {
+                @if (config.value().max_options_amount > 1) {
                     <div>
                         {{ 'Maximum amount options selected' | translate }}:
-                        <span>{{ config().max_options_amount }}</span>
+                        <span>{{ config.value().max_options_amount }}</span>
                     </div>
                 }
             }
         }
     } @else {
-        @if (config().min_vote_sum > 1 || config().max_vote_sum > 1) {
-            @if (config().min_vote_sum === config().max_vote_sum) {
+        @if (config.value().min_vote_sum > 1 || config.value().max_vote_sum > 1) {
+            @if (config.value().min_vote_sum === config.value().max_vote_sum) {
                 <div>
                     {{ 'Votes' | translate }}:
-                    <span>{{ config().min_vote_sum }}</span>
+                    <span>{{ config.value().min_vote_sum }}</span>
                 </div>
             } @else {
-                @if (config().min_vote_sum > 1) {
+                @if (config.value().min_vote_sum > 1) {
                     <div>
                         {{ 'Minimum amount of votes' | translate }}:
-                        <span>{{ config().min_vote_sum }}</span>
+                        <span>{{ config.value().min_vote_sum }}</span>
                     </div>
                 }
 
-                @if (config().max_vote_sum > 1) {
+                @if (config.value().max_vote_sum > 1) {
                     <div>
                         {{ 'Maximum amount of votes' | translate }}:
-                        <span>{{ config().max_vote_sum }}</span>
+                        <span>{{ config.value().max_vote_sum }}</span>
                     </div>
                 }
             }
         }
 
-        @if (config().max_yes_amount >= 1 && config().max_yes_amount < config().max_vote_sum) {
+        @if (config.value().max_yes_amount >= 1 && config.value().max_yes_amount < config.value().max_vote_sum) {
             <div>
                 {{ 'Maximum amount of yes votes' | translate }}:
-                <span>{{ config().max_yes_amount }}</span>
+                <span>{{ config.value().max_yes_amount }}</span>
             </div>
         }
     }
 
-    @if (config().max_votes_per_option > 1) {
+    @if (config.value().max_votes_per_option > 1) {
         <div>
             {{ 'Maximum amount of votes per option' | translate }}:
-            <span>{{ config().max_votes_per_option }}</span>
+            <span>{{ config.value().max_votes_per_option }}</span>
         </div>
     }
 
-    @if (config().onehundred_percent_base !== undefined) {
+    @if (config.value().onehundred_percent_base !== undefined) {
         <div>
             {{ '100% base' | translate }}:
-            <span>{{ config().onehundred_percent_base | translateKey: 'poll_percent_base' }}</span>
+            <span>{{ config.value().onehundred_percent_base | translateKey: 'poll_percent_base' }}</span>
         </div>
     }
 
-    @if (config().required_majority !== undefined && config().required_majority !== 'no_majority') {
+    @if (config.value().required_majority !== undefined && config.value().required_majority !== 'no_majority') {
         <div>
             {{ 'Required majority' | translate }}:
-            <span>{{ config().required_majority | translateKey: 'poll_required_majority' }}</span>
+            <span>{{ config.value().required_majority | translateKey: 'poll_required_majority' }}</span>
         </div>
     }
 </div>
