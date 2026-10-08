@@ -111,6 +111,9 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
     @Input()
     public allowEmbeds = false;
 
+    @Input()
+    public isModerationNote;
+
     @Output()
     public leaveFocus = new EventEmitter<void>();
 
@@ -378,6 +381,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                                         }
                                     ]
                                 })
+                                .insertContent({ type: `text`, text: ` ` })
                                 .run();
                         } else {
                             chain.setLink(result.link).run();
