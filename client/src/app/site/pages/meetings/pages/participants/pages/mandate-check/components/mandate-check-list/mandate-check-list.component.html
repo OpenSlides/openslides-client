@@ -102,11 +102,11 @@
                                         @if (entry.getTotalCount(gender.id)) {
                                             <!-- FIRST VAL -->
                                             <div class="flex-row bold">
-                                                <div style="min-width: 0; text-align: right; white-space: nowrap">
+                                                <div class="absolute-number-left-side">
                                                     {{ entry.genderEntryMap.get(gender.id).present }}
                                                 </div>
-                                                <div style="min-width: 36px; max-width: 36px"></div>
-                                                <div style="max-width: 46px; min-width: 0; text-align: right">
+                                                <div class="number-divider"></div>
+                                                <div class="relative-number-left-side">
                                                     {{
                                                         displayPercent(
                                                             $safeNavigationMigration(
@@ -119,7 +119,7 @@
                                         }
                                     </div>
                                     <!-- 3 col -->
-                                    <div class="justify-center justify-content-center flex" style="text-align: center">
+                                    <div class="justify-center justify-content-center flex text-align-center">
                                         {{
                                             $safeNavigationMigration(
                                                 entry.genderEntryMap.get(gender.id)?.label === 'NA'
@@ -132,12 +132,12 @@
                                     <div class="min-width-98">
                                         @if (entry.getTotalCount(gender.id)) {
                                             <div class="text-medium bold flex-row">
-                                                <div style="min-width: 14px; width: fit-content; text-align: left">
+                                                <div class="absolute-number-right-side">
                                                     {{ entry.getTotalCount(gender.id) }}
 
-                                                    <div style="min-width: 36px; max-width: 36px"></div>
+                                                    <div class="right-side-number-divider"></div>
                                                 </div>
-                                                <div style="min-width: 35px; max-width: 49px; text-align: right">
+                                                <div class="relative-number-right-side">
                                                     {{
                                                         displayPercent(
                                                             entry.getTotalCount(gender.id) / entry.getTotalCount()
@@ -161,42 +161,26 @@
                                 <div class="min-width-98 flex">
                                     @if (entry.presentUserIds.length) {
                                         <!-- FIRST VAL -->
-                                        <div class="flex-row bold" style="color: #b7b7b7; text-align: right">
-                                            <div style="min-width: 0px; text-align: right">
+                                        <div class="flex-row bold text-align-right">
+                                            <div
+                                                class="text-align-right total-number-color absolute-total-number-left-side"
+                                            >
                                                 {{ entry.presentUserIds.length }}
                                             </div>
-                                            <div style="min-width: 36px"></div>
-                                            <div
-                                                style="
-                                                    text-align: right;
-                                                    min-width: 30px;
-                                                    max-width: fit-content;
-                                                    overflow: visible;
-                                                "
-                                            >
-                                                100%
-                                            </div>
+                                            <div class="total-number-divider-left-side"></div>
+                                            <div class="total-number-color relative-total-number-left-side">100%</div>
                                         </div>
                                     }
                                 </div>
                                 <!-- 3 col -->
                                 <div class="justify-center bold empty-center flex-container">&nbsp;</div>
                                 <!-- 4 col -->
-                                <div class="flex-row bold min-width-98" style="color: #b7b7b7">
-                                    <div style="width: fit-content; max-width: 24px; min-width: 0px; text-align: left">
+                                <div class="flex-row bold min-width-98">
+                                    <div class="total-number-color absolute-total-number-right-side">
                                         {{ entry.getTotalCount() }}
                                     </div>
-                                    <div style="max-width: 36px; min-width: 36px"></div>
-                                    <div
-                                        style="
-                                            text-align: right;
-                                            min-width: 0;
-                                            max-width: fit-content;
-                                            overflow: visible;
-                                        "
-                                    >
-                                        100%
-                                    </div>
+                                    <div class="total-number-divider-right-side"></div>
+                                    <div class="total-number-color relative-total-number-right-side">100%</div>
                                 </div>
                                 <!-- LEFT EMPTY -->
                                 <div></div>
@@ -205,7 +189,7 @@
                     </div>
                     <!-- PARTICIPANTS -->
                     <div class="header-grid">
-                        <h1 class="text-large-bold color-inherit" style="padding-top: 30px">
+                        <h1 class="text-large-bold color-inherit padding-top-30">
                             {{ 'Participants' | translate }}
                         </h1>
                     </div>

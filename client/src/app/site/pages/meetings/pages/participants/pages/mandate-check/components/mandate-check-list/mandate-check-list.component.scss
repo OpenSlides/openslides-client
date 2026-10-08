@@ -19,6 +19,72 @@
 .flex-row {
     display: flex;
     flex-direction: row;
+
+    //Normal values
+    .absolute-number-left-side {
+        min-width: 0;
+        text-align: right;
+        white-space: nowrap
+    }
+    .left-side-number-divider {
+        min-width: 36px;
+        max-width: 36px;
+    }
+    .relative-number-left-side {
+        max-width: 46px;
+        min-width: 0;
+        text-align: right;
+    }
+
+    .absolute-number-right-side {
+        min-width: 14px;
+        width: fit-content !important;
+        text-align: left;
+    }
+    .right-side-number-divider {
+        min-width: 45px;
+    }
+    .relative-number-right-side {
+        min-width: 35px;
+        max-width: 49px;
+        text-align: right;
+    }
+
+    //Total values
+    .total-number-color {
+        color: #b7b7b7 !important;
+    }
+
+    .absolute-total-number-left-side {
+        min-width: 0;
+    }
+    .total-number-divider-left-side{
+        min-width: 45px;
+    }
+    .relative-total-number-left-side{
+        text-align: right;
+        min-width: 30px;
+        max-width: fit-content;
+        overflow: visible;
+    }
+
+    .absolute-total-number-right-side {
+        width: fit-content;
+        max-width: 24px;
+        min-width: 0px;
+        text-align: left
+    }
+    .total-number-divider-right-side {
+        max-width: 36px;
+        min-width: 36px
+    }
+    .relative-total-number-right-side {
+        text-align: right;
+        min-width: 0;
+        max-width: fit-content;
+        overflow: visible;
+    }
+
 }
 
 .flex {
@@ -39,6 +105,13 @@
 
 .align-right {
     align-items: end;
+}
+
+.text-align-center {
+    text-align: center;
+}
+.text-align-right {
+    text-align: right;
 }
 
 .groups-grid {
@@ -324,7 +397,9 @@ button {
 .padding-right {
     padding-right: 1em;
 }
-
+.padding-top-30 {
+    padding-top: 30px;
+}
 .stroke {
     border-top: 1px solid #bbb8b8;
 }
