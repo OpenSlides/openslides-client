@@ -24,7 +24,7 @@
     .absolute-number-left-side {
         min-width: 0;
         text-align: right;
-        white-space: nowrap
+        white-space: nowrap;
     }
     .left-side-number-divider {
         min-width: 36px;
@@ -58,10 +58,11 @@
     .absolute-total-number-left-side {
         min-width: 0;
     }
-    .total-number-divider-left-side{
-        min-width: 45px;
+    .total-number-divider-left-side {
+        min-width: clamp(36px, 2.67vw, 46px);
+        margin-left: clamp(-5px, 0.5vw, 0px);
     }
-    .relative-total-number-left-side{
+    .relative-total-number-left-side {
         text-align: right;
         min-width: 30px;
         max-width: fit-content;
@@ -72,11 +73,11 @@
         width: fit-content;
         max-width: 24px;
         min-width: 0px;
-        text-align: left
+        text-align: left;
     }
     .total-number-divider-right-side {
         max-width: 36px;
-        min-width: 36px
+        min-width: 36px;
     }
     .relative-total-number-right-side {
         text-align: right;
@@ -84,7 +85,6 @@
         max-width: fit-content;
         overflow: visible;
     }
-
 }
 
 .flex {
@@ -97,10 +97,6 @@
 
 .justify-content-center {
     justify-content: center;
-}
-
-.align-left {
-    align-items: start;
 }
 
 .align-right {
@@ -217,19 +213,8 @@ mat-progress-bar {
             font-size: xx-large;
         }
 
-        .margin-right--5 {
-            margin-right: -5px;
-        }
-
         .margin-bottom-15 {
             margin-bottom: 15px;
-        }
-
-        .total-genders {
-            display: flex !important;
-            flex-direction: row !important;
-            font-weight: bold !important;
-            color: #b7b7b7 !important;
         }
 
         .empty-center {
@@ -242,11 +227,6 @@ mat-progress-bar {
 
     .row {
         padding: 1em 0em 1em 0em;
-    }
-
-    .cell-width {
-        width: fit-content;
-        text-align: end;
     }
 
     .row:nth-child(even) {
@@ -295,11 +275,6 @@ mat-progress-bar {
     }
 }
 
-.border-line {
-    margin-bottom: 7px;
-    border-top: 2px solid rgba(128, 128, 128, 0.2);
-}
-
 .color-inherit {
     color: inherit;
 }
@@ -316,14 +291,6 @@ mat-progress-bar {
     font-weight: 500;
 }
 
-.margin-left-large {
-    margin-left: 140px;
-
-    @media (max-width: 700px) {
-        margin-left: 70px;
-    }
-}
-
 .margin-top--30 {
     margin-top: -30px;
 }
@@ -336,10 +303,6 @@ mat-progress-bar {
     margin-left: 0px;
 }
 
-.margin-left-medium {
-    margin-left: 115px;
-}
-
 .margin-bottom-20 {
     margin-bottom: 20px;
 }
@@ -348,29 +311,13 @@ mat-progress-bar {
     margin-bottom: 10px;
 }
 
-.margin-left--10 {
-    margin-left: -10px;
-}
-
 .margin-auto {
     margin: auto;
-}
-
-button {
-    border-radius: 0%;
 }
 
 .text-large-bold {
     font-size: 19px;
     font-weight: 600;
-}
-
-.text-small {
-    font-size: 12px;
-
-    &-bold {
-        font-weight: 500;
-    }
 }
 
 .text-medium-bold {
@@ -400,9 +347,6 @@ button {
 .padding-top-30 {
     padding-top: 30px;
 }
-.stroke {
-    border-top: 1px solid #bbb8b8;
-}
 
 .fit-content {
     width: fit-content;
@@ -412,8 +356,4 @@ button {
     justify-self: end;
     align-self: center;
     margin-top: -10px;
-}
-
-.gap {
-    gap: 20px;
 }
