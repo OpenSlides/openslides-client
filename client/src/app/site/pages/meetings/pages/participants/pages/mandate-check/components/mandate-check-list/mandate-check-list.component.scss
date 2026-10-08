@@ -88,7 +88,6 @@ mat-card {
 mat-progress-bar {
     width: 100%;
     min-width: 0;
-    margin-right: 3em;
     border-radius: 10px;
     --mdc-linear-progress-active-indicator-height: 1.5em;
     --mdc-linear-progress-track-height: 1.5em;
@@ -122,15 +121,17 @@ mat-progress-bar {
         max-width: inherit;
         display: grid;
         white-space: nowrap;
-        grid-template-columns: 6.5fr 7fr 50fr 7fr 5fr;
+        grid-template-columns: 5fr 7fr 40fr 7fr 5fr;
 
         & div {
             width: 100%;
         }
 
         .central-element {
+            display: flex;
             max-width: 90%;
-            align-self: center;
+            min-width: 0;
+            justify-content: center;
         }
 
         .mandate-ammount > div {
@@ -161,49 +162,8 @@ mat-progress-bar {
         .empty-center {
             display: flex;
             justify-content: center;
-            margin-left: -10px;
-            margin-right: 20px;
-        }
-    }
-
-    .row {
-        padding: 1em 0em 1em 0em;
-    }
-
-    .cell-width {
-        width: fit-content;
-        text-align: end;
-    }
-
-    .row:nth-child(even) {
-        background-color: #fafafa;
-    }
-}
-
-.gender-grid {
-    max-width: inherit;
-    display: grid;
-
-    .row,
-    .row-mandate {
-        max-width: inherit;
-        display: grid;
-        white-space: nowrap;
-        grid-template-columns: 8fr 8fr 50fr 8fr 7fr;
-
-        & div {
-            width: 100%;
-        }
-
-        .central-element {
-            max-width: 90%;
-            align-self: center;
-        }
-
-        .mandate-ammount > div {
-            display: flex;
-            justify-content: end;
-            align-items: end;
+            flex: 1 1 auto;
+            min-width: 0;
         }
     }
 
@@ -225,27 +185,19 @@ mat-progress-bar {
     display: grid;
     max-width: inherit;
     width: inherit;
-    grid-template-columns: 9fr 29fr 29fr 9fr;
+    margin-inline: auto;
+    grid-template-columns: 4fr 13.3fr 4.15fr;
 
     .participants-cell {
-        width: inherit;
+        width: 100%;
         display: grid;
-        grid-template-columns: 50% 25%;
-        gap: 20%;
+        grid-template-columns: 41% 41%;
+        gap: 19%;
 
         div {
             width: inherit;
             overflow-wrap: break-word;
             min-width: 0;
-        }
-
-        .present {
-            margin-left: 8%;
-        }
-
-        .absent {
-            width: calc(100% + 10px);
-            margin-right: -4%;
         }
     }
 

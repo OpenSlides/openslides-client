@@ -36,9 +36,7 @@
                         <!-- first col -->
                         <div class="flex-container"></div>
                         <!-- second col -->
-                        <div
-                            class="flex-container margin-auto text-medium-bold min-width-50 align-right margin-right--5"
-                        >
+                        <div class="flex-container margin-auto text-medium-bold min-width-50 align-right">
                             {{ 'Present' | translate }}
                         </div>
                         <!-- third col -->
@@ -55,15 +53,13 @@
                     <div class="row-mandate">
                         <!-- second row -->
                         <!-- first col -->
-                        <div class="flex-container">
-                            <div></div>
-                        </div>
+                        <div></div>
                         <!-- second col -->
                         <div
-                            class="flex-container text-medium-bold min-width-50 fit-content mandate-ammount margin-bottom-15"
+                            class="flex-container text-medium-bold min-width-50 fit-content mandate-ammount margin-bottom-15 align-right"
                         >
-                            <div class="text-large">{{ entry.presentUserIds.length }}&nbsp;</div>
-                            <div>{{ displayPercent(entry.getPercent()) }}&nbsp;</div>
+                            <div class="text-large">{{ entry.presentUserIds.length }}</div>
+                            <div>{{ displayPercent(entry.getPercent()) }}</div>
                         </div>
                         <!-- third col -->
                         <div class="center flex-container">
@@ -78,15 +74,13 @@
                         </div>
                         <!-- fourth col -->
                         <div
-                            class="flex-container margin-auto text align-left text-medium-bold min-width-50 margin-bottom-15"
+                            class="flex-container margin-auto text align-right text-medium-bold min-width-50 margin-bottom-15"
                         >
                             <div class="text-large">{{ entry.getTotalCount() }}</div>
                             <div class="no-left-margin">100%&nbsp;</div>
                         </div>
                         <!-- fifth col -->
-                        <div class="flex-container">
-                            <div></div>
-                        </div>
+                        <div></div>
                     </div>
                 </div>
                 @if (toggleMap.get(entry.id)) {
@@ -96,24 +90,23 @@
                             {{ 'Gender' | translate }}
                         </h1>
                     </div>
-                    <div class="gender-grid">
+                    <div class="map-grid">
                         @for (gender of genders; track gender.id; let last = $last) {
                             @if (entry.getTotalCount(gender.id)) {
                                 <!-- LEFT EMPTY -->
                                 <div class="row">
                                     <!-- 1 col -->
-                                    <div class="flex-container">
-                                        <div></div>
-                                    </div>
+                                    <div></div>
                                     <!--  2 col -->
-                                    <div class="min-width-50 align-right cell-width">
+                                    <div class="min-width-98">
                                         @if (entry.getTotalCount(gender.id)) {
                                             <!-- FIRST VAL -->
                                             <div class="flex-row bold">
-                                                <div>
+                                                <div style="min-width: 0; text-align: right; white-space: nowrap">
                                                     {{ entry.genderEntryMap.get(gender.id).present }}
                                                 </div>
-                                                <div>
+                                                <div style="min-width: 36px; max-width: 36px"></div>
+                                                <div style="max-width: 46px; min-width: 0; text-align: right">
                                                     {{
                                                         displayPercent(
                                                             $safeNavigationMigration(
@@ -126,7 +119,7 @@
                                         }
                                     </div>
                                     <!-- 3 col -->
-                                    <div class="justify-center bold justify-content-center flex">
+                                    <div class="justify-center justify-content-center flex" style="text-align: center">
                                         {{
                                             $safeNavigationMigration(
                                                 entry.genderEntryMap.get(gender.id)?.label === 'NA'
@@ -136,25 +129,26 @@
                                         }}
                                     </div>
                                     <!-- 4 col -->
-                                    <div class="text align-left">
+                                    <div class="min-width-98">
                                         @if (entry.getTotalCount(gender.id)) {
-                                            <div class="text-medium bold flex-row gap">
-                                                <div>{{ entry.getTotalCount(gender.id) }}</div>
-                                                <div>
+                                            <div class="text-medium bold flex-row">
+                                                <div style="min-width: 14px; width: fit-content; text-align: left">
+                                                    {{ entry.getTotalCount(gender.id) }}
+
+                                                    <div style="min-width: 36px; max-width: 36px"></div>
+                                                </div>
+                                                <div style="min-width: 35px; max-width: 49px; text-align: right">
                                                     {{
                                                         displayPercent(
                                                             entry.getTotalCount(gender.id) / entry.getTotalCount()
                                                         )
                                                     }}
                                                 </div>
-                                                <div></div>
                                             </div>
                                         }
                                     </div>
                                     <!-- LEFT EMPTY -->
-                                    <div class="flex-container">
-                                        <div></div>
-                                    </div>
+                                    <div></div>
                                 </div>
                             }
                         }
@@ -162,31 +156,50 @@
                             <!-- LAST ROW WITH TOTAL GENDERS -->
                             <div class="row">
                                 <!-- 1 col -->
-                                <div class="flex-container">
-                                    <div></div>
-                                </div>
+                                <div></div>
                                 <!--  2 col -->
-                                <div class="min-width-50 align-right cell-width">
+                                <div class="min-width-98 flex">
                                     @if (entry.presentUserIds.length) {
                                         <!-- FIRST VAL -->
-                                        <div class="flex-row bold" style="color: #b7b7b7">
-                                            <div>{{ entry.presentUserIds.length }}</div>
-                                            <div>100%</div>
+                                        <div class="flex-row bold" style="color: #b7b7b7; text-align: right">
+                                            <div style="min-width: 0px; text-align: right">
+                                                {{ entry.presentUserIds.length }}
+                                            </div>
+                                            <div style="min-width: 36px"></div>
+                                            <div
+                                                style="
+                                                    text-align: right;
+                                                    min-width: 30px;
+                                                    max-width: fit-content;
+                                                    overflow: visible;
+                                                "
+                                            >
+                                                100%
+                                            </div>
                                         </div>
                                     }
                                 </div>
                                 <!-- 3 col -->
-                                <div class="justify-center bold empty-center"></div>
+                                <div class="justify-center bold empty-center flex-container">&nbsp;</div>
                                 <!-- 4 col -->
-                                <div class="text align-left flex-row bold" style="color: #b7b7b7">
-                                    <div>{{ entry.getTotalCount() }}</div>
-                                    <div>100%</div>
-                                    <div></div>
+                                <div class="flex-row bold min-width-98" style="color: #b7b7b7">
+                                    <div style="width: fit-content; max-width: 24px; min-width: 0px; text-align: left">
+                                        {{ entry.getTotalCount() }}
+                                    </div>
+                                    <div style="max-width: 36px; min-width: 36px"></div>
+                                    <div
+                                        style="
+                                            text-align: right;
+                                            min-width: 0;
+                                            max-width: fit-content;
+                                            overflow: visible;
+                                        "
+                                    >
+                                        100%
+                                    </div>
                                 </div>
                                 <!-- LEFT EMPTY -->
-                                <div class="flex-container">
-                                    <div></div>
-                                </div>
+                                <div></div>
                             </div>
                         </div>
                     </div>
@@ -198,7 +211,7 @@
                     </div>
                     <div class="footer-grid">
                         <!-- Empty cell -->
-                        <div class="flex-container"></div>
+                        <div></div>
                         <!-- central cell -->
                         <div class="participants-cell">
                             <div class="present">
@@ -211,19 +224,20 @@
                                     </div>
                                 }
                             </div>
-                        </div>
-                        <div class="absent margin-left--10 text-align-end">
-                            <div class="bold small-margin-top text margin-bottom-20">
-                                {{ 'Absent' | translate }}
-                            </div>
-                            @for (userId of entry.absentUserIds; track userId) {
-                                <div class="color-black">
-                                    {{ getName(userId) }}
+
+                            <div class="absent text-align-end">
+                                <div class="bold small-margin-top text margin-bottom-20">
+                                    {{ 'Absent' | translate }}
                                 </div>
-                            }
+                                @for (userId of entry.absentUserIds; track userId) {
+                                    <div class="color-black">
+                                        {{ getName(userId) }}
+                                    </div>
+                                }
+                            </div>
                         </div>
                         <!-- Empty cell -->
-                        <div class="flex-container"><div></div></div>
+                        <div></div>
                     </div>
                 }
             </mat-card-content>
