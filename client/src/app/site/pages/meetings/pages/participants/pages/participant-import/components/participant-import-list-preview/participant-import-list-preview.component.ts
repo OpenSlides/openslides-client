@@ -37,14 +37,17 @@ import { ViewListComponent } from '@app/ui/modules/list/components/view-list/vie
 import { ScrollingTableCellDefConfig } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import { START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
 
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
 import { ViewImportedParticipant } from '../../view-models/view-participant-import';
 import { ParticipantImportListInfoDialogComponent } from '../participant-import-list-info-dialog/participant-import-list-info-dialog.component';
-import { CSVOptionsComponent } from './participant-import-csv-options/participant-import-csv-options.component';
+import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
+import { MatDivider } from '@angular/material/divider';
+import { MatDrawer } from '@angular/material/sidenav';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: `os-participant-import-list-preview`,
@@ -62,23 +65,37 @@ import { CSVOptionsComponent } from './participant-import-csv-options/participan
         MatDialogModule,
         MatProgressSpinner,
         MatLabel,
-        CSVOptionsComponent
+        MatRadioGroup,
+        MatDivider,
+        MatRadioButton,
+        MatDrawer,
+        FormsModule
     ]
 })
 export class ParticipantImportListPreviewComponent implements OnInit, AfterViewInit, OnDestroy {
     public readonly START_POSITION = START_POSITION;
 
     public readonly viewList = viewChild.required(ViewListComponent);
-    public readonly csvOptions = viewChild.required(CSVOptionsComponent);
+    public readonly csvConfigMenu = viewChild.required<MatDrawer>(MatDrawer);
 
     public modelName = `Participant`;
     public importer = inject(ParticipantImportService);
     public filterService = inject(ParticipantImportFilterService);
     public searchService = inject(ParticipantImportPreviewSearchService);
+    public vp = inject(ViewPortService);
     protected activeMeetingIdService = inject(ActiveMeetingIdService);
     protected dialog = inject(MatDialog);
     protected translate = inject(TranslateService);
-    public vp = inject(ViewPortService);
+    protected selectedEncoding = 'utf-8';
+    protected selectedColumnSeparator = '';
+    protected selectedTextSeparator = '"';
+    private selectedConfig$ = new BehaviorSubject<{ encoding: string; columnSeparator: string; textSeparator: string }>(
+        {
+            encoding: 'utf-8',
+            columnSeparator: '',
+            textSeparator: '"'
+        }
+    );
 
     /**
      * The actual headers of the preview, as they were delivered by the backend.
@@ -198,8 +215,8 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
     }
 
     public ngAfterViewInit(): void {
-        let previousConfig = this.csvOptions().selectedConfig$.value;
-        this.csvOptions().selectedConfig$.subscribe(options => {
+        let previousConfig = this.selectedConfig$.value;
+        this.selectedConfig$.subscribe(options => {
             if (
                 options.columnSeparator !== previousConfig?.columnSeparator ||
                 options.encoding !== previousConfig?.encoding ||
@@ -226,7 +243,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
     }
 
     public openCsvConfig(): void {
-        const menu = this.csvOptions().csvConfigMenu();
+        const menu = this.csvConfigMenu();
         this.viewList().sortFilterBarComponent.closeFilterMenu();
         if (menu.opened) {
             menu.close();
@@ -650,5 +667,26 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
             // unchanged
             return false;
         }
+    }
+
+    public onEncodingChange(value: string): void {
+        this.selectedConfig$.next({
+            ...this.selectedConfig$.value,
+            encoding: value
+        });
+    }
+
+    public onTextSeparatorChange(value): void {
+        this.selectedConfig$.next({
+            ...this.selectedConfig$.value,
+            textSeparator: value
+        });
+    }
+
+    public onColumnSeparatorChange(value): void {
+        this.selectedConfig$.next({
+            ...this.selectedConfig$.value,
+            columnSeparator: value
+        });
     }
 }

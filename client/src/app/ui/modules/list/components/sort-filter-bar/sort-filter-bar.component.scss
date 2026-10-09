@@ -104,23 +104,3 @@ os-sort-filter-bar {
         overflow: hidden;
     }
 }
-
-// REMOVE THE * IN BOTH BUTTON CLASSES
-.selected-button * {
-    color: var(--theme-primary-500) !important;
-}
-.not-selected-button * {
-    color: gray !important;
-}
-.mat-drawer-placement {
-    max-height: calc(100% - 49px);
-}
-
-.fileInput {
-    display: none;
-}
-
-.container {
-    display: flex;
-    margin-left: 10px;
-}

@@ -172,3 +172,9 @@ $os-yellow: rgb(255, 193, 7);
         color: $os-green;
     }
 }
+
+.button-positions {
+    display: flex;
+    flex-direction: row;
+    width: max-content;
+}
