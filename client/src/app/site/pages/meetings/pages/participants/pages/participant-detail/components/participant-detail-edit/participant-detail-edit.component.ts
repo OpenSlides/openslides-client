@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
@@ -28,7 +28,7 @@ import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_DETAIL_SUBSCRIPTION
 } from '../../../../participants.subscription';
-import { ParticipantListInfoDialogService } from '../../../participant-list/modules/participant-list-info-dialog/services';
+import { areGroupsDiminished } from '../../../participant-list/components/participant-list/participant-list.component';
 import { ParticipantListSortService } from '../../../participant-list/services/participant-list-sort/participant-list-sort.service';
 import { StructureLevelControllerService } from '../../../structure-levels/services/structure-level-controller.service';
 import { ViewStructureLevel } from '../../../structure-levels/view-models/view-structure-level';
@@ -42,8 +42,6 @@ import { ViewStructureLevel } from '../../../structure-levels/view-models/view-s
 })
 export class ParticipantDetailEditComponent extends BaseMeetingComponent implements OnInit {
     @ViewChild(UserDetailViewComponent)
-    private infoDialog = inject(ParticipantListInfoDialogService);
-
     private userDetailView;
 
     public participantSubscriptionConfig = getParticipantMinimalSubscriptionConfig(this.activeMeetingId);
@@ -320,9 +318,9 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
             }
             const payload = {
                 ...this.personalInfoFormValue,
-                vote_delegated_to_id: this.personalInfoFormValue.vote_delegated_to_id
-                    ? this.repo.getViewModel(this.personalInfoFormValue.vote_delegated_to_id).getMeetingUser().id
-                    : null,
+                vote_delegated_to_id:
+                    this.repo.getViewModel(this.personalInfoFormValue?.vote_delegated_to_id)?.getMeetingUser().id ||
+                    null,
                 vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
                     ? this.personalInfoFormValue.vote_delegations_from_ids
                           .map(id => this.repo.getViewModel(id).getMeetingUser().id)
@@ -342,11 +340,7 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
             if (
                 !(
                     this.user.id === this.operator.operatorId &&
-                    this.infoDialog.areGroupsDiminished(
-                        this.operator.user.group_ids(),
-                        payload.group_ids,
-                        this.activeMeeting
-                    )
+                    areGroupsDiminished(this.operator.user.group_ids(), payload.group_ids, this.activeMeeting)
                 ) ||
                 (await this.promptService.open(title, content))
             ) {
@@ -365,7 +359,7 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
         } else {
             await this.repo.updateSelf(this.personalInfoFormValue, this.user!);
         }
-        this.router.navigate([`../`], { relativeTo: this.route });
+        this.onCancel();
     }
 
     public onCancel(): void {

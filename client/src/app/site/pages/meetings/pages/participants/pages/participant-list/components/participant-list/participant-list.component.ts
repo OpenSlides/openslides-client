@@ -10,6 +10,7 @@ import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings'
 import { OsFilterOption } from '@app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from '@app/site/services/operator.service';
@@ -34,6 +35,14 @@ import { ParticipantListSortService } from '../../services/participant-list-sort
 import { ParticipantSwitchDialogComponent } from '../participant-switch-dialog/participant-switch-dialog.component';
 
 const PARTICIPANTS_LIST_STORAGE_INDEX = `participants`;
+
+export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[], activeMeeting: ViewMeeting): boolean {
+    return (
+        oldGroupIds
+            .filter(group => group !== activeMeeting.default_group_id)
+            .some(id => !(newGroupIds ?? []).includes(id)) && !newGroupIds.includes(activeMeeting.admin_group_id)
+    );
+}
 
 @Component({
     selector: `os-participant-list`,
@@ -353,52 +362,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             return;
         }
         ev?.stopPropagation();
-        const dialogRef = await this.infoDialog.open({
-            id: user.id,
-            name: user.short_name,
-            group_ids: user.group_ids(),
-            number: user.number(),
-            structure_level_ids: user.structure_level_ids(),
-            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
-            vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
-        });
-        const selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
-        const selfGroupRemovalDialogContent = _(
-            `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
-        );
-
-        dialogRef.afterClosed().subscribe(async result => {
-            if (result) {
-                if (!result.group_ids?.length) {
-                    result.group_ids = [this.activeMeeting.meeting!.default_group_id];
-                }
-                if (result.vote_delegated_to_id === 0) {
-                    result.vote_delegated_to_id = null;
-                }
-                if (
-                    !(
-                        user.id === this.operator.operatorId &&
-                        this.infoDialog.areGroupsDiminished(
-                            this.operator.user.group_ids(),
-                            result.group_ids,
-                            this.activeMeeting
-                        )
-                    ) ||
-                    (await this.prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
-                ) {
-                    if (
-                        this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
-                        !this.operator.hasPerms(Permission.userCanManage) &&
-                        !this.operator.hasPerms(Permission.userCanUpdate) &&
-                        user.id === this.operator.operatorId
-                    ) {
-                        this.repo.updateSelfDelegation(result, user);
-                    } else {
-                        this.repo.update(result, user).resolve();
-                    }
-                }
-            }
-        });
+        await this.infoDialog.openDialog(user, this.activeMeeting);
     }
 
     public getOtherUsersObservable(user: ViewUser): Observable<ViewUser[]> {
@@ -461,7 +425,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                     user =>
                         !(
                             user.id === this.operator.operatorId &&
-                            this.infoDialog.areGroupsDiminished(
+                            areGroupsDiminished(
                                 this.operator.user.group_ids(),
                                 this.operator.user.group_ids().filter(id => !chosenGroupIds.includes(id)),
                                 this.activeMeeting
