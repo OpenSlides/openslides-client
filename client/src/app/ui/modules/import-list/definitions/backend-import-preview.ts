@@ -6,13 +6,15 @@ export enum BackendImportState {
     New = `new`,
     Done = `done`,
     Generated = `generated`,
-    Remove = `remove`
+    Remove = `remove`,
+    Referenced = `referenced`,
+    Unchanged = `unchanged`
     // could be expanded later
 }
 
 export interface BackendImportHeader {
     property: string; // field name/column title
-    type: `boolean` | `number` | `string` | `date`; // date must be in format yyyy-mm-dd
+    type: `boolean` | `number` | `string` | `decimal` | `date`; // date must be in format yyyy-mm-dd
     is_list: boolean; // optional, if not given defaults to `false`
     is_object: boolean; // optional, if not given defaults to `false`
     is_hidden: boolean; // optional, if not given defaults to `false`

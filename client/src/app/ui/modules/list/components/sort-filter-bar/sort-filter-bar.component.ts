@@ -304,6 +304,20 @@ export class SortFilterBarComponent<V extends Identifiable> implements OnDestroy
         this._searchFieldComponent?.clear();
     }
 
+    public openFilterMenu(): void {
+        if (this.filterMenu.opened) {
+            this.filterMenu.close();
+        } else {
+            this.filterMenu.open();
+        }
+    }
+
+    public closeFilterMenu(): void {
+        if (this.filterMenu.opened) {
+            this.filterMenu.close();
+        }
+    }
+
     @HostListener(`document:keydown`, [`$event`]) public onKeyDown(event: KeyboardEvent): void {
         if ((event.ctrlKey || event.metaKey) && event.key === `f`) {
             event.preventDefault();
