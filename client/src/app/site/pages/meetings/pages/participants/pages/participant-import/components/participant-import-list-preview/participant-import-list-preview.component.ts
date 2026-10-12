@@ -1,22 +1,24 @@
-import { AsyncPipe, NgClass } from '@angular/common';
+import { AsyncPipe, CommonModule, NgClass } from '@angular/common';
 import {
-    AfterViewInit,
     ChangeDetectorRef,
     Component,
-    EventEmitter,
     inject,
     input,
     OnDestroy,
     OnInit,
-    Output,
+    output,
     TemplateRef,
     viewChild
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDivider } from '@angular/material/divider';
 import { MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatDrawer } from '@angular/material/sidenav';
 import { MatTooltip } from '@angular/material/tooltip';
 import { infoDialogSettings, mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
@@ -37,17 +39,13 @@ import { ViewListComponent } from '@app/ui/modules/list/components/view-list/vie
 import { ScrollingTableCellDefConfig } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-config';
 import { START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrolling-table-cell-position';
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
+import { firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
 
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
 import { ViewImportedParticipant } from '../../view-models/view-participant-import';
 import { ParticipantImportListInfoDialogComponent } from '../participant-import-list-info-dialog/participant-import-list-info-dialog.component';
-import { MatRadioGroup, MatRadioButton } from '@angular/material/radio';
-import { MatDivider } from '@angular/material/divider';
-import { MatDrawer } from '@angular/material/sidenav';
-import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: `os-participant-import-list-preview`,
@@ -69,93 +67,34 @@ import { FormsModule } from '@angular/forms';
         MatDivider,
         MatRadioButton,
         MatDrawer,
-        FormsModule
+        FormsModule,
+        CommonModule
     ]
 })
-export class ParticipantImportListPreviewComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
     public readonly START_POSITION = START_POSITION;
 
     public readonly viewList = viewChild.required(ViewListComponent);
     public readonly csvConfigMenu = viewChild.required<MatDrawer>(MatDrawer);
 
-    public modelName = `Participant`;
-    public importer = inject(ParticipantImportService);
-    public filterService = inject(ParticipantImportFilterService);
-    public searchService = inject(ParticipantImportPreviewSearchService);
-    public vp = inject(ViewPortService);
-    protected activeMeetingIdService = inject(ActiveMeetingIdService);
-    protected dialog = inject(MatDialog);
-    protected translate = inject(TranslateService);
+    protected searchFieldInput = input<string>('');
+    protected searchFilterUpdated = output<string>();
+
+    protected totalCount: number = null;
+    protected importDone: boolean;
+    protected summary: BackendImportSummary[];
+    protected previewColumns: BackendImportHeader[];
+    protected dataSource: Observable<BackendImportIdentifiedRow[]> = of([]);
+    protected uploadButton: boolean;
     protected selectedEncoding = 'utf-8';
     protected selectedColumnSeparator = '';
     protected selectedTextSeparator = '"';
-    private selectedConfig$ = new BehaviorSubject<{ encoding: string; columnSeparator: string; textSeparator: string }>(
-        {
-            encoding: 'utf-8',
-            columnSeparator: '',
-            textSeparator: '"'
-        }
-    );
 
-    /**
-     * The actual headers of the preview, as they were delivered by the backend.
-     */
-    public get previewColumns(): BackendImportHeader[] {
-        return this._previewColumns;
-    }
-
-    /**
-     * The summary of the preview, as it was delivered by the backend.
-     */
-    public get summary(): BackendImportSummary[] {
-        return this._summary;
-    }
-
-    /**
-     * The rows of the preview, which were delivered by the backend.
-     * Affixed with fake ids for the purpose of displaying them correctly.
-     */
-    public get rows(): BackendImportIdentifiedRow[] {
-        return this._rows;
-    }
-
-    /**
-     * Client side information on the required fields of this import.
-     * Generated from the information in the defaultColumns.
-     */
-    public get requiredFields(): string[] {
-        return this._requiredFields;
-    }
-
-    /**
-     * The Observable from which the views table will be calculated
-     */
-    public get dataSource(): Observable<BackendImportIdentifiedRow[]> {
-        return this._dataSource;
-    }
-
-    public searchFieldInput = input<string>('');
-
-    @Output()
-    public searchFilterUpdated = new EventEmitter<string>();
-
-    protected _totalCountObservable: Observable<number> = null;
-
-    /**
-     * Whether or not to show the filter bar
-     */
-    public showFilterBar = true;
-
-    /**
-     * Whether or not to allow horizontal scroll
-     */
-    public horizontalScroll = true;
-
-    /**
-     * Whether or not to show the header
-     */
-    public showHeader = true;
-
+    private _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
+    private _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
+    private rows: BackendImportIdentifiedRow[];
+    private tempPreviewsObservable: Subscription;
+    private importPhaseObservable: Subscription;
     /** The header's order according to how they are displayed on the template file */
     private headersConfig = [
         { header: 'title', size: 50 },
@@ -181,53 +120,38 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
         { header: 'comment', size: 500 }
     ];
 
-    private tempPreviewsObservable: Subscription;
-    protected importDone: boolean;
-    protected _state: BackendImportPhase = BackendImportPhase.LOADING_PREVIEW;
-    protected _summary: BackendImportSummary[];
-    protected _rows: BackendImportIdentifiedRow[];
-    protected _previewColumns: BackendImportHeader[];
-    protected _dataSource: Observable<BackendImportIdentifiedRow[]> = of([]);
-    protected _defaultColumns: ImportListHeaderDefinition[] = [];
-    protected _headers: Record<string, { default?: ImportListHeaderDefinition; preview?: BackendImportHeader }> = {};
-    protected _requiredFields: string[] = [];
-    protected uploadButton: boolean;
-    public constructor(private cd: ChangeDetectorRef) {}
+    public importer = inject(ParticipantImportService);
+    public filterService = inject(ParticipantImportFilterService);
+    public searchService = inject(ParticipantImportPreviewSearchService);
+    public vp = inject(ViewPortService);
+    protected activeMeetingIdService = inject(ActiveMeetingIdService);
+    protected dialog = inject(MatDialog);
+    protected translate = inject(TranslateService);
+    private cd = inject(ChangeDetectorRef);
 
     /**
      * Starts with a clean preview (removing any previously existing import previews)
      */
     public ngOnInit(): void {
-        this._dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
-        this.importer.currentImportPhaseObservable.subscribe(phase => {
+        this.dataSource = this.importer.previewsObservable.pipe(map(previews => this.calculateRows(previews)));
+        this.importPhaseObservable = this.importer.currentImportPhaseObservable.subscribe(phase => {
             this._state = phase;
             this.importDone = [BackendImportPhase.FINISHED, BackendImportPhase.FINISHED_WITH_WARNING].includes(phase);
         });
         this.tempPreviewsObservable = this.importer.previewsObservable.subscribe(previews => {
-            this._rows = this.calculateRows(previews);
-            this.uploadButton = previews?.some(preview => preview.state === 'error') ? true : false;
-            this._totalCountObservable = this.dataSource?.pipe(map(items => items?.length));
-            if (!(this._state === BackendImportPhase.IMPORTING) && !(this._state === BackendImportPhase.FINISHED)) {
+            this.rows = this.calculateRows(previews);
+            this.totalCount = this.rows?.length;
+            this.uploadButton = previews?.some(preview => preview.state === 'error') ?? false;
+            if (
+                !(this._state === BackendImportPhase.IMPORTING) &&
+                !(
+                    this._state === BackendImportPhase.FINISHED ||
+                    this._state === BackendImportPhase.FINISHED_WITH_WARNING
+                )
+            ) {
                 this.fillPreviewData(previews);
             }
-            this.setHeaders({ preview: this._previewColumns });
-        });
-    }
-
-    public ngAfterViewInit(): void {
-        let previousConfig = this.selectedConfig$.value;
-        this.selectedConfig$.subscribe(options => {
-            if (
-                options.columnSeparator !== previousConfig?.columnSeparator ||
-                options.encoding !== previousConfig?.encoding ||
-                options.textSeparator !== previousConfig?.textSeparator
-            ) {
-                this.importer.columnSeparator = options.columnSeparator;
-                this.importer.encoding = options.encoding;
-                this.importer.textSeparator = options.textSeparator;
-                this.importer.refreshFile();
-                previousConfig = options;
-            }
+            this.setHeaders({ preview: this.previewColumns });
         });
     }
 
@@ -237,6 +161,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
     public ngOnDestroy(): void {
         this.importDone = undefined;
         this.tempPreviewsObservable.unsubscribe();
+        this.importPhaseObservable.unsubscribe();
         this.importer.clearPreview();
         this.importer.clearFile();
         this.importer.clearAll();
@@ -244,7 +169,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
 
     public openCsvConfig(): void {
         const menu = this.csvConfigMenu();
-        this.viewList().sortFilterBarComponent.closeFilterMenu();
         if (menu.opened) {
             menu.close();
         } else {
@@ -443,7 +367,6 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
     }
 
     protected containsError(entry: any, def: string): boolean {
-        this.cd.markForCheck();
         const value = entry?.[def];
         if (!value) return false;
         if (Array.isArray(value)) {
@@ -468,7 +391,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
                 return this.getErrorDescription(row) ?? _(`The affected columns will not be imported.`);
             case BackendImportState.New:
                 return (
-                    this.translate.instant(this.modelName) +
+                    this.translate.instant('Participant') +
                     ` ` +
                     (this._state !== BackendImportPhase.FINISHED
                         ? this.translate.instant(`will be created`) // item will be updated
@@ -478,7 +401,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
                 return this.updatedRowTooltip();
             case BackendImportState.Unchanged:
                 return (
-                    this.translate.instant(this.modelName) +
+                    this.translate.instant('Participant') +
                     ` ` +
                     (this._state !== BackendImportPhase.FINISHED
                         ? this.translate.instant(`will not be changed`) // item will not be changed
@@ -486,7 +409,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
                 );
             case BackendImportState.Referenced:
                 return (
-                    this.translate.instant(this.modelName) +
+                    this.translate.instant('Participant') +
                     ` ` +
                     (this._state !== BackendImportPhase.FINISHED
                         ? this.translate.instant(`will be referenced`) // item will be referenced
@@ -499,7 +422,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
 
     protected updatedRowTooltip(): string {
         return (
-            this.translate.instant(this.modelName) +
+            this.translate.instant('Participant') +
             ` ` +
             (this._state !== BackendImportPhase.FINISHED
                 ? this.translate.instant(`will be updated`) // item will be updated
@@ -509,12 +432,12 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
 
     protected fillPreviewData(previews: BackendImportPreview[]): void {
         if (!previews || !previews.length) {
-            this._previewColumns = undefined;
-            this._summary = undefined;
-            this._rows = undefined;
+            this.previewColumns = undefined;
+            this.summary = undefined;
+            this.rows = undefined;
         } else {
             const orderMap = new Map(this.headersConfig.map((property, index) => [property.header, index]));
-            this._previewColumns = (previews[0]?.headers ?? this._previewColumns)
+            this.previewColumns = (previews[0]?.headers ?? this.previewColumns)
                 .filter(header => !header.is_hidden)
                 .sort((a, b) => {
                     const aIndex = orderMap.get(a.property) ?? this.headersConfig.length;
@@ -527,44 +450,40 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
     }
 
     private transformSummary(previews: BackendImportPreview[]): void {
-        this._summary = undefined;
-        this._summary = previews.some(preview => preview.statistics)
+        this.summary = undefined;
+        const statistics = previews.some(preview => preview.statistics)
             ? previews.flatMap(preview => preview.statistics).filter(point => point?.value)
             : [];
-        const counts = [0, 0];
-        this.rows.filter(participant => {
-            if (participant.state === BackendImportState.Done) {
-                counts[0] += 1;
-            } else if (participant.state === BackendImportState.Referenced) {
-                counts[1] += 1;
-            }
-        });
-        const error = this._summary.find(item => item.name === 'error');
-        const addIfMissing: (...items: any[]) => void = (...items) => {
-            for (const [name, value] of items) {
-                if (value > 0 && !this._summary.some(item => item.name === name)) {
-                    this._summary.push({ name, value });
+        const counts = this.rows.reduce(
+            (accumulator, participant) => {
+                if (participant.state === BackendImportState.Done) {
+                    accumulator.updated++;
+                } else if (participant.state === BackendImportState.Referenced) {
+                    accumulator.referenced++;
                 }
-            }
-        };
-        this._summary.map(item => {
-            if (item.name === 'created') {
-                item.name = 'new';
-            }
-            if (counts[0] > 0 && item.name === 'updated') {
-                item.value = counts[0];
-            } else {
-                this._summary = this.summary.filter(item => item.name !== 'updated');
-            }
-            if (counts[1] > 0 && item.name === 'referenced') {
-                item.value = counts[1];
-            } else {
-                this._summary = this.summary.filter(item => item.name !== 'referenced');
-            }
-        });
-        addIfMissing(['updated', counts[0]], ['referenced', counts[1]]);
-        this._summary = this._summary.filter(item => item.name !== 'error');
-        this._summary.push({ name: error?.name, value: error?.value });
+
+                return accumulator;
+            },
+            { updated: 0, referenced: 0 }
+        );
+        const error = statistics.find(item => item.name === 'error');
+        const summary = statistics
+            .filter(item => item.name !== 'error')
+            .map(item => ({
+                ...item,
+                name: item.name === 'created' ? 'new' : item.name
+            }))
+            .filter(item => item.name !== 'updated' && item.name !== 'referenced');
+        if (counts.updated > 0) {
+            summary.push({ name: 'updated', value: counts.updated });
+        }
+        if (counts.referenced > 0) {
+            summary.push({ name: 'referenced', value: counts.referenced });
+        }
+        if (error) {
+            summary.push(error);
+        }
+        this.summary = summary;
     }
 
     protected calculateRows(previews: BackendImportPreview[]): ViewImportedParticipant[] {
@@ -616,14 +535,16 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
                     })
                     .afterClosed();
             }
-        } catch {}
+        } catch {
+            e => e;
+        }
         this.cd.detectChanges();
         ref.close();
     }
 
     protected isReferenced(row: ViewImportedParticipant): boolean {
-        if (row.state === 'error') return false;
-        if (row.data?.['username']['info'] === 'referenced') {
+        if (row.state === BackendImportState.Error) return false;
+        if (row.data?.['username']?.['info'] === 'referenced') {
             row.setState = BackendImportState.Referenced;
             return true;
         }
@@ -641,8 +562,11 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
         return false;
     }
 
-    protected checkChanges(participant: ViewImportedParticipant, headerName?: string): boolean | object {
-        const changes = {};
+    protected checkChanges(
+        participant: ViewImportedParticipant,
+        headerName?: string
+    ): boolean | ['autorenew', Record<string, unknown>] {
+        const changes: Record<string, unknown> = {};
         for (const key of Object.keys(participant.data)) {
             if (Array.isArray(participant.data[key])) {
                 participant.data[key].map(item => {
@@ -670,23 +594,17 @@ export class ParticipantImportListPreviewComponent implements OnInit, AfterViewI
     }
 
     public onEncodingChange(value: string): void {
-        this.selectedConfig$.next({
-            ...this.selectedConfig$.value,
-            encoding: value
-        });
+        this.importer.encoding = value;
+        this.importer.refreshFile();
     }
 
-    public onTextSeparatorChange(value): void {
-        this.selectedConfig$.next({
-            ...this.selectedConfig$.value,
-            textSeparator: value
-        });
+    public onTextSeparatorChange(value: string): void {
+        this.importer.textSeparator = value;
+        this.importer.refreshFile();
     }
 
-    public onColumnSeparatorChange(value): void {
-        this.selectedConfig$.next({
-            ...this.selectedConfig$.value,
-            columnSeparator: value
-        });
+    public onColumnSeparatorChange(value: string): void {
+        this.importer.columnSeparator = value;
+        this.importer.refreshFile();
     }
 }

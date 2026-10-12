@@ -16,13 +16,13 @@
 <div class="static-sort-filter-bar">
     <os-view-list
         [filterService]="filterService"
-        [horizontalScroll]="horizontalScroll"
+        [horizontalScroll]="true"
         [listObservable]="dataSource"
         [searchFieldInput]="searchFieldInput()"
         [searchService]="searchService"
-        [showFilterBar]="showFilterBar"
-        [showHeader]="showHeader"
-        [totalCount]="_totalCountObservable | async"
+        [showFilterBar]="true"
+        [showHeader]="true"
+        [totalCount]="totalCount"
         [vScrollFixed]="50"
         (searchFilterUpdated)="searchFilterUpdated.emit($event)"
     >
@@ -53,15 +53,8 @@
         </div>
         <div class="filter-bar-drawer-slot">
             <mat-drawer #csvConfigMenu autoFocus="false" mode="push" position="end">
-                <div
-                    class="custom-table-header filter-menu-head"
-                    role="none"
-                    (click)="csvConfigMenu.opened ? csvConfigMenu.close() : csvConfigMenu.open()"
-                >
-                    <span
-                        tabindex="0"
-                        (keyup.enter)="csvConfigMenu.opened ? csvConfigMenu.close() : csvConfigMenu.open()"
-                    >
+                <div class="custom-table-header filter-menu-head" role="none" (click)="openCsvConfig()">
+                    <span tabindex="0" (keyup.enter)="openCsvConfig()">
                         <mat-icon>keyboard_arrow_right</mat-icon>
                     </span>
                 </div>
@@ -69,8 +62,7 @@
                     <!-- ENCODING -->
                     <h2>{{ 'File encoding' | translate }}</h2>
                     <mat-radio-group
-                        class="radio-group"
-                        style="display: flex; flex-direction: column"
+                        class="radio-group encoding-options-display"
                         [(ngModel)]="selectedEncoding"
                         (ngModelChange)="onEncodingChange($event)"
                     >
@@ -184,101 +176,58 @@
                     <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) | translate }}</div>
                     @if (entry && (entry[def] || type === 'boolean')) {
                         <div class="flex-vertical-center">
-                            @if (getHeader(def).is_list && entry[def]) {
-                                @for (item of entry[def]; track item; let last = $last; let index = $index) {
+                            @let header = getHeader(def);
+                            @let headerType = header.type;
+                            @let entryDef = entry[def];
+                            @if (header.is_list && entryDef) {
+                                @for (item of entryDef; track item; let last = $last) {
                                     @let icon = getEntryIcon(item);
-                                    <span style="display: flex">
-                                        {{ entry[def].value }}
-                                        @if (getHeader(def).is_object) {
-                                            @if (getHeader(def).type === 'string') {
-                                                {{ item.value }}
-                                            }
-                                            @if (getHeader(def).type === 'number') {
-                                                {{ item.value }}
-                                            }
-                                            @if (getHeader(def).type === 'date') {
-                                                {{ item.value }}
-                                            }
-                                            @if (getHeader(def).type === 'boolean') {
-                                                <mat-checkbox disabled [checked]="item.value" />
-                                            }
-                                        } @else {
-                                            @if (getHeader(def).type === 'string') {
-                                                {{ item.value }}
-                                            }
-                                            @if (getHeader(def).type === 'number') {
-                                                {{ item.value }}
-                                            }
-                                            @if (getHeader(def).type === 'decimal') {
-                                                {{ this.getShortenedDecimal(entry[def].value) }}
-                                            }
-                                            @if (getHeader(def).type === 'date') {
-                                                {{ item.value }}
-                                            }
-                                            @if (getHeader(def).type === 'boolean') {
-                                                <mat-checkbox disabled [checked]="item.value" />
-                                            }
-                                        }
-                                        <mat-icon
-                                            class="lower-margin-top"
-                                            color="accent"
-                                            inline
-                                            [class.error-icon]="icon === 'error_outline'"
-                                            [class.os-green]="icon === 'add_circle_outline'"
-                                            [class.os-yellow]="icon === 'autorenew'"
-                                        >
-                                            {{ icon }}
-                                        </mat-icon>
-                                        @if (!last && index >= 0) {
+                                    @let color = getColorIcon(entry[def]);
+                                    <span class="flex">
+                                        {{ item.value }}
+                                        <ng-container
+                                            [ngTemplateOutlet]="iconTemplate"
+                                            [ngTemplateOutletContext]="{
+                                                icon: icon,
+                                                color: color
+                                            }"
+                                        />
+                                        @if (!$last) {
                                             <div>,&nbsp;</div>
                                         }
                                     </span>
                                 }
                             }
                             <span>
-                                @if (!getHeader(def).is_list && entry[def] !== undefined) {
-                                    @if (getHeader(def).is_object) {
-                                        @let icon =
-                                            getActionIconEntry(entry?.[def]) === 'error_outline'
-                                                ? 'error_outline'
-                                                : changes?.[0] === 'autorenew'
-                                                  ? 'autorenew'
-                                                  : getActionIconEntry(entry[def]);
-                                        <div class="cell-wrapper">
-                                            <div>
-                                                @if (getHeader(def).type === 'string') {
-                                                    {{ entry[def].value }}
-                                                }
-                                                @if (getHeader(def).type === 'number') {
-                                                    {{ entry[def].value }}
-                                                }
-                                                @if (getHeader(def).type === 'decimal') {
-                                                    {{ this.getShortenedDecimal(entry[def].value) }}
-                                                }
-                                                @if (getHeader(def).type === 'date') {
-                                                    {{ entry[def].value }}
-                                                }
-                                                @if (getHeader(def).type === 'boolean') {
-                                                    <mat-checkbox disabled [checked]="entry[def].value" />
-                                                }
-                                            </div>
-                                            <div>
-                                                @if (icon !== '') {
-                                                    @let color = getColorIcon(entry[def]);
-                                                    <mat-icon
-                                                        class="lower-margin-top"
-                                                        inline
-                                                        [class.error-icon]="icon === 'error_outline'"
-                                                        [class.os-green]="icon === 'add_circle_outline'"
-                                                        [class.os-yellow]="icon === 'autorenew'"
-                                                        [color]="color"
-                                                    >
-                                                        {{ icon }}
-                                                    </mat-icon>
-                                                }
-                                            </div>
+                                @if (!header.is_list && entryDef !== undefined && header.is_object) {
+                                    @let actionIconEntry = getActionIconEntry(entry?.[def]);
+                                    <div class="cell-wrapper">
+                                        <div>
+                                            @if (headerType === 'decimal') {
+                                                {{ this.getShortenedDecimal(entryDef.value) }}
+                                            } @else if (headerType === 'boolean') {
+                                                <mat-checkbox disabled [checked]="entryDef.value" />
+                                            } @else {
+                                                {{ entryDef.value }}
+                                            }
                                         </div>
-                                    }
+                                        <div>
+                                            @let icon =
+                                                actionIconEntry === 'error_outline'
+                                                    ? 'error_outline'
+                                                    : (changes?.[0] ?? actionIconEntry);
+                                            @if (icon !== '') {
+                                                @let color = getColorIcon(entry[def]);
+                                                <ng-container
+                                                    [ngTemplateOutlet]="iconTemplate"
+                                                    [ngTemplateOutletContext]="{
+                                                        icon: icon,
+                                                        color: color
+                                                    }"
+                                                />
+                                            }
+                                        </div>
+                                    </div>
                                 }
                             </span>
                         </div>
@@ -289,13 +238,12 @@
                 *osScrollingTableCell="'errors'; row as row; config: { width: 100, position: START_POSITION }"
                 class="flex-vertical-center icon-container"
             >
-                <div *osScrollingTableCellLabel style="text-align: center; width: 100%">Action</div>
+                <div *osScrollingTableCellLabel class="text-align-center full-width">Action</div>
                 @if (row.state === 'error') {
                     <mat-icon class="red-warning-text" matTooltipPosition="right" [matTooltip]="getRowTooltip(row)">
                         {{ getActionIconRow(row) }}
                     </mat-icon>
-                }
-                @if (row.state !== 'error' && row.messages.length) {
+                } @else if (row.messages?.length) {
                     <mat-icon class="warn" matTooltipPosition="right" [matTooltip]="getWarningRowTooltip(row)">
                         warning
                     </mat-icon>
@@ -308,18 +256,12 @@
                     >
                         merge
                     </mat-icon>
-                    @let icon = checkChanges(row);
-                    @if (icon) {
-                        <mat-icon
-                            matTooltipPosition="right"
-                            [class.os-yellow]="icon"
-                            [matTooltip]="updatedRowTooltip()"
-                        >
+                    @if (checkChanges(row)) {
+                        <mat-icon class="os-yellow" matTooltipPosition="right" [matTooltip]="updatedRowTooltip()">
                             {{ 'autorenew' }}
                         </mat-icon>
                     }
-                }
-                @if (row.state !== 'error' && row.state !== 'referenced') {
+                } @else if (row.state !== 'error') {
                     <mat-icon
                         matTooltipPosition="right"
                         [matTooltip]="getRowTooltip(row)"
@@ -335,17 +277,17 @@
             @let cols = shortenSummary(summary);
             @for (col of cols; track col; let i = $index) {
                 @let colInfo = getSummaryInformation(col.name);
-                <mat-icon inline style="margin-top: 13px; font-size: x-large" [ngClass]="colInfo[1]">
+                <mat-icon class="margin-top-13 font-size-large" inline [ngClass]="colInfo[1]">
                     {{ colInfo[0] }}
                 </mat-icon>
-                <div style="margin-bottom: 0px">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
+                <div class="margin-bottom-0">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
             }
             @if (importDone) {
                 <div class="import-successful">
                     {{ 'Import successful' | translate }}
                 </div>
             }
-            <div style="margin-left: auto; margin-right: 15px">
+            <div class="info-button">
                 <button matButton (click)="openDialog()">
                     <mat-icon color="accent">info</mat-icon>
                     <mat-label>{{ 'INFO' | translate }}</mat-label>
@@ -357,7 +299,7 @@
 
 <ng-template #ImportDialog>
     <div class="import-dialog">
-        <h2 class="import-dialog-title" mat-dialog-title style="margin-bottom: 1em">
+        <h2 class="import-dialog-title" mat-dialog-title>
             {{ 'Importing participants' | translate }}
         </h2>
 
@@ -384,7 +326,7 @@
         <h4 class="summary-dialog-subtitle">
             {{ summary[0]?.value }}&nbsp;{{ 'participants have been processed' | translate }}
         </h4>
-        <div style="justify-content: center; margin-bottom: 22px">
+        <div class="summary-dialog-content-wrapper">
             <mat-dialog-content class="summary-dialog-content">
                 <div>
                     @let shortenedSummary = shortenSummary(summary);
@@ -405,4 +347,17 @@
             }
         </div>
     </div>
+</ng-template>
+
+<ng-template #iconTemplate let-color="color" let-icon="icon">
+    <mat-icon
+        class="lower-margin-top"
+        inline
+        [class.error-icon]="icon === 'error_outline'"
+        [class.os-green]="icon === 'add_circle_outline'"
+        [class.os-yellow]="icon === 'autorenew'"
+        [color]="color"
+    >
+        {{ icon }}
+    </mat-icon>
 </ng-template>

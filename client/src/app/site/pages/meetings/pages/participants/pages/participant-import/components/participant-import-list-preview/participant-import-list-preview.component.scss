@@ -62,7 +62,12 @@ $os-yellow: rgb(255, 193, 7);
         color: var(--theme-accent-400);
         font-size: 20px;
         font-weight: 500;
-        margin-bottom: 0;
+        margin-bottom: 1em;
+    }
+
+    .summary-dialog-content-wrapper {
+        justify-content: center;
+        margin-bottom: 22px;
     }
 
     .import-dialog-content {
@@ -158,6 +163,18 @@ $os-yellow: rgb(255, 193, 7);
     align-items: center;
     overflow: hidden;
 
+    .margin-top-13 {
+        margin-top: 13px;
+    }
+
+    .font-size-large {
+        font-size: x-large;
+    }
+
+    .margin-bottom-0 {
+        margin-bottom: 0px;
+    }
+
     > div {
         display: flex;
     }
@@ -171,10 +188,32 @@ $os-yellow: rgb(255, 193, 7);
         font-size: larger;
         color: $os-green;
     }
+
+    .info-button {
+        margin-left: auto;
+        margin-right: 15px;
+    }
 }
 
 .button-positions {
     display: flex;
     flex-direction: row;
     width: max-content;
+}
+
+.encoding-options-display {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex {
+    display: flex;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+.full-width {
+    width: 100%;
 }
