@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIcon } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 
 import { ScrollingTableComponent } from './components/scrolling-table/scrolling-table.component';
@@ -28,7 +29,8 @@ const DECLARATIONS = [
         PortalModule,
         MatTableModule,
         MatCheckboxModule,
-        ScrollingTableServiceModule
+        ScrollingTableServiceModule,
+        MatIcon
     ],
     exports: DECLARATIONS
 })
