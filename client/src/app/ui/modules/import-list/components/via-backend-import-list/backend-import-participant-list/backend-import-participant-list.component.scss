@@ -1,7 +1,14 @@
 @use 'src/assets/styles/tables.scss';
 
-:host {
-    --os-row-height: 50px;
+.mat-content-display {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: auto;
+
+    .instructions-container {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .instructions {
@@ -15,10 +22,6 @@
     max-width: 210px;
 }
 
-.text-align-center {
-    text-align: center;
-}
-
 button mat-label {
     padding-right: 5px;
 }
@@ -27,26 +30,6 @@ button mat-label {
     display: flex;
     align-items: center;
     margin-left: 8px;
-}
-
-@keyframes rotation {
-    from {
-        transform: rotate(0deg);
-    }
-
-    to {
-        transform: rotate(359deg);
-    }
-}
-
-.table-title-column {
-    vertical-align: top;
-}
-
-.list-field-entry {
-    margin-left: 20px;
-    margin-right: 20px;
-    display: inline-block;
 }
 
 .dropdiv {
@@ -69,8 +52,4 @@ button mat-label {
     .dropdiv-label {
         color: var(--theme-accent-400);
     }
-}
-
-.dropdiv.processing {
-    display: none;
 }

@@ -1,6 +1,3 @@
-$os-green: rgb(15, 228, 15);
-$os-yellow: rgb(255, 193, 7);
-
 @mixin scrolling-table-style() {
     box-sizing: border-box;
 
@@ -96,14 +93,6 @@ $os-yellow: rgb(255, 193, 7);
     overflow-x: auto;
     position: relative;
     width: 100%;
-}
-
-.os-green {
-    color: $os-green;
-}
-
-.os-yellow {
-    color: $os-yellow;
 }
 
 .table-body {

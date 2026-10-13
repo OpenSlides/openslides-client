@@ -15,13 +15,7 @@
                         <div class="scrolling-table-header">
                             <div
                                 class="flex-vertical-center placeholder divider-bottom scrolling-table-header"
-                                [ngStyle]="
-                                    horizontalScroll
-                                        ? {
-                                              ...getNgStyle()
-                                          }
-                                        : getNgStyle()
-                                "
+                                [ngStyle]="getNgStyle()"
                             >
                                 @for (definition of definitions; track definition; let first = $first) {
                                     <div

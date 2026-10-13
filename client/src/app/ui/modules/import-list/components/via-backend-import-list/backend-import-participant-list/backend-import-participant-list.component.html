@@ -1,7 +1,7 @@
 <mat-card class="os-card import-table spacer-bottom-60">
     <mat-card-content>
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; width: auto">
-            <div style="display: flex; flex-direction: column">
+        <div class="mat-content-display">
+            <div class="instructions-container">
                 <h3 class="instructions">{{ 'Example (template)' | translate }}</h3>
                 <div>
                     <input
@@ -30,7 +30,7 @@
                     </button>
                 </div>
             </div>
-            <div style="display: flex; flex-direction: column">
+            <div class="instructions-container">
                 <h3 class="instructions">{{ 'Description of columns' | translate }}</h3>
                 <div>
                     <button class="outlined-border" matButton outlined (click)="openDialog()">
@@ -40,7 +40,7 @@
                 </div>
                 <span class="descriptionColumns" [innerHTML]="columnsInformation() | trust: 'html'"></span>
             </div>
-            <div style="display: flex; flex-direction: column">
+            <div class="instructions-container">
                 <h3 class="instructions">{{ 'Instructions for import file' | translate }}</h3>
                 <span [innerHTML]="instructionsForImport() | trust: 'html'"></span>
             </div>

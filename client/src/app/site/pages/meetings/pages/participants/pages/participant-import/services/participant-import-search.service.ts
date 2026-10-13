@@ -1,24 +1,25 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { ListSearchService } from '@app/ui/modules/list/services/list-search.service';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class ParticipantImportPreviewSearchService extends ListSearchService<any> {
+import { ViewImportedParticipant } from '../view-models/view-participant-import';
+
+@Service()
+export class ParticipantImportPreviewSearchService extends ListSearchService<ViewImportedParticipant> {
     public constructor() {
         super(
             [
-                `short_name`,
-                `first_name`,
-                `username`,
-                `email`,
-                `saml_id`,
-                `member_number`,
-                `externalString`,
-                `homeCommitteeName`,
-                `gender`,
-                `title`,
-                `structure_level`
+                'email',
+                'title',
+                'gender',
+                'groups',
+                'number',
+                'saml_id',
+                'username',
+                'first_name',
+                'home_commitee',
+                'member_number',
+                'home_committee',
+                'structure_level'
             ],
             []
         );

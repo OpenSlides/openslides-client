@@ -14,7 +14,7 @@ import {
     providedIn: 'root'
 })
 export class ParticipantImportFilterService extends BaseFilterListService<any> {
-    protected storageKey = `participantImportPreview`;
+    protected storageKey = 'participantImportPreview';
     public constructor(store: ActiveFiltersService) {
         super(store);
     }
@@ -28,122 +28,123 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
                     { condition: IMPORTED_PARTICIPANT_STATES_ITERABLE[0], label: IMPORTED_PARTICIPANT_STATES[0] },
                     { condition: IMPORTED_PARTICIPANT_STATES_ITERABLE[1], label: IMPORTED_PARTICIPANT_STATES[1] },
                     { condition: IMPORTED_PARTICIPANT_STATES_ITERABLE[2], label: IMPORTED_PARTICIPANT_STATES[2] },
-                    { condition: IMPORTED_PARTICIPANT_STATES_ITERABLE[3], label: IMPORTED_PARTICIPANT_STATES[3] }
+                    { condition: IMPORTED_PARTICIPANT_STATES_ITERABLE[3], label: IMPORTED_PARTICIPANT_STATES[3] },
+                    { condition: IMPORTED_PARTICIPANT_STATES_ITERABLE[4], label: IMPORTED_PARTICIPANT_STATES[4] }
                 ]
             },
             {
-                property: `isPresent`,
-                label: _(`Presence`),
+                property: 'isPresent',
+                label: _('Presence'),
                 options: [
-                    { condition: true, label: _(`Is present`) },
-                    { condition: [false, null], label: _(`Is not present`) }
+                    { condition: true, label: _('Is present') },
+                    { condition: [false, null], label: _('Is not present') }
                 ]
             },
             {
-                property: `hasGroups`,
-                label: _(`Groups`),
+                property: 'hasGroups',
+                label: _('Groups'),
                 options: [
-                    { condition: true, label: _(`Has groups`) },
-                    { condition: [false, null], label: _(`Has no groups`) }
+                    { condition: true, label: _('Has groups') },
+                    { condition: [false, null], label: _('Has no groups') }
                 ]
             },
             {
-                property: `isLockedOut`,
-                label: `Locked out`,
+                property: 'isLockedOut',
+                label: 'Locked out',
                 options: [
-                    { condition: true, label: `Is locked out` },
-                    { condition: [false, null], label: `Is not locked out` }
+                    { condition: true, label: 'Is locked out' },
+                    { condition: [false, null], label: 'Is not locked out' }
                 ]
             },
             {
-                property: `isActive`,
-                label: _(`Active`),
+                property: 'isActive',
+                label: _('Active'),
                 options: [
-                    { condition: true, label: _(`Is active`) },
-                    { condition: [false, null], label: _(`Is not active`) }
+                    { condition: true, label: _('Is active') },
+                    { condition: [false, null], label: _('Is not active') }
                 ]
             },
             {
-                property: `isPhysicalPerson`,
-                label: _(`Committee`),
+                property: 'isPhysicalPerson',
+                label: _('Committee'),
                 options: [
-                    { condition: true, label: _(`Is not a committee`) },
-                    { condition: [false, null], label: _(`Is a committee`) }
+                    { condition: true, label: _('Is not a committee') },
+                    { condition: [false, null], label: _('Is a committee') }
                 ]
             },
             {
-                property: `gender`,
-                label: _(`Gender`),
+                property: 'gender',
+                label: _('Gender'),
                 options: [
                     { condition: GENDER_FITLERABLE[0], label: GENDERS[0] },
                     { condition: GENDER_FITLERABLE[1], label: GENDERS[1] },
                     { condition: GENDER_FITLERABLE[2], label: GENDERS[2] },
                     { condition: GENDER_FITLERABLE[3], label: GENDERS[3] },
-                    { condition: null, label: _(`not specified`) }
+                    { condition: null, label: _('not specified') }
                 ]
             },
             {
-                property: `hasMemberNumber`,
-                label: _(`Membership number`),
+                property: 'hasMemberNumber',
+                label: _('Membership number'),
                 options: [
-                    { condition: true, label: _(`Has a membership number`) },
-                    { condition: [false, null], label: _(`Has no membership number`) }
+                    { condition: true, label: _('Has a membership number') },
+                    { condition: [false, null], label: _('Has no membership number') }
                 ]
             },
             {
-                property: `hasEmail`,
-                label: _(`Email address`),
+                property: 'hasEmail',
+                label: _('Email address'),
                 options: [
-                    { condition: true, label: _(`Has an email address`) },
-                    { condition: [false, null], label: _(`Has no email address`) }
+                    { condition: true, label: _('Has an email address') },
+                    { condition: [false, null], label: _('Has no email address') }
                 ]
             },
             {
-                property: `hasSamlId`,
-                label: _(`SSO`),
+                property: 'hasSamlId',
+                label: _('SSO'),
                 options: [
-                    { condition: true, label: _(`Has SSO identification`) },
-                    { condition: [false, null], label: _(`Has no SSO identification`) }
+                    { condition: true, label: _('Has SSO identification') },
+                    { condition: [false, null], label: _('Has no SSO identification') }
                 ]
             },
             {
-                property: `changedVoteWeight`,
-                label: _(`Vote weight`),
+                property: 'changedVoteWeight',
+                label: _('Vote weight'),
                 options: [
-                    { condition: true, label: _(`Has changed vote weight`) },
-                    { condition: [false, null], label: _(`Has unchanged vote weight`) }
+                    { condition: true, label: _('Has changed vote weight') },
+                    { condition: [false, null], label: _('Has unchanged vote weight') }
                 ]
             },
             {
-                property: `hasTitle`,
-                label: _(`Title`),
+                property: 'hasTitle',
+                label: _('Title'),
                 options: [
-                    { condition: true, label: _(`Has a title`) },
-                    { condition: [false, null], label: _(`Has no title`) }
+                    { condition: true, label: _('Has a title') },
+                    { condition: [false, null], label: _('Has no title') }
                 ]
             },
             {
-                property: `hasPronoun`,
-                label: _(`Pronoun`),
+                property: 'hasPronoun',
+                label: _('Pronoun'),
                 options: [
-                    { condition: true, label: _(`Has pronoun`) },
-                    { condition: [false, null], label: _(`Has no pronoun`) }
+                    { condition: true, label: _('Has pronoun') },
+                    { condition: [false, null], label: _('Has no pronoun') }
                 ]
             },
             {
-                property: `hasUsername`,
-                label: _(`Username`),
+                property: 'hasUsername',
+                label: _('Username'),
                 options: [
-                    { condition: true, label: _(`Has username`) },
-                    { condition: [false, null], label: _(`Has no username`) }
+                    { condition: true, label: _('Has username') },
+                    { condition: [false, null], label: _('Has no username') }
                 ]
             },
             {
-                property: `hasHomeCommittee`,
-                label: _(`Home committee`),
+                property: 'hasHomeCommittee',
+                label: _('Home committee'),
                 options: [
-                    { condition: true, label: _(`Has home committee`) },
-                    { condition: [false, null], label: _(`Has no home committee`) }
+                    { condition: true, label: _('Has home committee') },
+                    { condition: [false, null], label: _('Has no home committee') }
                 ]
             }
         ];

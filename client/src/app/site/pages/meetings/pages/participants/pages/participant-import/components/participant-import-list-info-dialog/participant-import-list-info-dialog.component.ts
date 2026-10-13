@@ -19,18 +19,14 @@ import {
     imports: [HeadBarModule, ListModule, AsyncPipe, TranslatePipe, MatDialogModule]
 })
 export class ParticipantImportListInfoDialogComponent {
-    public _defaultColumns: ImportListHeaderDefinition[] = participantColumns.map(header => ({
+    public readonly defaultColumns: ImportListHeaderDefinition[] = participantColumns.map(header => ({
         property: header,
         label: (participantHeadersAndVerboseNames as string)[header],
         description: (participantColumnsDescriptions as string)[header],
         isTableColumn: true
     }));
 
-    public get defaultColumns(): ImportListHeaderDefinition[] {
-        return this._defaultColumns;
-    }
-
-    public isString(value: any): value is string {
+    public isString(value: unknown): value is string {
         return typeof value === `string`;
     }
 }

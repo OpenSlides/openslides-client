@@ -1,4 +1,3 @@
-import { Decimal } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
 import {
     BackendImportEntry,
@@ -11,125 +10,87 @@ export const IMPORTED_PARTICIPANT_STATES = [
     _(`New participant`),
     _(`Updated participant`),
     _('Referenced participant'),
+    _(`Unchanged participant`),
     _(`Faulty participant`)
 ];
-export const IMPORTED_PARTICIPANT_STATES_ITERABLE = [`new`, `done`, `referenced`, `error`];
+export const IMPORTED_PARTICIPANT_STATES_ITERABLE = [`new`, `done`, `referenced`, `unchanged`, `error`];
 
 export class ViewImportedParticipant implements Identifiable, BackendImportRow {
-    // This class replaces BackendImportIdentifiedRow
+    // This class wraps BackendImportIdentifiedRow
 
-    public meeting_id: number;
-    public static COLLECTION = `importedParticipant`;
+    public static readonly COLLECTION = `importedParticipant`;
 
     public state: BackendImportState;
     public messages: string[];
     public data: Record<string, BackendImportEntry | BackendImportEntry[]>;
 
     public id: number;
-    public first_name: string;
-    public last_name: string;
-    public email: string;
-    public member_number: string;
-    public number: string;
-    public vote_weight: Decimal;
-    public gender: string;
-    public pronoun: string;
-    public username: string;
-    public default_password: string;
-    public saml_id: string;
-    public home_committee: string;
-    public comment: string;
-    public title: string;
 
-    public structure_level: string[];
-    public groups: string[];
-
-    public external: boolean;
-    public is_active: boolean;
-    public is_present: boolean;
-    public is_locked_out: boolean;
-    public is_physical_person: boolean;
-
-    public constructor(preview_id: number, preview: BackendImportRow, meeting_id: number) {
-        this.meeting_id = meeting_id; // id of the meeting to import into
+    public constructor(preview_id: number, preview: BackendImportRow) {
         this.id = preview_id;
-
         this.data = preview.data;
         this.messages = preview.messages ?? [];
         this.state = preview.state;
-
-        for (const [originalKey, entry] of Object.entries(preview.data)) {
-            const key = originalKey === 'locked_out' ? 'is_'.concat(originalKey) : originalKey;
-            (this as Record<string, unknown>)[key] = Array.isArray(entry) ? entry.map(e => e['value']) : entry['value'];
-        }
-    }
-
-    public get voteWeight(): Decimal {
-        return this.vote_weight;
-    }
-
-    public get getGroups(): string[] {
-        return [this.groups['value']];
-    }
-
-    public get getStructureLevels(): string[] {
-        return this.structure_level;
     }
 
     public get changedVoteWeight(): boolean {
-        return !this.vote_weight ? true : false;
+        return !this.data?.['vote_weight'];
     }
 
     public get hasMemberNumber(): boolean {
-        return this.member_number ? true : false;
+        return !!this.data?.['member_number'];
     }
 
     public get hasTitle(): boolean {
-        return this.title?.length > 0 ? true : false;
+        return !!this.data?.['title'];
     }
 
     public get hasSamlId(): boolean {
-        return this.saml_id ? true : false;
+        return !!this.data?.['saml_id'];
     }
 
     public get hasEmail(): boolean {
-        return this.email?.length > 0 ? true : false;
+        return !!this.data?.['email'];
     }
 
     public get hasUsername(): boolean {
-        return this.username ? true : false;
+        return !!this.data?.['username'];
     }
 
     public get hasPronoun(): boolean {
-        return this.pronoun ? true : false;
+        return !!this.data?.['pronoun'];
+    }
+
+    public get gender(): any {
+        return this.data?.['gender']?.['value'];
     }
 
     public get hasHomeCommittee(): boolean {
-        return this.home_committee?.length > 0 ? true : false;
+        return !!this.data?.['home_committee'];
     }
 
     public get hasGroups(): boolean {
-        return this.getGroups.length > 0 ? true : false;
+        return !!((this.data['groups'] as BackendImportEntry[]).length > 0);
     }
 
     public get isLockedOut(): boolean {
-        return this.is_locked_out ?? false;
+        return !!this.data?.['is_locked_out'];
     }
 
     public get isPresent(): boolean {
-        return this.is_present ?? false;
+        return !!this.data?.['is_present'];
     }
 
     public get isActive(): boolean {
-        return this.is_active ?? false;
+        return !!this.data?.['is_active'];
     }
 
     public get isPhysicalPerson(): boolean {
-        return this.is_physical_person ?? false;
+        return !!this.data?.['is_physical_person'];
     }
 
     public get isExternal(): boolean {
-        return this.external ?? false;
+        return !!this.data?.['external'];
     }
 
     public set setState(value: BackendImportState) {

@@ -8,9 +8,13 @@
     text-align: center;
 }
 
+.text-align-start {
+    text-align: start;
+}
+
 .fix-size {
     height: 100%;
-    overflow: hidden;
+    overflow: auto;
     margin-bottom: 20px;
 }
 

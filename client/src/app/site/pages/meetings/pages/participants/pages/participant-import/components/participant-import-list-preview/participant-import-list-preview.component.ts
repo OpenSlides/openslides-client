@@ -173,6 +173,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             menu.close();
         } else {
             menu.open();
+            this.viewList().sortFilterBarComponent.closeFilterMenu();
         }
     }
 
@@ -489,7 +490,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     protected calculateRows(previews: BackendImportPreview[]): ViewImportedParticipant[] {
         return previews?.flatMap(preview =>
             preview.rows.map(row => {
-                const participant = new ViewImportedParticipant(row.id, row, this.activeMeetingIdService.meetingId);
+                const participant = new ViewImportedParticipant(row.id, row);
                 this.isReferenced(participant);
                 this.isUnchanged(participant);
                 return participant;
@@ -524,20 +525,18 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             ...customOptions,
             hasBackdrop: false
         });
-        try {
-            if (await this.importer.doImport()) {
-                // The close() is needed here so dialogs don't overlap if the second one opens
-                ref.close();
-                this.dialog
-                    .open(summaryDialog, {
-                        data: this.summary,
-                        ...customOptions
-                    })
-                    .afterClosed();
-            }
-        } catch {
-            e => e;
+
+        if (await this.importer.doImport()) {
+            // The close() is needed here so dialogs don't overlap if the second one opens
+            ref.close();
+            this.dialog
+                .open(summaryDialog, {
+                    data: this.summary,
+                    ...customOptions
+                })
+                .afterClosed();
         }
+
         this.cd.detectChanges();
         ref.close();
     }
