@@ -310,56 +310,65 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
     }
 
     private async updateUser(): Promise<void> {
-        if (this.operator.hasPerms(Permission.userCanUpdate)) {
-            this.checkForGroups(this.personalInfoFormValue);
-            const isPresent = this.personalInfoFormValue.is_present || false;
-            if (this.personalInfoFormValue.vote_delegated_to_id === 0) {
-                this.personalInfoFormValue.vote_delegated_to_id = null;
-            }
-            const payload = {
-                ...this.personalInfoFormValue,
-                vote_delegated_to_id:
-                    this.repo.getViewModel(this.personalInfoFormValue?.vote_delegated_to_id)?.getMeetingUser().id ||
-                    null,
-                vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
-                    ? this.personalInfoFormValue.vote_delegations_from_ids
-                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
-                          .filter(id => !!id)
-                    : []
-            };
-            if (payload.member_number === ``) {
-                payload.member_number = null;
-            }
-            if (payload.gender_id === 0) {
-                payload.gender_id = null;
-            }
-            const title = _(`This action will remove you from one or more groups.`);
-            const content = _(
-                `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
-            );
-            if (
-                !(
-                    this.user.id === this.operator.operatorId &&
-                    areGroupsDiminished(this.operator.user.group_ids(), payload.group_ids, this.activeMeeting)
-                ) ||
-                (await this.promptService.open(title, content))
-            ) {
-                if (
-                    this.operator.hasPerms(Permission.userCanManagePresence) &&
-                    this.personalInfoFormValue.is_present !== undefined
-                ) {
-                    await this.repo
-                        .update(payload, this.user!)
-                        .concat(this.repo.setPresent(isPresent, this.user!))
-                        .resolve();
-                } else {
-                    await this.repo.update(payload, this.user!).resolve();
-                }
-            }
-        } else {
+        if (!this.operator.hasPerms(Permission.userCanUpdate)) {
             await this.repo.updateSelf(this.personalInfoFormValue, this.user!);
+            this.onCancel();
+            return;
+        }
+        this.checkForGroups(this.personalInfoFormValue);
+        const payload = this.normalizePayload();
+        if (!(await this.confirmGroupChanges(payload))) {
+            this.onCancel();
+            return;
+        }
+        if (
+            this.operator.hasPerms(Permission.userCanManagePresence) &&
+            this.personalInfoFormValue.is_present !== undefined
+        ) {
+            const isPresent = this.personalInfoFormValue.is_present || false;
+            await this.repo.update(payload, this.user!).concat(this.repo.setPresent(isPresent, this.user!)).resolve();
+        } else {
+            await this.repo.update(payload, this.user!).resolve();
         }
         this.onCancel();
+    }
+
+    private normalizePayload(): Record<string, unknown> {
+        this.personalInfoFormValue.structure_level_ids = Array.isArray(this.personalInfoFormValue.structure_level_ids)
+            ? this.personalInfoFormValue.structure_level_ids
+            : [];
+        this.personalInfoFormValue.vote_delegated_to_id ||= null;
+        this.personalInfoFormValue.home_committee_id =
+            this.personalInfoFormValue.home_committee_id < 1 ? null : this.personalInfoFormValue.home_committee_id;
+        this.personalInfoFormValue.member_number ||= null;
+        this.personalInfoFormValue.gender_id ||= null;
+        return {
+            ...this.personalInfoFormValue,
+            vote_delegated_to_id:
+                this.repo.getViewModel(this.personalInfoFormValue.vote_delegated_to_id)?.getMeetingUser().id || null,
+            vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
+                ? this.personalInfoFormValue.vote_delegations_from_ids
+                      .map(id => this.repo.getViewModel(id).getMeetingUser().id)
+                      .filter(id => !!id)
+                : []
+        };
+    }
+
+    private async confirmGroupChanges(payload: typeof this.personalInfoFormValue): Promise<boolean> {
+        const isDiminishingOwnGroups =
+            this.user.id === this.operator.operatorId &&
+            areGroupsDiminished(this.operator.user.group_ids(), payload.group_ids, this.activeMeeting);
+
+        if (!isDiminishingOwnGroups) {
+            return true;
+        }
+
+        return this.promptService.open(
+            _(`This action will remove you from one or more groups.`),
+            _(
+                `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
+            )
+        );
     }
 
     public onCancel(): void {
