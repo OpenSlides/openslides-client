@@ -115,6 +115,7 @@
                                 formControlName="{{ searchLists[$index] }}FormControl"
                                 [keepOpen]="searchRepo.keepOpen"
                                 [repo]="searchRepo"
+                                [disabled]="!!externalUrl"
                                 [subscriptionConfig]="searchSubscriptionConfig[$index]"
                                 [wider]="searchRepo.wider"
                             ></os-repo-search-selector>
@@ -123,7 +124,7 @@
                 </mat-form-field>
             </div>
             <div class="clear-button">
-                <button aria-label="Reset" color="gray" mat-icon-button (click)="initForm()">
+                <button aria-label="Reset" color="gray" mat-icon-button (click)="internalReferenceForm.reset()">
                     <mat-icon>clear</mat-icon>
                 </button>
             </div>

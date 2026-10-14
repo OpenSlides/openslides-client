@@ -1,20 +1,28 @@
-import { ChangeDetectionStrategy, Component, Inject, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, viewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { Topic } from '@app/domain/models/topics/topic';
 import { AssignmentRepositoryService } from '@app/gateways/repositories/assignments/assignment-repository.service';
 import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { TopicRepositoryService } from '@app/gateways/repositories/topics/topic-repository.service';
+import { ViewTopic } from '@app/site/pages/meetings/pages/agenda';
 import { getAgendaListMinimalSubscriptionConfig } from '@app/site/pages/meetings/pages/agenda/agenda.subscription';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
 import { getAssignmentListMinimalSubscriptionConfig } from '@app/site/pages/meetings/pages/assignments/assignments.subscription';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { getMotionListMinimalSubscriptionConfig } from '@app/site/pages/meetings/pages/motions/motions.subscription';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { SubscribeToConfig } from '@app/site/services/model-request.service';
+import { RepoSearchSelectorComponent } from '@app/ui/modules/search-selector/components/repo-search-selector/repo-search-selector.component';
 import { TranslateService } from '@ngx-translate/core';
 
 interface EditorLinkDialogInput {
     link?: { href: string; target?: string };
     needsText?: boolean;
+    isModerationNote?: boolean;
 }
 
 export interface EditorLinkDialogOutput {
@@ -31,126 +39,109 @@ export interface EditorLinkDialogOutput {
     standalone: false
 })
 export class EditorLinkDialogComponent implements OnInit {
-    public isUpdate: boolean;
+    protected translate = inject(TranslateService);
+    protected data = inject<EditorLinkDialogInput>(MAT_DIALOG_DATA);
+    private fb = inject(FormBuilder);
+    private router = inject(Router);
+    private destroyRef = inject(DestroyRef);
+    private agendaItemRepo = inject(TopicRepositoryService);
+    private motionItemRepo = inject(MotionRepositoryService);
+    private assignmentItemRepo = inject(AssignmentRepositoryService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private dialogRef = inject(MatDialogRef<EditorLinkDialogComponent>);
 
+    public isUpdate: boolean;
     public link: { href: string; target?: string };
     public text = ``;
-
-    public internalLink: { href: string; target?: string };
-    public internalText = ``;
-
-    public canEmbed: boolean;
-
-    public toggleInternalReference: boolean;
-    public toggleExternalReference: boolean;
-
-    // Subscriptions config
-    public searchSubscriptionConfig;
-    private activeMeetingIdService = inject(ActiveMeetingIdService);
-    public subscriptionTopicConfig: SubscribeToConfig;
-    public subscriptionMotionConfig: SubscribeToConfig;
-    public subscriptionAssignmentConfig: SubscribeToConfig;
-
-    /**
-     * Boolean to decide, whether to open the extension-input and search-list.
-     */
-    public editMode = false;
-
-    /**
-     * Init Repos
-     */
-    public agendaItemRepo = inject(TopicRepositoryService);
-    public motionItemRepo = inject(MotionRepositoryService);
-    public assignmentItemRepo = inject(AssignmentRepositoryService);
-
-    public searchLists = ['Topic', 'Motion', 'Assignment'];
-    public searchRepos;
 
     /**
      * FormGroup for the search-list.
      */
-    public internalReferenceForm: UntypedFormGroup;
+    protected internalReferenceForm: UntypedFormGroup;
 
     /**
      * The selected internal item
      */
-    public item;
+    protected item: ViewTopic | ViewMotion | ViewAssignment;
 
     /**
      * Values selected by radio buttons
      */
-    public internalRadioOptions: FormGroup;
-    public selectedRepoValue = 0;
+    protected internalRadioOptions: FormGroup;
+    protected selectedRepoValue = 0;
 
     /**
      * Values for external link
      */
-    public externalLink: FormGroup;
-    public externalUrl: string;
-    public externalText: string;
+    protected externalLink = this.fb.group({
+        extUrl: this.fb.control(''),
+        extText: this.fb.control(''),
+        extDisplayMode: this.fb.control<'_self' | '_blank'>('_self')
+    });
+    protected externalUrl: string;
+    protected externalText: string;
+    protected canEmbed: boolean;
+    protected searchSubscriptionConfig: SubscribeToConfig[];
+    protected toggleInternalReference: boolean;
+    protected toggleExternalReference: boolean;
+    protected readonly searchLists = ['Topic', 'Motion', 'Assignment'];
+    protected searchRepos;
 
-    private meetingId = this.activeMeetingIdService.meetingId;
+    /**
+     * Boolean to decide, whether to open the extension-input and search-list.
+     */
+    private editMode = false;
 
-    public constructor(
-        @Inject(MAT_DIALOG_DATA) public data: EditorLinkDialogInput,
-        private dialogRef: MatDialogRef<EditorLinkDialogComponent>,
-        private router: Router,
-        private fb: FormBuilder,
-        public translate: TranslateService
-    ) {
+    private readonly externalControls = ['extUrl', 'extText', 'extDisplayMode'];
+    private readonly meetingId = this.activeMeetingIdService.meetingId;
+    private internalLink: { href: string; target?: string };
+    private internalText = ``;
+    private subscriptionTopicConfig: SubscribeToConfig = getAgendaListMinimalSubscriptionConfig(this.meetingId);
+    private subscriptionMotionConfig: SubscribeToConfig = getMotionListMinimalSubscriptionConfig(this.meetingId);
+    private subscriptionAssignmentConfig: SubscribeToConfig = getAssignmentListMinimalSubscriptionConfig(
+        this.meetingId
+    );
+
+    public constructor() {
         // External reference
-        this.link = { ...data.link };
-        this.isUpdate = !!data.link && !!data.link.href;
+        this.link = { ...this.data.link };
+        this.isUpdate = !!this.data.link && !!this.data.link.href;
         if (!this.link.target) {
             this.link.target = `_self`;
         }
-        this.externalLink = this.fb.group({
-            extUrl: new FormControl(),
-            extText: new FormControl(),
-            extDisplayMode: new FormControl()
-        });
-        this.externalLink.valueChanges.subscribe(() => {
-            this.externalUrl = this.externalLink.get('extUrl').value;
-            this.externalText = this.externalLink.get('extText').value;
-            this.link.target = this.externalLink.get('extDisplayMode').value;
+        this.externalLink.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            const { extUrl, extText, extDisplayMode } = this.externalLink.getRawValue();
+            this.externalUrl = extUrl;
+            this.externalText = extText;
+            this.link.target = extDisplayMode;
         });
 
         // Internal reference
-        this.internalLink = { ...data.link };
-        if (!this.internalLink.target) {
-            this.internalLink.target = `_blank`;
-        }
+        this.internalLink = { ...this.data.link };
         this.internalRadioOptions = this.fb.group({
             options: [0]
         });
-        this.internalRadioOptions.valueChanges.subscribe(() => {
+        this.internalRadioOptions.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.selectedRepoValue = this.internalRadioOptions.get('options').value;
         });
     }
 
     public ngOnInit(): void {
-        if ((this.canEmbed = this.embedAllowed(this.meetingId))) {
-            this.searchRepos = [this.agendaItemRepo, this.motionItemRepo, this.assignmentItemRepo];
-            this.searchSubscriptionConfig = [
-                (this.subscriptionTopicConfig = getAgendaListMinimalSubscriptionConfig(this.meetingId)),
-                (this.subscriptionMotionConfig = getMotionListMinimalSubscriptionConfig(this.meetingId)),
-                (this.subscriptionAssignmentConfig = getAssignmentListMinimalSubscriptionConfig(this.meetingId))
-            ];
-            this.initForm();
-        }
+        if (!(this.canEmbed = this.embedAllowed())) return;
+        this.searchRepos = [this.agendaItemRepo, this.motionItemRepo, this.assignmentItemRepo];
+        this.searchSubscriptionConfig = [
+            this.subscriptionTopicConfig,
+            this.subscriptionMotionConfig,
+            this.subscriptionAssignmentConfig
+        ];
+        this.initForm();
     }
 
-    private embedAllowed(meetingId: number): boolean {
-        const url = this.router.url;
-        return this.isHome(meetingId, url) || this.isTopic(url);
-    }
-
-    private isHome(meetingId: number, url: string): boolean {
-        return url === `/${meetingId}`;
-    }
-
-    private isTopic(url: string): boolean {
-        return url.includes('agenda/topics');
+    private embedAllowed(): boolean {
+        return (
+            (this.router.url === `/${this.meetingId}` || this.router.url.includes('agenda/topics')) &&
+            this.data.isModerationNote
+        );
     }
 
     public removeLink(): void {
@@ -162,19 +153,20 @@ export class EditorLinkDialogComponent implements OnInit {
     }
 
     public save(): void {
-        if (this.externalUrl) {
-            this.link.href = !/^[a-zA-Z]+:\/\//.test(this.externalUrl)
-                ? `http://` + this.externalUrl
-                : this.externalUrl;
+        const { extUrl, extText } = this.externalLink.getRawValue();
+        if (extUrl?.trim()) {
+            this.link.href = this.normalizeExternalUrl(extUrl);
+            this.internalLink.target = `_blank`;
             if (this.data.needsText) {
                 this.dialogRef.close({
                     action: `set-link`,
                     link: this.link,
-                    text: this.externalText || this.link.href
+                    text: extText || this.link.href
                 });
             } else {
                 this.dialogRef.close({ action: `set-link`, link: this.link });
             }
+            return;
         } else {
             this.changeEditMode(true);
             if (this.internalLink.href) {
@@ -185,6 +177,10 @@ export class EditorLinkDialogComponent implements OnInit {
                 });
             }
         }
+    }
+
+    private normalizeExternalUrl(externalUrl): string {
+        return !/^[a-zA-Z]+:\/\//.test(externalUrl) ? `http://` + externalUrl : externalUrl;
     }
 
     public toggleArrow(prop: 'toggleInternalReference' | 'toggleExternalReference'): void {
@@ -200,7 +196,7 @@ export class EditorLinkDialogComponent implements OnInit {
         if (save) {
             this.addReference();
         } else {
-            this.initForm();
+            this.internalReferenceForm.reset();
             this.internalText = ``;
         }
         this.editMode = !this.editMode;
@@ -210,11 +206,27 @@ export class EditorLinkDialogComponent implements OnInit {
      * Initializes the form.
      */
     public initForm(externalLink?: FormGroup<any>): void {
-        const externalControls = ['extUrl', 'extText', 'extDisplayMode'];
         if (externalLink) {
-            externalControls.forEach(name => this.externalLink.get(name)?.reset());
+            this.externalControls.forEach(name => this.externalLink.get(name)?.reset());
             return;
         }
+        if (!this.internalReferenceForm) {
+            this.initInternalReferenceForm();
+        }
+    }
+
+    private updateSelectedValue(): void {
+        const controlName = `${this.searchLists[this.selectedRepoValue]}FormControl`;
+        const selectedId = this.internalReferenceForm.get(controlName)?.value;
+        const repo = this.searchRepos[this.selectedRepoValue];
+        this.item = repo.getViewModel(selectedId);
+        const action = this.item ? 'disable' : 'enable';
+        this.externalControls.forEach(name => {
+            this.externalLink.get(name)?.[action]();
+        });
+    }
+
+    private initInternalReferenceForm(): void {
         const disabled = !!this.externalUrl;
         this.internalReferenceForm = new FormGroup({
             TopicFormControl: new FormControl({
@@ -230,15 +242,8 @@ export class EditorLinkDialogComponent implements OnInit {
                 disabled
             })
         });
-        this.internalReferenceForm.valueChanges.subscribe(() => {
-            const controlName = `${this.searchLists[this.selectedRepoValue]}FormControl`;
-            const selectedId = this.internalReferenceForm.get(controlName)?.value;
-            const repo = this.searchRepos[this.selectedRepoValue];
-            this.item = repo.getViewModel(selectedId);
-            const action = this.item ? 'disable' : 'enable';
-            externalControls.forEach(name => {
-                this.externalLink.get(name)?.[action]();
-            });
+        this.internalReferenceForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.updateSelectedValue();
             this.addReference();
         });
     }
@@ -246,16 +251,14 @@ export class EditorLinkDialogComponent implements OnInit {
     /**
      * Function to add the values.
      */
-    public addReference(): void {
+    private addReference(): void {
         this.internalText = this.item ? `${this.item.getTitle()}` : '';
         this.internalLink.href = this.item ? this.urlBuilder(this.item) : '';
     }
 
-    public urlBuilder(item): string {
-        const setCollection: string = item.collection === 'topic' ? 'agenda/topic' : item.collection;
-        const setId: number = item.collection === 'assignment' ? item.id : item.sequential_number;
-        const builtUrl = `${this.meetingId}/${setCollection}s/${setId}`;
-        const url = this.router.url.replace(/^\/.*$/, `/${builtUrl}`);
-        return url;
+    private urlBuilder(item): string {
+        const collection = item.collection === 'topic' ? 'agenda/topics' : `${item.collection}s`;
+        const id = item.collection === 'assignment' ? item.id : item.sequential_number;
+        return `/${this.meetingId}/${collection}/${id}`;
     }
 }

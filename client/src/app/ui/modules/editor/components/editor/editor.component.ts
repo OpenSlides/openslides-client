@@ -4,15 +4,13 @@ import {
     ChangeDetectorRef,
     Component,
     ElementRef,
-    EventEmitter,
     forwardRef,
     inject,
-    Input,
+    input,
     OnDestroy,
-    Output,
+    output,
     QueryList,
-    ViewChild,
-    ViewChildren
+    viewChild
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, UntypedFormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -96,26 +94,15 @@ const DEFAULT_COLOR_PALETE = [
     standalone: false
 })
 export class EditorComponent extends BaseFormControlComponent<string> implements AfterViewInit, OnDestroy {
-    @ViewChild(`editorEl`) private editorEl: ElementRef;
+    public buttonElements = viewChild<QueryList<ElementRef>>(`btn`);
+    public isDisabled = viewChild<ArrowNavigationDirective>(`isDisabled`);
+    public setTab = viewChild<ArrowNavigationDirective>(`setTab`);
+    private editorEl = viewChild<ElementRef>(`editorEl`);
 
-    @ViewChildren(`btn`)
-    public buttonElements!: QueryList<ElementRef>;
-
-    @ViewChild(`isDisabled`) public isDisabled: ArrowNavigationDirective;
-
-    @ViewChild(`setTab`) public setTab: ArrowNavigationDirective;
-
-    @Input()
-    public customSettings: object = {};
-
-    @Input()
-    public allowEmbeds = false;
-
-    @Input()
-    public isModerationNote;
-
-    @Output()
-    public leaveFocus = new EventEmitter<void>();
+    public customSettings = input<object>({});
+    public allowEmbeds = input<boolean>(false);
+    public isModerationNote = input<boolean>();
+    public leaveFocus = output<void>();
 
     public focusText = false;
     public focusBackground = false;
@@ -172,7 +159,7 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
 
     public ngAfterViewInit(): void {
         const editorConfig = {
-            element: this.editorEl.nativeElement,
+            element: this.editorEl().nativeElement,
             extensions: this.getExtensions(),
             content: this.value
         };
@@ -355,7 +342,8 @@ export class EditorComponent extends BaseFormControlComponent<string> implements
                 width: `400px`,
                 data: {
                     link: this.editor.getAttributes(`link`),
-                    needsText: this.editor.state.selection.empty && !this.editor.isActive(`link`)
+                    needsText: this.editor.state.selection.empty && !this.editor.isActive(`link`),
+                    isModerationNote: !this.isModerationNote()
                 }
             })
             .afterClosed()
