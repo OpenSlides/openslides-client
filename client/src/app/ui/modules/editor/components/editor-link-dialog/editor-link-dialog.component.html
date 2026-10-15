@@ -80,51 +80,34 @@
         <div mat-dialog-content>
             <div class="card-grid" [formGroup]="internalRadioOptions">
                 <mat-radio-group aria-label="Select an option" class="radio-group" formControlName="options">
-                    <mat-radio-button
-                        aria-label="Topics"
-                        [disabled]="!!externalUrl"
-                        [value]="0"
-                        (click)="changeEditMode()"
-                    >
+                    <mat-radio-button aria-label="Topics" [value]="'Topics'" (click)="changeEditMode()">
                         {{ this.translate.instant('Topics') }}
                     </mat-radio-button>
-                    <mat-radio-button
-                        aria-label="Motions"
-                        [disabled]="!!externalUrl"
-                        [value]="1"
-                        (click)="changeEditMode()"
-                    >
+                    <mat-radio-button aria-label="Motions" [value]="'Motions'" (click)="changeEditMode()">
                         {{ this.translate.instant('Motions') }}
                     </mat-radio-button>
-                    <mat-radio-button
-                        aria-label="Assignments"
-                        [disabled]="!!externalUrl"
-                        [value]="2"
-                        (click)="changeEditMode()"
-                    >
+                    <mat-radio-button aria-label="Assignments" [value]="'Assignments'" (click)="changeEditMode()">
                         {{ this.translate.instant('Assignments') }}
                     </mat-radio-button>
                 </mat-radio-group>
-                <mat-form-field [formGroup]="internalReferenceForm">
+                <mat-form-field [formGroup]="internalReferenceSelector">
                     <mat-label>
-                        {{ this.translate.instant(searchLists[selectedRepoValue]) }}
+                        {{ this.translate.instant(selectedRepoName) }}
                     </mat-label>
-                    @for (searchRepo of searchRepos; track $index) {
-                        @if (selectedRepoValue === $index) {
-                            <os-repo-search-selector
-                                formControlName="{{ searchLists[$index] }}FormControl"
-                                [keepOpen]="searchRepo.keepOpen"
-                                [repo]="searchRepo"
-                                [disabled]="!!externalUrl"
-                                [subscriptionConfig]="searchSubscriptionConfig[$index]"
-                                [wider]="searchRepo.wider"
-                            ></os-repo-search-selector>
-                        }
+                    @let selectedFormControl = selectedRepoName + 'FormControl';
+                    @for (currentRepo of [repo ?? agendaItemRepo]; track currentRepo) {
+                        <os-repo-search-selector
+                            [formControlName]="selectedFormControl"
+                            [keepOpen]="currentRepo?.keepOpen"
+                            [repo]="currentRepo"
+                            [subscriptionConfig]="searchSubscriptionConfig[selectedRepoName]"
+                            [wider]="currentRepo?.wider"
+                        ></os-repo-search-selector>
                     }
                 </mat-form-field>
             </div>
             <div class="clear-button">
-                <button aria-label="Reset" color="gray" mat-icon-button (click)="internalReferenceForm.reset()">
+                <button aria-label="Reset" color="gray" mat-icon-button (click)="internalReferenceSelector.reset()">
                     <mat-icon>clear</mat-icon>
                 </button>
             </div>

@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, FormGroup, UntypedFormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Assignment } from '@app/domain/models/assignments/assignment';
-import { Topic } from '@app/domain/models/topics/topic';
 import { AssignmentRepositoryService } from '@app/gateways/repositories/assignments/assignment-repository.service';
 import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
 import { TopicRepositoryService } from '@app/gateways/repositories/topics/topic-repository.service';
@@ -16,7 +14,6 @@ import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { getMotionListMinimalSubscriptionConfig } from '@app/site/pages/meetings/pages/motions/motions.subscription';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { SubscribeToConfig } from '@app/site/services/model-request.service';
-import { RepoSearchSelectorComponent } from '@app/ui/modules/search-selector/components/repo-search-selector/repo-search-selector.component';
 import { TranslateService } from '@ngx-translate/core';
 
 interface EditorLinkDialogInput {
@@ -57,7 +54,7 @@ export class EditorLinkDialogComponent implements OnInit {
     /**
      * FormGroup for the search-list.
      */
-    protected internalReferenceForm: UntypedFormGroup;
+    protected internalReferenceSelector: UntypedFormGroup;
 
     /**
      * The selected internal item
@@ -68,7 +65,7 @@ export class EditorLinkDialogComponent implements OnInit {
      * Values selected by radio buttons
      */
     protected internalRadioOptions: FormGroup;
-    protected selectedRepoValue = 0;
+    protected selectedRepoName = 'Topics';
 
     /**
      * Values for external link
@@ -78,14 +75,15 @@ export class EditorLinkDialogComponent implements OnInit {
         extText: this.fb.control(''),
         extDisplayMode: this.fb.control<'_self' | '_blank'>('_self')
     });
+
     protected externalUrl: string;
     protected externalText: string;
     protected canEmbed: boolean;
-    protected searchSubscriptionConfig: SubscribeToConfig[];
     protected toggleInternalReference: boolean;
     protected toggleExternalReference: boolean;
-    protected readonly searchLists = ['Topic', 'Motion', 'Assignment'];
-    protected searchRepos;
+    protected searchSubscriptionConfig: Record<string, SubscribeToConfig>;
+    protected searchRepos: Record<string, typeof this.repo>;
+    protected repo;
 
     /**
      * Boolean to decide, whether to open the extension-input and search-list.
@@ -114,26 +112,44 @@ export class EditorLinkDialogComponent implements OnInit {
             this.externalUrl = extUrl;
             this.externalText = extText;
             this.link.target = extDisplayMode;
+            this.updateDisabledState();
         });
-
         // Internal reference
+        if (!(this.canEmbed = this.embedAllowed())) return;
         this.internalLink = { ...this.data.link };
         this.internalRadioOptions = this.fb.group({
-            options: [0]
+            options: this.fb.control('Topics')
         });
-        this.internalRadioOptions.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.selectedRepoValue = this.internalRadioOptions.get('options').value;
-        });
+        this.internalRadioOptions
+            .get('options')
+            ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(value => {
+                this.selectedRepoName = value;
+                this.repo = this.searchRepos[this.selectedRepoName];
+            });
+    }
+
+    private updateDisabledState(): void {
+        const disabled = !!this.externalUrl;
+        const optionsControl = this.internalRadioOptions.get('options');
+        const referenceControl = this.internalReferenceSelector.get(this.selectedRepoName + 'FormControl');
+
+        optionsControl?.[disabled ? 'disable' : 'enable']({ emitEvent: false });
+        referenceControl?.[disabled ? 'disable' : 'enable']({ emitEvent: false });
     }
 
     public ngOnInit(): void {
-        if (!(this.canEmbed = this.embedAllowed())) return;
-        this.searchRepos = [this.agendaItemRepo, this.motionItemRepo, this.assignmentItemRepo];
-        this.searchSubscriptionConfig = [
-            this.subscriptionTopicConfig,
-            this.subscriptionMotionConfig,
-            this.subscriptionAssignmentConfig
-        ];
+        if (!this.canEmbed) return;
+        this.searchRepos = {
+            Topics: this.agendaItemRepo,
+            Motions: this.motionItemRepo,
+            Assignments: this.assignmentItemRepo
+        };
+        this.searchSubscriptionConfig = {
+            Topics: this.subscriptionTopicConfig,
+            Motions: this.subscriptionMotionConfig,
+            Assignments: this.subscriptionAssignmentConfig
+        };
         this.initForm();
     }
 
@@ -196,7 +212,7 @@ export class EditorLinkDialogComponent implements OnInit {
         if (save) {
             this.addReference();
         } else {
-            this.internalReferenceForm.reset();
+            this.internalReferenceSelector.reset();
             this.internalText = ``;
         }
         this.editMode = !this.editMode;
@@ -205,20 +221,19 @@ export class EditorLinkDialogComponent implements OnInit {
     /**
      * Initializes the form.
      */
-    public initForm(externalLink?: FormGroup<any>): void {
+    protected initForm(externalLink?: FormGroup<any>): void {
         if (externalLink) {
             this.externalControls.forEach(name => this.externalLink.get(name)?.reset());
             return;
         }
-        if (!this.internalReferenceForm) {
+        if (!this.internalReferenceSelector) {
             this.initInternalReferenceForm();
         }
     }
 
-    private updateSelectedValue(): void {
-        const controlName = `${this.searchLists[this.selectedRepoValue]}FormControl`;
-        const selectedId = this.internalReferenceForm.get(controlName)?.value;
-        const repo = this.searchRepos[this.selectedRepoValue];
+    private disableExternalLinkFields(): void {
+        const selectedId = this.internalReferenceSelector.get(this.selectedRepoName + 'FormControl')?.value;
+        const repo = this.searchRepos[this.selectedRepoName];
         this.item = repo.getViewModel(selectedId);
         const action = this.item ? 'disable' : 'enable';
         this.externalControls.forEach(name => {
@@ -227,23 +242,22 @@ export class EditorLinkDialogComponent implements OnInit {
     }
 
     private initInternalReferenceForm(): void {
-        const disabled = !!this.externalUrl;
-        this.internalReferenceForm = new FormGroup({
-            TopicFormControl: new FormControl({
+        this.internalReferenceSelector = new FormGroup({
+            TopicsFormControl: new FormControl({
                 value: this.agendaItemRepo,
-                disabled
+                disabled: !!this.externalUrl
             }),
-            MotionFormControl: new FormControl({
+            MotionsFormControl: new FormControl({
                 value: this.motionItemRepo,
-                disabled
+                disabled: !!this.externalUrl
             }),
-            AssignmentFormControl: new FormControl({
+            AssignmentsFormControl: new FormControl({
                 value: this.assignmentItemRepo,
-                disabled
+                disabled: !!this.externalUrl
             })
         });
-        this.internalReferenceForm.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
-            this.updateSelectedValue();
+        this.internalReferenceSelector.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.disableExternalLinkFields();
             this.addReference();
         });
     }
