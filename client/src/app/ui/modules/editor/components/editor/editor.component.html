@@ -10,7 +10,7 @@
                         mat-ripple
                         osArrowNavigation
                         type="button"
-                        [buttonList]="buttonElements"
+                        [buttonList]="buttonElements()"
                         [ngClass]="{ active: isGodButtonActive }"
                         (click)="godButtonAction()"
                         (focus)="setTab.setTab()"
@@ -24,7 +24,7 @@
                         mat-ripple
                         osArrowNavigation
                         type="button"
-                        [buttonList]="buttonElements"
+                        [buttonList]="buttonElements()"
                         [matMenuTriggerFor]="formatMenu"
                     >
                         <mat-icon>arrow_drop_down</mat-icon>
@@ -145,7 +145,7 @@
                             mat-ripple
                             osArrowNavigation
                             type="button"
-                            [buttonList]="buttonElements"
+                            [buttonList]="buttonElements()"
                             [matTooltip]="'Bold' | translate"
                             [ngClass]="{ active: editor.isActive('bold') }"
                             (click)="editor.chain().focus().toggleBold().run()"
@@ -159,7 +159,7 @@
                             mat-ripple
                             osArrowNavigation
                             type="button"
-                            [buttonList]="buttonElements"
+                            [buttonList]="buttonElements()"
                             [matTooltip]="'Italic' | translate"
                             [ngClass]="{ active: editor.isActive('italic') }"
                             (click)="editor.chain().focus().toggleItalic().run()"
@@ -174,7 +174,7 @@
                             mat-ripple
                             osArrowNavigation
                             type="button"
-                            [buttonList]="buttonElements"
+                            [buttonList]="buttonElements()"
                             [matTooltip]="'Underline' | translate"
                             [ngClass]="{ active: editor.isActive('underline') }"
                             (click)="editor.chain().focus().toggleUnderline().run()"
@@ -189,7 +189,7 @@
                             mat-ripple
                             osArrowNavigation
                             type="button"
-                            [buttonList]="buttonElements"
+                            [buttonList]="buttonElements()"
                             [matTooltip]="'Strikethrough' | translate"
                             [ngClass]="{ active: editor.isActive('strike') }"
                             (click)="editor.chain().focus().toggleStrike().run()"
@@ -207,7 +207,7 @@
                         mat-ripple
                         osArrowNavigation
                         type="button"
-                        [buttonList]="buttonElements"
+                        [buttonList]="buttonElements()"
                         [matTooltip]="'Text color' | translate"
                         [ngClass]="{ active: editor.isActive('textStyle') }"
                         [ngStyle]="{
@@ -231,7 +231,7 @@
                             list="text-colors"
                             osArrowNavigation
                             type="color"
-                            [buttonList]="buttonElements"
+                            [buttonList]="buttonElements()"
                             [matTooltip]="'Text color' | translate"
                             [value]="editor.getAttributes('textStyle')['color']"
                             (change)="updateFontColor($event)"
@@ -249,7 +249,7 @@
                         mat-ripple
                         osArrowNavigation
                         type="button"
-                        [buttonList]="buttonElements"
+                        [buttonList]="buttonElements()"
                         [matTooltip]="'Background color' | translate"
                         [ngClass]="{ active: editor.isActive('highlight') }"
                         [ngStyle]="{ color: editor.getAttributes('highlight')['color'] }"
@@ -271,7 +271,7 @@
                             list="background-colors"
                             osArrowNavigation
                             type="color"
-                            [buttonList]="buttonElements"
+                            [buttonList]="buttonElements()"
                             [matTooltip]="'Background color' | translate"
                             [value]="editor.getAttributes('highlight')['color']"
                             (change)="updateHighlightColor($event)"
@@ -286,7 +286,7 @@
                 mat-ripple
                 osArrowNavigation
                 type="button"
-                [buttonList]="buttonElements"
+                [buttonList]="buttonElements()"
                 [matTooltip]="'Clear formatting' | translate"
                 (click)="clearSelectedFormat()"
             >
@@ -301,7 +301,7 @@
                             mat-ripple
                             osArrowNavigation
                             type="button"
-                            [buttonList]="buttonElements"
+                            [buttonList]="buttonElements()"
                             [matTooltip]="'Bullet list' | translate"
                             [ngClass]="{ active: editor.isActive('bulletList') }"
                             (click)="editor.chain().focus().toggleBulletList().run()"
@@ -316,7 +316,7 @@
                             mat-ripple
                             osArrowNavigation
                             type="button"
-                            [buttonList]="buttonElements"
+                            [buttonList]="buttonElements()"
                             [matTooltip]="'Numbered list' | translate"
                             [ngClass]="{ active: editor.isActive('orderedList') }"
                             (click)="editor.chain().focus().toggleOrderedList().run()"
@@ -335,7 +335,7 @@
                             mat-ripple
                             osArrowNavigation
                             type="button"
-                            [buttonList]="buttonElements"
+                            [buttonList]="buttonElements()"
                             [matTooltip]="'Insert/edit link' | translate"
                             [ngClass]="{ active: editor.isActive('link') }"
                             (click)="setLinkDialog()"
@@ -350,7 +350,7 @@
                             mat-ripple
                             osArrowNavigation
                             type="button"
-                            [buttonList]="buttonElements"
+                            [buttonList]="buttonElements()"
                             [matTooltip]="'Insert/edit image' | translate"
                             [ngClass]="{ active: editor.isActive('image') }"
                             (click)="setImageDialog()"
@@ -369,7 +369,7 @@
                         mat-ripple
                         osArrowNavigation
                         type="button"
-                        [buttonList]="buttonElements"
+                        [buttonList]="buttonElements()"
                         [disabled]="!editor.can().undo()"
                         [matTooltip]="'Undo' | translate"
                         (click)="editor.chain().focus().undo().run() && isDisabled.setDisabled()"
@@ -383,7 +383,7 @@
                         mat-ripple
                         osArrowNavigation
                         type="button"
-                        [buttonList]="buttonElements"
+                        [buttonList]="buttonElements()"
                         [disabled]="!editor.can().redo()"
                         [matTooltip]="'Redo' | translate"
                         (click)="editor.chain().focus().redo().run() && isDisabled.setDisabled()"
@@ -400,7 +400,7 @@
                     mat-ripple
                     osArrowNavigation
                     type="button"
-                    [buttonList]="buttonElements"
+                    [buttonList]="buttonElements()"
                     [matTooltip]="'Source code' | translate"
                     (click)="editCode()"
                     (focus)="setTab.setTab(true)"
