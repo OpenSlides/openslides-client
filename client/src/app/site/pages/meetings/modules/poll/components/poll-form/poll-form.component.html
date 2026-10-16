@@ -149,7 +149,7 @@
         </div>
     </ng-content>
 
-    @if (optionEdit() && selectedMethod() !== `approval`) {
+    @if (optionEdit() && selectedMethod() !== `approval` && isCreated()) {
         <div class="option-section">
             <h4 class="option-section-title">{{ 'Options' | translate }}</h4>
             <os-editable-list
