@@ -61,14 +61,14 @@
                             <mat-form-field>
                                 <mat-label>{{ 'Election method' | translate }}</mat-label>
                                 <mat-select [formField]="form.method_preselection">
-                                    @if (optionAmount() <= 1 && form.options().value().length <= 1) {
+                                    @if (optionEdit() || (optionAmount() <= 1 && form.options().value().length <= 1)) {
                                         <mat-option value="approval.yes_no">{{ 'Yes/No' | translate }}</mat-option>
                                         <mat-option value="approval.yes_no_abstain">
                                             {{ 'Yes/No/Abstain' | translate }}
                                         </mat-option>
                                     }
 
-                                    @if (optionAmount() > 1 || form.options().value().length > 1) {
+                                    @if (optionEdit() || (optionAmount() > 1 || form.options().value().length > 1)) {
                                         @if (optionType() === 'text') {
                                             <mat-option value="selection.yes">
                                                 {{ 'Yes per option' | translate }}
@@ -118,7 +118,7 @@
 
     <ng-content>
         <div class="method">
-            @switch (this.selectedMethod()) {
+            @switch (selectedMethod()) {
                 @case ('approval') {
                     <os-poll-form-approval [data]="data()" [hideMethod]="true" [settings]="pollSettings()" />
                 }
@@ -149,7 +149,7 @@
         </div>
     </ng-content>
 
-    @if (optionEdit()) {
+    @if (optionEdit() && selectedMethod() !== `approval`) {
         <div class="option-section">
             <h4 class="option-section-title">{{ 'Options' | translate }}</h4>
             <os-editable-list

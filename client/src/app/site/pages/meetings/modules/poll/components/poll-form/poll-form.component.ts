@@ -107,7 +107,11 @@ export class PollFormComponent extends BaseComponent {
     });
 
     public isValid = computed<boolean>(() => {
-        return this.form().valid() && this.methodForm()?.formValid();
+        return (
+            this.form().valid() &&
+            this.methodForm()?.formValid() &&
+            (this.selectedMethod() === `approval` || this.optionAmount() > 0 || this.form.options().value()?.length > 0)
+        );
     });
 
     public isCreated = computed<boolean>(() => {
