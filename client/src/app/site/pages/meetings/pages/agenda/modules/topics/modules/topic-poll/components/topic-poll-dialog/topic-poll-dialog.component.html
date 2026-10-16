@@ -40,7 +40,7 @@
                     <button mat-button (click)="toggleAnalogPollForm()">
                         <span>{{ 'Edit Poll' | translate }}</span>
                     </button>
-                } @else {
+                } @else if (!pollData.published) {
                     <button mat-button (click)="toggleAnalogPollForm()">
                         <span>{{ 'Edit Result' | translate }}</span>
                     </button>
