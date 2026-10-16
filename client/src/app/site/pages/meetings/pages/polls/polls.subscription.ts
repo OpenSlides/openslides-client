@@ -32,6 +32,10 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
             fieldset: [`acting_meeting_user_id`, `represented_meeting_user_id`]
         },
         {
+            idField: `entitled_user_ids`,
+            fieldset: [`present`]
+        },
+        {
             idField: `option_ids`,
             fieldset: FULL_FIELDSET,
             follow: [

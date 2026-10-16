@@ -189,8 +189,11 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public presentEntitledUsers = computed<number | null>(() => {
-        // TODO: Implement if available
-        return null;
+        if (this.config().onehundred_percent_base !== `entitled_present`) {
+            return null;
+        }
+
+        return this.poll().entitled_users?.filter(u => u.present).length;
     });
 
     public requiredMajority = computed<number | null>(() => {
@@ -202,17 +205,24 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
             return Math.ceil(this.config().onehundredPercentBaseNum / 2 + 1);
         } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
             return Math.ceil((this.config().onehundredPercentBaseNum * 2) / 3);
+        } else if (this.config().required_majority === PollRequiredMajority.SimpleMajority) {
+            const result = this.config().parsedResult();
+            return Math.max(
+                ...Object.keys({ ...result, 0: 1 })
+                    .filter(k => !isNaN(+k) && !isNaN(+result[k]))
+                    .map(k => +result[k])
+            );
         }
 
         return null;
     });
 
     public generalAbstain = computed<number | null>(() => {
-        if (this.config().min_options_amount !== 0) {
+        if (!this.poll().allow_empty) {
             return null;
         }
 
-        return +this.config().parsedResult()?.abstain || 0;
+        return +this.config().parsedResult()?.empty || 0;
     });
 
     public generalAbstainPercent = computed<string | null>(() => {

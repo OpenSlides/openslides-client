@@ -94,7 +94,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 icon: `circle`,
                 amount: +results.abstain || 0,
                 percent:
-                    this.onehundredPercentBase() === `yes_no_abstain`
+                    this.onehundredPercentBase() === `yes_no_abstain` && this.config().onehundredPercentBaseNum
                         ? Big(results.abstain || 0)
                               .div(this.config().onehundredPercentBaseNum)
                               .mul(100)
@@ -154,7 +154,11 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public validBallotsPercent = computed<string | null>(() => {
-        if (!this.config().onehundredPercentBaseNum) {
+        if (
+            !this.config().onehundredPercentBaseNum ||
+            this.onehundredPercentBase() === `yes_no` ||
+            this.onehundredPercentBase() === `disabled`
+        ) {
             return null;
         }
 
@@ -194,8 +198,11 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public presentEntitledUsers = computed<number | null>(() => {
-        // TODO: Implement if available
-        return null;
+        if (this.config().onehundred_percent_base !== `entitled_present`) {
+            return null;
+        }
+
+        return this.poll().entitled_users?.filter(u => u.present).length;
     });
 
     public majorityReached = computed<boolean | undefined>(() => {

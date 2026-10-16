@@ -4,6 +4,7 @@ import { BasePollConfigModel } from './base-poll-config';
 import { BaseOnehundredPercentBase } from './poll-config-types';
 
 export type SelectionOnehundredPercentBase = BaseOnehundredPercentBase | `no_general`;
+export type SelectionRequiredMajority = PollRequiredMajority | `simple_majority`;
 
 export class PollConfigSelection extends BasePollConfigModel<PollConfigSelection> {
     public static COLLECTION = `poll_config_selection`;
@@ -14,7 +15,7 @@ export class PollConfigSelection extends BasePollConfigModel<PollConfigSelection
     public allow_nota!: boolean;
     public display_chart!: string;
     public onehundred_percent_base!: SelectionOnehundredPercentBase;
-    public required_majority!: PollRequiredMajority;
+    public required_majority!: SelectionRequiredMajority;
 
     public get max_vote_sum(): number {
         return this.max_options_amount;

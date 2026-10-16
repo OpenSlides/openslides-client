@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs';
 import { djb2hash } from '@app/infrastructure/utils';
-import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import {
     BasePollDialogComponent,
     PollMethodPayload,
@@ -12,9 +12,10 @@ import {
 import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
 import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
 import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ViewMeetingPollSetting } from '@app/site/pages/meetings/view-models/view-meeting-poll-setting';
 import { TranslatePipe } from '@ngx-translate/core';
-
-const TAB_METHOD_MAP = [`selection`, `approval`];
+import { Observable, switchMap } from 'rxjs';
 
 @Component({
     selector: `os-topic-poll-dialog`,
@@ -26,7 +27,8 @@ const TAB_METHOD_MAP = [`selection`, `approval`];
         MatTabsModule,
         MatDialogModule,
         MatButtonModule,
-        TranslatePipe
+        TranslatePipe,
+        AsyncPipe
     ],
     changeDetection: ChangeDetectionStrategy.Eager
 })
@@ -37,24 +39,16 @@ export class TopicPollDialogComponent extends BasePollDialogComponent {
         return this.pollService.isElectronicVotingEnabled;
     }
 
-    public selectedTab = signal(0);
-
     public options = computed(() => {
         return this.pollForm().form.options().value();
     });
 
-    private pollService = inject(PollService);
-
-    public constructor() {
-        super();
-
-        if (this.pollData?.config_id) {
-            const collection = collectionFromFqid(this.pollData?.config_id);
-            this.selectedTab.set(TAB_METHOD_MAP.indexOf(collection.replace(`poll_config_`, ``)));
-        } else if (this.pollData?.config?.method) {
-            this.selectedTab.set(TAB_METHOD_MAP.indexOf(this.pollData.config.method));
-        }
+    public get pollSettings(): Observable<ViewMeetingPollSetting> {
+        return this.activeMeetingService.meetingObservable.pipe(switchMap(m => m.topic_poll_config$));
     }
+
+    private pollService = inject(PollService);
+    private activeMeetingService = inject(ActiveMeetingService);
 
     public override methodPayload(): PollMethodPayload {
         return {
