@@ -1,4 +1,4 @@
-import { NgTemplateOutlet } from '@angular/common';
+import { AsyncPipe, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval';
@@ -18,7 +18,7 @@ import { ViewPollOption } from '../../../../pages/polls/view-models/poll-option'
 
 @Component({
     selector: 'os-poll-meta',
-    imports: [CommaSeparatedListingComponent, TranslatePipe, TranslateKeyPipe, NgTemplateOutlet],
+    imports: [CommaSeparatedListingComponent, TranslatePipe, TranslateKeyPipe, NgTemplateOutlet, AsyncPipe],
     templateUrl: './poll-meta.component.html',
     styleUrl: './poll-meta.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush

@@ -52,11 +52,12 @@
 
 <div class="meta-info-right subtitle">
     <!-- Groups that can vote -->
-    @if (poll().entitled_groups && poll().isEVoting) {
+    @let entitledGroups = poll().entitled_groups$ | async;
+    @if (entitledGroups && poll().isEVoting) {
         <div>
             {{ 'Entitled to vote' | translate }}:
             @if (poll().entitled_groups.length) {
-                <os-comma-separated-listing [list]="poll().entitled_groups">
+                <os-comma-separated-listing [list]="entitledGroups">
                     <ng-template let-group>{{ group.getTitle() }}</ng-template>
                 </os-comma-separated-listing>
             } @else {
@@ -65,102 +66,104 @@
         </div>
     }
 
-    @if (config.value().strike_out !== undefined || config.value().allow_abstain !== undefined) {
-        <div>
-            {{ 'Voting method' | translate }}:
-            @if (config.value().strike_out === true) {
-                @if (isPersonPoll()) {
-                    <span>{{ 'No per candidate' | translate }}</span>
-                } @else {
-                    <span>{{ 'No per option' | translate }}</span>
-                }
-            } @else if (config.value().strike_out === false) {
-                @if (isPersonPoll()) {
-                    <span>{{ 'Yes per candidate' | translate }}</span>
-                } @else {
-                    <span>{{ 'Yes per option' | translate }}</span>
-                }
-            } @else if (config.value().allow_abstain === true) {
-                <span>{{ 'Yes/No/Abstain' | translate }}</span>
-            } @else if (config.value().allow_abstain === false) {
-                <span>{{ 'Yes/No' | translate }}</span>
-            }
-        </div>
-    }
-
-    @if (config.value().COLLECTION === `poll_config_selection`) {
-        @if (config.value().min_options_amount > 1 || config.value().max_options_amount > 1) {
-            @if (config.value().min_options_amount === config.value().max_options_amount) {
-                <div>
-                    {{ 'Votes on different options' | translate }}:
-                    <span>{{ config.value().min_options_amount }}</span>
-                </div>
-            } @else {
-                @if (config.value().min_options_amount > 1) {
-                    <div>
-                        {{ 'Minimum amount of options selected' | translate }}:
-                        <span>{{ config.value().min_options_amount }}</span>
-                    </div>
-                }
-
-                @if (config.value().max_options_amount > 1) {
-                    <div>
-                        {{ 'Maximum amount options selected' | translate }}:
-                        <span>{{ config.value().max_options_amount }}</span>
-                    </div>
-                }
-            }
-        }
-    } @else {
-        @if (config.value().min_vote_sum > 1 || config.value().max_vote_sum > 1) {
-            @if (config.value().min_vote_sum === config.value().max_vote_sum) {
-                <div>
-                    {{ 'Votes' | translate }}:
-                    <span>{{ config.value().min_vote_sum }}</span>
-                </div>
-            } @else {
-                @if (config.value().min_vote_sum > 1) {
-                    <div>
-                        {{ 'Minimum amount of votes' | translate }}:
-                        <span>{{ config.value().min_vote_sum }}</span>
-                    </div>
-                }
-
-                @if (config.value().max_vote_sum > 1) {
-                    <div>
-                        {{ 'Maximum amount of votes' | translate }}:
-                        <span>{{ config.value().max_vote_sum }}</span>
-                    </div>
-                }
-            }
-        }
-
-        @if (config.value().max_yes_amount >= 1 && config.value().max_yes_amount < config.value().max_vote_sum) {
+    @if (config.hasValue() && config.value()) {
+        @if (config.value().strike_out !== undefined || config.value().allow_abstain !== undefined) {
             <div>
-                {{ 'Maximum amount of yes votes' | translate }}:
-                <span>{{ config.value().max_yes_amount }}</span>
+                {{ 'Voting method' | translate }}:
+                @if (config.value().strike_out === true) {
+                    @if (isPersonPoll()) {
+                        <span>{{ 'No per candidate' | translate }}</span>
+                    } @else {
+                        <span>{{ 'No per option' | translate }}</span>
+                    }
+                } @else if (config.value().strike_out === false) {
+                    @if (isPersonPoll()) {
+                        <span>{{ 'Yes per candidate' | translate }}</span>
+                    } @else {
+                        <span>{{ 'Yes per option' | translate }}</span>
+                    }
+                } @else if (config.value().allow_abstain === true) {
+                    <span>{{ 'Yes/No/Abstain' | translate }}</span>
+                } @else if (config.value().allow_abstain === false) {
+                    <span>{{ 'Yes/No' | translate }}</span>
+                }
             </div>
         }
-    }
 
-    @if (config.value().max_votes_per_option > 1) {
-        <div>
-            {{ 'Maximum amount of votes per option' | translate }}:
-            <span>{{ config.value().max_votes_per_option }}</span>
-        </div>
-    }
+        @if (config.value().COLLECTION === `poll_config_selection`) {
+            @if (config.value().min_options_amount > 1 || config.value().max_options_amount > 1) {
+                @if (config.value().min_options_amount === config.value().max_options_amount) {
+                    <div>
+                        {{ 'Votes on different options' | translate }}:
+                        <span>{{ config.value().min_options_amount }}</span>
+                    </div>
+                } @else {
+                    @if (config.value().min_options_amount > 1) {
+                        <div>
+                            {{ 'Minimum amount of options selected' | translate }}:
+                            <span>{{ config.value().min_options_amount }}</span>
+                        </div>
+                    }
 
-    @if (config.value().onehundred_percent_base !== undefined) {
-        <div>
-            {{ '100% base' | translate }}:
-            <span>{{ config.value().onehundred_percent_base | translateKey: 'poll_percent_base' }}</span>
-        </div>
-    }
+                    @if (config.value().max_options_amount > 1) {
+                        <div>
+                            {{ 'Maximum amount options selected' | translate }}:
+                            <span>{{ config.value().max_options_amount }}</span>
+                        </div>
+                    }
+                }
+            }
+        } @else {
+            @if (config.value().min_vote_sum > 1 || config.value().max_vote_sum > 1) {
+                @if (config.value().min_vote_sum === config.value().max_vote_sum) {
+                    <div>
+                        {{ 'Votes' | translate }}:
+                        <span>{{ config.value().min_vote_sum }}</span>
+                    </div>
+                } @else {
+                    @if (config.value().min_vote_sum > 1) {
+                        <div>
+                            {{ 'Minimum amount of votes' | translate }}:
+                            <span>{{ config.value().min_vote_sum }}</span>
+                        </div>
+                    }
 
-    @if (config.value().required_majority !== undefined && config.value().required_majority !== 'no_majority') {
-        <div>
-            {{ 'Required majority' | translate }}:
-            <span>{{ config.value().required_majority | translateKey: 'poll_required_majority' }}</span>
-        </div>
+                    @if (config.value().max_vote_sum > 1) {
+                        <div>
+                            {{ 'Maximum amount of votes' | translate }}:
+                            <span>{{ config.value().max_vote_sum }}</span>
+                        </div>
+                    }
+                }
+            }
+
+            @if (config.value().max_yes_amount >= 1 && config.value().max_yes_amount < config.value().max_vote_sum) {
+                <div>
+                    {{ 'Maximum amount of yes votes' | translate }}:
+                    <span>{{ config.value().max_yes_amount }}</span>
+                </div>
+            }
+        }
+
+        @if (config.value().max_votes_per_option > 1) {
+            <div>
+                {{ 'Maximum amount of votes per option' | translate }}:
+                <span>{{ config.value().max_votes_per_option }}</span>
+            </div>
+        }
+
+        @if (config.value().onehundred_percent_base !== undefined) {
+            <div>
+                {{ '100% base' | translate }}:
+                <span>{{ config.value().onehundred_percent_base | translateKey: 'poll_percent_base' }}</span>
+            </div>
+        }
+
+        @if (config.value().required_majority !== undefined && config.value().required_majority !== 'no_majority') {
+            <div>
+                {{ 'Required majority' | translate }}:
+                <span>{{ config.value().required_majority | translateKey: 'poll_required_majority' }}</span>
+            </div>
+        }
     }
 </div>
