@@ -62,7 +62,7 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
         }
 
         for (const key of Object.keys(result)) {
-            if (key !== `invalid` && key !== `nota` && key !== `abstain`) {
+            if (key !== `invalid` && key !== `nota` && key !== `abstain` && !isNaN(+result[key])) {
                 total = total.plus(result[key]);
             }
         }
