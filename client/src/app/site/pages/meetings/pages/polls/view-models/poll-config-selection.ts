@@ -1,4 +1,5 @@
 import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
+import { isFqid } from '@app/infrastructure/utils/transform-functions';
 import { ViewModelRelations } from '@app/site/base/base-view-model';
 import Big from 'big.js';
 
@@ -62,7 +63,7 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
         }
 
         for (const key of Object.keys(result)) {
-            if (key !== `invalid` && key !== `nota` && key !== `abstain`) {
+            if ((!isNaN(+key) || isFqid(key) || key.startsWith(`text-`)) && !isNaN(+result[key])) {
                 total = total.plus(result[key]);
             }
         }
