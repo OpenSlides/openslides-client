@@ -42,7 +42,6 @@ export interface BaseVoteData extends Identifiable {
     selector: `os-poll-single-votes`,
     templateUrl: `./poll-single-votes.component.html`,
     styleUrls: [`./poll-single-votes.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         IconContainerComponent,
         TranslatePipe,
