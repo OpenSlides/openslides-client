@@ -4,7 +4,7 @@ import { SubscriptionConfig } from '@app/domain/interfaces/subscription-config';
 import { ProjectorRepositoryService } from '@app/gateways/repositories/projectors/projector-repository.service';
 import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
 import { BaseMeetingModelRequestHandler } from '@app/site/pages/meetings/base/base-meeting-model-request-handler.component';
-import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service/collection-mapper.service';
 import { distinctUntilChanged, map } from 'rxjs';
 
 import {

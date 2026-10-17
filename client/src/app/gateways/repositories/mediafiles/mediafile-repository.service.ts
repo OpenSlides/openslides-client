@@ -1,11 +1,11 @@
 import { inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
+import { ORGANIZATION_ID } from '@app/domain/definitions/organization-id';
 import { Identifiable } from '@app/domain/interfaces';
 import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
 import { ViewMediafile, ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
-import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
 import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { TypedFieldset } from '../../../site/services/model-request-builder/model-request-builder.service';

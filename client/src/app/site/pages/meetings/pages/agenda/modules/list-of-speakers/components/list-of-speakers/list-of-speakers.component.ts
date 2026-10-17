@@ -5,7 +5,7 @@ import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting
 import { ListOfSpeakersContentComponent } from '@app/site/pages/meetings/modules/list-of-speakers-content/components/list-of-speakers-content/list-of-speakers-content.component';
 import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
 import { ProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models/projection-build-descriptor';
-import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service/collection-mapper.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';

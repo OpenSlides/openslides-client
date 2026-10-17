@@ -7,6 +7,7 @@ import { NullablePartial } from '@app/infrastructure/utils';
 import { AgendaListTitle } from '@app/site/pages/meetings/pages/agenda';
 import type { MotionFormatResult } from '@app/site/pages/meetings/pages/motions/services/common/motion-format.service';
 import { ViewMotion } from '@app/site/pages/meetings/pages/motions/view-models/view-motion';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
@@ -32,6 +33,7 @@ export class MotionRepositoryService extends BaseAgendaItemAndListOfSpeakersCont
     protected sortProperty: SortProperty = `number`;
     private treeService = inject(TreeService);
     private sequentialNumber = inject(SequentialNumberMappingService);
+    private meetingSettingsService = inject(MeetingSettingsService);
 
     public baseModelCtor = Motion;
 

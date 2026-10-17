@@ -1,14 +1,14 @@
 import { inject, Service } from '@angular/core';
-import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
-import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
-import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
+import { ORGANIZATION_ID } from '@app/domain/definitions/organization-id';
+import type { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import type { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { Id } from '../../domain/definitions/key-types';
 import { CML, OML } from '../../domain/definitions/organization-permission';
 import { Identifiable } from '../../domain/interfaces/identifiable';
 import { Committee } from '../../domain/models/comittees/committee';
-import { ViewCommittee } from '../../site/pages/organization/pages/committees/view-models/view-committee';
-import { Fieldsets, TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
+import type { ViewCommittee } from '../../site/pages/organization/pages/committees/view-models/view-committee';
+import type { Fieldsets, TypedFieldset } from '../../site/services/model-request-builder/model-request-builder.service';
 import { OperatorService } from '../../site/services/operator.service';
 import { Action } from '../actions/action';
 import { BaseRepository } from './base-repository';

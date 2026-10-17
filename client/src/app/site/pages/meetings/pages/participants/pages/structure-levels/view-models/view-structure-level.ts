@@ -1,9 +1,9 @@
 import { StructureLevel } from '@app/domain/models/structure-levels/structure-level';
 import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
-import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
-import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
+import type { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
+import type { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 
-import { ViewStructureLevelListOfSpeakers } from './view-structure-level-list-of-speakers';
+import type { ViewStructureLevelListOfSpeakers } from './view-structure-level-list-of-speakers';
 
 export class ViewStructureLevel extends BaseViewModel<StructureLevel> {
     public static COLLECTION = StructureLevel.COLLECTION;

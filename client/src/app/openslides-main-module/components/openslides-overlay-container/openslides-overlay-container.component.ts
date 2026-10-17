@@ -1,17 +1,14 @@
-import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
+import { Component, ViewContainerRef } from '@angular/core';
 import { DomService } from '@app/openslides-main-module/services/dom.service';
 import { SpinnerService } from '@app/site/modules/global-spinner';
 
 @Component({
     selector: `os-openslides-overlay-container`,
-    templateUrl: `./openslides-overlay-container.component.html`,
-    styleUrls: [`./openslides-overlay-container.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    template: ``
 })
 export class OpenSlidesOverlayContainerComponent {
-    public constructor(_viewContainer: ViewContainerRef, _domService: DomService, _spinnerService: SpinnerService) {
-        _domService.setViewContainer(_viewContainer);
-        _spinnerService.show(undefined, { hideWhenStable: true });
+    public constructor(viewContainer: ViewContainerRef, domService: DomService, spinnerService: SpinnerService) {
+        domService.setViewContainer(viewContainer);
+        spinnerService.show(undefined, { hideWhenStable: true });
     }
 }
