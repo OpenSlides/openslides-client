@@ -19,7 +19,7 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
         },
         {
             idField: `ballot_ids`,
-            fieldset: [`poll_id`, `value`],
+            fieldset: [`poll_id`, `value`, `weight`],
             follow: [
                 {
                     idField: `poll_ballot_user_id`,
@@ -83,7 +83,7 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
             },
             {
                 idField: `ballot_ids`,
-                fieldset: [`poll_id`, `value`],
+                fieldset: [`poll_id`, `value`, `weight`],
                 follow: [
                     {
                         idField: `poll_ballot_user_id`,
