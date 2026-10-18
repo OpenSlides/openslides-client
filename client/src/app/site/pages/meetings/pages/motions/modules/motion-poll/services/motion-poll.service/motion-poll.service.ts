@@ -28,7 +28,7 @@ export class MotionPollService extends PollService {
             entitled_group_ids: Object.values(this.defaultGroupIds() ?? []),
             live_voting_enabled: this.defaultLiveVoting(),
             config: {
-                allow_abstain: this.defaultMethod().endsWith(`yes_no_abstain`),
+                allow_abstain: !!this.defaultMethod()?.endsWith(`yes_no_abstain`),
                 onehundred_percent_base: this.defaultPercentBase(),
                 required_majority: this.defaultRequiredMajority()
             }
