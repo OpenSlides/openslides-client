@@ -68,7 +68,7 @@
                                         </mat-option>
                                     }
 
-                                    @if (optionEdit() || (optionAmount() > 1 || form.options().value().length > 1)) {
+                                    @if (optionEdit() || optionAmount() > 1 || form.options().value().length > 1) {
                                         @if (optionType() === 'text') {
                                             <mat-option value="selection.yes">
                                                 {{ 'Yes per option' | translate }}
