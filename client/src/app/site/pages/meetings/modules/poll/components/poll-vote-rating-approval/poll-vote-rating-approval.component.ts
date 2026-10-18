@@ -32,8 +32,8 @@ export class PollVoteRatingApprovalComponent extends PollVoteBaseComponent<ViewP
     });
 
     public maxYesReached = computed<boolean>(() => {
-        const max = this.config()?.max_yes_amount;
-        return max != null && this.yesVotesUsed() >= max;
+        const max = this.config()?.max_yes_amount || null;
+        return max !== null && this.yesVotesUsed() >= max;
     });
 
     public isYesDisabled(optionId: number): boolean {
