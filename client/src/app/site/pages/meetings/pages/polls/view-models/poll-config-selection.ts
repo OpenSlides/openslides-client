@@ -27,7 +27,7 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
             case 'valid':
                 return this.validBallots;
             case 'cast':
-                return this.poll.ballot_user_ids?.length || 0;
+                return this.parsedResult().total_ballots;
             case 'entitled':
                 return this.poll.entitled_user_ids?.length;
             case 'entitled_present':
@@ -45,7 +45,7 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
         }
 
         for (const key of Object.keys(result)) {
-            if (key === `invalid`) {
+            if (key === `invalid` || !isNaN(+result[key])) {
                 continue;
             }
 
