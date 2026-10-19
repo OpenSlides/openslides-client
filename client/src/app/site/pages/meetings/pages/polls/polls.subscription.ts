@@ -15,7 +15,7 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
     follow: [
         {
             idField: `content_object_id`,
-            fieldset: [`sequential_number`]
+            fieldset: [`sequential_number`, `number`, `title`]
         },
         {
             idField: `config_id`,
