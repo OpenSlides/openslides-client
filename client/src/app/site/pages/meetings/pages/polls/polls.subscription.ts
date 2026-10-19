@@ -14,6 +14,10 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
     fieldset: FULL_FIELDSET,
     follow: [
         {
+            idField: `content_object_id`,
+            fieldset: [`sequential_number`]
+        },
+        {
             idField: `config_id`,
             fieldset: FULL_FIELDSET
         },
