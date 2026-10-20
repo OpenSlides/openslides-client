@@ -76,7 +76,7 @@ export class PollDetailComponent extends BaseComponent {
     public selectedTab = signal(0);
 
     public presentEntitledUsers = rxResource({
-        params: () => ({ entitledGroupIds: this.poll().entitled_group_ids }),
+        params: () => ({ entitledGroupIds: this.poll()?.entitled_group_ids || [] }),
         defaultValue: 0,
         stream: ({ params }) =>
             this.userRepo.getViewModelListObservable().pipe(
