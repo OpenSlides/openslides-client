@@ -56,8 +56,25 @@ export function diffString(oldStr: string, newStr: string): string {
             }
         }
     }
+    str = formatSplittedStyleTags(str);
 
     return str.replace(/^\s+/g, ``).replace(/\s+$/g, ``).replace(/ {2,}/g, ` `);
+}
+
+/**
+ * Fixes formatting changes where the diff inserts opening and closing inline tags separately around text breaking diff calculations
+ */
+function formatSplittedStyleTags(diff: string): string {
+  const tags = `STRONG|EM|B|I|U|S|SUB|SUP|MARK`;
+  const pattern = new RegExp(
+    `<ins><(${tags})><\\/ins>` + `([\\s\\S]*?)` + `<ins><\\/\\1><\\/ins>`,
+    `gi`,
+  );
+  return diff.replace(
+    pattern,
+    (_match: string, tag: string, text: string): string =>
+      `<del>${text}</del><ins><${tag}>${text}</${tag}></ins>`,
+  );
 }
 
 /**
