@@ -522,7 +522,9 @@ export class HtmlToPdfService {
                                     break;
                                 }
                                 case `line-through`: {
-                                    styleObject.decoration = (styleObject.decoration ?? []).concat(`lineThrough`);
+                                    styleObject.decoration = [
+                                        ...new Set([...(styleObject.decoration ?? []), `lineThrough`])
+                                    ];
                                     break;
                                 }
                             }
