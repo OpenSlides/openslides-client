@@ -171,7 +171,7 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
             return ``;
         }
         const percent = `${Number(value * 100).toFixed(2)}`;
-        return `${percent.endsWith('.00') ? percent.slice(0, -3) : percent}%`;
+        return `${percent.endsWith('.00') ? percent.slice(0, -3) : percent}%`.replace('.', ',');
     }
 
     public toggle(structureLevelId: Id, gender?: boolean): void {

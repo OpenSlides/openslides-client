@@ -105,7 +105,7 @@
                                                 <div class="absolute-number-left-side">
                                                     {{ entry.genderEntryMap.get(gender.id).present }}
                                                 </div>
-                                                <div class="number-divider"></div>
+                                                <div class="left-side-number-divider"></div>
                                                 <div class="relative-number-left-side">
                                                     {{
                                                         displayPercent(
@@ -134,8 +134,6 @@
                                             <div class="text-medium bold flex-row">
                                                 <div class="absolute-number-right-side">
                                                     {{ entry.getTotalCount(gender.id) }}
-
-                                                    <div class="right-side-number-divider"></div>
                                                 </div>
                                                 <div class="relative-number-right-side">
                                                     {{
@@ -179,7 +177,6 @@
                                     <div class="total-number-color absolute-total-number-right-side">
                                         {{ entry.getTotalCount() }}
                                     </div>
-                                    <div class="total-number-divider-right-side"></div>
                                     <div class="total-number-color relative-total-number-right-side">100%</div>
                                 </div>
                                 <!-- LEFT EMPTY -->

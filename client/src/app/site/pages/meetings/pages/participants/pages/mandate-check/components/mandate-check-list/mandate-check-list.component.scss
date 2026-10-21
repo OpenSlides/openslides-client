@@ -27,26 +27,28 @@
         white-space: nowrap;
     }
     .left-side-number-divider {
-        min-width: 36px;
         max-width: 36px;
+        width: clamp(36px, 2.65vh, 1px);
     }
     .relative-number-left-side {
-        max-width: 46px;
-        min-width: 0;
+        max-width: 53.4px;
+        min-width: 53.4px;
         text-align: right;
     }
 
     .absolute-number-right-side {
-        min-width: 14px;
-        width: fit-content !important;
+        max-width: 53.4px;
+        min-width: fit-content !important;
         text-align: left;
     }
     .right-side-number-divider {
-        min-width: 45px;
+        max-width: 30px;
+        width: clamp(30px, 2.65vh, 1px);
     }
     .relative-number-right-side {
-        min-width: 35px;
-        max-width: 49px;
+        min-width: fit-content;
+        width: fit-content;
+        max-width: 53.4px;
         text-align: right;
     }
 
@@ -59,30 +61,32 @@
         min-width: 0;
     }
     .total-number-divider-left-side {
-        min-width: clamp(36px, 2.67vw, 46px);
+        max-width: 36px;
         margin-left: clamp(-5px, 0.5vw, 0px);
     }
     .relative-total-number-left-side {
         text-align: right;
-        min-width: 30px;
-        max-width: fit-content;
+        min-width: 53.4px;
+        width: 53.4px;
+        max-width: 53.4px;
         overflow: visible;
     }
 
     .absolute-total-number-right-side {
         width: fit-content;
-        max-width: 24px;
-        min-width: 0px;
+        max-width: 53.4px;
+        min-width: 53.4px;
         text-align: left;
     }
     .total-number-divider-right-side {
         max-width: 36px;
-        min-width: 36px;
+        width: clamp(36px, 2.65vh, 1px);
     }
     .relative-total-number-right-side {
         text-align: right;
-        min-width: 0;
-        max-width: fit-content;
+        min-width: fit-content;
+        width: fit-content;
+        max-width: 53.4px;
         overflow: visible;
     }
 }
@@ -190,8 +194,7 @@ mat-progress-bar {
         max-width: inherit;
         display: grid;
         white-space: nowrap;
-        grid-template-columns: 5fr 7fr 40fr 7fr 5fr;
-
+        grid-template-columns: 2fr clamp(17fr, 0.5fr, 7fr) clamp(65fr, 2.1fr, 75fr) clamp(17fr, 0.5fr, 4fr) 2fr;
         & div {
             width: 100%;
         }
@@ -227,10 +230,17 @@ mat-progress-bar {
 
     .row {
         padding: 1em 0em 1em 0em;
+        grid-template-columns: 2fr clamp(17fr, 0.5fr, 7fr) clamp(65fr, 1.7fr, 10fr) clamp(17fr, 0.5fr, 4fr) 2fr;
     }
 
     .row:nth-child(even) {
         background-color: #fafafa;
+    }
+}
+
+@media (min-width: 960px) and (max-width: 1145px) {
+    .row-mandate {
+        grid-template-columns: 2fr 10fr clamp(12fr, 6fr, 2fr) 10fr 2fr;
     }
 }
 
