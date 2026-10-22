@@ -70,6 +70,15 @@
             <os-poll-result [poll]="poll()" />
         }
 
+        <!-- Named table: only show if votes are present -->
+        @if (
+            poll().isFinished &&
+            (poll().isNamed || (poll().isOpen && !poll().isAnonymized)) &&
+            poll().config?.method === 'approval'
+        ) {
+            <os-poll-filted-votes-chart [poll]="poll()" />
+        }
+
         <mat-tab-group [(selectedIndex)]="selectedTab">
             <mat-tab [label]="'Single votes' | translate">
                 <div class="tab-content">

@@ -14,12 +14,16 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
     fieldset: FULL_FIELDSET,
     follow: [
         {
+            idField: `content_object_id`,
+            fieldset: [`sequential_number`, `number`, `title`]
+        },
+        {
             idField: `config_id`,
             fieldset: FULL_FIELDSET
         },
         {
             idField: `ballot_ids`,
-            fieldset: [`poll_id`, `value`],
+            fieldset: [`poll_id`, `value`, `weight`],
             follow: [
                 {
                     idField: `poll_ballot_user_id`,
@@ -30,6 +34,10 @@ export const pollModelRequest: BaseSimplifiedModelRequest = {
         {
             idField: `ballot_user_ids`,
             fieldset: [`acting_meeting_user_id`, `represented_meeting_user_id`]
+        },
+        {
+            idField: `entitled_user_ids`,
+            fieldset: [`present`]
         },
         {
             idField: `option_ids`,
@@ -79,7 +87,7 @@ export const getPollDetailSubscriptionConfig: SubscriptionConfigGenerator = (...
             },
             {
                 idField: `ballot_ids`,
-                fieldset: [`poll_id`, `value`],
+                fieldset: [`poll_id`, `value`, `weight`],
                 follow: [
                     {
                         idField: `poll_ballot_user_id`,

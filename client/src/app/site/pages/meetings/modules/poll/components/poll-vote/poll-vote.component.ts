@@ -7,7 +7,7 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { ViewUser } from '../../../../view-models/view-user';
-import { VotingService } from '../../services/voting.service/voting.service';
+import { VotingProhibition, VotingService } from '../../services/voting.service/voting.service';
 import { PollCannotVoteMessageComponent } from '../poll-cannot-vote-message/poll-cannot-vote-message.component';
 import { PollVoteApprovalComponent } from '../poll-vote-approval/poll-vote-approval.component';
 import { PollVoteRatingApprovalComponent } from '../poll-vote-rating-approval/poll-vote-rating-approval.component';
@@ -33,6 +33,9 @@ export class PollVoteComponent {
     public user = input.required<ViewUser>();
 
     public loading = signal(false);
+    public deliveringVote = computed(() => {
+        return this.loading() && this.voteProhibited.value() !== VotingProhibition.USER_HAS_VOTED;
+    });
 
     public configType = computed(() => {
         return this.poll().config_id ? collectionFromFqid(this.poll().config_id) : null;
@@ -53,7 +56,10 @@ export class PollVoteComponent {
 
     public async sendVote(value: unknown): Promise<void> {
         this.loading.set(true);
-        await this.voteApi.vote(this.poll().id, value, this.user().getMeetingUser().id);
-        this.loading.set(false);
+        try {
+            await this.voteApi.vote(this.poll().id, value, this.user().getMeetingUser().id);
+        } catch {
+            this.loading.set(false);
+        }
     }
 }

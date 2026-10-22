@@ -8,7 +8,7 @@
 
     @if (loading() || (voteProhibited.hasValue() && voteProhibited.value())) {
         <os-poll-cannot-vote-message
-            [isDeliveringVote]="loading()"
+            [isDeliveringVote]="deliveringVote()"
             [poll]="poll()"
             [reason]="voteProhibited.value()"
             [user]="user()"

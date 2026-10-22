@@ -157,11 +157,18 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         // All data is piped through an throttleTime of 20ms. This is to prevent massive
         // updates, if e.g. an autoupdate with a lot motions come in. The result is just one
         // update of the new list instead of many unnecessary updates.
-        this.unsafeViewModelListSubject.pipe(throttleTime(20)).subscribe(models => {
-            if (models) {
-                this.updateViewModelListSubject(models);
-            }
-        });
+        this.unsafeViewModelListSubject
+            .pipe(
+                throttleTime(20, undefined, {
+                    leading: true,
+                    trailing: true
+                })
+            )
+            .subscribe(models => {
+                if (models) {
+                    this.updateViewModelListSubject(models);
+                }
+            });
 
         this.languageCollator = getIntlCollatorForLang(this.translate.getCurrentLang() ?? `en`);
     }

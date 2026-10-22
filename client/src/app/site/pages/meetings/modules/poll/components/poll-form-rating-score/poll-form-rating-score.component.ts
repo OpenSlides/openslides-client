@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { Component, effect, input } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -33,8 +33,7 @@ export interface PollFormRatingScore {
         TranslateKeyPipe
     ],
     templateUrl: './poll-form-rating-score.component.html',
-    styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-score.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-score.component.scss`]
 })
 export class PollFormRatingScoreComponent extends PollFormBaseComponent {
     public validPercentBases: [RatingScoreOnehundredPercentBase, string][] = [
@@ -42,24 +41,36 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
         [`valid`, _('All valid ballots')],
         [`cast`, _('All casted ballots')],
         [`entitled`, _('All entitled users')],
-        // [`entitled_present`, _('Present entitled users')],
+        [`entitled_present`, _('Present entitled users')],
         [`disabled`, _('Disabled (no percents)')]
     ];
 
     public optionAmount = input<number>(null);
 
     public getSerialzedForm(): Record<string, unknown> {
+        const data = {
+            ...this.form.value
+        };
+        delete data[`allow_empty`];
+
+        if (!this.settings().enable_max_options_limit) {
+            delete data[`min_options_amount`];
+            delete data[`max_options_amount`];
+        }
+
+        return data;
+    }
+
+    public override getSerialzedAdditionalData(): Record<string, unknown> {
         return {
-            ...this.form.value,
-            min_options_amount: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_options_amount`],
-            min_vote_sum: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_vote_sum`]
+            allow_empty: this.form.value[`allow_empty`]
         };
     }
 
     protected initForm(): void {
         this.form = this.fb.group({
             onehundred_percent_base: [`valid`],
-            allow_general_abstain: [false],
+            allow_empty: [false],
             max_votes_per_option: [null],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [
@@ -97,14 +108,11 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
             `min_options_amount`,
             `max_vote_sum`,
             `min_vote_sum`,
-            `required_majority`
+            `required_majority`,
+            `allow_empty`
         ]) {
             if (data && data[field] !== undefined) patch[field] = data[field];
             else if (data && data.config[field] !== undefined) patch[field] = data.config[field];
-        }
-
-        if (patch[`min_options_amount`] !== undefined && patch[`min_vote_sum`] !== undefined) {
-            patch[`allow_general_abstain`] = +patch[`min_options_amount`] === 0 && +patch[`min_vote_sum`] === 0;
         }
 
         return patch;
