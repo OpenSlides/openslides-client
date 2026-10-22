@@ -1,5 +1,4 @@
 import { inject, Service } from '@angular/core';
-import { Assignment } from '@app/domain/models/assignments/assignment';
 import { PollVisibility } from '@app/domain/models/poll';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
@@ -7,6 +6,7 @@ import { _ } from '@ngx-translate/core';
 
 import { PollService } from '../../../../../modules/poll/services/poll.service/poll.service';
 import { PollControllerService } from '../../../../../modules/poll/services/poll-controller.service/poll-controller.service';
+import { ViewAssignment } from '../../../view-models';
 
 export const UnknownUserLabel = _(`Deleted user`);
 
@@ -27,13 +27,14 @@ export class AssignmentPollService extends PollService {
     private defaultRequiredMajority = this.meetingPollSettingsService.signal(`assignment`, `required_majority`);
     private defaultMethod = this.meetingPollSettingsService.signal(`assignment`, `method`);
 
-    public getDefaultPollData(contentObject?: Assignment): Partial<ViewPoll> & { method_preselection?: string } {
+    public getDefaultPollData(contentObject?: ViewAssignment): Partial<ViewPoll> & { method_preselection?: string } {
         const poll: Partial<ViewPoll> & { method_preselection?: string } = {
             title: this.translate.instant(`Ballot`),
             visibility: this.isElectronicVotingEnabled ? this.defaultPollType() : PollVisibility.Manually,
             entitled_group_ids: Object.values(this.defaultGroupIds() ?? []),
             live_voting_enabled: this.defaultEnableLiveVote(),
-            method_preselection: this.defaultMethod(),
+            method_preselection:
+                contentObject.candidate_ids.length <= 1 ? `approval.yes_no_abstain` : this.defaultMethod(),
             config: {
                 onehundred_percent_base: this.defaultPercentBase(),
                 required_majority: this.defaultRequiredMajority()

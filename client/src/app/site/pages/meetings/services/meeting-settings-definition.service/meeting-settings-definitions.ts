@@ -1099,7 +1099,10 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             'rating_approval.yes_no_abstain': _(`Yes/No/Abstain per candidate`),
                             'approval.yes_no': _(`Yes/No per list`),
                             'approval.yes_no_abstain': _(`Yes/No/Abstain per list`)
-                        }
+                        },
+                        helpText: _(
+                            `Polls with one candidate will always default to Yes/No/Abstain regardless of what is set here.`
+                        )
                     },
                     {
                         key: `assignment_poll_setting_enable_max_yes_votes`,
