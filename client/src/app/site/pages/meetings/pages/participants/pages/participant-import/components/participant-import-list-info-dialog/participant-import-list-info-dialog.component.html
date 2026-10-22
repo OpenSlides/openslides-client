@@ -1,0 +1,46 @@
+<div>
+    <div class="action-title text-align-center" mat-dialog-title>
+        <h1 class="dialog-title">
+            {{ 'The fields are defined as follows' | translate }}
+        </h1>
+    </div>
+    <mat-dialog-content class="fix-size">
+        <table class="padding-left-20">
+            <thead>
+                <tr>
+                    <th class="text-align-start">{{ 'Column Name' | translate }}</th>
+                    <th class="padding-left-20 text-align-start">{{ 'Meaning' | translate }}</th>
+                    <th class="text-align-start">{{ 'Notes' | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (column of defaultColumns; track column.property) {
+                    <tr>
+                        <td class="table-title-column">{{ column.property }}:</td>
+                        <td class="table-title-column fix-table-column-size">
+                            {{ column.label | translate }}
+                            @let customInfo = column.customInfo;
+                            @if (customInfo) {
+                                @if (isString(customInfo)) {
+                                    {{ customInfo | translate }}
+                                } @else {
+                                    {{ customInfo | async }}
+                                }
+                            }
+                        </td>
+                        <td class="table-title-column">
+                            @if (column.description) {
+                                {{ column.description | translate }}
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button mat-dialog-close>
+            {{ 'Close' | translate }}
+        </button>
+    </mat-dialog-actions>
+</div>
