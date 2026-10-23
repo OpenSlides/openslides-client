@@ -97,7 +97,7 @@
 </mat-card>
 
 <ng-template #canNotManageUsersTemplate>
-    <div class="fake-button-no-touch" matTooltip="{{ userAmount }} {{ 'participants' | translate }}">
+    <div class="fake-button-no-touch" [matTooltip]="userAmount + ' ' + ('participants' | translate)">
         <mat-icon
             [attr.aria-hidden]="false"
             [attr.aria-label]="('Number of participants' | translate) + ' ' + userAmount"
@@ -113,7 +113,7 @@
 <ng-template #canManageUsersTemplate>
     <button
         mat-icon-button
-        matTooltip="{{ userAmount }} {{ 'participants' | translate }}"
+        [matTooltip]="userAmount + ' ' + ('participants' | translate)"
         (click)="changeToMeetingUsers()"
     >
         <mat-icon

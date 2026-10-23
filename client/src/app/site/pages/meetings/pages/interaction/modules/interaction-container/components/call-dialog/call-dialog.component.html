@@ -33,7 +33,7 @@
                         mat-icon-button
                         type="button"
                         color="primary"
-                        matTooltip="{{ 'Full screen' | translate }}"
+                        [matTooltip]="'Full screen' | translate"
                         (click)="fullScreen()()"
                     >
                         <mat-icon>fullscreen</mat-icon>
