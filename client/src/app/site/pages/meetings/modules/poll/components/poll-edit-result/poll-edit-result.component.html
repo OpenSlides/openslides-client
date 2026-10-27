@@ -1,5 +1,3 @@
-<h2>{{ pollData().title }}</h2>
-
 <form>
     @for (option of options(); track option.key; let i = $index) {
         @if (options().length > 1 && (configType() === 'approval' || configType() === 'rating_approval')) {
@@ -9,43 +7,47 @@
         @switch (configType()) {
             @case ('rating_score')
             @case ('selection') {
-                <div class="option">
-                    <mat-form-field class="option-amount">
-                        <mat-label>{{ option.title }}</mat-label>
-                        <input matInput type="number" [formField]="resultForm.options[i].value.yes" />
-                    </mat-form-field>
+                @if (resultForm.options[i]) {
+                    <div class="option">
+                        <mat-form-field class="option-amount">
+                            <mat-label>{{ option.title }}</mat-label>
+                            <input matInput type="number" [formField]="resultForm.options[i].value.yes" />
+                        </mat-form-field>
 
-                    <mat-checkbox class="option-majority" [formField]="resultForm.options[i].majority">
-                        {{ 'majority' | translate }}
-                    </mat-checkbox>
-                </div>
+                        <mat-checkbox class="option-majority" [formField]="resultForm.options[i].majority">
+                            {{ 'majority' | translate }}
+                        </mat-checkbox>
+                    </div>
+                }
             }
             @case ('approval')
             @case ('rating_approval') {
                 <mat-radio-group [formField]="resultForm.options[i].majority_value">
                     <ng-template #option let-key="key" let-label="label">
-                        <div class="option">
-                            <mat-form-field class="option-amount">
-                                <mat-label>{{ label }}</mat-label>
-                                <input matInput type="number" [formField]="resultForm.options[i].value[key]" />
-                            </mat-form-field>
+                        @if (resultForm.options[i]) {
+                            <div class="option">
+                                <mat-form-field class="option-amount">
+                                    <mat-label>{{ label }}</mat-label>
+                                    <input matInput type="number" [formField]="resultForm.options[i].value[key]" />
+                                </mat-form-field>
 
-                            <div class="majority-container">
-                                <mat-radio-button class="option-majority" [value]="key">
-                                    {{ 'majority' | translate }}
-                                </mat-radio-button>
+                                <div class="majority-container">
+                                    <mat-radio-button class="option-majority" [value]="key">
+                                        {{ 'majority' | translate }}
+                                    </mat-radio-button>
 
-                                @if (resultForm.options[i].majority_value().value() === key) {
-                                    <button
-                                        mat-icon-button
-                                        [attr.aria-label]="'Unselect majority' | translate"
-                                        (click)="resultForm.options[i].majority_value().value.set(null)"
-                                    >
-                                        <mat-icon>close</mat-icon>
-                                    </button>
-                                }
+                                    @if (resultForm.options[i].majority_value().value() === key) {
+                                        <button
+                                            mat-icon-button
+                                            [attr.aria-label]="'Unselect majority' | translate"
+                                            (click)="resultForm.options[i].majority_value().value.set(null)"
+                                        >
+                                            <mat-icon>close</mat-icon>
+                                        </button>
+                                    }
+                                </div>
                             </div>
-                        </div>
+                        }
                     </ng-template>
 
                     <ng-container

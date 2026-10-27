@@ -1,5 +1,5 @@
 <mat-dialog-content>
-    <div class="poll-config" [class.hidden]="analogPollFormOpen()">
+    <div class="poll-config">
         <os-poll-form
             [customConfigForm]="true"
             [data]="pollData"
@@ -10,7 +10,7 @@
         </os-poll-form>
     </div>
 
-    @if (analogPollFormOpen()) {
+    @if (isAnalogPoll()) {
         <div class="poll-result">
             <os-poll-edit-result
                 configType="approval"
@@ -32,20 +32,6 @@
             <button mat-button [mat-dialog-close]="false">
                 <span>{{ 'Cancel' | translate }}</span>
             </button>
-        </div>
-
-        <div>
-            @if (isAnalogPoll()) {
-                @if (analogPollFormOpen()) {
-                    <button mat-button (click)="toggleAnalogPollForm()">
-                        <span>{{ 'Edit Poll' | translate }}</span>
-                    </button>
-                } @else if (!pollData.published) {
-                    <button mat-button (click)="toggleAnalogPollForm()">
-                        <span>{{ 'Edit Result' | translate }}</span>
-                    </button>
-                }
-            }
         </div>
     </div>
 </mat-dialog-actions>

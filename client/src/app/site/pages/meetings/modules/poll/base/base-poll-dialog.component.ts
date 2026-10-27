@@ -1,4 +1,4 @@
-import { computed, Directive, inject, signal, viewChild } from '@angular/core';
+import { computed, Directive, inject, viewChild } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Fqid, Id } from '@app/domain/definitions/key-types';
@@ -48,7 +48,6 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
         return this.pollForm().isValid();
     });
 
-    public analogPollFormOpen = signal(false);
     public isAnalogPoll = computed(() => {
         return this.pollForm().form.visibility().value() === PollVisibility.Manually;
     });
@@ -62,15 +61,6 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
     public constructor() {
         super();
         this.addKeyListener();
-    }
-
-    public toggleAnalogPollForm(): void {
-        const payload = this.getPayload();
-        if (payload.result && !(payload.result instanceof String)) {
-            payload.result = JSON.stringify(payload.result);
-        }
-        this.currentPollData = Object.assign(this.currentPollData, payload);
-        this.analogPollFormOpen.set(!this.analogPollFormOpen());
     }
 
     /**
