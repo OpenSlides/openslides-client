@@ -5,11 +5,10 @@
  * @returns {string}
  */
 export function djb2hash(str: string): string {
-    let hash = 5381;
-    let char: number;
-    for (let i = 0; i < str.length; i++) {
-        char = str.charCodeAt(i);
-        hash = (hash << 5) + hash + char;
+    let hash = 5381n;
+    for (const byte of new TextEncoder().encode(str)) {
+        hash = ((hash << 5n) + hash + BigInt(byte)) & 0xffffffffffffffffn;
     }
+
     return hash.toString();
 }
