@@ -1,10 +1,11 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, effect, input } from '@angular/core';
+import { Component, computed, effect, input, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { PollVisibility } from '@app/domain/models/poll';
 import { SelectionOnehundredPercentBase } from '@app/domain/models/poll/poll-config-selection';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
@@ -36,14 +37,20 @@ export interface PollFormSelection {
     styleUrls: [`../poll-form/poll-form.component.scss`, './poll-form-selection.component.scss']
 })
 export class PollFormSelectionComponent extends PollFormBaseComponent {
-    public validPercentBases: [SelectionOnehundredPercentBase, string][] = [
-        [`no_general`, _('Sum of votes without general options')],
-        [`valid`, _('All valid ballots')],
-        [`cast`, _('All casted ballots')],
-        [`entitled`, _('All entitled users')],
-        [`entitled_present`, _('Present entitled users')],
-        [`disabled`, _('Disabled (no percents)')]
-    ];
+    public validPercentBases: Signal<[SelectionOnehundredPercentBase, string][]> = computed(() => {
+        return [
+            [`no_general`, _('Sum of votes without general options')],
+            [`valid`, _('All valid ballots')],
+            [`cast`, _('All casted ballots')],
+            ...((this.data().visibility !== PollVisibility.Manually
+                ? [
+                      [`entitled`, _('All entitled users')],
+                      [`entitled_present`, _('Present entitled users')]
+                  ]
+                : []) as [SelectionOnehundredPercentBase, string][]),
+            [`disabled`, _('Disabled (no percents)')]
+        ];
+    });
 
     public hideMethod = input<boolean>(false);
     public optionAmount = input<number>(null);

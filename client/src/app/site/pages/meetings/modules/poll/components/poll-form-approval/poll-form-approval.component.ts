@@ -1,8 +1,9 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input, Signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { PollVisibility } from '@app/domain/models/poll';
 import { ApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-approval';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
@@ -31,15 +32,21 @@ export interface PollFormApproval {
 export class PollFormApprovalComponent extends PollFormBaseComponent {
     public hideMethod = input<boolean>(false);
 
-    public validPercentBases: [ApprovalOnehundredPercentBase, string][] = [
-        [`yes_no`, _('Yes/No')],
-        [`yes_no_abstain`, _('Yes/No/Abstain')],
-        [`valid`, _('All valid ballots')],
-        [`cast`, _('All casted ballots')],
-        [`entitled`, _('All entitled users')],
-        [`entitled_present`, _('Present entitled users')],
-        [`disabled`, _('Disabled (no percents)')]
-    ];
+    public validPercentBases: Signal<[ApprovalOnehundredPercentBase, string][]> = computed(() => {
+        return [
+            [`yes_no`, _('Yes/No')],
+            [`yes_no_abstain`, _('Yes/No/Abstain')],
+            [`valid`, _('All valid ballots')],
+            [`cast`, _('All casted ballots')],
+            ...((this.data().visibility !== PollVisibility.Manually
+                ? [
+                      [`entitled`, _('All entitled users')],
+                      [`entitled_present`, _('Present entitled users')]
+                  ]
+                : []) as [ApprovalOnehundredPercentBase, string][]),
+            [`disabled`, _('Disabled (no percents)')]
+        ];
+    });
 
     protected initForm(): void {
         this.form = this.fb.group({

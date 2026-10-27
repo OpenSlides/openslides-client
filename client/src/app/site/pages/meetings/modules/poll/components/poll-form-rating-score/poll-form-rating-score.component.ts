@@ -1,10 +1,11 @@
-import { Component, effect, input } from '@angular/core';
+import { Component, computed, effect, input, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { PollVisibility } from '@app/domain/models/poll';
 import { RatingScoreOnehundredPercentBase } from '@app/domain/models/poll/poll-config-rating-score';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
@@ -36,14 +37,20 @@ export interface PollFormRatingScore {
     styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-score.component.scss`]
 })
 export class PollFormRatingScoreComponent extends PollFormBaseComponent {
-    public validPercentBases: [RatingScoreOnehundredPercentBase, string][] = [
-        [`yes_no`, _('Yes/No per candidate')],
-        [`valid`, _('All valid ballots')],
-        [`cast`, _('All casted ballots')],
-        [`entitled`, _('All entitled users')],
-        [`entitled_present`, _('Present entitled users')],
-        [`disabled`, _('Disabled (no percents)')]
-    ];
+    public validPercentBases: Signal<[RatingScoreOnehundredPercentBase, string][]> = computed(() => {
+        return [
+            [`yes_no`, _('Yes/No per candidate')],
+            [`valid`, _('All valid ballots')],
+            [`cast`, _('All casted ballots')],
+            ...((this.data().visibility !== PollVisibility.Manually
+                ? [
+                      [`entitled`, _('All entitled users')],
+                      [`entitled_present`, _('Present entitled users')]
+                  ]
+                : []) as [RatingScoreOnehundredPercentBase, string][]),
+            [`disabled`, _('Disabled (no percents)')]
+        ];
+    });
 
     public optionAmount = input<number>(null);
 
