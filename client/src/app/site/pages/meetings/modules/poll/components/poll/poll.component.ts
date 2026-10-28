@@ -8,7 +8,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { RouterLink } from '@angular/router';
 import { PollState, PollVisibility } from '@app/domain/models/poll';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
-import { idFromFqid } from '@app/infrastructure/utils/transform-functions';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { DirectivesModule } from '@app/ui/directives';
@@ -74,11 +73,11 @@ export class PollComponent extends BaseMeetingComponent {
             return `/${this.poll().meeting_id}/polls/${this.poll().id}`;
         } else if (this.navigateTo() === `content_object`) {
             if (this.poll().isMotionPoll) {
-                return `/${this.poll().meeting_id}/motions/${idFromFqid(this.poll().content_object_id)}`;
+                return `/${this.poll().meeting_id}/motions/${this.poll().content_object.sequential_number}`;
             } else if (this.poll().isAssignmentPoll) {
-                return `/${this.poll().meeting_id}/assignments/${idFromFqid(this.poll().content_object_id)}`;
+                return `/${this.poll().meeting_id}/assignments/${this.poll().content_object.sequential_number}`;
             } else if (this.poll().isTopicPoll) {
-                return `/${this.poll().meeting_id}/topics/${idFromFqid(this.poll().content_object_id)}`;
+                return `/${this.poll().meeting_id}/topics/${this.poll().content_object.sequential_number}`;
             }
         }
 

@@ -9,6 +9,7 @@ export const PERCENT_DECIMAL_PLACES = 3;
 @Directive()
 export abstract class PollResultBaseComponent<T extends BaseViewModel, U> {
     public poll = input.required<ViewPoll>();
+    public config = input.required<T>();
 
     public results = computed<U>(() => {
         if (!this.poll().result) {
@@ -16,10 +17,6 @@ export abstract class PollResultBaseComponent<T extends BaseViewModel, U> {
         }
 
         return this.poll()?.config?.parsedResult() || {};
-    });
-
-    public config = computed<T | undefined>(() => {
-        return this.poll().config;
     });
 
     /**

@@ -446,13 +446,13 @@ describe(`utils: functions`, () => {
         }[] = [
             { test: ``, expect: `5381` },
             { test: ` `, expect: `177605` },
-            { test: `Hello World`, expect: `-2022174591` },
-            { test: `Apples`, expect: `-1482141334` },
-            { test: `Lorem ipsum dolor sit amet`, expect: `-157398551` },
-            { test: `!"§$%&/()=`, expect: `2127362171` },
-            { test: `1234567890`, expect: `-276485134` },
-            { test: `ABCDEFGHIJKLMNOP`, expect: `-2596616051` },
-            { test: `abcdefg`, expect: `442645281` }
+            { test: `Hello World`, expect: `13827776004929097857` },
+            { test: `Apples`, expect: `6952069910890` },
+            { test: `Lorem ipsum dolor sit amet`, expect: `14517756090510100969` },
+            { test: `!"§$%&/()=`, expect: `13765058223953244221` },
+            { test: `1234567890`, expect: `8243773245711789042` },
+            { test: `ABCDEFGHIJKLMNOP`, expect: `4982811068976515213` },
+            { test: `abcdefg`, expect: `229459070434081` }
         ];
 
         for (const date of data) {

@@ -1,16 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
-import { VoteValue, VoteValueVerbose } from '@app/domain/models/poll';
+import { ChangeDetectorRef, Component, inject, Input, OnInit } from '@angular/core';
+import { MatDividerModule } from '@angular/material/divider';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ThemeService } from '@app/site/services/theme.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
-import { ViewPollBallot } from '../../../../pages/polls/view-models/poll-ballot';
+import { BaseVoteData } from '../../../../pages/polls/components/poll-single-votes/poll-single-votes.component';
+import { PollApprovalBallotValue } from '../../../../pages/polls/view-models/poll-ballot';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { VotesFilterService } from '../../services/votes-filter.service';
 
 interface VoteAmount {
-    value: VoteValue;
-    name: string;
+    value: PollApprovalBallotValue;
     amount: number;
     hiddenInBase: boolean;
     weightedAmount: number;
@@ -21,8 +23,7 @@ interface VoteAmount {
     selector: `os-poll-filted-votes-chart`,
     templateUrl: `./poll-filtered-votes-chart.component.html`,
     styleUrls: [`./poll-filtered-votes-chart.component.scss`],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [MatDividerModule, TranslatePipe, TranslateKeyPipe]
 })
 export class PollFilteredVotesChartComponent extends BaseUiComponent implements OnInit {
     @Input()
@@ -47,27 +48,31 @@ export class PollFilteredVotesChartComponent extends BaseUiComponent implements 
         this.subscriptions.push(this.filterService.outputObservable.subscribe(votes => this.onVotesUpdated(votes)));
     }
 
-    private onVotesUpdated(votes: ViewPollBallot[]): void {
+    private onVotesUpdated(votes: BaseVoteData[]): void {
         this.voteAmounts = [];
-        const voteValues: VoteValue[] = !this.poll.config?.allow_abstain ? [`Y`, `N`] : [`Y`, `N`, `A`];
-        const baseVoteValues: VoteValue[] =
-            this.poll.config?.onehundred_percent_base === `yes_no` ? [`Y`, `N`] : [`Y`, `N`, `A`];
-        const countedVotes = votes.filter(v => baseVoteValues.indexOf(v.value) !== -1);
+        const voteValues: PollApprovalBallotValue[] = !this.poll.config?.allow_abstain
+            ? [`yes`, `no`]
+            : [`yes`, `no`, `abstain`];
+        const baseVoteValues: PollApprovalBallotValue[] =
+            this.poll.config?.onehundred_percent_base === `yes_no` ? [`yes`, `no`] : [`yes`, `no`, `abstain`];
+        const countedVotes = votes.filter(v => baseVoteValues.indexOf(v.valueRaw as PollApprovalBallotValue) !== -1);
         for (const i in voteValues) {
             const voteValue = voteValues[i];
             this.voteAmounts.push({
                 value: voteValue,
-                name: VoteValueVerbose[voteValue],
                 hiddenInBase: baseVoteValues.indexOf(voteValue) === -1,
-                amount: votes.reduce((acc, curr) => acc + +(curr.value === voteValue), 0),
-                weightedAmount: votes.reduce((acc, curr) => acc + (curr.value === voteValue ? +curr.weight : 0), 0),
-                backgroundColor: this.themeService.getPollColor(VoteValueVerbose[voteValue].toLowerCase())
+                amount: votes.reduce((acc, curr) => acc + +(curr.valueRaw === voteValue), 0),
+                weightedAmount: votes.reduce(
+                    (acc, curr) => acc + (curr.valueRaw === voteValue ? +(curr.weight ?? 1) : 0),
+                    0
+                ),
+                backgroundColor: this.themeService.getPollColor(voteValue)
             });
         }
 
         this.totalAmount = votes.length;
-        this.totalAmountWeighted = countedVotes.reduce((acc, curr) => acc + +curr.weight, 0);
-        this.validAmount = votes.reduce((acc, curr) => acc + +curr.weight, 0);
+        this.totalAmountWeighted = countedVotes.reduce((acc, curr) => acc + +(curr.weight ?? 1), 0);
+        this.validAmount = votes.reduce((acc, curr) => acc + +(curr.weight ?? 1), 0);
 
         this.usesVoteWeight =
             this.meetingSettings.instant(`users_enable_vote_weight`) || this.totalAmount !== this.validAmount;

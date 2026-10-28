@@ -10,6 +10,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
+import { PollState } from '@app/domain/models/poll';
+import { MeetingUserRepositoryService } from '@app/gateways/repositories/meeting_user';
 import { BaseComponent } from '@app/site/base/base.component';
 import { EntitledUsersListFilterService } from '@app/site/pages/meetings/modules/poll/services/entitled-user-filter.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
@@ -18,9 +20,10 @@ import { HeadBarModule } from '@app/ui/modules/head-bar';
 import { ListModule } from '@app/ui/modules/list';
 import { PipesModule } from '@app/ui/pipes';
 import { TranslatePipe } from '@ngx-translate/core';
-import { combineLatest, map, Observable, startWith, switchMap, tap } from 'rxjs';
+import { combineLatest, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
 
 import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
+import { ViewPollEntitledUser } from '../../view-models/poll-entitled-user';
 
 export interface EntitledUserData extends Identifiable {
     meetingUser: ViewMeetingUser;
@@ -58,19 +61,53 @@ export class PollEntitledUserComponent extends BaseComponent {
     public filterProps = [`meetingUser.user.getFullName`];
 
     public entitledUsers$: Observable<EntitledUserData[]> = toObservable(this.poll).pipe(
-        switchMap(poll => combineLatest([poll.entitled_users$, poll.ballot_users$.pipe(startWith([]))])),
-        map(([users, voted]) => {
+        switchMap(poll =>
+            poll.state === PollState.Finished
+                ? combineLatest([
+                      of(poll),
+                      poll.entitled_users$,
+                      poll.ballot_users$.pipe(startWith([])),
+                      of([] as ViewMeetingUser[])
+                  ])
+                : combineLatest([
+                      of(poll),
+                      of([] as ViewPollEntitledUser[]),
+                      poll.ballot_users$.pipe(startWith([])),
+                      this.userRepo.getViewModelListObservable().pipe(
+                          map(users => {
+                              return users.filter(mu => {
+                                  const countable = mu.user.isVoteCountable;
+                                  const inVoteGroup = poll.entitled_group_ids.intersect(mu.group_ids).length;
+
+                                  return countable && inVoteGroup;
+                              });
+                          })
+                      )
+                  ])
+        ),
+        map(([poll, entitledUsersAtStop, voted, entitledUsers]) => {
             const votedSet = new Set<Id>();
             for (const user of voted) {
                 votedSet.add(user.represented_meeting_user_id);
             }
 
-            return users.map(
+            if (poll.state === PollState.Finished) {
+                return entitledUsersAtStop.map(
+                    eUser =>
+                        ({
+                            meetingUser: eUser.meeting_user,
+                            isPresent: eUser.present,
+                            hasVoted: votedSet.has(eUser.meeting_user_id)
+                        }) as EntitledUserData
+                );
+            }
+
+            return entitledUsers.map(
                 eUser =>
                     ({
-                        meetingUser: eUser.meeting_user,
-                        isPresent: false, // TODO: Implement or remove
-                        hasVoted: votedSet.has(eUser.meeting_user_id)
+                        meetingUser: eUser,
+                        isPresent: eUser.user.is_present,
+                        hasVoted: votedSet.has(eUser.id)
                     }) as EntitledUserData
             );
         }),
@@ -80,4 +117,5 @@ export class PollEntitledUserComponent extends BaseComponent {
     public totalCount = signal(0);
 
     public filter = inject(EntitledUsersListFilterService);
+    public userRepo = inject(MeetingUserRepositoryService);
 }

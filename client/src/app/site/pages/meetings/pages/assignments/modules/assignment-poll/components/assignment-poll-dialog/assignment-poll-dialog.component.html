@@ -1,20 +1,21 @@
 <mat-dialog-content>
-    <div class="poll-config" [class.hidden]="analogPollFormOpen()">
+    <div class="poll-config">
         <os-poll-form
             optionType="meeting_user"
             [data]="pollData"
             [isEVotingEnabled]="isEVotingEnabled"
             [optionAmount]="optionAmount"
+            [pollSettings]="pollSettings | async"
         ></os-poll-form>
     </div>
 
-    @if (analogPollFormOpen()) {
+    @if (isAnalogPoll() && pollForm().methodConfig()) {
         <div class="poll-result">
             <os-poll-edit-result
                 [configType]="pollForm().selectedMethod()"
                 [options]="analogPollOptions()"
                 [pollConfigData]="pollForm().methodConfig()"
-                [pollData]="pollData"
+                [pollData]="currentPollData"
             />
         </div>
     }
@@ -31,20 +32,6 @@
             <button mat-button [mat-dialog-close]="false">
                 <span>{{ 'Cancel' | translate }}</span>
             </button>
-        </div>
-
-        <div>
-            @if (isAnalogPoll()) {
-                @if (analogPollFormOpen()) {
-                    <button mat-button (click)="analogPollFormOpen.set(false)">
-                        <span>{{ 'Edit Poll' | translate }}</span>
-                    </button>
-                } @else {
-                    <button mat-button (click)="analogPollFormOpen.set(true)">
-                        <span>{{ 'Edit Result' | translate }}</span>
-                    </button>
-                }
-            }
         </div>
     </div>
 </mat-dialog-actions>

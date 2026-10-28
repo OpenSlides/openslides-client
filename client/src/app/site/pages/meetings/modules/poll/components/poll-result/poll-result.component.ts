@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 import { PollResultApprovalComponent } from '../poll-result-approval/poll-result-approval.component';
@@ -20,6 +21,11 @@ import { PollResultSelectionComponent } from '../poll-result-selection/poll-resu
 })
 export class PollResultComponent {
     public poll = input.required<ViewPoll>();
+
+    public config = rxResource<any, ViewPoll>({
+        params: () => this.poll(),
+        stream: ({ params }) => params.config$
+    });
 
     public configType = computed(() => {
         return this.poll().config?.method ?? `none`;

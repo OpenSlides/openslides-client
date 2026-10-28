@@ -55,7 +55,7 @@ export class PollResultRatingApprovalComponent extends PollResultBaseComponent<
             } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
                 majority = (+results[option.id]?.yes || 0) >= (onehundredBase * 2) / 3;
             }
-            rows.push({
+            const row = {
                 option,
                 yes: +results[option.id]?.yes || 0,
                 yes_percent: onehundredBase
@@ -72,14 +72,20 @@ export class PollResultRatingApprovalComponent extends PollResultBaseComponent<
                           .toNumber()
                     : onehundredBase,
                 abstain: +results[option.id]?.abstain || 0,
-                abstain_percent: onehundredBase
+                abstain_percent: null,
+                majority
+            };
+
+            if (this.config().onehundred_percent_base !== `yes_no`) {
+                row.abstain_percent = onehundredBase
                     ? Big(results[option.id]?.abstain || 0)
                           .div(onehundredBase)
                           .mul(100)
                           .toNumber()
-                    : onehundredBase,
-                majority
-            });
+                    : onehundredBase;
+            }
+
+            rows.push(row);
         }
 
         return rows;
@@ -138,8 +144,11 @@ export class PollResultRatingApprovalComponent extends PollResultBaseComponent<
     });
 
     public presentEntitledUsers = computed<number | null>(() => {
-        // TODO: Implement if available
-        return null;
+        if (this.config().onehundred_percent_base !== `entitled_present`) {
+            return null;
+        }
+
+        return this.poll().entitled_users?.filter(u => u.present).length;
     });
 
     public globalRequiredMajority = computed<number | null>(() => {

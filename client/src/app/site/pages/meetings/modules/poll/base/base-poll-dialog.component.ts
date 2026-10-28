@@ -1,4 +1,4 @@
-import { computed, Directive, inject, signal, viewChild } from '@angular/core';
+import { computed, Directive, inject, viewChild } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Fqid, Id } from '@app/domain/definitions/key-types';
@@ -48,7 +48,6 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
         return this.pollForm().isValid();
     });
 
-    public analogPollFormOpen = signal(false);
     public isAnalogPoll = computed(() => {
         return this.pollForm().form.visibility().value() === PollVisibility.Manually;
     });
@@ -56,6 +55,8 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
     protected formBuilder = inject(UntypedFormBuilder);
     public dialogRef = inject(MatDialogRef<BasePollDialogComponent>);
     public pollData: ViewPoll = inject(MAT_DIALOG_DATA);
+
+    public currentPollData: ViewPoll = this.pollData;
 
     public constructor() {
         super();
@@ -66,11 +67,26 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
      * Submits the values from dialog.
      */
     public submitPoll(): void {
+        this.dialogRef.close(this.getPayload());
+    }
+
+    /**
+     * Returns the poll method related part of the payload
+     */
+    public abstract methodPayload(): PollMethodPayload;
+
+    /**
+     * Returns the poll options related part of the payload
+     */
+    public abstract optionsPayload(): PollOptionsPayload;
+
+    protected getPayload(): PollUpdatePayload {
         const formValues = this.pollForm().getValues();
         const visibility: PollVisibility = formValues?.visibility;
 
         const payload: PollUpdatePayload = {
             title: formValues?.title,
+            allow_empty: formValues?.allow_empty,
             ...this.methodPayload(),
             ...this.optionsPayload(),
             visibility,
@@ -87,18 +103,8 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
             }
         }
 
-        this.dialogRef.close(payload);
+        return payload;
     }
-
-    /**
-     * Returns the poll method related part of the payload
-     */
-    public abstract methodPayload(): PollMethodPayload;
-
-    /**
-     * Returns the poll options related part of the payload
-     */
-    public abstract optionsPayload(): PollOptionsPayload;
 
     private addKeyListener(): void {
         if (!this.dialogRef) {

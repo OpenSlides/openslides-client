@@ -1,4 +1,5 @@
 import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
+import { isFqid } from '@app/infrastructure/utils/transform-functions';
 import { ViewModelRelations } from '@app/site/base/base-view-model';
 import Big from 'big.js';
 
@@ -26,11 +27,11 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
             case 'valid':
                 return this.validBallots;
             case 'cast':
-                return this.poll.ballot_user_ids?.length || 0;
+                return this.parsedResult().total_ballots;
             case 'entitled':
-                return null;
+                return this.poll.entitled_user_ids?.length;
             case 'entitled_present':
-                return null;
+                return this.poll?.entitled_users.filter(u => u.present).length ?? null;
         }
 
         return null;
@@ -44,7 +45,7 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
         }
 
         for (const key of Object.keys(result)) {
-            if (key === `invalid`) {
+            if (key === `invalid` || !isNaN(+result[key])) {
                 continue;
             }
 
@@ -62,7 +63,7 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
         }
 
         for (const key of Object.keys(result)) {
-            if (key !== `invalid` && key !== `nota` && key !== `abstain`) {
+            if ((!isNaN(+key) || isFqid(key) || key.startsWith(`text-`)) && !isNaN(+result[key])) {
                 total = total.plus(result[key]);
             }
         }
