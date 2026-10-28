@@ -1,0 +1,43 @@
+<h2 class="dialog-title" mat-dialog-title>
+    {{ (data.isMultiSelect ? 'Move all selected items to agenda' : 'Move ' + data.title + ' to agenda') | translate }}
+</h2>
+<mat-dialog-content class="dialog-content padding-top">
+    <form class="agenda-add-form" [formGroup]="toAgendaForm">
+        @let visibilityControl = toAgendaForm.controls.agenda_type;
+        <div [style.margin-bottom]="visibilityControl.touched && visibilityControl.value === null ? '1em' : null">
+            <mat-form-field appearance="outline" class="padding-top form-field">
+                <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
+                <mat-select formControlName="agenda_type" required>
+                    @for (type of visibilityChoices; track type) {
+                        <mat-option [value]="type.key">
+                            {{ type.name }}
+                        </mat-option>
+                    }
+                </mat-select>
+                @if (visibilityControl.touched) {
+                    <mat-error>
+                        {{ 'Please select an agenda visibility' | translate }}
+                    </mat-error>
+                }
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
+                <os-list-search-selector
+                    formControlName="agenda_parent_id"
+                    [includeNone]="true"
+                    [inputListValues]="parentObserver"
+                ></os-list-search-selector>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<mat-dialog-actions class="text-align-end">
+    <button mat-button type="button" (click)="dialogRef.close()">{{ 'Cancel' | translate }}</button>
+
+    <button color="primary" mat-button type="button" [disabled]="isVisibilitySet()" (click)="addToAgenda()">
+        {{ 'Move to agenda' | translate }}
+    </button>
+</mat-dialog-actions>
