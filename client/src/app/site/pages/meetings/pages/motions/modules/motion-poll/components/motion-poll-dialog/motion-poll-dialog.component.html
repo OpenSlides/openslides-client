@@ -6,7 +6,7 @@
             [isEVotingEnabled]="isEVotingEnabled"
             [pollSettings]="pollSettings | async"
         >
-            <os-poll-form-approval [data]="pollData" [settings]="pollSettings | async" />
+            <os-poll-form-approval [formData]="pollData" [initialData]="pollData" [settings]="pollSettings | async" />
         </os-poll-form>
     </div>
 

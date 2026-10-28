@@ -42,7 +42,7 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             [`no_general`, _('Sum of votes without general options')],
             [`valid`, _('All valid ballots')],
             [`cast`, _('All casted ballots')],
-            ...((this.data().visibility !== PollVisibility.Manually
+            ...((this.formData().visibility !== PollVisibility.Manually
                 ? [
                       [`entitled`, _('All entitled users')],
                       [`entitled_present`, _('Present entitled users')]
@@ -104,7 +104,7 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             `allow_empty`
         ]) {
             if (data && data[field] !== undefined) patch[field] = data[field];
-            else if (data && data.config[field] !== undefined) patch[field] = data.config[field];
+            else if (data && data.config && data.config[field] !== undefined) patch[field] = data.config[field];
         }
 
         if (patch[`onehundred_percent_base`] === `yes_no`) {

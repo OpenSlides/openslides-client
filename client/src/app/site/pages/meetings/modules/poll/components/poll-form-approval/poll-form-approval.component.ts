@@ -38,7 +38,7 @@ export class PollFormApprovalComponent extends PollFormBaseComponent {
             [`yes_no_abstain`, _('Yes/No/Abstain')],
             [`valid`, _('All valid ballots')],
             [`cast`, _('All casted ballots')],
-            ...((this.data().visibility !== PollVisibility.Manually
+            ...((this.formData().visibility !== PollVisibility.Manually
                 ? [
                       [`entitled`, _('All entitled users')],
                       [`entitled_present`, _('Present entitled users')]

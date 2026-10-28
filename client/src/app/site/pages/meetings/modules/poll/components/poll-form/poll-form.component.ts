@@ -87,10 +87,6 @@ export class PollFormComponent extends BaseComponent {
 
     public readonly data = input<Partial<ViewPoll> & { method_preselection?: string }>({});
 
-    public updatedData = computed<Partial<ViewPoll> & { method_preselection?: string }>(() => {
-        return Object.assign({}, this.data(), this.form().value());
-    });
-
     private pollModel = signal<PollForm>({
         title: ``,
         visibility: PollVisibility.Open,

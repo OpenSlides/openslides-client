@@ -120,27 +120,35 @@
         <div class="method">
             @switch (selectedMethod()) {
                 @case ('approval') {
-                    <os-poll-form-approval [data]="updatedData()" [hideMethod]="true" [settings]="pollSettings()" />
+                    <os-poll-form-approval
+                        [formData]="form().value()"
+                        [hideMethod]="true"
+                        [initialData]="data()"
+                        [settings]="pollSettings()"
+                    />
                 }
                 @case ('selection') {
                     <os-poll-form-selection
-                        [data]="updatedData()"
+                        [formData]="form().value()"
                         [hideMethod]="true"
+                        [initialData]="data()"
                         [optionAmount]="optionAmount()"
                         [settings]="pollSettings()"
                     />
                 }
                 @case ('rating_approval') {
                     <os-poll-form-rating-approval
-                        [data]="updatedData()"
+                        [formData]="form().value()"
                         [hideMethod]="true"
+                        [initialData]="data()"
                         [optionAmount]="optionAmount()"
                         [settings]="pollSettings()"
                     />
                 }
                 @case ('rating_score') {
                     <os-poll-form-rating-score
-                        [data]="updatedData()"
+                        [formData]="form().value()"
+                        [initialData]="data()"
                         [optionAmount]="optionAmount()"
                         [settings]="pollSettings()"
                     />

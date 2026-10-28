@@ -42,7 +42,7 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
             [`yes_no`, _('Yes/No per candidate')],
             [`valid`, _('All valid ballots')],
             [`cast`, _('All casted ballots')],
-            ...((this.data().visibility !== PollVisibility.Manually
+            ...((this.formData().visibility !== PollVisibility.Manually
                 ? [
                       [`entitled`, _('All entitled users')],
                       [`entitled_present`, _('Present entitled users')]
