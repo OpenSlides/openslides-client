@@ -19,14 +19,6 @@
                         <td class="table-title-column">{{ column.property }}:</td>
                         <td class="table-title-column fix-table-column-size">
                             {{ column.label | translate }}
-                            @let customInfo = column.customInfo;
-                            @if (customInfo) {
-                                @if (isString(customInfo)) {
-                                    {{ customInfo | translate }}
-                                } @else {
-                                    {{ customInfo | async }}
-                                }
-                            }
                         </td>
                         <td class="table-title-column">
                             @if (column.description) {

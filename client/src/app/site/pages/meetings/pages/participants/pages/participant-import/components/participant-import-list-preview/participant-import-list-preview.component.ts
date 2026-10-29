@@ -41,10 +41,10 @@ import { START_POSITION } from '@app/ui/modules/scrolling-table/directives/scrol
 import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, map, Observable, of, Subscription } from 'rxjs';
 
+import { BackendImportRowClass } from '../../backend-import-row/backend-import-row-class';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 import { ParticipantImportFilterService } from '../../services/participant-import-filter.service';
 import { ParticipantImportPreviewSearchService } from '../../services/participant-import-search.service';
-import { ViewImportedParticipant } from '../../view-models/view-participant-import';
 import { ParticipantImportListInfoDialogComponent } from '../participant-import-list-info-dialog/participant-import-list-info-dialog.component';
 
 @Component({
@@ -74,8 +74,10 @@ import { ParticipantImportListInfoDialogComponent } from '../participant-import-
 export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy {
     public readonly START_POSITION = START_POSITION;
 
-    public readonly viewList = viewChild.required(ViewListComponent);
-    public readonly csvConfigMenu = viewChild.required<MatDrawer>(MatDrawer);
+    protected readonly viewList = viewChild.required(ViewListComponent);
+    protected readonly csvConfigMenu = viewChild.required<MatDrawer>(MatDrawer);
+    protected readonly importDialog = viewChild.required<TemplateRef<string>>('ImportDialog');
+    protected readonly summaryDialog = viewChild.required<TemplateRef<string>>('ImportDialogSummary');
 
     protected searchFieldInput = input<string>('');
     protected searchFilterUpdated = output<string>();
@@ -95,6 +97,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     private rows: BackendImportIdentifiedRow[];
     private tempPreviewsObservable: Subscription;
     private importPhaseObservable: Subscription;
+
     /** The header's order according to how they are displayed on the template file */
     private headersConfig = [
         { header: 'title', size: 50 },
@@ -249,7 +252,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * @param item a row with a current state
      * @return the icon for the item
      */
-    protected getActionIconRow(item: ViewImportedParticipant): string {
+    protected getActionIconRow(item: BackendImportRowClass): string {
         switch (item[`state`]) {
             case BackendImportState.Error: // no import possible
                 return this._state !== BackendImportPhase.FINISHED ? `error_outline` : 'close';
@@ -312,7 +315,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return decimalString;
     }
 
-    protected getColorIcon(item: ViewImportedParticipant | BackendImportEntryObject): string {
+    protected getColorIcon(item: BackendImportRowClass | BackendImportEntryObject): string {
         switch (item[`state`] ?? item[`info`]) {
             case BackendImportState.Error: // no import possible
                 return `red-warning-text`;
@@ -381,7 +384,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
      * @param entry a row with a current state
      * @eturn the tooltip for the item
      */
-    protected getRowTooltip(row: ViewImportedParticipant): string {
+    protected getRowTooltip(row: BackendImportRowClass): string {
         switch (row.state) {
             case BackendImportState.Error: // no import possible
                 return (
@@ -487,10 +490,10 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         this.summary = summary;
     }
 
-    protected calculateRows(previews: BackendImportPreview[]): ViewImportedParticipant[] {
+    protected calculateRows(previews: BackendImportPreview[]): BackendImportRowClass[] {
         return previews?.flatMap(preview =>
             preview.rows.map(row => {
-                const participant = new ViewImportedParticipant(row.id, row);
+                const participant = new BackendImportRowClass(row.id, row);
                 this.isReferenced(participant);
                 this.isUnchanged(participant);
                 return participant;
@@ -513,14 +516,14 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return summary?.filter(col => col.name === 'structure levels created' || col.name === 'groups created');
     }
 
-    protected async importData(dialogTemplate: TemplateRef<string>, summaryDialog: TemplateRef<string>): Promise<void> {
+    protected async importData(): Promise<void> {
         const customOptions = {
             width: `600px`,
             disableClose: false,
             maxWidth: `90vw`,
             maxHeight: `90vh`
         };
-        const ref = this.dialog.open(dialogTemplate, {
+        const ref = this.dialog.open(this.importDialog(), {
             data: this.summary,
             ...customOptions,
             hasBackdrop: false
@@ -530,7 +533,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
             // The close() is needed here so dialogs don't overlap if the second one opens
             ref.close();
             this.dialog
-                .open(summaryDialog, {
+                .open(this.summaryDialog(), {
                     data: this.summary,
                     ...customOptions
                 })
@@ -541,7 +544,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         ref.close();
     }
 
-    protected isReferenced(row: ViewImportedParticipant): boolean {
+    protected isReferenced(row: BackendImportRowClass): boolean {
         if (row.state === BackendImportState.Error) return false;
         if (row.data?.['username']?.['info'] === 'referenced') {
             row.setState = BackendImportState.Referenced;
@@ -550,7 +553,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
         return false;
     }
 
-    protected isUnchanged(item: ViewImportedParticipant): boolean {
+    protected isUnchanged(item: BackendImportRowClass): boolean {
         if (![BackendImportState.Done, BackendImportState.Referenced].includes(item.state)) {
             return false;
         }
@@ -562,7 +565,7 @@ export class ParticipantImportListPreviewComponent implements OnInit, OnDestroy 
     }
 
     protected checkChanges(
-        participant: ViewImportedParticipant,
+        participant: BackendImportRowClass,
         headerName?: string
     ): boolean | ['autorenew', Record<string, unknown>] {
         const changes: Record<string, unknown> = {};

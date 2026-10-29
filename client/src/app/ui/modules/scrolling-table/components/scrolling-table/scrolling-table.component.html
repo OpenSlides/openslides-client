@@ -12,7 +12,13 @@
                     "
                 >
                     @if (showHeader) {
-                        <div class="scrolling-table-header">
+                        <div
+                            [ngClass]="
+                                horizontalScroll
+                                    ? `scrolling-table-header-participant-import`
+                                    : `scrolling-table-header`
+                            "
+                        >
                             <div
                                 class="flex-vertical-center placeholder divider-bottom scrolling-table-header"
                                 [ngStyle]="getNgStyle()"

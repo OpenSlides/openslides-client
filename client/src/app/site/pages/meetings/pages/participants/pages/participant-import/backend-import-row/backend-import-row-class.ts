@@ -15,7 +15,7 @@ export const IMPORTED_PARTICIPANT_STATES = [
 ];
 export const IMPORTED_PARTICIPANT_STATES_ITERABLE = [`new`, `done`, `referenced`, `unchanged`, `error`];
 
-export class ViewImportedParticipant implements Identifiable, BackendImportRow {
+export class BackendImportRowClass implements Identifiable, BackendImportRow {
     // This class wraps BackendImportIdentifiedRow
 
     public static readonly COLLECTION = `importedParticipant`;

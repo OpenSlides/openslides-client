@@ -2,7 +2,7 @@
     box-sizing: border-box;
 
     &:hover {
-        background-color: var(--mat-app-background-color);
+        background-color: rgba(0, 0, 0, 0.025);
     }
 
     .scrolling-table-cell {
@@ -46,17 +46,25 @@
     user-select: none;
 }
 
-.scrolling-table-header {
+.scrolling-table-header,
+.scrolling-table-header-participant-import {
     @include scrolling-table-style();
     @include render-all-table();
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: var(--mat-app-background-color);
 
     .scrolling-table-cell {
         font-weight: 500;
     }
+}
+
+.scrolling-table-header-participant-import {
+    &:hover {
+        background-color: var(--mat-app-background-color);
+    }
+
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--mat-app-background-color);
 }
 
 .scrolling-table--no-data-wrapper {

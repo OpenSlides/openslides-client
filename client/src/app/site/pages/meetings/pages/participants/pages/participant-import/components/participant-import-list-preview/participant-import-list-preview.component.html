@@ -3,12 +3,7 @@
         <h1 class="mock-h2">{{ 'Import participants' | translate }}</h1>
     </div>
     <ng-container class="menu-slot">
-        <button
-            mat-button
-            [disabled]="uploadButton"
-            [hidden]="importDone"
-            (click)="importData(ImportDialog, ImportDialogSummary)"
-        >
+        <button mat-button [disabled]="uploadButton" [hidden]="importDone" (click)="importData()">
             <span class="upper">{{ 'Import' | translate }}</span>
         </button>
     </ng-container>

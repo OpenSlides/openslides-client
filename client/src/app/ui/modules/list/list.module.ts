@@ -55,10 +55,10 @@ const DECLARATIONS = [ListComponent, ViewListComponent];
         OpenSlidesTranslationModule,
         IconContainerComponent,
         InputModule,
-        ...MODULES,
         MatRadioButton,
         MatRadioModule,
-        CdkPortalOutlet
+        CdkPortalOutlet,
+        ...MODULES
     ]
 })
 export class ListModule {}

@@ -12,7 +12,7 @@ export const participantHeadersAndVerboseNames: { [key in keyof GeneralUser]?: a
     comment: `Comment`
 };
 
-export const participantColumns: (keyof GeneralUser)[] = [
+export const participantColumns = [
     `title`,
     `first_name`,
     `last_name`,
@@ -34,11 +34,9 @@ export const participantColumns: (keyof GeneralUser)[] = [
     `home_committee`,
     `external`,
     `comment`
-];
+] satisfies (keyof GeneralUser)[];
 
-type ExcludedGeneralUserKey = Exclude<keyof GeneralUser, keyof typeof Object.prototype>;
-
-export const participantColumnsDescriptions: Partial<Record<ExcludedGeneralUserKey, string>> = {
+export const participantColumnsDescriptions: Partial<Record<(typeof participantColumns)[number], string>> = {
     title: '',
     first_name: 'first name, last name, or username must be provided',
     last_name: 'first name, last name, or username must be provided',

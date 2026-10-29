@@ -34,9 +34,12 @@ import { BackendImportPhase } from '../backend-import-list.component';
     ]
 })
 export class BackendImportParticipantListComponent implements OnInit {
-    public modelName = input.required<string>();
-    public instructionsForImport = input<string>();
-    public columnsInformation = input<string>();
+    public modelName = 'Participant';
+    public instructionsForImport =
+        'Existing accounts can be reused or updated by using: <ul><li>Membership number <i>(recommended)</i><li>Username<li>Email address AND first name AND last name';
+
+    public columnsInformation =
+        '<ul><li>Column identifiers must not be changed. The order is arbitrary.<li>Unnecessary columns can be deleted.';
 
     /**
      * Client-side definition of required/accepted columns.

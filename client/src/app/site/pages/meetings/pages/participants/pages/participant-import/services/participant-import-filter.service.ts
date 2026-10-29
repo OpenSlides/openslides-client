@@ -5,10 +5,10 @@ import { ActiveFiltersService } from '@app/site/services/active-filters.service'
 import { _ } from '@ngx-translate/core';
 
 import {
+    BackendImportRowClass,
     IMPORTED_PARTICIPANT_STATES,
-    IMPORTED_PARTICIPANT_STATES_ITERABLE,
-    ViewImportedParticipant
-} from '../view-models/view-participant-import';
+    IMPORTED_PARTICIPANT_STATES_ITERABLE
+} from '../backend-import-row/backend-import-row-class';
 
 @Injectable({
     providedIn: 'root'
@@ -19,7 +19,7 @@ export class ParticipantImportFilterService extends BaseFilterListService<any> {
         super(store);
     }
 
-    protected getFilterDefinitions(): OsFilter<ViewImportedParticipant>[] {
+    protected getFilterDefinitions(): OsFilter<BackendImportRowClass>[] {
         return [
             {
                 property: 'state',

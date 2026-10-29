@@ -1,4 +1,3 @@
-import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
@@ -16,7 +15,7 @@ import {
     selector: `os-participant-import-list-info-dialog`,
     templateUrl: `./participant-import-list-info-dialog.component.html`,
     styleUrls: [`./participant-import-list-info-dialog.component.scss`],
-    imports: [HeadBarModule, ListModule, AsyncPipe, TranslatePipe, MatDialogModule]
+    imports: [HeadBarModule, ListModule, TranslatePipe, MatDialogModule]
 })
 export class ParticipantImportListInfoDialogComponent {
     public readonly defaultColumns: ImportListHeaderDefinition[] = participantColumns.map(header => ({

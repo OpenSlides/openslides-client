@@ -1,10 +1,10 @@
 import { Service } from '@angular/core';
 import { ListSearchService } from '@app/ui/modules/list/services/list-search.service';
 
-import { ViewImportedParticipant } from '../view-models/view-participant-import';
+import { BackendImportRowClass } from '../backend-import-row/backend-import-row-class';
 
 @Service()
-export class ParticipantImportPreviewSearchService extends ListSearchService<ViewImportedParticipant> {
+export class ParticipantImportPreviewSearchService extends ListSearchService<BackendImportRowClass> {
     public constructor() {
         super(
             [
