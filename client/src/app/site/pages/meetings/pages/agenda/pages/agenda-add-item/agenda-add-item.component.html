@@ -5,7 +5,7 @@
     <form class="agenda-add-form" [formGroup]="toAgendaForm">
         @let visibilityControl = toAgendaForm.controls.agenda_type;
         <div [style.margin-bottom]="visibilityControl.touched && visibilityControl.value === null ? '1em' : null">
-            <mat-form-field appearance="outline" class="padding-top form-field">
+            <mat-form-field class="padding-top form-field">
                 <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
                 <mat-select formControlName="agenda_type" required>
                     @for (type of visibilityChoices; track type) {
@@ -22,7 +22,7 @@
             </mat-form-field>
         </div>
         <div>
-            <mat-form-field appearance="outline" class="form-field">
+            <mat-form-field class="form-field">
                 <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
                 <os-list-search-selector
                     formControlName="agenda_parent_id"
@@ -35,9 +35,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions class="text-align-end">
-    <button mat-button type="button" (click)="dialogRef.close()">{{ 'Cancel' | translate }}</button>
-
     <button color="primary" mat-button type="button" [disabled]="isVisibilitySet()" (click)="addToAgenda()">
         {{ 'Move to agenda' | translate }}
     </button>
+    <button mat-button type="button" (click)="dialogRef.close()">{{ 'Cancel' | translate }}</button>
 </mat-dialog-actions>

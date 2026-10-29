@@ -125,6 +125,11 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
     }
 
     public addToAgenda(assignments: ViewAssignment[]): void {
+        const originalOrder = this.listComponent.source.map(item => item.assignment.id) ?? [];
+        const sortedAssignments = [...assignments].sort(
+            (a, b) => originalOrder.indexOf(a.id) - originalOrder.indexOf(b.id)
+        );
+
         this.dialog
             .open(AddItemToAgendaDialog, {
                 data: { meetingId: assignments[0].meeting_id, isMultiSelect: true },
@@ -139,7 +144,7 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
                                 type: result?.agenda_type,
                                 parent_id: result?.agenda_parent_id
                             },
-                            ...assignments
+                            ...sortedAssignments
                         )
                         .resolve()
                         .then(() => this.toggleMultiSelect());
