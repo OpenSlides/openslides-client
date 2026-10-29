@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Permission } from '@app/domain/definitions/permission';
 import { PROJECTIONDEFAULT } from '@app/domain/models/projector/projection-default';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { AddItemToAgendaDialog } from '@app/site/pages/meetings/pages/agenda/pages/agenda-add-item/agenda-add-item.component';
+import { AgendaItemControllerService } from '@app/site/pages/meetings/pages/agenda/services';
 import { MultiProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
@@ -46,9 +50,11 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         private promptService: PromptService,
         public filterService: AssignmentFilterListService,
         public sortService: AssignmentSortListService,
+        public dialog: MatDialog,
         private pdfService: AssignmentExportService,
         protected route: ActivatedRoute,
         private operator: OperatorService,
+        private itemRepo: AgendaItemControllerService,
         public vp: ViewPortService
     ) {
         super();
@@ -115,6 +121,45 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         const title = this.translate.instant(`Are you sure you want to delete all selected elections?`);
         if (await this.promptService.open(title)) {
             await this.repo.delete(...this.selectedRows);
+        }
+    }
+
+    public addToAgenda(assignments: ViewAssignment[]): void {
+        const originalOrder = this.listComponent.source.map(item => item.assignment.id) ?? [];
+        const sortedAssignments = [...assignments].sort(
+            (a, b) => originalOrder.indexOf(a.id) - originalOrder.indexOf(b.id)
+        );
+
+        this.dialog
+            .open(AddItemToAgendaDialog, {
+                data: { meetingId: assignments[0].meeting_id, isMultiSelect: true },
+                ...infoDialogSettings
+            })
+            .afterClosed()
+            .subscribe(result => {
+                if (result) {
+                    this.itemRepo
+                        .addToAgenda(
+                            {
+                                type: result?.agenda_type,
+                                parent_id: result?.agenda_parent_id
+                            },
+                            ...sortedAssignments
+                        )
+                        .resolve()
+                        .then(() => this.toggleMultiSelect());
+                }
+            });
+    }
+
+    public async removeFromAgenda(assignments: ViewAssignment[]): Promise<void> {
+        const title = this.translate.instant(`Are you sure you want to remove all selected items from the agenda?`);
+        const content = this.translate.instant(`All topics will be deleted and won't be accessible afterwards.`);
+        if (await this.promptService.open(title, content)) {
+            this.itemRepo
+                .removeFromAgenda(...assignments.map(assignment => assignment?.agenda_item_id))
+                .then(() => this.toggleMultiSelect())
+                .catch(this.raiseError);
         }
     }
 

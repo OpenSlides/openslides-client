@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnDestroy } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
@@ -7,12 +8,14 @@ import { HasSequentialNumber } from '@app/domain/interfaces';
 import { Selectable } from '@app/domain/interfaces/selectable';
 import { Assignment } from '@app/domain/models/assignments/assignment';
 import { AssignmentPhase } from '@app/domain/models/assignments/assignment-phase';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { Deferred } from '@app/infrastructure/utils/promises';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
 import { UserSelectionData } from '@app/site/pages/meetings/modules/participant-search-selector';
 import { PollDialogData } from '@app/site/pages/meetings/modules/poll/definitions';
 import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda';
+import { AddItemToAgendaDialog } from '@app/site/pages/meetings/pages/agenda/pages/agenda-add-item/agenda-add-item.component';
 import { ViewAssignment, ViewAssignmentCandidate } from '@app/site/pages/meetings/pages/assignments';
 import { ViewMediafile, ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles';
 import { ViewTag } from '@app/site/pages/meetings/pages/motions';
@@ -165,6 +168,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     private pollController = inject(PollControllerService);
     private userRepo = inject(UserControllerService);
     private snackBar = inject(MatSnackBar);
+    private dialog = inject(MatDialog);
 
     /**
      * Constructor. Build forms and subscribe to needed configs and updates
@@ -381,7 +385,30 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
     }
 
     public addToAgenda(): void {
-        this.itemRepo.addToAgenda({}, this.assignment).resolve();
+        this.dialog
+            .open(AddItemToAgendaDialog, {
+                data: {
+                    title: this.assignment.getTitle(),
+                    meetingId: this.assignment.meeting_id,
+                    isMultiSelect: false
+                },
+                ...infoDialogSettings
+            })
+            .afterClosed()
+            .subscribe(result => {
+                if (result) {
+                    this.itemRepo
+                        .addToAgenda(
+                            {
+                                type: result?.agenda_type,
+                                parent_id: result?.agenda_parent_id
+                            },
+                            this.assignment
+                        )
+                        .resolve()
+                        .catch(this.raiseError);
+                }
+            });
     }
 
     public removeFromAgenda(): void {

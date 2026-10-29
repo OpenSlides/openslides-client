@@ -1,4 +1,5 @@
-import { inject, Service } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Id, Ids } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
@@ -6,6 +7,7 @@ import { Selectable } from '@app/domain/interfaces/selectable';
 import { AgendaItemType } from '@app/domain/models/agenda/agenda-item';
 import { Action, ActionService } from '@app/gateways/actions';
 import { ActionRequest } from '@app/gateways/actions/action-utils';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { SpinnerService } from '@app/site/modules/global-spinner';
 import { ListOfSpeakersControllerService } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
 import { ModelRequestService } from '@app/site/services/model-request.service';
@@ -19,6 +21,7 @@ import {
     AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION,
     getAgendaListMinimalSubscriptionConfig
 } from '../../../../agenda/agenda.subscription';
+import { AddItemToAgendaDialog } from '../../../../agenda/pages/agenda-add-item/agenda-add-item.component';
 import { AgendaItemControllerService } from '../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import {
     getParticipantMinimalSubscriptionConfig,
@@ -36,6 +39,7 @@ import { ViewMotion } from '../../../view-models/view-motion';
 
 @Service()
 export class MotionMultiselectService {
+    protected dialog = inject(MatDialog);
     private repo = inject(MotionControllerService);
     private translate = inject(TranslateService);
     private promptService = inject(PromptService);
@@ -54,6 +58,8 @@ export class MotionMultiselectService {
     private snackbar = inject(MatSnackBar);
     private modelRequestService = inject(ModelRequestService);
     private actionService = inject(ActionService);
+
+    public readonly onSuccess = signal(false);
 
     private messageForSpinner = this.translate.instant(`Motions are in process. Please wait ...`);
     /**
@@ -336,6 +342,41 @@ export class MotionMultiselectService {
                     hideAfterPromiseResolved: () => Action.from(...actions).resolve()
                 });
             }
+        }
+    }
+
+    public async addToAgenda(motions: ViewMotion[]): Promise<void> {
+        if (!motions.length) return;
+        this.dialog
+            .open(AddItemToAgendaDialog, {
+                data: { meetingId: motions[0].meeting_id, isMultiSelect: true },
+                ...infoDialogSettings
+            })
+            .afterClosed()
+            .subscribe(result => {
+                if (result) {
+                    this.agendaRepo
+                        .addToAgenda(
+                            {
+                                type: result?.agenda_type,
+                                parent_id: result?.agenda_parent_id
+                            },
+                            ...motions
+                        )
+                        .resolve()
+                        .then(() => this.onSuccess.set(true));
+                }
+            });
+    }
+
+    public async removeFromAgenda(motions: ViewMotion[]): Promise<void> {
+        if (!motions.length) return;
+        const title = this.translate.instant(`Are you sure you want to remove all selected items from the agenda?`);
+        const content = this.translate.instant(`All topics will be deleted and won't be accessible afterwards.`);
+        if (await this.promptService.open(title, content)) {
+            await this.agendaRepo
+                .removeFromAgenda(...motions.map(motion => motion?.agenda_item_id))
+                .then(() => this.onSuccess.set(true));
         }
     }
 
