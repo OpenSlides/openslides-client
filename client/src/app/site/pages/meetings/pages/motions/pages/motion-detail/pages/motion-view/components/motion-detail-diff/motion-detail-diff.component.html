@@ -17,7 +17,11 @@
     <div class="motion-text-with-diffs underlined-links">
         @if (getTitleChangingObject(); as changedTitle) {
             <div>
-                <div class="diff-box diff-box-{{ changedTitle.getChangeId() }} clearfix outlined-hover outlined-border">
+                <div
+                    [class]="
+                        'diff-box diff-box-' + changedTitle.getChangeId() + ' clearfix outlined-hover outlined-border'
+                    "
+                >
                     <div *osPerms="permission.motionCanManage; and: !noEditMode()" class="action-row">
                         @if (isRecommendation(changedTitle)) {
                             <button
@@ -64,7 +68,7 @@
                     ></os-motion-detail-original-change-recommendations>
                 </div>
                 <div
-                    class="diff-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border"
+                    [class]="'diff-box diff-box-' + change.getChangeId() + ' clearfix outlined-hover outlined-border'"
                     [class.collides]="change.hasCollisions"
                 >
                     <div class="action-row">
@@ -192,7 +196,11 @@
             </div>
             @for (change of brokenTextChangingObjects; track change.getChangeId(); let i = $index) {
                 <div>
-                    <div class="broken-box diff-box-{{ change.getChangeId() }} clearfix outlined-hover outlined-border">
+                    <div
+                        [class]="
+                            'broken-box diff-box-' + change.getChangeId() + 'clearfix outlined-hover outlined-border'
+                        "
+                    >
                         <div class="broken-action-row">
                             <button
                                 *osPerms="permission.motionCanManage; and: isRecommendation(change) && !noEditMode()"
