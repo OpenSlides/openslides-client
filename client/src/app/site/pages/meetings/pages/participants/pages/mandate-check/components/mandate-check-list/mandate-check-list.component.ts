@@ -170,7 +170,11 @@ export class MandateCheckListComponent extends BaseMeetingComponent implements O
         if (Number.isNaN(value)) {
             return ``;
         }
-        return `(${Number(value * 100).toFixed(0)}%)`;
+        return new Intl.NumberFormat(this.translate.getCurrentLang() ?? `en`, {
+            style: 'percent',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        }).format(value);
     }
 
     public toggle(structureLevelId: Id, gender?: boolean): void {
