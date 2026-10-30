@@ -85,6 +85,8 @@
             }
         }
 
+        <ng-content select=".extra-button-slot"></ng-content>
+
         <!-- Filter button -->
         @if (hasFilters) {
             <button
@@ -141,8 +143,12 @@
 
 <!-- Header for the filter side bar -->
 <mat-drawer #filterMenu autoFocus="false" mode="push" position="end">
-    <div class="custom-table-header filter-menu-head" role="none" (click)="this.filterMenu.toggle()">
-        <span tabindex="0" (keyup.enter)="this.filterMenu.toggle()">
+    <div
+        class="custom-table-header filter-menu-head"
+        role="none"
+        (click)="filterMenu.opened ? filterMenu.close() : filterMenu.open()"
+    >
+        <span tabindex="0" (keyup.enter)="filterMenu.opened ? filterMenu.close() : filterMenu.open()">
             <mat-icon>keyboard_arrow_right</mat-icon>
         </span>
 
@@ -158,6 +164,8 @@
         <os-filter-menu [service]="filterService" [showSpacer]="showSpacer" (dismissed)="this.filterMenu.close()" />
     }
 </mat-drawer>
+
+<ng-content select=".extra-drawer-slot"></ng-content>
 
 <!-- non-mobile sorting menu -->
 <mat-menu #menu>

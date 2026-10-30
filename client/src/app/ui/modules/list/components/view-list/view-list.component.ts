@@ -33,7 +33,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     private readonly _scrollingTableComponent: ScrollingTableComponent<V> | undefined;
 
     @ViewChild(SortFilterBarComponent)
-    private readonly _sortFilterBarComponent: SortFilterBarComponent<V> | undefined;
+    public readonly sortFilterBarComponent: SortFilterBarComponent<V> | undefined;
 
     /**
      * The required repository (prioritized over listObservable)
@@ -99,6 +99,15 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
      */
     @Input()
     public showMenu = true;
+
+    /*
+     * To Optionally show the scrolling-table's header bar
+     */
+    @Input()
+    public showHeader: boolean;
+
+    @Input()
+    public horizontalScroll: boolean;
 
     /**
      * Fix value for the height of the rows in the virtual-scroll-list.
@@ -166,7 +175,7 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public get totalCountObservable(): Observable<number> {
-        return this._totalCountObservable ?? this._source.pipe(map(items => items.length));
+        return this._totalCountObservable ?? this._source.pipe(map(items => items?.length));
     }
 
     public get source(): V[] {
@@ -265,6 +274,6 @@ export class ViewListComponent<V extends Identifiable> implements OnInit, OnDest
     }
 
     public clearSearchField(): void {
-        this._sortFilterBarComponent?.clearSearchField();
+        this.sortFilterBarComponent?.clearSearchField();
     }
 }
