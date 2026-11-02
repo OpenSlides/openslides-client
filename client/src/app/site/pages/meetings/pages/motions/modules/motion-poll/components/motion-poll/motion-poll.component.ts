@@ -13,14 +13,12 @@ import { PollComponent } from '@app/site/pages/meetings/modules/poll/components/
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { DirectivesModule } from '@app/ui/directives';
-import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: `os-motion-poll`,
     imports: [
         PollComponent,
         RouterModule,
-        TranslatePipe,
         DirectivesModule,
         MatButtonModule,
         MatCardModule,
@@ -51,13 +49,5 @@ export class MotionPollComponent extends BaseMeetingComponent {
         return false;
     });
 
-    public isSameMeeting = computed<boolean>(() => {
-        return !this.poll().meeting_id || this.activeMeetingId === this.poll().meeting_id;
-    });
-
     private operator = inject(OperatorService);
-
-    public getDetailLink = computed<string>(() => {
-        return `/${this.activeMeetingId}/polls/${this.poll().sequential_number}`;
-    });
 }
