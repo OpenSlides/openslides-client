@@ -62,6 +62,10 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
             return null;
         }
 
+        if (this.strike_out) {
+            return this.validBallots - this.invalidBallots - Big(result.empty || 0).toNumber();
+        }
+
         for (const key of Object.keys(result)) {
             if ((!isNaN(+key) || isFqid(key) || key.startsWith(`text-`)) && !isNaN(+result[key])) {
                 total = total.plus(result[key]);
