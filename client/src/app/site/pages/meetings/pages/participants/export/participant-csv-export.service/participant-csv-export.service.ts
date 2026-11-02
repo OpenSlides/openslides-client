@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { UserExport } from 'src/app/domain/models/users/user.export';
+import { inject, Service } from '@angular/core';
+import { UserExport } from '@app/domain/models/users/user.export';
 import {
     CsvColumnDefinitionMap,
     CsvColumnDefinitionProperty,
     CsvColumnsDefinition
-} from 'src/app/gateways/export/csv-export.service';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+} from '@app/gateways/export/csv-export.service';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
+import { TranslateService } from '@ngx-translate/core';
 
 import { MeetingCsvExportForBackendService } from '../../../../services/export/meeting-csv-export-for-backend.service';
 import { participantColumns } from '../../pages/participant-import/definitions';
@@ -19,9 +19,7 @@ export interface ParticipantExport extends UserExport {
     locked_out?: boolean;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ParticipantCsvExportService {
     // private _csvColumnDefinitionMapsMap: Map<string, CsvColumnDefinitionMap<ViewUser>> = new Map([
     //     [
@@ -44,10 +42,8 @@ export class ParticipantCsvExportService {
     //     ]
     // ]);
 
-    public constructor(
-        private csvExport: MeetingCsvExportForBackendService,
-        private translate: TranslateService
-    ) {}
+    private csvExport = inject(MeetingCsvExportForBackendService);
+    private translate = inject(TranslateService);
 
     public export(participants: ViewUser[]): void {
         this.csvExport.export(

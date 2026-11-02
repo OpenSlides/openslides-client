@@ -7,8 +7,8 @@
                     <mat-icon
                         append
                         class="primary-accent-by-theme"
-                        matTooltip="{{ 'The list of speakers is closed.' | translate }}"
                         style="margin-top: 8px"
+                        [matTooltip]="'The list of speakers is closed.' | translate"
                     >
                         lock
                     </mat-icon>
@@ -127,8 +127,8 @@
         @if (canManage) {
             <div class="search-new-speaker-form">
                 <os-participant-search-selector
-                    placeholder="{{ 'Select speaker' | translate }}"
                     [nonSelectableUserIds]="nonAvailableUserIds"
+                    [placeholder]="'Select speaker' | translate"
                     (userSelected)="addUserAsNewSpeaker($event)"
                 ></os-participant-search-selector>
             </div>
@@ -136,7 +136,7 @@
 
         <div *osPerms="permission.listOfSpeakersCanBeSpeaker" class="centered-text">
             @if (!canAddDueToPresence) {
-                <span translate>You have to be present to add yourself.</span>
+                <span>{{ 'You have to be present to add yourself.' | translate }}</span>
             }
         </div>
         <div class="add-self-buttons">
@@ -182,7 +182,7 @@
                     (click)="removePointOfOrder()"
                 >
                     <mat-icon>remove</mat-icon>
-                    <span translate>Withdraw point of order</span>
+                    <span>{{ 'Withdraw point of order' | translate }}</span>
                 </button>
             }
             @if (addSelf) {

@@ -1,66 +1,61 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Selectable } from '@app/domain/interfaces/selectable';
+import { AgendaItemType } from '@app/domain/models/agenda/agenda-item';
+import { Action, ActionService } from '@app/gateways/actions';
+import { ActionRequest } from '@app/gateways/actions/action-utils';
+import { SpinnerService } from '@app/site/modules/global-spinner';
+import { ListOfSpeakersControllerService } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
+import { ModelRequestService } from '@app/site/services/model-request.service';
+import { ChoiceService } from '@app/ui/modules/choice-dialog';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Selectable } from 'src/app/domain/interfaces/selectable';
-import { AgendaItemType } from 'src/app/domain/models/agenda/agenda-item';
-import { Action, ActionService } from 'src/app/gateways/actions';
-import { ActionRequest } from 'src/app/gateways/actions/action-utils';
-import { SpinnerService } from 'src/app/site/modules/global-spinner';
-import { ListOfSpeakersControllerService } from 'src/app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
-import { ModelRequestService } from 'src/app/site/services/model-request.service';
-import { ChoiceService } from 'src/app/ui/modules/choice-dialog';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { TreeService } from 'src/app/ui/modules/sorting/modules/sorting-tree/services';
 
 import {
     AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION,
     getAgendaListMinimalSubscriptionConfig
 } from '../../../../agenda/agenda.subscription';
-import { AgendaItemControllerService } from '../../../../agenda/services';
+import { AgendaItemControllerService } from '../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import {
     getParticipantMinimalSubscriptionConfig,
     PARTICIPANT_LIST_SUBSCRIPTION_MINIMAL
 } from '../../../../participants/participants.subscription';
-import { ParticipantControllerService } from '../../../../participants/services/common/participant-controller.service';
-import { MotionCategoryControllerService } from '../../../modules/categories/services';
-import { MotionBlockControllerService } from '../../../modules/motion-blocks/services';
-import { PersonalNoteControllerService } from '../../../modules/personal-notes/services';
-import { MotionSubmitterControllerService } from '../../../modules/submitters/services';
-import { TagControllerService } from '../../../modules/tags/services';
-import { MotionWorkflowControllerService } from '../../../modules/workflows/services';
-import { MotionControllerService } from '../../../services/common/motion-controller.service';
-import { ViewMotion } from '../../../view-models';
+import { ParticipantControllerService } from '../../../../participants/services/common/participant-controller.service/participant-controller.service';
+import { MotionCategoryControllerService } from '../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionBlockControllerService } from '../../../modules/motion-blocks/services/motion-block-controller.service/motion-block-controller.service';
+import { PersonalNoteControllerService } from '../../../modules/personal-notes/services/personal-note-controller.service/personal-note-controller.service';
+import { MotionSubmitterControllerService } from '../../../modules/submitters/services/motion-submitter-controller/motion-submitter-controller.service';
+import { TagControllerService } from '../../../modules/tags/services/tag-controller.service/tag-controller.service';
+import { MotionWorkflowControllerService } from '../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
+import { MotionControllerService } from '../../../services/common/motion-controller.service/motion-controller.service';
+import { ViewMotion } from '../../../view-models/view-motion';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class MotionMultiselectService {
+    private repo = inject(MotionControllerService);
+    private translate = inject(TranslateService);
+    private promptService = inject(PromptService);
+    private choiceService = inject(ChoiceService);
+    private userRepo = inject(ParticipantControllerService);
+    private workflowRepo = inject(MotionWorkflowControllerService);
+    private categoryRepo = inject(MotionCategoryControllerService);
+    private submitterRepo = inject(MotionSubmitterControllerService);
+    private tagRepo = inject(TagControllerService);
+    private personalNoteRepo = inject(PersonalNoteControllerService);
+    private agendaRepo = inject(AgendaItemControllerService);
+    private motionBlockRepo = inject(MotionBlockControllerService);
+    private treeService = inject(TreeService);
+    private spinnerService = inject(SpinnerService);
+    private listOfSpeakersRepo = inject(ListOfSpeakersControllerService);
+    private snackbar = inject(MatSnackBar);
+    private modelRequestService = inject(ModelRequestService);
+    private actionService = inject(ActionService);
+
     private messageForSpinner = this.translate.instant(`Motions are in process. Please wait ...`);
-
-    public constructor(
-        private repo: MotionControllerService,
-        private translate: TranslateService,
-        private promptService: PromptService,
-        private choiceService: ChoiceService,
-        private userRepo: ParticipantControllerService,
-        private workflowRepo: MotionWorkflowControllerService,
-        private categoryRepo: MotionCategoryControllerService,
-        private submitterRepo: MotionSubmitterControllerService,
-        private tagRepo: TagControllerService,
-        private personalNoteRepo: PersonalNoteControllerService,
-        private agendaRepo: AgendaItemControllerService,
-        private motionBlockRepo: MotionBlockControllerService,
-        private treeService: TreeService,
-        private spinnerService: SpinnerService,
-        private listOfSpeakersRepo: ListOfSpeakersControllerService,
-        private snackbar: MatSnackBar,
-        private modelRequestService: ModelRequestService,
-        private actionService: ActionService
-    ) {}
-
     /**
      * Deletes the given motions. Asks for confirmation.
      *

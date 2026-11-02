@@ -1,17 +1,18 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { OperatorService } from '@app/site/services/operator.service';
 import { StorageMap } from '@ngx-pwa/local-storage';
 import { BehaviorSubject, distinctUntilChanged, map, Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MeetingSettingsService } from '../../../services/meeting-settings.service';
 
 const STREAM_RUNNING_STORAGE_KEY = `streamIsRunning`;
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class StreamService {
+    private storageMap = inject(StorageMap);
+    private settingService = inject(MeetingSettingsService);
+
     public liveStreamUrlObservable: Observable<string> = this.settingService.get(`conference_stream_url`);
     public hasLiveStreamUrlObservable: Observable<boolean> = this.liveStreamUrlObservable.pipe(
         map(url => !!url?.trim() || false)
@@ -30,11 +31,8 @@ export class StreamService {
     private canSeeLiveStreamSubject = new BehaviorSubject<boolean>(false);
     public canSeeLiveStreamObservable = this.canSeeLiveStreamSubject as Observable<boolean>;
 
-    public constructor(
-        private storageMap: StorageMap,
-        operator: OperatorService,
-        private settingService: MeetingSettingsService
-    ) {
+    public constructor() {
+        const operator = inject(OperatorService);
         this.streamLoadedOnceObservable = this.storageMap
             .watch(STREAM_RUNNING_STORAGE_KEY, { type: `boolean` })
             .pipe(distinctUntilChanged() as any);

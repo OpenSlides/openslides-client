@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
+import { TimeZoneService } from '@app/site/services/time-zone.service';
 import { tzName } from '@date-fns/tz';
 import { Locale } from 'date-fns';
 import { DateFnsConfigurationService, DateFnsInputDate, FormatPipe } from 'ngx-date-fns';
-import { TimeZoneService } from 'src/app/site/services/time-zone.service';
 
 @Pipe({
     name: `localizedDateRange`,

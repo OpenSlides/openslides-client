@@ -8,7 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
 
 import { PipesModule } from '../../pipes/pipes.module';
 import { CopyrightSignComponent } from './components/copyright-sign/copyright-sign.component';
@@ -17,7 +17,7 @@ import { LogoComponent } from './components/logo/logo.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { SidenavDrawerContentDirective } from './directives/sidenav-drawer-content.directive';
 import { SidenavMainContentDirective } from './directives/sidenav-main-content.directive';
-import { EasterEggModule } from './modules/easter-egg';
+import { EasterEggModule } from './modules/easter-egg/easter-egg.module';
 
 const EXPORTS = [SidenavComponent, SidenavMainContentDirective, SidenavDrawerContentDirective];
 
@@ -36,7 +36,7 @@ const EXPORTS = [SidenavComponent, SidenavMainContentDirective, SidenavDrawerCon
         MatTooltipModule,
         EasterEggModule,
         PipesModule,
-        OpenSlidesTranslationModule.forChild()
+        OpenSlidesTranslationModule
     ]
 })
 export class SidenavModule {}

@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-    <span translate>Are you sure you want to submit a point of order?</span>
+    <span>{{ 'Are you sure you want to submit a point of order?' | translate }}</span>
 </h2>
 
 <form class="edit-form" [formGroup]="editForm" (ngSubmit)="onOk()">

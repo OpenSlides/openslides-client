@@ -1,13 +1,12 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Vote } from '@app/domain/models/poll/vote';
+import { HttpService } from '@app/gateways/http.service';
+import { ViewPoll, ViewVote } from '@app/site/pages/meetings/pages/polls';
+import { OperatorService } from '@app/site/services/operator.service';
 import { BehaviorSubject } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Vote } from 'src/app/domain/models/poll/vote';
-import { HttpService } from 'src/app/gateways/http.service';
-import { ViewPoll, ViewVote } from 'src/app/site/pages/meetings/pages/polls';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 
 const VOTE_URL = `/system/vote`;
 const HAS_VOTED_URL = `${VOTE_URL}/voted`;
@@ -29,9 +28,7 @@ export interface VotePayload {
     value: any;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote, Vote> {
     private _subscribedPolls = new Map<Id, PollSubscription>();
 
@@ -39,13 +36,10 @@ export class VoteRepositoryService extends BaseMeetingRelatedRepository<ViewVote
     private _fetchVotablePollsInterval = null;
     private _fetchVotablePollsTimeout = null;
 
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        private operator: OperatorService,
-        private http: HttpService
-    ) {
-        super(repositoryServiceCollector, Vote);
-    }
+    private operator = inject(OperatorService);
+    private http = inject(HttpService);
+
+    public baseModelCtor = Vote;
 
     public getTitle = (): string => `Vote`;
 

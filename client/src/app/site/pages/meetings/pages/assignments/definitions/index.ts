@@ -1,5 +1,5 @@
+import { AssignmentPhase } from '@app/domain/models/assignments/assignment-phase';
 import { _ } from '@ngx-translate/core';
-import { AssignmentPhase } from 'src/app/domain/models/assignments/assignment-phase';
 
 /**
  * A constant containing all possible assignment phases and their different

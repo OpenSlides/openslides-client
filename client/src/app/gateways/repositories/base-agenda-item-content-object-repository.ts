@@ -1,11 +1,11 @@
-import { HasAgendaItemId } from 'src/app/domain/interfaces';
-import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { AgendaListTitle, HasAgendaItem } from 'src/app/site/pages/meetings/pages/agenda';
+import { inject, Service } from '@angular/core';
+import { HasAgendaItemId } from '@app/domain/interfaces';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { AgendaListTitle, HasAgendaItem } from '@app/site/pages/meetings/pages/agenda';
 
-import { AgendaItemRepositoryService } from './agenda';
+import { AgendaItemRepositoryService } from './agenda/agenda-item-repository.service';
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
 
 export function isAgendaItemContentObjectRepository(obj: any): obj is BaseAgendaItemContentObjectRepository<any, any> {
     const repo = obj as BaseAgendaItemContentObjectRepository<any, any>;
@@ -26,6 +26,7 @@ export interface AgendaItemContentObjectRepository<
 /**
  * The base repository for objects with an agenda item.
  */
+@Service()
 export abstract class BaseAgendaItemContentObjectRepository<
     V extends BaseViewModel & HasAgendaItem,
     M extends BaseModel & HasAgendaItemId
@@ -33,13 +34,7 @@ export abstract class BaseAgendaItemContentObjectRepository<
     extends BaseMeetingRelatedRepository<V, M>
     implements AgendaItemContentObjectRepository<V, M>
 {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        baseModelCtor: ModelConstructor<M>,
-        protected agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, baseModelCtor);
-    }
+    protected agendaItemRepo = inject(AgendaItemRepositoryService);
 
     /**
      * @returns the agenda title for the agenda item list. Should

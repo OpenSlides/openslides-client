@@ -1,22 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
 import { _ } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
 
-import { Identifiable } from '../../../domain/interfaces';
+import { Identifiable } from '../../../domain/interfaces/identifiable';
 import { StructureLevel } from '../../../domain/models/structure-levels/structure-level';
 import { ViewStructureLevel } from '../../../site/pages/meetings/pages/participants/pages/structure-levels/view-models/view-structure-level';
-import { Action } from '../../actions';
+import { Action } from '../../actions/action';
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 import { StructureLevelAction } from './structure-level.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class StructureLevelRepositoryService extends BaseMeetingRelatedRepository<ViewStructureLevel, StructureLevel> {
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, StructureLevel);
-    }
+    public baseModelCtor = StructureLevel;
 
     public getVerboseName = (plural?: boolean): string => (plural ? _(`Structure levels`) : _(`Structure level`));
     public getTitle = (viewModel: ViewStructureLevel): string => viewModel.name;

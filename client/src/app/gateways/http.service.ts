@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable, Injector } from '@angular/core';
+import { inject, Injector, Service } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
@@ -11,7 +11,7 @@ import {
     QueryParams,
     ResponseType
 } from '../infrastructure/definitions/http';
-import { ProcessError } from '../infrastructure/errors';
+import { ProcessError } from '../infrastructure/errors/process.error';
 import { toBase64 } from '../infrastructure/utils/functions';
 import { ActionWorkerWatchService } from './action-worker-watch/action-worker-watch.service';
 import { ErrorMapService } from './error-mapping/error-map.service';
@@ -27,9 +27,7 @@ export interface RequestSettings {
     catchError?: boolean;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class HttpService {
     private _actionWorkerWatch: ActionWorkerWatchService;
     private get actionWorkerWatch(): ActionWorkerWatchService {
@@ -39,13 +37,11 @@ export class HttpService {
         return this._actionWorkerWatch;
     }
 
-    public constructor(
-        private http: HttpClient,
-        private errorMapper: ErrorMapService,
-        private injector: Injector,
-        private snackBar: MatSnackBar,
-        private translate: TranslateService
-    ) {}
+    private errorMapper = inject(ErrorMapService);
+    private http = inject(HttpClient);
+    private injector = inject(Injector);
+    private snackBar = inject(MatSnackBar);
+    private translate = inject(TranslateService);
 
     /**
      * Send the a http request the the given path.
@@ -98,10 +94,14 @@ export class HttpService {
                     this.snackBar.open(cleanError, this.translate.instant(`Ok`));
                     throw new ProcessError(cleanError);
                 } else if (error.error.message) {
-                    const cleanError = this.errorMapper.getCleanErrorMessage(error.error.message, {
-                        data,
-                        url: error.url
-                    });
+                    const cleanError = this.errorMapper.getCleanErrorMessage(
+                        error.error.message,
+                        {
+                            data,
+                            url: error.url
+                        },
+                        error.error.message_args
+                    );
                     if (typeof cleanError !== `string`) {
                         throw cleanError;
                     }

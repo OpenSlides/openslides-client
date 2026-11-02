@@ -1,5 +1,5 @@
 import { Directive, Input, TemplateRef } from '@angular/core';
-import { OML } from 'src/app/domain/definitions/organization-permission';
+import { OML } from '@app/domain/definitions/organization-permission';
 
 import { BasePermsDirective } from './base-perms.directive';
 

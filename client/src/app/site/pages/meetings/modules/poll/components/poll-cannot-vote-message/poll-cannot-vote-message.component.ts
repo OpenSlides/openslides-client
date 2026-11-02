@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { OperatorService } from '@app/site/services/operator.service';
 import { combineLatest, debounceTime, distinctUntilChanged } from 'rxjs';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { BaseMeetingComponent } from '../../../../base/base-meeting.component';
-import { ViewPoll } from '../../../../pages/polls';
+import { ViewPoll } from '../../../../pages/polls/view-models/view-poll';
 import { ViewUser } from '../../../../view-models/view-user';
-import { VotingService } from '../../services/voting.service';
+import { VotingService } from '../../services/voting.service/voting.service';
 
 @Component({
     selector: `os-poll-cannot-vote-message`,

@@ -1,5 +1,5 @@
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
+import { BaseHasMeetingUserViewModel } from '@app/site/pages/meetings/base/base-has-meeting-user-view-model';
 
 import { MotionSubmitter } from '../../../../../../../../domain/models/motions/motion-submitter';
 import { HasMeeting } from '../../../../../view-models/has-meeting';

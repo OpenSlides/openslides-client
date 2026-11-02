@@ -1,20 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { ItemTypeChoices } from '@app/domain/models/agenda/agenda-item';
+import { Assignment } from '@app/domain/models/assignments/assignment';
+import { Motion } from '@app/domain/models/motions/motion';
+import { MotionBlock } from '@app/domain/models/motions/motion-block';
+import { Topic } from '@app/domain/models/topics/topic';
+import { BaseFilterListService, OsFilter, OsFilterOption } from '@app/site/base/base-filter.service';
+import { ViewAgendaItem } from '@app/site/pages/meetings/pages/agenda/view-models';
+import { ActiveFiltersService } from '@app/site/services/active-filters.service';
 import { _ } from '@ngx-translate/core';
-import { TranslateService } from '@ngx-translate/core';
-import { ItemTypeChoices } from 'src/app/domain/models/agenda/agenda-item';
-import { Assignment } from 'src/app/domain/models/assignments/assignment';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { Topic } from 'src/app/domain/models/topics/topic';
-import { BaseFilterListService, OsFilter, OsFilterOption } from 'src/app/site/base/base-filter.service';
-import { ViewAgendaItem } from 'src/app/site/pages/meetings/pages/agenda/view-models';
-import { ActiveFiltersService } from 'src/app/site/services/active-filters.service';
 
 import { TagControllerService } from '../../../../../motions/modules/tags/services/tag-controller.service/tag-controller.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaItem> {
     /**
      * set the storage key name
@@ -29,15 +26,10 @@ export class AgendaItemFilterService extends BaseFilterListService<ViewAgendaIte
 
     /**
      * Constructor. Also creates the dynamic filter options
-     *
-     * @param store
-     * @param translate Translation service
      */
-    public constructor(
-        store: ActiveFiltersService,
-        private translate: TranslateService,
-        tagRepo: TagControllerService
-    ) {
+    public constructor() {
+        const store = inject(ActiveFiltersService);
+        const tagRepo = inject(TagControllerService);
         super(store);
 
         this.updateFilterForRepo({

@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy,
     Component,
     EmbeddedViewRef,
     EventEmitter,
@@ -11,11 +12,12 @@ import {
     ViewContainerRef
 } from '@angular/core';
 
-import { OverlayPosition } from './definitions';
+import { OverlayPosition } from './definitions/overlay-config';
 
 @Component({
     selector: `os-overlay`,
     templateUrl: `./overlay.component.html`,
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: [`./overlay.component.scss`]
 })
 export class OverlayComponent {

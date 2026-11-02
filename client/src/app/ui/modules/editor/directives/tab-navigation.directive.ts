@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, QueryList } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject, Input, QueryList } from '@angular/core';
 
 @Directive({
     selector: `[osArrowNavigation]`,
@@ -126,7 +126,7 @@ export class ArrowNavigationDirective {
         firstButton.nativeElement.tabIndex = 0;
     }
 
-    public constructor(private button: ElementRef) {}
+    private button = inject(ElementRef);
 
     private findButtonIndex(): number {
         return this.buttonList

@@ -1,11 +1,11 @@
 import { Directive, inject } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { BaseListViewComponent } from '@app/site/base/base-list-view.component';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { TranslateService } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { BaseListViewComponent } from 'src/app/site/base/base-list-view.component';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import { ActiveMeetingService } from '../services/active-meeting.service';
 import { MeetingComponentServiceCollectorService } from '../services/meeting-component-service-collector.service';

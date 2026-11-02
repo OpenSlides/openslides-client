@@ -8,17 +8,16 @@ import {
     ViewChildren
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { Meeting, Settings } from 'src/app/domain/models/meetings/meeting';
-import { Action } from 'src/app/gateways/actions';
-import { canPerformListUpdates } from 'src/app/gateways/repositories/base-repository';
-import { Relation, RELATIONS } from 'src/app/infrastructure/definitions/relations';
-import { ObjectReplaceKeysConfig, partitionModelsForUpdate, replaceObjectKeys } from 'src/app/infrastructure/utils';
-import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
-import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { MeetingControllerService } from 'src/app/site/pages/meetings/services/meeting-controller.service';
-import { MeetingSettingsDefinitionService } from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
+import { Meeting, Settings } from '@app/domain/models/meetings/meeting';
+import { Action } from '@app/gateways/actions';
+import { canPerformListUpdates } from '@app/gateways/repositories/base-repository';
+import { Relation, RELATIONS } from '@app/infrastructure/definitions/relations';
+import { ObjectReplaceKeysConfig, partitionModelsForUpdate, replaceObjectKeys } from '@app/infrastructure/utils';
+import { deepCopy } from '@app/infrastructure/utils/transform-functions';
+import { CanComponentDeactivate } from '@app/site/guards/watch-for-changes.guard';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { MeetingControllerService } from '@app/site/pages/meetings/services/meeting-controller.service';
+import { MeetingSettingsDefinitionService } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import {
     isSettingsInput,
     SettingsGroup,
@@ -27,11 +26,12 @@ import {
     SettingsInput,
     SettingsItem,
     SKIPPED_SETTINGS
-} from 'src/app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { CollectionMapperService } from 'src/app/site/services/collection-mapper.service';
-import { ensureIdField } from 'src/app/site/services/relation-manager.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
+} from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { ensureIdField } from '@app/site/services/relation-manager.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { TranslateService } from '@ngx-translate/core';
 
 import {
     MeetingSettingsGroupDetailFieldComponent,

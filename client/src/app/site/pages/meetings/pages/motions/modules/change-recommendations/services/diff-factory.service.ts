@@ -1,4 +1,4 @@
-import { ClassProvider, inject, Injectable, InjectionToken, Injector, StaticProvider, Type } from '@angular/core';
+import { ClassProvider, inject, InjectionToken, Injector, Service, StaticProvider, Type } from '@angular/core';
 
 export const DIFF_VERSION = new InjectionToken<string>('DIFF_VERSION');
 
@@ -7,9 +7,7 @@ interface DiffServiceCacheEntry<T> {
     instance: T;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class DiffServiceFactory {
     private injector = inject(Injector);
 

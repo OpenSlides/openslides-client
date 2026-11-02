@@ -1,13 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { debounceTime, filter, firstValueFrom, fromEvent, map, Observable, skipUntil } from 'rxjs';
 
 import { LifecycleService } from './lifecycle.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class WindowVisibilityService {
-    public constructor(private lifecycle: LifecycleService) {}
+    private lifecycle = inject(LifecycleService);
 
     public async waitUntilVisible(): Promise<void> {
         if (document.visibilityState !== `visible`) {

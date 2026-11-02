@@ -1,15 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { Papa } from 'ngx-papaparse';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ImportServiceCollectorService {
-    public constructor(
-        public readonly matSnackBar: MatSnackBar,
-        public readonly translate: TranslateService,
-        public readonly papa: Papa
-    ) {}
+    public readonly matSnackBar = inject(MatSnackBar);
+    public readonly translate = inject(TranslateService);
+    public readonly papa = inject(Papa);
 }

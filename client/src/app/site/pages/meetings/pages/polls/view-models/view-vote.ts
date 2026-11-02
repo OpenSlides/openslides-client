@@ -1,4 +1,4 @@
-import { Id } from 'src/app/domain/definitions/key-types';
+import { Id } from '@app/domain/definitions/key-types';
 
 import { Vote } from '../../../../../../domain/models/poll/vote';
 import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';

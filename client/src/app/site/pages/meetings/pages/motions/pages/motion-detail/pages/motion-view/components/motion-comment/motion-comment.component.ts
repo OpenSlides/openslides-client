@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionComment } from '@app/domain/models/motions/motion-comment';
+import { ViewMotionComment, ViewMotionCommentSection } from '@app/site/pages/meetings/pages/motions';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionComment } from 'src/app/domain/models/motions/motion-comment';
-import { ViewMotionComment, ViewMotionCommentSection } from 'src/app/site/pages/meetings/pages/motions';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { MotionCommentControllerService } from '../../../../../../modules/comments/services/motion-comment-controller.service';
 import { MotionPdfExportService } from '../../../../../../services/export/motion-pdf-export.service/motion-pdf-export.service';

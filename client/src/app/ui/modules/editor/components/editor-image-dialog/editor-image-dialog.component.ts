@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 interface EditorImageData {
@@ -20,15 +20,15 @@ export interface EditorImageDialogOutput {
     selector: `os-editor-image-dialog`,
     templateUrl: `./editor-image-dialog.component.html`,
     styleUrls: [`editor-image-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class EditorImageDialogComponent {
     public image: EditorImageData;
 
-    public constructor(
-        @Inject(MAT_DIALOG_DATA) public data: EditorImageDialogInput,
-        private dialogRef: MatDialogRef<EditorImageDialogComponent>
-    ) {
+    private dialogRef = inject(MatDialogRef<EditorImageDialogComponent>);
+
+    public constructor(@Inject(MAT_DIALOG_DATA) public data: EditorImageDialogInput) {
         this.image = data.image;
     }
 

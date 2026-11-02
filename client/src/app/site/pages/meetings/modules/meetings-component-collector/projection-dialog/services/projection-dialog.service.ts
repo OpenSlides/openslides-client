@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { firstValueFrom } from 'rxjs';
-import { ProjectorControllerService } from 'src/app/site/pages/meetings/pages/projectors/services/projector-controller.service';
+import { ProjectorControllerService } from '@app/site/pages/meetings/pages/projectors/services/projector-controller.service';
 import {
     isMultiProjectionBuildDescriptor,
     isProjectionBuildDescriptor,
     MultiProjectionBuildDescriptor,
     ProjectionBuildDescriptor
-} from 'src/app/site/pages/meetings/view-models';
+} from '@app/site/pages/meetings/view-models';
+import { firstValueFrom } from 'rxjs';
 
 import {
     ProjectionDialogComponent,
@@ -15,12 +15,10 @@ import {
 } from '../components/projection-dialog/projection-dialog.component';
 import { ProjectionDialogReturnType } from '../definitions';
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class ProjectionDialogService {
-    public constructor(
-        private dialog: MatDialog,
-        private projectorRepo: ProjectorControllerService
-    ) {}
+    private dialog = inject(MatDialog);
+    private projectorRepo = inject(ProjectorControllerService);
 
     /**
      * Opens the projection dialog for the given projectable. After the user's choice,

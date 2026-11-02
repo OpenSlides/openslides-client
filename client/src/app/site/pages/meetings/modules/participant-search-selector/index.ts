@@ -1,4 +1,4 @@
-import { RawUser } from 'src/app/gateways/repositories/users';
+import { RawUser } from '@app/gateways/repositories/users';
 
 export * from './participant-search-selector.module';
 

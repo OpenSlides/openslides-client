@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Ids } from '@app/domain/definitions/key-types';
+import { PERSONAL_NOTE_ID } from '@app/domain/models/motions/motions.constants';
+import { CellFillingDefinition, XlsxExportService } from '@app/gateways/export/xlsx-export.service';
+import { reconvertChars, stripHtmlTags } from '@app/infrastructure/utils';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Workbook } from 'exceljs';
-import { Ids } from 'src/app/domain/definitions/key-types';
-import { PERSONAL_NOTE_ID } from 'src/app/domain/models/motions/motions.constants';
-import { CellFillingDefinition, XlsxExportService } from 'src/app/gateways/export/xlsx-export.service';
-import { reconvertChars, stripHtmlTags } from 'src/app/infrastructure/utils';
 
-import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
-import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers';
-import { ViewMotion } from '../../../view-models';
-import { MotionControllerService } from '../../common/motion-controller.service';
+import { MotionCommentSectionControllerService } from '../../../modules/comments/services/motion-comment-section-controller.service';
+import { ViewMotionWorkingGroupSpeaker } from '../../../modules/working-group-speakers/view-models/view-motion-working-group-speaker';
+import { ViewMotion } from '../../../view-models/view-motion';
+import { MotionControllerService } from '../../common/motion-controller.service/motion-controller.service';
 import { InfoToExport, sortMotionPropertyList } from '../definitions';
 
 interface MotionXlsxExportConfig {
@@ -22,9 +22,7 @@ interface MotionXlsxExportConfig {
 /**
  * Service to export motion elements to XLSX
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionXlsxExportService {
     /**
      * Determine the default font size
@@ -64,12 +62,10 @@ export class MotionXlsxExportService {
         }
     };
 
-    public constructor(
-        private xlsx: XlsxExportService,
-        private translate: TranslateService,
-        private motionService: MotionControllerService,
-        private commentRepo: MotionCommentSectionControllerService
-    ) {}
+    private xlsx = inject(XlsxExportService);
+    private translate = inject(TranslateService);
+    private motionService = inject(MotionControllerService);
+    private commentRepo = inject(MotionCommentSectionControllerService);
 
     /**
      * Export motions as XLSX
@@ -184,7 +180,7 @@ export class MotionXlsxExportService {
                                 .join(`, `);
                         case `referring_motions`:
                             return motion.referenced_in_motion_recommendation_extensions
-                                .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
+                                .naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`])
                                 .map(motion => motion.getNumberOrTitle())
                                 .join(`, `);
                         default:

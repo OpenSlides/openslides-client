@@ -1,7 +1,12 @@
 <!-- A summary of all changes -->
 @if (changes?.length) {
     <div class="change-recommendation-summary outlined-border">
-        <strong matBadgeOverlap="false" [matBadge]="changes.length">
+        <strong
+            matBadgeOverlap="false"
+            [attr.aria-hidden]="false"
+            [attr.aria-label]="('Amount of changes' | translate) + ': ' + changes.length"
+            [matBadge]="changes.length"
+        >
             {{ 'Summary of changes' | translate }}&nbsp;
         </strong>
         <cdk-virtual-scroll-viewport

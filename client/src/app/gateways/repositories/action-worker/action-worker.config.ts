@@ -1,5 +1,5 @@
-import { ActionWorker } from 'src/app/domain/models/action-worker/action-worker';
-import { AppConfig } from 'src/app/infrastructure/definitions/app-config';
+import { ActionWorker } from '@app/domain/models/action-worker/action-worker';
+import { AppConfig } from '@app/infrastructure/definitions/app-config';
 
 import { ActionWorkerRepositoryService } from './action-worker-repository.service';
 import { ViewActionWorker } from './view-action-worker';

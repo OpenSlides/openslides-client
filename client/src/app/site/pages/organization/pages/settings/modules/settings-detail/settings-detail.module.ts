@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { SearchSelectorModule } from 'src/app/ui/modules/search-selector';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { DirectivesModule } from '@app/ui/directives';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { SearchSelectorModule } from '@app/ui/modules/search-selector';
 
 import { OrganizationSettingsComponent } from './components/organization-settings/organization-settings.component';
 import { SettingsDetailRoutingModule } from './settings-detail-routing.module';
@@ -27,7 +28,8 @@ import { SettingsDetailRoutingModule } from './settings-detail-routing.module';
         MatSelectModule,
         MatCardModule,
         MatCheckboxModule,
-        OpenSlidesTranslationModule.forChild(),
+        MatAutocompleteModule,
+        OpenSlidesTranslationModule,
         DirectivesModule,
         SearchSelectorModule
     ]

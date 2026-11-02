@@ -1,11 +1,11 @@
-import { HasProperties } from 'src/app/domain/interfaces/has-properties';
-import { ProjectiondefaultValue } from 'src/app/domain/models/projector/projection-default';
-import { Projector } from 'src/app/domain/models/projector/projector';
-import { ViewProjectorMeetingUsageKey } from 'src/app/domain/models/projector/projector.constants';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { Follow } from 'src/app/site/services/model-request-builder';
+import { HasProperties } from '@app/domain/interfaces/has-properties';
+import { ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
+import { Projector } from '@app/domain/models/projector/projector';
+import { ViewProjectorMeetingUsageKey } from '@app/domain/models/projector/projector.constants';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
+import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { Follow } from '@app/site/services/model-request-builder';
 
 import { ViewProjection } from './view-projection';
 

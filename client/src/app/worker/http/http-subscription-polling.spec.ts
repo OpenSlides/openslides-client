@@ -1,5 +1,5 @@
+import { HttpMethod } from '@app/infrastructure/definitions/http';
 import fetchMock from 'fetch-mock';
-import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
 import { HttpSubscriptionEndpoint } from './http-subscription';
 import { HttpSubscriptionPolling, POLLING_INTERVAL } from './http-subscription-polling';

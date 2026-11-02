@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { OML } from 'src/app/domain/definitions/organization-permission';
-import { GetActiveUsersAmountPresenterService } from 'src/app/gateways/presenter';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { OML } from '@app/domain/definitions/organization-permission';
+import { GetActiveUsersAmountPresenterService } from '@app/gateways/presenter';
 import {
     AssignMeetingsPayload,
     AssignMeetingsResult,
@@ -11,15 +10,15 @@ import {
     ShortNameInformation,
     UserPatchFn,
     UserRepositoryService
-} from 'src/app/gateways/repositories/users';
-import { OperatorService } from 'src/app/site/services/operator.service';
+} from '@app/gateways/repositories/users';
+import { OperatorService } from '@app/site/services/operator.service';
+import { Observable } from 'rxjs';
 
-import { Identifiable } from '../../domain/interfaces';
+import { Identifiable } from '../../domain/interfaces/identifiable';
 import { User } from '../../domain/models/users/user';
-import { Action } from '../../gateways/actions';
+import { Action } from '../../gateways/actions/action';
 import { BaseController } from '../base/base-controller';
 import { ViewUser } from '../pages/meetings/view-models/view-user';
-import { ControllerServiceCollectorService } from './controller-service-collector.service';
 
 /**
  * type for determining the user name from a string during import.
@@ -35,18 +34,13 @@ export interface CreateUserNameInformation {
     title?: string;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class UserControllerService extends BaseController<ViewUser, User> {
-    public constructor(
-        controllerServiceCollector: ControllerServiceCollectorService,
-        protected override repo: UserRepositoryService,
-        private presenter: GetActiveUsersAmountPresenterService,
-        private operator: OperatorService
-    ) {
-        super(controllerServiceCollector, User, repo);
-    }
+    protected repo: UserRepositoryService = inject(UserRepositoryService);
+    private presenter = inject(GetActiveUsersAmountPresenterService);
+    private operator = inject(OperatorService);
+
+    public baseModelCtor = User;
 
     ///////////////////
     /// //////////////// TODO: Remove, because participants and accounts have their dedicated "controller"

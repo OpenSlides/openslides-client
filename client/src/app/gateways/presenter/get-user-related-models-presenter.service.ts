@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { Id } from '../../domain/definitions/key-types';
 import { CML, OML } from '../../domain/definitions/organization-permission';
@@ -28,11 +28,9 @@ export interface GetUserRelatedModelsCommittee {
 
 export type GetUserRelatedModelsPresenterResult = Record<number, GetUserRelatedModelsUser>;
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GetUserRelatedModelsPresenterService {
-    public constructor(private presenter: PresenterService) {}
+    private presenter = inject(PresenterService);
 
     public async call(data: { user_ids: Id[] }): Promise<GetUserRelatedModelsPresenterResult> {
         return await this.presenter.call<GetUserRelatedModelsPresenterResult>(Presenter.GET_USER_RELATED_MODELS, data);

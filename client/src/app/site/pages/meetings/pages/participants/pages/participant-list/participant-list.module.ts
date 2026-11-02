@@ -6,17 +6,17 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { OpenSlidesTranslationModule } from 'src/app/site/modules/translations';
-import { UserComponentsModule } from 'src/app/site/modules/user-components';
-import { MeetingsComponentCollectorModule } from 'src/app/site/pages/meetings/modules/meetings-component-collector';
-import { DirectivesModule } from 'src/app/ui/directives';
-import { ChoiceDialogComponent } from 'src/app/ui/modules/choice-dialog';
-import { CommaSeparatedListingComponent } from 'src/app/ui/modules/comma-separated-listing';
-import { HeadBarModule } from 'src/app/ui/modules/head-bar';
-import { IconContainerComponent } from 'src/app/ui/modules/icon-container';
-import { PipesModule } from 'src/app/ui/pipes';
+import { OpenSlidesTranslationModule } from '@app/site/modules/translations';
+import { UserComponentsModule } from '@app/site/modules/user-components';
+import { MeetingsComponentCollectorModule } from '@app/site/pages/meetings/modules/meetings-component-collector';
+import { DirectivesModule } from '@app/ui/directives';
+import { ChoiceDialogComponent } from '@app/ui/modules/choice-dialog';
+import { CommaSeparatedListingComponent } from '@app/ui/modules/comma-separated-listing';
+import { HeadBarModule } from '@app/ui/modules/head-bar';
+import { IconContainerComponent } from '@app/ui/modules/icon-container';
+import { PipesModule } from '@app/ui/pipes';
 
-import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector';
+import { ParticipantSearchSelectorModule } from '../../../../modules/participant-search-selector/participant-search-selector.module';
 import { ParticipantExportModule } from '../../export/participant-export.module';
 import { ParticipantListComponent } from './components/participant-list/participant-list.component';
 import { ParticipantSwitchDialogComponent } from './components/participant-switch-dialog/participant-switch-dialog.component';
@@ -40,7 +40,7 @@ import { ParticipantListServiceModule } from './services/participant-list-servic
         IconContainerComponent,
         DirectivesModule,
         MeetingsComponentCollectorModule,
-        OpenSlidesTranslationModule.forChild(),
+        OpenSlidesTranslationModule,
         MatIconModule,
         MatMenuModule,
         MatCheckboxModule,

@@ -40,7 +40,7 @@
                             <button
                                 color="accent"
                                 mat-mini-fab
-                                matTooltip="{{ 'Refresh' | translate }}"
+                                [matTooltip]="'Refresh' | translate"
                                 (click)="onRefreshVideo()"
                             >
                                 <mat-icon>refresh</mat-icon>

@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
+import { Id } from '@app/domain/definitions/key-types';
+import { Displayable, Identifiable } from '@app/domain/interfaces';
+import { FlatNode, isFlatNode } from '@app/infrastructure/definitions/tree';
+import { MockTranslateService } from '@app/site/pages/meetings/modules/poll/pipes/poll-parse-number/poll-parse-number.pipe.spec';
 import { TranslateService } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Displayable, Identifiable } from 'src/app/domain/interfaces';
-import { FlatNode, isFlatNode } from 'src/app/infrastructure/definitions/tree';
-import { MockTranslateService } from 'src/app/site/pages/meetings/modules/poll/pipes/poll-parse-number/poll-parse-number.pipe.spec';
 
 import { TreeService } from './tree.service';
 import { TreeSortService } from './tree-sort.service';

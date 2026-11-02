@@ -1,7 +1,9 @@
 import { TemplatePortal } from '@angular/cdk/portal';
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     Component,
+    inject,
     OnDestroy,
     TemplateRef,
     ViewChild,
@@ -9,7 +11,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global-headbar.service';
+import { GlobalHeadbarService } from '@app/site/modules/global-headbar/global-headbar.service';
 
 /**
  * Reusable toolbar compoment
@@ -23,18 +25,14 @@ import { GlobalHeadbarService } from 'src/app/site/modules/global-headbar/global
     styleUrls: [`./head-toolbar.component.scss`],
     imports: [MatToolbarModule],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })
 export class HeadToolbarComponent implements AfterViewInit, OnDestroy {
     @ViewChild(`toolbarContent`) public toolbarContent: TemplateRef<unknown>;
 
-    /**
-     * Empty constructor
-     */
-    public constructor(
-        private headbarService: GlobalHeadbarService,
-        private _viewContainerRef: ViewContainerRef
-    ) {}
+    private headbarService = inject(GlobalHeadbarService);
+    private _viewContainerRef = inject(ViewContainerRef);
 
     public ngAfterViewInit(): void {
         this.headbarService.additionalHeadbar = new TemplatePortal(this.toolbarContent, this._viewContainerRef);

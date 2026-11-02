@@ -1,7 +1,7 @@
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
-import { Meeting } from 'src/app/domain/models/meetings/meeting';
-import { ORGANIZATION_ID } from 'src/app/site/pages/organization/services/organization.service';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
+import { Meeting } from '@app/domain/models/meetings/meeting';
+import { ORGANIZATION_ID } from '@app/site/pages/organization/services/organization.service';
+import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
 
 export const DASHBOARD_MEETING_LIST_SUBSCRIPTION = `dashboard_meeting_list`;
 

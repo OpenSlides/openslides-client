@@ -40,19 +40,19 @@
                                 @if (!user.is_physical_person) {
                                     <os-icon-container
                                         icon="account_balance"
-                                        matTooltip="{{ 'Is no natural person' | translate }}"
+                                        [matTooltip]="'Is no natural person' | translate"
                                     ></os-icon-container>
                                 }
                                 @if (!user.is_active) {
                                     <os-icon-container
                                         icon="block"
-                                        matTooltip="{{ 'Inactive' | translate }}"
+                                        [matTooltip]="'Inactive' | translate"
                                     ></os-icon-container>
                                 }
                                 @if (user.hasSamlId) {
                                     <os-icon-container
                                         icon="fingerprint"
-                                        matTooltip="{{ 'Has SSO identification' | translate }}"
+                                        [matTooltip]="'Has SSO identification' | translate"
                                     ></os-icon-container>
                                 }
                             </div>

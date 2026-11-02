@@ -32,6 +32,7 @@ export default tseslint.config({
     },
     processor: angular.processInlineTemplates,
     rules: {
+        "@angular-eslint/prefer-on-push-component-change-detection": ["off"],
         "@angular-eslint/prefer-standalone": ["off"],
         "@angular-eslint/prefer-inject": ["off"],
         "@angular-eslint/component-selector": ["error", {
@@ -140,7 +141,9 @@ export default tseslint.config({
         "@angular-eslint/template/attributes-order": ["error", {
             alphabetical: true,
         }],
-
+        "@angular-eslint/template/no-interpolation-in-attributes": ["error", {
+            allowSubstringInterpolation: true,
+        }],
         "@angular-eslint/template/prefer-control-flow": ["error"],
     },
 }, {

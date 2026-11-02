@@ -3,12 +3,27 @@ import {
     ChangeDetectorRef,
     Component,
     HostListener,
+    inject,
     OnInit,
     ViewEncapsulation
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { Id, UnsafeHtml } from '@app/domain/definitions/key-types';
+import { Permission } from '@app/domain/definitions/permission';
+import { HasSequentialNumber, Selectable } from '@app/domain/interfaces';
+import { Mediafile } from '@app/domain/models/mediafiles/mediafile';
+import { Motion } from '@app/domain/models/motions/motion';
+import { GetForwardingCommitteesPresenterService } from '@app/gateways/presenter/get-forwarding-committees-presenter.service';
+import { RawUser, UserRepositoryService } from '@app/gateways/repositories/users';
+import { deepCopy } from '@app/infrastructure/utils/transform-functions';
+import { isUniqueAmong } from '@app/infrastructure/utils/validators/is-unique-among';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { ViewPortService } from '@app/site/services/view-port.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import {
     auditTime,
     BehaviorSubject,
@@ -21,26 +36,11 @@ import {
     Subscription,
     tap
 } from 'rxjs';
-import { Id, UnsafeHtml } from 'src/app/domain/definitions/key-types';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { HasSequentialNumber, Selectable } from 'src/app/domain/interfaces';
-import { Mediafile } from 'src/app/domain/models/mediafiles/mediafile';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { GetForwardingCommitteesPresenterService } from 'src/app/gateways/presenter/get-forwarding-committees-presenter.service';
-import { RawUser, UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { deepCopy } from 'src/app/infrastructure/utils/transform-functions';
-import { isUniqueAmong } from 'src/app/infrastructure/utils/validators/is-unique-among';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { ViewPortService } from 'src/app/site/services/view-port.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ParticipantListSortService } from '../../../../../../../participants/pages/participant-list/services/participant-list-sort/participant-list-sort.service';
 import { getParticipantMinimalSubscriptionConfig } from '../../../../../../../participants/participants.subscription';
-import { MotionCategoryControllerService } from '../../../../../../modules/categories/services';
-import { MotionWorkflowControllerService } from '../../../../../../modules/workflows/services';
+import { MotionCategoryControllerService } from '../../../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
+import { MotionWorkflowControllerService } from '../../../../../../modules/workflows/services/motion-workflow-controller.service/motion-workflow-controller.service';
 import { MOTION_DETAIL_SUBSCRIPTION } from '../../../../../../motions.subscription';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
 import { MotionControllerService } from '../../../../../../services/common/motion-controller.service/motion-controller.service';
@@ -185,24 +185,23 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
     private _motionId: Id | null = null;
     private _parentId: Id | null = null;
 
-    public constructor(
-        protected override translate: TranslateService,
-        public vp: ViewPortService,
-        public participantRepo: ParticipantControllerService,
-        public participantSortService: ParticipantListSortService,
-        public userRepo: UserRepositoryService,
-        public categoryRepo: MotionCategoryControllerService,
-        public workflowRepo: MotionWorkflowControllerService,
-        private fb: UntypedFormBuilder,
-        private route: ActivatedRoute,
-        private motionController: MotionControllerService,
-        private amendmentRepo: AmendmentControllerService,
-        private perms: MotionPermissionService,
-        private prompt: PromptService,
-        private cd: ChangeDetectorRef,
-        private operator: OperatorService,
-        private presenter: GetForwardingCommitteesPresenterService
-    ) {
+    public categoryRepo = inject(MotionCategoryControllerService);
+    public participantRepo = inject(ParticipantControllerService);
+    public participantSortService = inject(ParticipantListSortService);
+    public userRepo = inject(UserRepositoryService);
+    public vp = inject(ViewPortService);
+    public workflowRepo = inject(MotionWorkflowControllerService);
+    private amendmentRepo = inject(AmendmentControllerService);
+    private cd = inject(ChangeDetectorRef);
+    private fb = inject(UntypedFormBuilder);
+    private motionController = inject(MotionControllerService);
+    private operator = inject(OperatorService);
+    private perms = inject(MotionPermissionService);
+    private presenter = inject(GetForwardingCommitteesPresenterService);
+    private prompt = inject(PromptService);
+    private route = inject(ActivatedRoute);
+
+    public constructor() {
         super();
 
         this.subscriptions.push(
@@ -250,12 +249,16 @@ export class MotionFormComponent extends BaseMeetingComponent implements OnInit 
                 delete update.supporter_ids;
             }
 
+            if (this.amendmentEdit && update.category_id) {
+                delete update.category_id;
+            }
+
             if (this.newMotion) {
                 update.submitter_meeting_user_ids = [];
                 if (update.submitter_ids.length === 0 && this.operator.isInMeeting(this.activeMeetingId)) {
                     update.submitter_meeting_user_ids = [this.operator.user.getMeetingUser(this.activeMeetingId).id];
                 } else {
-                    update.submitter_ids.forEach(id => {
+                    update.submitter_ids.forEach((id: number) => {
                         update.submitter_meeting_user_ids.push(
                             this.userRepo.getViewModel(id).getMeetingUser(this.activeMeetingId).id
                         );

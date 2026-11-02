@@ -159,7 +159,7 @@
     }
 
     @if (!editTopic) {
-        <os-moderation-note [listOfSpeakers]="topic?.list_of_speakers" />
+        <os-moderation-note [listOfSpeakers]="$safeNavigationMigration(topic?.list_of_speakers)" />
     }
     @if (!editTopic) {
         <div class="spacer-bottom-60">

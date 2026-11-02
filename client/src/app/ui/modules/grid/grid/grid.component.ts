@@ -1,4 +1,4 @@
-import { Component, ContentChildren, Input, QueryList } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChildren, Input, QueryList } from '@angular/core';
 
 import { TileComponent } from '../tile/tile.component';
 
@@ -6,6 +6,7 @@ import { TileComponent } from '../tile/tile.component';
     selector: `os-grid`,
     templateUrl: `./grid.component.html`,
     styleUrls: [`./grid.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class GridComponent {

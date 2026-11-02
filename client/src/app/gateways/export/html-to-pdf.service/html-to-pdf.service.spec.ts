@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Content } from 'pdfmake/interfaces';
-import { E2EImportsModule } from 'src/e2e-imports.module';
 
+import { E2EImportsModule } from '../../../../e2e-imports.module';
 import { ExportServiceModule } from '../export-service.module';
 import { HtmlToPdfService } from './html-to-pdf.service';
 

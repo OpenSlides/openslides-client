@@ -1,32 +1,32 @@
 import { Location } from '@angular/common';
-import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
+import { inject, Service } from '@angular/core';
 import {
     ChangeRecoMode,
     LineNumberingMode,
     MOTION_PDF_OPTIONS,
     PERSONAL_NOTE_ID
-} from 'src/app/domain/models/motions/motions.constants';
-import { VOTE_UNDOCUMENTED } from 'src/app/domain/models/poll';
-import { PdfImagesService } from 'src/app/gateways/export/pdf-document.service/pdf-images.service';
-import { ViewMotion, ViewMotionChangeRecommendation } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingPdfExportService } from 'src/app/site/pages/meetings/services/export';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
-import { OrganizationSettingsService } from 'src/app/site/pages/organization/services/organization-settings.service';
+} from '@app/domain/models/motions/motions.constants';
+import { VOTE_UNDOCUMENTED } from '@app/domain/models/poll';
+import { PdfImagesService } from '@app/gateways/export/pdf-document.service/pdf-images.service';
+import { ViewMotion, ViewMotionChangeRecommendation } from '@app/site/pages/meetings/pages/motions';
+import { MeetingPdfExportService } from '@app/site/pages/meetings/services/export';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Content, ContentTable, ContentText, TableCell } from 'pdfmake/interfaces';
 
-import { getRecommendationTypeName } from '../../../definitions';
+import { getRecommendationTypeName } from '../../../definitions/recommendation-type-names';
 import { ViewUnifiedChangeType } from '../../../modules';
-import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services';
-import { MotionCommentSectionControllerService } from '../../../modules/comments/services';
-import { MotionPollService } from '../../../modules/motion-poll/services';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
+import { MotionCommentSectionControllerService } from '../../../modules/comments/services/motion-comment-section-controller.service';
+import { MotionPollService } from '../../../modules/motion-poll/services/motion-poll.service/motion-poll.service';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
-import { MotionControllerService } from '../../common/motion-controller.service';
-import { MotionFormatService } from '../../common/motion-format.service';
-import { MotionLineNumberingService } from '../../common/motion-line-numbering.service';
+import { MotionControllerService } from '../../common/motion-controller.service/motion-controller.service';
+import { MotionFormatService } from '../../common/motion-format.service/motion-format.service';
+import { MotionLineNumberingService } from '../../common/motion-line-numbering.service/motion-line-numbering.service';
 import { InfoToExport } from '../definitions';
-import { MotionExportInfo } from '../motion-export.service';
-import { MotionHtmlToPdfService } from '../motion-html-to-pdf.service';
+import { MotionExportInfo } from '../motion-export.service/motion-export.service';
+import { MotionHtmlToPdfService } from '../motion-html-to-pdf.service/motion-html-to-pdf.service';
 
 interface CreateTextData {
     motion: ViewMotion;
@@ -70,24 +70,20 @@ const PDF_A5_POINTS_WIDTH = 419.544;
  * const pdfMakeCompatibleDocDef = this.MotionPdfService.motionToDocDef(myMotion);
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionPdfService {
-    public constructor(
-        private translate: TranslateService,
-        private motionService: MotionControllerService,
-        private motionLineNumbering: MotionLineNumberingService,
-        private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private meetingSettingsService: MeetingSettingsService,
-        private pdfDocumentService: MeetingPdfExportService,
-        private htmlToPdfService: MotionHtmlToPdfService,
-        private commentRepo: MotionCommentSectionControllerService,
-        private organizationSettingsService: OrganizationSettingsService,
-        private motionPollService: MotionPollService,
-        private motionFormatService: MotionFormatService,
-        private pdfImagesService: PdfImagesService
-    ) {}
+    private translate = inject(TranslateService);
+    private motionService = inject(MotionControllerService);
+    private motionLineNumbering = inject(MotionLineNumberingService);
+    private changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    private meetingSettingsService = inject(MeetingSettingsService);
+    private pdfDocumentService = inject(MeetingPdfExportService);
+    private htmlToPdfService = inject(MotionHtmlToPdfService);
+    private commentRepo = inject(MotionCommentSectionControllerService);
+    private organizationSettingsService = inject(OrganizationSettingsService);
+    private motionPollService = inject(MotionPollService);
+    private motionFormatService = inject(MotionFormatService);
+    private pdfImagesService = inject(PdfImagesService);
 
     /**
      * Converts a motion to PdfMake doc definition
@@ -276,7 +272,7 @@ export class MotionPdfService {
             const minSupporters = this.meetingSettingsService.instant(`motions_supporters_min_amount`);
             if (minSupporters && motion.supporters.length > 0) {
                 const supporters = motion.supporterUsers
-                    .naturalSort(this.translate.getCurrentLang(), [`first_name`, `last_name`])
+                    .naturalSort(this.translate.getCurrentLang() ?? `en`, [`first_name`, `last_name`])
                     .map(supporter => supporter.getTitle())
                     .join(`, `);
 
@@ -368,7 +364,7 @@ export class MotionPdfService {
         ) {
             if (motion.referenced_in_motion_recommendation_extensions.length) {
                 const referringMotions = motion.referenced_in_motion_recommendation_extensions
-                    .naturalSort(this.translate.getCurrentLang(), [`number`, `title`])
+                    .naturalSort(this.translate.getCurrentLang() ?? `en`, [`number`, `title`])
                     .map(motion => motion.getNumberOrTitle())
                     .join(`, `);
 

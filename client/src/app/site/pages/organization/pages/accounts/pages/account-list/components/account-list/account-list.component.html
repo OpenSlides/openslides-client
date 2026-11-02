@@ -8,7 +8,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Accounts</h1>
+        <h1 class="mock-h2">{{ 'Accounts' | translate }}</h1>
     </div>
 
     <!-- Menu -->
@@ -53,20 +53,20 @@
                         @if (!user.is_physical_person) {
                             <os-icon-container
                                 icon="account_balance"
-                                matTooltip="{{ 'Is no natural person' | translate }}"
+                                [matTooltip]="'Is no natural person' | translate"
                             ></os-icon-container>
                         }
                         @if (!user.is_active) {
                             <os-icon-container
                                 class="red-warning-text"
                                 icon="do_not_disturb_on"
-                                matTooltip="{{ 'Inactive' | translate }}"
+                                [matTooltip]="'Inactive' | translate"
                             ></os-icon-container>
                         }
                         @if (user.hasSamlId) {
                             <os-icon-container
                                 icon="fingerprint"
-                                matTooltip="{{ 'Has SSO identification' | translate }}"
+                                [matTooltip]="'Has SSO identification' | translate"
                             ></os-icon-container>
                         }
                     </div>
@@ -94,8 +94,8 @@
             @if (!!user.meetings?.length) {
                 <os-icon-container
                     icon="event_available"
-                    matTooltip="{{ 'Meetings' | translate }}"
                     matTooltipPosition="left"
+                    [matTooltip]="'Meetings' | translate"
                     [noWrap]="true"
                     [showIcon]="true"
                 >
@@ -116,8 +116,8 @@
             <os-icon-container
                 *osOmlPerms="OML.can_manage_users; allowCommitteeAdmin: true; and: !!getOmlByUser(user)"
                 icon="engineering"
-                matTooltip="{{ getOmlByUser(user) | translate }}"
                 matTooltipPosition="left"
+                [matTooltip]="getOmlByUser(user) | translate"
                 [matTooltipDisabled]="!isMobile"
             >
                 @if (!isMobile) {

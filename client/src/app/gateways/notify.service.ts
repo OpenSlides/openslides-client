@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
 import { BaseICCGatewayService } from './base-icc-gateway.service';
@@ -82,9 +82,7 @@ interface NotifySendOptions<T> {
     channels?: string[];
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class NotifyService extends BaseICCGatewayService<ChannelIdResponse | NotifyResponse<any>> {
     protected readonly serviceDescription = `NotifyService`;
 

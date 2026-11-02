@@ -1,10 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { LifecycleService } from '@app/site/services/lifecycle.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { LifecycleService } from 'src/app/site/services/lifecycle.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ServerTimeService {
     // TODO: couple this with the offlineService: Just retry often, if we are online.
     // When we are offline, this is not necessary.
@@ -16,7 +14,8 @@ export class ServerTimeService {
      */
     private readonly _serverOffsetSubject = new BehaviorSubject<number>(0);
 
-    public constructor(lifecycleService: LifecycleService) {
+    public constructor() {
+        const lifecycleService = inject(LifecycleService);
         lifecycleService.appLoaded.subscribe(() => this.startScheduler());
     }
 

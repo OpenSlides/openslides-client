@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
+import { MEETING_PDF_EXPORT_HEADING_STYLES } from '@app/domain/models/meetings/meeting.constants';
 import { Content, ContentColumns } from 'pdfmake/interfaces';
-import { MEETING_PDF_EXPORT_HEADING_STYLES } from 'src/app/domain/models/meetings/meeting.constants';
 
 export interface ChildNodeParagraphPayload {
     child: Element;
@@ -28,9 +28,7 @@ export interface CreateSpecificParagraphPayload {
  * const dd = htmlToPdfService.convertHtml('<h3>Hello World!</h3>');
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class HtmlToPdfService {
     /**
      * Normal line height for paragraphs
@@ -520,11 +518,13 @@ export class HtmlToPdfService {
                         case `text-decoration`: {
                             switch (value) {
                                 case `underline`: {
-                                    styleObject.decoration = (styleObject.decoration ?? []).concat(value);
+                                    styleObject.decoration = [...new Set([...(styleObject.decoration ?? []), value])];
                                     break;
                                 }
                                 case `line-through`: {
-                                    styleObject.decoration = (styleObject.decoration ?? []).concat(`lineThrough`);
+                                    styleObject.decoration = [
+                                        ...new Set([...(styleObject.decoration ?? []), `lineThrough`])
+                                    ];
                                     break;
                                 }
                             }

@@ -5,9 +5,9 @@
     <div class="search-top-form">
         <div class="search-input-container">
             <os-rounded-input
-                placeholder="{{ 'Search' | translate }}"
                 [autofocus]="true"
                 [hasSubmit]="true"
+                [placeholder]="'Search' | translate"
                 [(ngModel)]="searchTerm"
                 (clickSubmit)="searchChange()"
                 (inputCleared)="searchCleared()"
@@ -42,7 +42,7 @@
                 <div class="filter-section">
                     @for (filter of currentlyAvailableFilters; track filter) {
                         @if (hasFilterPermission(filter)) {
-                            <mat-checkbox class="filter" formControlName="{{ filter }}">
+                            <mat-checkbox class="filter" [formControlName]="filter">
                                 {{ availableFilters[filter] | translate }}
                             </mat-checkbox>
                         }
@@ -100,7 +100,9 @@
                                 @if (result.title) {
                                     <h3>
                                         @if (result.obj?.number) {
-                                            <span [innerHTML]="result.obj?.number + ': '"></span>
+                                            <span
+                                                [innerHTML]="$safeNavigationMigration(result.obj?.number) + ': '"
+                                            ></span>
                                         }
                                         <span [innerHTML]="result.title"></span>
                                     </h3>

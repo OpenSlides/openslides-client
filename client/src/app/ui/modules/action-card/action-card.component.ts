@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 
-import { DirectivesModule } from '../../directives';
-import { ExpandableContentWrapperComponent } from '../expandable-content-wrapper';
+import { DirectivesModule } from '../../directives/directives.module';
+import { ExpandableContentWrapperComponent } from '../expandable-content-wrapper/expandable-content-wrapper.component';
 
 @Component({
     selector: `os-action-card`,

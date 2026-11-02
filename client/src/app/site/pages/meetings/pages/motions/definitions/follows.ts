@@ -1,5 +1,5 @@
-import { UserFieldsets } from 'src/app/domain/fieldsets/user';
-import { Follow } from 'src/app/site/services/model-request-builder';
+import { UserFieldsets } from '@app/domain/fieldsets/user';
+import { Follow } from '@app/site/services/model-request-builder';
 
 export const GET_POSSIBLE_RECOMMENDATIONS: Follow = {
     idField: `workflow_id`,

@@ -1,18 +1,19 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { CanComponentDeactivate } from '@app/site/guards/watch-for-changes.guard';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewMotionCategory } from '@app/site/pages/meetings/pages/motions';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
+import { SortingTreeComponent } from '@app/ui/modules/sorting/modules/sorting-tree/components/sorting-tree/sorting-tree.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { CanComponentDeactivate } from 'src/app/site/guards/watch-for-changes.guard';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewMotionCategory } from 'src/app/site/pages/meetings/pages/motions';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
-import { SortingTreeComponent } from 'src/app/ui/modules/sorting/modules/sorting-tree/components/sorting-tree/sorting-tree.component';
 
-import { MotionCategoryControllerService } from '../../../../modules/categories/services';
+import { MotionCategoryControllerService } from '../../../../modules/categories/services/motion-category-controller.service/motion-category-controller.service';
 
 @Component({
     selector: `os-category-list-sort`,
     templateUrl: `./category-list-sort.component.html`,
     styleUrls: [`./category-list-sort.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CategoryListSortComponent extends BaseMeetingComponent implements CanComponentDeactivate {

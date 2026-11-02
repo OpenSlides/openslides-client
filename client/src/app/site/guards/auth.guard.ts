@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 
 import { AuthCheckService } from '../services/auth-check.service';
@@ -12,18 +12,14 @@ enum CannotAccessReason {
     NO_SETTING
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AuthGuard {
     private _cannotAccessReason: CannotAccessReason | null = null;
 
-    public constructor(
-        private reroute: RerouteService,
-        private osRouter: OpenSlidesRouterService,
-        private operator: OperatorService,
-        private authCheck: AuthCheckService
-    ) {}
+    private reroute = inject(RerouteService);
+    private osRouter = inject(OpenSlidesRouterService);
+    private operator = inject(OperatorService);
+    private authCheck = inject(AuthCheckService);
 
     /**
      * Checks of the operator has the required permission to see the state.

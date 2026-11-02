@@ -1,18 +1,23 @@
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 import { inject, NgModule, provideAppInitializer } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { provideTranslateService, TranslateLoader, TranslateParser } from '@ngx-translate/core';
-import { GlobalSpinnerModule } from 'src/app/site/modules/global-spinner';
-import { environment } from 'src/environments/environment';
+import { GlobalSpinnerModule } from '@app/site/modules/global-spinner';
+import { CustomMissingTranslationHandler } from '@app/site/modules/translations/missing-translation-handler';
+import {
+    provideMissingTranslationHandler,
+    provideTranslateService,
+    TranslateLoader,
+    TranslateParser
+} from '@ngx-translate/core';
 
+import { environment } from '../../environments/environment';
 import { CustomTranslationService } from '../site/modules/translations/custom-translation.service';
 import { CustomTranslationParser } from '../site/modules/translations/translation-parser';
 import { PruningTranslationLoader } from '../site/modules/translations/translation-pruning-loader';
-import { WaitForActionDialogModule } from '../site/modules/wait-for-action-dialog';
-import { WaitForActionDialogService } from '../site/modules/wait-for-action-dialog/services';
+import { WaitForActionDialogService } from '../site/modules/wait-for-action-dialog/services/wait-for-action-dialog.service';
+import { WaitForActionDialogModule } from '../site/modules/wait-for-action-dialog/wait-for-action-dialog.module';
 import { OpenSlidesMainComponent } from './components/openslides-main/openslides-main.component';
 import { OpenSlidesOverlayContainerComponent } from './components/openslides-overlay-container/openslides-overlay-container.component';
 import { httpInterceptorProviders } from './interceptors';
@@ -42,7 +47,6 @@ if (isFirefox && `serviceWorker` in navigator) {
     imports: [
         BrowserModule,
         OpenSlidesMainRoutingModule,
-        BrowserAnimationsModule,
         ...NOT_LAZY_LOADED_MODULES,
         ServiceWorkerModule.register(`sw.js`, {
             enabled: environment.production && !isFirefox,
@@ -58,7 +62,7 @@ if (isFirefox && `serviceWorker` in navigator) {
             return initializerFn();
         }),
         httpInterceptorProviders,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideTranslateService({
             fallbackLang: `en`,
             loader: {
@@ -66,6 +70,7 @@ if (isFirefox && `serviceWorker` in navigator) {
                 useClass: PruningTranslationLoader,
                 deps: [HttpClient]
             },
+            missingTranslationHandler: provideMissingTranslationHandler(CustomMissingTranslationHandler),
             parser: {
                 provide: TranslateParser,
                 useClass: CustomTranslationParser,

@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { BaseViaBackendImportListComponent } from 'src/app/site/base/base-via-backend-import-list.component';
-import { committeeHeadersAndVerboseNames } from 'src/app/site/pages/organization/pages/committees/pages/committee-import/definitions';
-import { ImportListHeaderDefinition } from 'src/app/ui/modules/import-list';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BaseViaBackendImportListComponent } from '@app/site/base/base-via-backend-import-list.component';
+import { committeeHeadersAndVerboseNames } from '@app/site/pages/organization/pages/committees/pages/committee-import/definitions';
+import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 
 import { CommitteeImportService } from '../../services/committee-import.service/committee-import.service';
 
@@ -10,6 +9,7 @@ import { CommitteeImportService } from '../../services/committee-import.service/
     selector: `os-committee-import-list`,
     templateUrl: `./committee-import-list.component.html`,
     styleUrls: [`./committee-import-list.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CommitteeImportListComponent extends BaseViaBackendImportListComponent {
@@ -32,10 +32,7 @@ export class CommitteeImportListComponent extends BaseViaBackendImportListCompon
         is_list: [`forward_to_committees`, `organization_tags`, `managers`, `meeting_admins`].includes(header)
     }));
 
-    public constructor(
-        protected override translate: TranslateService,
-        public override importer: CommitteeImportService
-    ) {
+    public constructor(public override importer: CommitteeImportService) {
         super(importer);
     }
 }

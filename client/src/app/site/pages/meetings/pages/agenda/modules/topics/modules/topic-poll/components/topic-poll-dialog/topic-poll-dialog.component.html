@@ -30,7 +30,7 @@
                                         <span class="delete-button">
                                             <button
                                                 mat-icon-button
-                                                matTooltip="{{ 'Remove option' | translate }}"
+                                                [matTooltip]="'Remove option' | translate"
                                                 (click)="removeOption(item)"
                                             >
                                                 <mat-icon>clear</mat-icon>

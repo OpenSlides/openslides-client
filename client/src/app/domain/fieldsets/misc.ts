@@ -1,4 +1,4 @@
-import { BaseSimplifiedModelRequest, Follow, FollowList } from 'src/app/site/services/model-request-builder';
+import { BaseSimplifiedModelRequest, Follow, FollowList } from '@app/site/services/model-request-builder';
 
 /**
  * Fieldset used if no fieldset is specified
