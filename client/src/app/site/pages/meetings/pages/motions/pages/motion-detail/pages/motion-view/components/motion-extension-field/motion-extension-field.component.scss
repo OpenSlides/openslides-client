@@ -11,6 +11,6 @@
     white-space: wrap;
 }
 
-.cursor-chip {
+::ng-deep .cursor-chip * {
     cursor: pointer;
 }
