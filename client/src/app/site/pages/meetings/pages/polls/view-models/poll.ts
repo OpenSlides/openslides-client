@@ -152,7 +152,7 @@ export class ViewPoll<C extends PollContentObject = any>
                       {
                           key: `single_votes`,
                           displayName: _(`Which visualization?`),
-                          default: !!this.published && this.live_voting_enabled,
+                          default: !this.anonymized && this.live_voting_enabled,
                           choices
                       }
                   ]
