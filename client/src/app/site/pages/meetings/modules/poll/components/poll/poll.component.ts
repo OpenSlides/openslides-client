@@ -77,7 +77,7 @@ export class PollComponent extends BaseMeetingComponent {
             } else if (this.poll().isAssignmentPoll) {
                 return `/${this.poll().meeting_id}/assignments/${this.poll().content_object.sequential_number}`;
             } else if (this.poll().isTopicPoll) {
-                return `/${this.poll().meeting_id}/topics/${this.poll().content_object.sequential_number}`;
+                return `/${this.poll().meeting_id}/agenda/topics/${this.poll().content_object.sequential_number}`;
             }
         }
 
