@@ -14,7 +14,9 @@ import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
 import { ChangeRecoMode, LineNumberingMode, PERSONAL_NOTE_ID } from '@app/domain/models/motions/motions.constants';
 import { MeetingRepositoryService } from '@app/gateways/repositories/meeting-repository.service';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { AddItemToAgendaDialog } from '@app/site/pages/meetings/pages/agenda/pages/agenda-add-item/agenda-add-item.component';
 import { ViewMotion, ViewMotionChangeRecommendation, ViewUnifiedChange } from '@app/site/pages/meetings/pages/motions';
 import { AutoupdateService } from '@app/site/services/autoupdate';
 import { ModelRequestBuilderService } from '@app/site/services/model-request-builder';
@@ -389,7 +391,26 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     public addToAgenda(): void {
-        this.itemRepo.addToAgenda({}, this.motion).resolve().catch(this.raiseError);
+        this.dialog
+            .open(AddItemToAgendaDialog, {
+                data: { title: this.motion.getTitle(), meetingId: this.activeMeetingId, isMultiSelect: false },
+                ...infoDialogSettings
+            })
+            .afterClosed()
+            .subscribe(result => {
+                if (result) {
+                    this.itemRepo
+                        .addToAgenda(
+                            {
+                                type: result?.agenda_type,
+                                parent_id: result?.agenda_parent_id
+                            },
+                            this.motion
+                        )
+                        .resolve()
+                        .catch(this.raiseError);
+                }
+            });
     }
 
     public removeFromAgenda(): void {

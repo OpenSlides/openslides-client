@@ -127,6 +127,25 @@
                 <mat-icon>clear</mat-icon>
                 <span>{{ 'Deselect all' | translate }}</span>
             </button>
+            <div *osPerms="permission.agendaItemCanManage">
+                @if (selectedRows.length) {
+                    <mat-divider></mat-divider>
+                    @let notInAgenda = selectedRows.filter(row => !row.agenda_item_id);
+                    @let inAgenda = selectedRows.filter(row => row.agenda_item_id);
+                    @if (notInAgenda.length) {
+                        <button mat-menu-item (click)="addToAgenda(notInAgenda)">
+                            <mat-icon>add</mat-icon>
+                            <span>{{ 'Add to agenda' | translate }}</span>
+                        </button>
+                    }
+                    @if (inAgenda.length) {
+                        <button mat-menu-item (click)="removeFromAgenda(inAgenda)">
+                            <mat-icon>remove</mat-icon>
+                            <span>{{ 'Remove from agenda' | translate }}</span>
+                        </button>
+                    }
+                }
+            </div>
             <mat-divider></mat-divider>
             <!-- Add to projector queue -->
             <os-projector-button
