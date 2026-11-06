@@ -11,6 +11,6 @@
     white-space: wrap;
 }
 
-::ng-deep .cursor-chip * {
-    cursor: pointer;
+mat-basic-chip.cursor-chip .mat-mdc-chip-action {
+    cursor: pointer !important;
 }
