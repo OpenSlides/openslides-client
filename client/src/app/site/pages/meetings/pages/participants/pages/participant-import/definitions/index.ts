@@ -12,7 +12,7 @@ export const participantHeadersAndVerboseNames: { [key in keyof GeneralUser]?: a
     comment: `Comment`
 };
 
-export const participantColumns: (keyof GeneralUser)[] = [
+export const participantColumns = [
     `title`,
     `first_name`,
     `last_name`,
@@ -34,4 +34,28 @@ export const participantColumns: (keyof GeneralUser)[] = [
     `home_committee`,
     `external`,
     `comment`
-];
+] satisfies (keyof GeneralUser)[];
+
+export const participantColumnsDescriptions: Partial<Record<(typeof participantColumns)[number], string>> = {
+    title: '',
+    first_name: 'first name, last name, or username must be provided',
+    last_name: 'first name, last name, or username must be provided',
+    email: 'valid email format required',
+    member_number: 'must be unique',
+    structure_level: 'example "A, B, C". New elements are created automatically during import.',
+    groups: 'example "Admin, Delegates". New elements are created automatically during import. ',
+    number: '',
+    vote_weight: 'enter a voting weight greater than 0',
+    gender: 'only existing genders can be used. Default values: male, female, divers, non-binary',
+    pronoun: '',
+    username: 'automatically generated from first and last name; must be unique. ',
+    default_password: 'automatically generated',
+    is_active: '0 or 1',
+    is_physical_person: '0 or 1',
+    is_present: '0 or 1',
+    locked_out: '0 or 1',
+    saml_id: 'if used, this value must be unique',
+    home_committee: '',
+    external: '0 or 1',
+    comment: ''
+};

@@ -3,22 +3,9 @@
     <div class="title-slot">
         <h1 class="mock-h2">{{ 'Import participants' | translate }}</h1>
     </div>
-
-    <ng-container class="menu-slot">
-        @if (canImport) {
-            <button mat-button (click)="doImport()">
-                <span class="upper">{{ 'Import' | translate }}</span>
-            </button>
-        }
-    </ng-container>
 </os-head-bar>
 
-<os-backend-import-list
-    modelName="Participant"
-    [additionalInfo]="
-        'Existing accounts can be reused or updated by using: <ul><li>Membership number <i>(recommended)</i><li>Username<li>Email address AND first name AND last name'
-            | translate
-    "
+<os-backend-import-participant-list
     [defaultColumns]="columns"
     [importer]="importer"
     [possibleFields]="possibleFields"
