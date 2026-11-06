@@ -9,6 +9,7 @@ import { ReversePipe } from './reverse/reverse.pipe';
 import { TimePipe } from './time/time.pipe';
 import { ToArrayPipe } from './to-array/to-array.pipe';
 import { ToStringPipe } from './to-string/to-string.pipe';
+import { TranslateKeyPipe } from './translate-key/translate-key.pipe';
 import { TrustPipe } from './trust/trust.pipe';
 
 const DECLARATIONS = [
@@ -24,9 +25,9 @@ const DECLARATIONS = [
 ];
 
 @NgModule({
-    exports: DECLARATIONS,
+    exports: [...DECLARATIONS, TranslateKeyPipe],
     declarations: DECLARATIONS,
-    imports: [CommonModule],
+    imports: [CommonModule, TranslateKeyPipe],
     providers: [SlicePipe, AsyncPipe]
 })
 export class PipesModule {}

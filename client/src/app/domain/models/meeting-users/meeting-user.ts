@@ -16,7 +16,7 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
     public user_id!: Id;
     public meeting_id!: Id;
 
-    public vote_delegated_to_id!: Id; // meeting_user/vote_delegations_from_ids;
+    public vote_delegated_to_ids!: Id[]; // meeting_user/vote_delegations_from_ids;
 
     public group_ids!: Id[]; // (group/meeting_user_ids)[];
     public speaker_ids!: Id[]; // (speaker/meeting_user_id)[];
@@ -24,10 +24,12 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
     public motion_supporter_ids!: Id[]; // (motion_supporter/meeting_user_id);
     public submitted_motion_ids!: Id[]; // (motion_submitter/meeting_user_id)[];
     public assignment_candidate_ids!: Id[]; // (assignment_candidate/meeting_user_id)[];
-    public vote_delegated_vote_ids!: Id[];
     public vote_delegations_from_ids!: Id[]; // meeting_user/vote_delegated_to_id;
+    public acting_ballot_ids: Id[];
+    public represented_ballot_ids: Id[];
     public chat_message_ids!: Id[]; // (chat_message/meeting_user_id)[];
     public structure_level_ids!: Id[]; // structure_level/meeting_user_ids
+    public poll_entitled_user_ids: Id[];
 
     public constructor(input?: Partial<MeetingUser>) {
         super(MeetingUser.COLLECTION, input);
@@ -50,8 +52,11 @@ export class MeetingUser extends BaseDecimalModel<MeetingUser> {
         `speaker_ids`,
         `motion_supporter_ids`,
         `assignment_candidate_ids`,
-        `vote_delegated_to_id`,
+        `vote_delegated_to_ids`,
         `vote_delegations_from_ids`,
+        `acting_ballot_ids`,
+        `represented_ballot_ids`,
+        `poll_entitled_user_ids`,
         `chat_message_ids`,
         `group_ids`,
         `structure_level_ids`

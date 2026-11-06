@@ -55,7 +55,7 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
         comment: [``],
         group_ids: [``],
         vote_delegations_from_ids: [``],
-        vote_delegated_to_id: [``],
+        vote_delegated_to_ids: [``],
         is_present: [``],
         locked_out: [``],
         external: [``],
@@ -369,6 +369,52 @@ export class ParticipantDetailEditComponent extends BaseMeetingComponent impleme
                 `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
             )
         );
+            const payload = {
+                ...this.personalInfoFormValue,
+                vote_delegated_to_ids: this.personalInfoFormValue.vote_delegated_to_ids
+                    ? this.personalInfoFormValue.vote_delegated_to_ids
+                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter(id => !!id)
+                    : [],
+                vote_delegations_from_ids: this.personalInfoFormValue.vote_delegations_from_ids
+                    ? this.personalInfoFormValue.vote_delegations_from_ids
+                          .map(id => this.repo.getViewModel(id).getMeetingUser().id)
+                          .filter(id => !!id)
+                    : []
+            };
+            if (payload.member_number === ``) {
+                payload.member_number = null;
+            }
+            if (payload.gender_id === 0) {
+                payload.gender_id = null;
+            }
+            const title = _(`This action will remove you from one or more groups.`);
+            const content = _(
+                `This may diminish your ability to do things in this meeting and you may not be able to revert it by youself. Are you sure you want to do this?`
+            );
+            if (
+                !(
+                    this.user.id === this.operator.operatorId &&
+                    areGroupsDiminished(this.operator.user.group_ids(), payload.group_ids, this.activeMeeting)
+                ) ||
+                (await this.promptService.open(title, content))
+            ) {
+                if (
+                    this.operator.hasPerms(Permission.userCanManagePresence) &&
+                    this.personalInfoFormValue.is_present !== undefined
+                ) {
+                    await this.repo
+                        .update(payload, this.user!)
+                        .concat(this.repo.setPresent(isPresent, this.user!))
+                        .resolve();
+                } else {
+                    await this.repo.update(payload, this.user!).resolve();
+                }
+            }
+        } else {
+            await this.repo.updateSelf(this.personalInfoFormValue, this.user!);
+        }
+        this.router.navigate([`../`], { relativeTo: this.route });
     }
 
     public onCancel(): void {

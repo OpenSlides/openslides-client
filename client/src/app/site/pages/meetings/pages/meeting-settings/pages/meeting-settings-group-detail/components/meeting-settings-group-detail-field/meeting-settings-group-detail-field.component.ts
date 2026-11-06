@@ -26,7 +26,7 @@ import { GroupControllerService } from '../../../../../participants/modules/grou
 import { AllocationListConfig } from '../allocation-list/allocation-list.component';
 
 export interface SettingsFieldUpdate {
-    key: keyof Settings | (keyof Settings)[];
+    key: keyof Settings | (keyof Settings)[] | string;
     value: any;
 }
 
@@ -135,7 +135,7 @@ export class MeetingSettingsGroupDetailFieldComponent extends BaseComponent impl
 
     public sortFn = (groupA: ViewGroup, groupB: ViewGroup): number => groupA.weight - groupB.weight;
 
-    public get watchProperties(): (keyof Settings)[] {
+    public get watchProperties(): (keyof Settings | string)[] {
         return this.setting.automaticChangesSetting?.watchProperties;
     }
 

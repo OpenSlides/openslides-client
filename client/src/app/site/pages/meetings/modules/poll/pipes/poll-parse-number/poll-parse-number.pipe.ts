@@ -9,6 +9,6 @@ export class PollParseNumberPipe implements PipeTransform {
     public constructor(private pollService: PollService) {}
 
     public transform(value?: number): string {
-        return this.pollService.parseNumber(value);
+        return this.pollService.parseNumber(value, 3);
     }
 }

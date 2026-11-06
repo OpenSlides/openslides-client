@@ -1,0 +1,11 @@
+.detail-link {
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.detail-link:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
