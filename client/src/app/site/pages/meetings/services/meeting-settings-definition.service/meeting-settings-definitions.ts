@@ -820,7 +820,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
     },
     {
         label: _(`Vote`),
-        icon: `ballot`,
+        icon: `check_circle`,
         subgroups: [
             {
                 label: _(`General`),
