@@ -19,3 +19,78 @@
         </mat-card-content>
     </mat-card>
 }
+
+<ng-template #viewTemplate>
+    @if (isSameMeeting) {
+        <os-motion-poll-detail-content [poll]="poll" [routerLink]="getDetailLink()" />
+    } @else {
+        <os-motion-poll-detail-content [poll]="poll" />
+    }
+</ng-template>
+
+<ng-template #emptyTemplate>
+    <span *osPerms="permission.motionCanManagePolls; and: poll.type === 'analog'">
+        <button mat-stroked-button [matTooltip]="'Edit' | translate" (click)="dialogOpened.emit()">
+            <mat-icon>edit</mat-icon>
+        </button>
+        <div>
+            {{ 'Edit to enter votes.' | translate }}
+        </div>
+    </span>
+    @if (poll.type !== 'analog') {
+        <p>
+            <i *osPerms="permission.motionCanManagePolls; or: isPublished">
+                {{ 'No one has voted for this poll' | translate }}
+            </i>
+        </p>
+    }
+</ng-template>
+
+<!-- More Menu -->
+<mat-menu #pollDetailMenu="matMenu">
+    <button
+        *osPerms="permission.motionCanManagePolls"
+        mat-menu-item
+        [attr.aria-label]="'Edit' | translate"
+        (click)="dialogOpened.emit()"
+    >
+        <mat-icon>edit</mat-icon>
+        <span>{{ 'Edit' | translate }}</span>
+    </button>
+    <os-projector-button
+        *osPerms="permission.projectorCanManage"
+        [allowReferenceProjector]="true"
+        [menuItem]="true"
+        [object]="poll.getProjectionBuildDescriptor()"
+    />
+    <button
+        *osPerms="
+            permission.motionCanManagePolls;
+            and: poll && poll.type === 'named' && (poll.isFinished || poll.isPublished) && !poll.is_pseudoanonymized
+        "
+        mat-menu-item
+        (click)="pseudoanonymizePoll()"
+    >
+        <mat-icon>warning</mat-icon>
+        <span>{{ 'Anonymize votes' | translate }}</span>
+    </button>
+    <button mat-menu-item (click)="downloadPdf()">
+        <mat-icon>picture_as_pdf</mat-icon>
+        <span>{{ 'Ballot papers' | translate }}</span>
+    </button>
+    <div *osPerms="permission.motionCanManagePolls">
+        <mat-divider></mat-divider>
+
+        <!-- Reset Button -->
+        <button mat-menu-item (click)="resetState()">
+            <mat-icon color="warn">replay</mat-icon>
+            <span>{{ 'Reset state' | translate }}</span>
+        </button>
+
+        <!-- Delete button -->
+        <button mat-menu-item (click)="deletePoll()">
+            <mat-icon color="warn">delete</mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+        </button>
+    </div>
+</mat-menu>

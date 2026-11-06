@@ -5,8 +5,12 @@ import { Router } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
 import { allAvailableTranslations, availableTranslations } from '@app/domain/definitions/languages';
 import { getOmlVerboseName } from '@app/domain/definitions/organization-permission';
+import { Permission } from '@app/domain/definitions/permission';
 import { largeDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { mediumDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { ParticipantListInfoDialogService } from '@app/site/pages/meetings/pages/participants/pages/participant-list/modules/participant-list-info-dialog';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
@@ -15,6 +19,7 @@ import { OperatorService } from '@app/site/services/operator.service';
 import { ThemeService } from '@app/site/services/theme.service';
 import { UserControllerService } from '@app/site/services/user-controller.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { PromptService } from '@app/ui/modules/prompt-dialog/services/prompt.service';
 import { ChessDialogComponent } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
 import { ChessChallengeService } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -71,11 +76,16 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
 
     public username = ``;
     public isLoggedIn = false;
+    private _voteDelegationEnabled = false;
 
     public show1337 = -20;
 
     private get activeMeetingId(): Id | null {
         return this.activeMeetingIdService.meetingId;
+    }
+
+    protected get isVoteDelegationEnabled(): boolean {
+        return this._voteDelegationEnabled;
     }
 
     private _isAllowedSelfSetPresent = false;
@@ -86,12 +96,16 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     private translate = inject(TranslateService);
     private operator = inject(OperatorService);
     private userRepo = inject(UserControllerService);
+    private participantRepo = inject(ParticipantControllerService);
     private authService = inject(AuthService);
     private theme = inject(ThemeService);
+    private activeMeeting = inject(ActiveMeetingService);
     private meetingSettingsService = inject(MeetingSettingsService);
     private activeMeetingIdService = inject(ActiveMeetingIdService);
     private dialog = inject(MatDialog);
     private router = inject(Router);
+    private infoDialog = inject(ParticipantListInfoDialogService);
+    private prompt = inject(PromptService);
 
     public constructor(chessChallengeService: ChessChallengeService) {
         super();
@@ -104,6 +118,9 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         this.meetingSettingsService
             .get(`users_allow_self_set_present`)
             .subscribe(allowed => (this._isAllowedSelfSetPresent = allowed));
+        this.meetingSettingsService
+            .get(`users_enable_vote_delegations`)
+            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
 
         this.onOperatorUpdate(); // initially trigger the update manually to set initial values
     }
@@ -225,5 +242,16 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
             stringForUserPresent = this.translate.instant(`Your account is not in this meeting.`);
         }
         return this.user.short_name + ': ' + stringForUserPresent;
+    }
+
+    public canEditOwnDelegation(): boolean {
+        return (
+            this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
+            this.activeMeeting.meeting.user_ids.includes(this.operator.operatorId)
+        );
+    }
+
+    public async openEditInfo(user: ViewUser): Promise<void> {
+        await this.infoDialog.openDialog(user, this.activeMeeting.meeting!);
     }
 }

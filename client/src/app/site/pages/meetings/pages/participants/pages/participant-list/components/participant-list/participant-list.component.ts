@@ -352,7 +352,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     /**
      * This function opens the dialog,
      * where the user can quick change the groups,
-     * the gender and the participant number.
+     * the participant number and the delegations.
      *
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
@@ -399,6 +399,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                 }
             }
         });
+        await this.infoDialog.openDialog(user, this.activeMeeting);
     }
 
     public getOtherUsersObservable(user: ViewUser): Observable<ViewUser[]> {
@@ -635,8 +636,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     public canSeeItemMenu(): boolean {
         return (
-            this.operator.hasPerms(Permission.userCanUpdate) ||
-            this.operator.hasPerms(Permission.userCanEditOwnDelegation)
+            this.operator.hasPermsInMeeting(this.activeMeetingId, ...[this.permission.userCanUpdate]) &&
+            (this.operator.hasPerms(Permission.userCanUpdate) ||
+                this.operator.hasPerms(Permission.userCanEditOwnDelegation))
         );
     }
 
