@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UserRepositoryService } from '@app/gateways/repositories/users';
 import { BaseComponent } from '@app/site/base/base.component';
+import { PollFilteredVotesChartComponent } from '@app/site/pages/meetings/modules/poll/components/poll-filtered-votes-chart/poll-filtered-votes-chart.component';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { DirectivesModule } from '@app/ui/directives';
 import { HeadBarModule } from '@app/ui/modules/head-bar';
@@ -45,6 +46,7 @@ import { PollSingleVotesComponent } from '../poll-single-votes/poll-single-votes
         ProjectorButtonModule,
         PollEntitledUserComponent,
         PollSingleVotesComponent,
+        PollFilteredVotesChartComponent,
         TranslatePipe,
         HeadBarModule,
         MatInputModule,
@@ -74,7 +76,7 @@ export class PollDetailComponent extends BaseComponent {
     public selectedTab = signal(0);
 
     public presentEntitledUsers = rxResource({
-        params: () => ({ entitledGroupIds: this.poll().entitled_group_ids }),
+        params: () => ({ entitledGroupIds: this.poll()?.entitled_group_ids || [] }),
         defaultValue: 0,
         stream: ({ params }) =>
             this.userRepo.getViewModelListObservable().pipe(

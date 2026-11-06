@@ -18,7 +18,8 @@ export enum PollVisibility {
 export enum PollRequiredMajority {
     NoMajority = `no_majority`,
     TwoThirdMajority = `two_third_majority`,
-    AbsoluteMajority = `absolute_majority`
+    AbsoluteMajority = `absolute_majority`,
+    SimpleMajority = `simple_majority`
 }
 
 /**

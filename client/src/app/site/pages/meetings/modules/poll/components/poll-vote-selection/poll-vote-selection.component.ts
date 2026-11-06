@@ -100,7 +100,7 @@ export class PollVoteSelectionComponent extends PollVoteBaseComponent<ViewPollCo
         }
 
         if (selected.has(0)) {
-            this.voted.emit([]);
+            this.voted.emit(null);
         } else if (selected.has(-1)) {
             this.voted.emit(`nota`);
         } else {

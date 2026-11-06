@@ -1,10 +1,11 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { Component, computed, effect, input, Signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { PollVisibility } from '@app/domain/models/poll';
 import { SelectionOnehundredPercentBase } from '@app/domain/models/poll/poll-config-selection';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { TranslateKeyPipe } from '@app/ui/pipes/translate-key/translate-key.pipe';
@@ -33,26 +34,39 @@ export interface PollFormSelection {
         AsyncPipe
     ],
     templateUrl: './poll-form-selection.component.html',
-    styleUrls: [`../poll-form/poll-form.component.scss`, './poll-form-selection.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrls: [`../poll-form/poll-form.component.scss`, './poll-form-selection.component.scss']
 })
 export class PollFormSelectionComponent extends PollFormBaseComponent {
-    public validPercentBases: [SelectionOnehundredPercentBase, string][] = [
-        [`no_general`, _('Sum of votes without general options')],
-        [`valid`, _('All valid ballots')],
-        [`cast`, _('All casted ballots')],
-        [`entitled`, _('All entitled users')],
-        // [`entitled_present`, _('Present entitled users')],
-        [`disabled`, _('Disabled (no percents)')]
-    ];
+    public validPercentBases: Signal<[SelectionOnehundredPercentBase, string][]> = computed(() => {
+        return [
+            [`no_general`, _('Sum of votes without general options')],
+            [`valid`, _('All valid ballots')],
+            [`cast`, _('All casted ballots')],
+            ...((this.formData().visibility !== PollVisibility.Manually
+                ? [
+                      [`entitled`, _('All entitled users')],
+                      [`entitled_present`, _('Present entitled users')]
+                  ]
+                : []) as [SelectionOnehundredPercentBase, string][]),
+            [`disabled`, _('Disabled (no percents)')]
+        ];
+    });
 
     public hideMethod = input<boolean>(false);
     public optionAmount = input<number>(null);
 
     public getSerialzedForm(): Record<string, unknown> {
+        const data = {
+            ...this.form.value
+        };
+        delete data[`allow_empty`];
+
+        return data;
+    }
+
+    public override getSerialzedAdditionalData(): Record<string, unknown> {
         return {
-            ...this.form.value,
-            min_options_amount: this.form.value[`allow_general_abstain`] ? 0 : this.form.value[`min_options_amount`]
+            allow_empty: this.form.value[`allow_empty`]
         };
     }
 
@@ -61,7 +75,7 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             onehundred_percent_base: [`valid`],
             strike_out: [false],
             allow_nota: [false],
-            allow_general_abstain: [false],
+            allow_empty: [false],
             max_options_amount: [1, [Validators.required, Validators.min(1)]],
             min_options_amount: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator()]],
             display_chart: [`table`],
@@ -86,18 +100,15 @@ export class PollFormSelectionComponent extends PollFormBaseComponent {
             `max_options_amount`,
             `min_options_amount`,
             `display_chart`,
-            `required_majority`
+            `required_majority`,
+            `allow_empty`
         ]) {
             if (data && data[field] !== undefined) patch[field] = data[field];
-            else if (data && data.config[field] !== undefined) patch[field] = data.config[field];
+            else if (data && data.config && data.config[field] !== undefined) patch[field] = data.config[field];
         }
 
         if (patch[`onehundred_percent_base`] === `yes_no`) {
             patch[`onehundred_percent_base`] = `valid`;
-        }
-
-        if (patch[`min_options_amount`] !== undefined) {
-            patch[`allow_general_abstain`] = +patch[`min_options_amount`] === 0;
         }
 
         return patch;

@@ -1,5 +1,5 @@
 import { inject, Service, Signal, signal, WritableSignal } from '@angular/core';
-import { MeetingPollDefault } from '@app/domain/models/meetings/meeting-poll-default';
+import { MeetingPollSetting } from '@app/domain/models/meetings/meeting-poll-setting';
 import { BehaviorSubject, combineLatest, filter, Observable, switchMap } from 'rxjs';
 
 import { ActiveMeetingService } from './active-meeting.service';
@@ -92,10 +92,10 @@ export class MeetingPollSettingsService {
      *
      * @param key The setting value to get from.
      */
-    public instant<T extends keyof MeetingPollDefault>(
+    public instant<T extends keyof MeetingPollSetting>(
         collection: MeetingPollSettingCollection,
         key: T
-    ): MeetingPollDefault[T] | null {
+    ): MeetingPollSetting[T] | null {
         return this.activeMeetingService.meeting[`${collection}_poll_config`][key];
     }
 
@@ -104,14 +104,14 @@ export class MeetingPollSettingsService {
      *
      * @param key The setting value to get from.
      */
-    public get<T extends keyof MeetingPollDefault>(
+    public get<T extends keyof MeetingPollSetting>(
         collection: MeetingPollSettingCollection,
         key: T
-    ): Observable<MeetingPollDefault[T]> {
+    ): Observable<MeetingPollSetting[T]> {
         if (!this.settingSubjects[collection][key]) {
             this.settingSubjects[collection][key] = new BehaviorSubject<any>(this.instant(collection, key));
         }
-        return this.settingSubjects[collection][key] as Observable<MeetingPollDefault[T]>;
+        return this.settingSubjects[collection][key] as Observable<MeetingPollSetting[T]>;
     }
 
     /**
@@ -119,13 +119,13 @@ export class MeetingPollSettingsService {
      *
      * @param key The setting value to get from.
      */
-    public signal<T extends keyof MeetingPollDefault>(
+    public signal<T extends keyof MeetingPollSetting>(
         collection: MeetingPollSettingCollection,
         key: T
-    ): Signal<MeetingPollDefault[T]> {
+    ): Signal<MeetingPollSetting[T]> {
         if (!this.settingSignals[collection][key]) {
-            this.settingSignals[collection][key] = signal<MeetingPollDefault[T]>(this.instant(collection, key));
+            this.settingSignals[collection][key] = signal<MeetingPollSetting[T]>(this.instant(collection, key));
         }
-        return this.settingSignals[collection][key] as Signal<MeetingPollDefault[T]>;
+        return this.settingSignals[collection][key] as Signal<MeetingPollSetting[T]>;
     }
 }

@@ -43,12 +43,17 @@
                         @if (poll().isOpen && poll().isAnonymized) {
                             ({{ 'anonymized' | translate }})
                         }
+                    } @else if (poll().isFinished && !poll().published) {
+                        <span *osPerms="permission.motionCanManagePolls">
+                            {{ poll().state | translateKey: 'poll_state' }}
+                            ({{ 'unpublished' | translate }})
+                        </span>
+
+                        <span *osPerms="permission.motionCanManagePolls; complement: true">
+                            {{ 'Counting of votes is in progress ...' | translate }}
+                        </span>
                     } @else {
                         {{ poll().state | translateKey: 'poll_state' }}
-                    }
-
-                    @if (poll().isFinished && !poll().published) {
-                        ({{ 'unpublished' | translate }})
                     }
                 </span>
             </div>

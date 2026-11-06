@@ -6,10 +6,16 @@ export class PollEntitledUser extends BaseModel<PollEntitledUser> {
 
     public poll_id!: Id;
     public meeting_user_id: Id;
+    public present: boolean;
 
     public constructor(input?: Partial<PollEntitledUser>) {
         super(PollEntitledUser.COLLECTION, input);
     }
 
-    public static readonly REQUESTABLE_FIELDS: (keyof PollEntitledUser)[] = [`id`, `poll_id`, `meeting_user_id`];
+    public static readonly REQUESTABLE_FIELDS: (keyof PollEntitledUser)[] = [
+        `id`,
+        `poll_id`,
+        `meeting_user_id`,
+        `present`
+    ];
 }

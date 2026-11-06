@@ -7,15 +7,6 @@
                 [poll]="poll()"
                 (dialogOpened)="dialogOpened.emit($event)"
             ></os-poll>
-
-            <!-- Detail link -->
-            @if (poll().isPublished && isSameMeeting()) {
-                <div class="poll-detail-button-wrapper">
-                    <a mat-icon-button [matTooltip]="'More' | translate" [routerLink]="getDetailLink()">
-                        <mat-icon class="icon-18">visibility</mat-icon>
-                    </a>
-                </div>
-            }
         </mat-card-content>
     </mat-card>
 }

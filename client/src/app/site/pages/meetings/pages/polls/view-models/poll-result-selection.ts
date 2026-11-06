@@ -6,7 +6,7 @@ import { ViewPollConfigSelection } from './poll-config-selection';
 export class SelectionPollResult extends BasePollResult<ViewPollConfigSelection, SelectionPollResult> {
     [key: number]: string;
     public nota?: string;
-    public abstain?: string;
+    public empty?: string;
 
     public constructor(
         public override config: ViewPollConfigSelection,
@@ -15,7 +15,7 @@ export class SelectionPollResult extends BasePollResult<ViewPollConfigSelection,
         super(config, input);
 
         if (config.strike_out) {
-            const validVotes = this.total_ballots - (this.invalid ?? 0) - +(this.abstain ?? 0);
+            const validVotes = this.total_ballots - (this.invalid ?? 0) - +(this.empty ?? 0);
 
             const options = config.poll?.options;
             if (options) {
