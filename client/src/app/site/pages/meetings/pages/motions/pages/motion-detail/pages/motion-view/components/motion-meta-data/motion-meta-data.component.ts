@@ -130,7 +130,6 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     public originTreeData = signal<ViewMotion[][]>([]);
 
     public refreshOriginMotions(): void {
-        this.displayFutureForward.set(true); // TODO: waiting for new setting, also see TODO in ngOnInit
         const futureList: ViewMotion[] =
             this.displayFutureForward() && this.motion.all_derived_motions ? this.motion.all_derived_motions : [];
         const pastList: ViewMotion[] =
@@ -221,13 +220,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         }
 
         this.derivedMotionSubscriptions.push(
-            this.motion.all_derived_motions$.subscribe(_ => this.refreshOriginMotions()),
-            // TODO: Use actual setting
-            // motions_enable_origin_motion_display is NOT the wanted setting here
             this.meetingSettingsService
-                .get(`motions_enable_origin_motion_display`)
+                .get(`motions_enable_consultation_sequence`)
                 .pipe(map(v => !!v))
-                .subscribe((v: boolean) => this.displayFutureForward.set(v))
+                .subscribe((v: boolean) => this.displayFutureForward.set(v)),
+            this.motion.all_derived_motions$.subscribe(_ => this.refreshOriginMotions())
         );
     }
 
@@ -445,20 +442,24 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         const leaves = list.filter(motion => !childrenIds.has(motion.id));
         const tree: ViewMotion[][] = [];
 
-        for (const leaf of leaves) {
-            const branch: ViewMotion[] = [];
-            let currentId: number | null = leaf.id;
+        if (leaves.length > 0) {
+            for (const leaf of leaves) {
+                const branch: ViewMotion[] = [];
+                let currentId: number | null = leaf.id;
 
-            while (currentId !== null) {
-                const motion = list.find(m => m.id === currentId);
-                if (!motion) break;
+                while (currentId !== null) {
+                    const motion = list.find(m => m.id === currentId);
+                    if (!motion) break;
 
-                branch.push(motion);
-                currentId = motion.origin_id;
+                    branch.push(motion);
+                    currentId = motion.origin_id;
+                }
+
+                branch.push(...origins.reverse());
+                tree.push(branch);
             }
-
-            branch.push(...origins.reverse());
-            tree.push(branch);
+        } else {
+            tree.push(origins);
         }
         return tree;
     }

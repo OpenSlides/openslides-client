@@ -309,7 +309,7 @@
             <h4>
                 {{ 'Consultation sequence' | translate }}
             </h4>
-        } @else {
+        } @else if (originTreeData()[0].length) {
             <h4>{{ 'Origin' | translate }}</h4>
         }
         <table class="origin-view">

@@ -62,6 +62,7 @@ export const meetingSettingsDefaults: Record<string, any> = {
     motion_poll_projection_max_columns: 6,
     motion_poll_ballot_paper_selection: 'CUSTOM_NUMBER',
     motion_poll_ballot_paper_number: 8,
+    motions_enable_consultation_sequence: false,
     motions_enable_origin_motion_display: false,
     motions_origin_motion_toggle_default: false,
     assignment_poll_default_type: 'pseudoanonymous',
