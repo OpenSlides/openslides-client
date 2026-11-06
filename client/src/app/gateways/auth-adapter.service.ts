@@ -33,8 +33,15 @@ export class AuthAdapterService {
         return this.http.post<AuthServiceResponse>(`${this.authUrl}/who-am-i/`);
     }
 
-    public async startSamlLogin(): Promise<string> {
-        const { message } = await this.http.get<AuthServiceResponse>(`/system/saml/getUrl`);
+    public async startSamlLogin(redirectUrl?: string): Promise<string> {
+        const queryParams = {};
+        if (redirectUrl) {
+            queryParams['redirectUrl'] = redirectUrl;
+        }
+
+        const { message } = await this.http.get<AuthServiceResponse>(`/system/saml/getUrl`, null, {
+            queryParams
+        });
         return message;
     }
 }
