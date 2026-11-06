@@ -7,7 +7,14 @@
                     <mat-icon>close</mat-icon>
                 </button>
             } @else {
-                <button class="small-button" disableRipple mat-icon-button type="button" (click)="onEdit()">
+                <button
+                    class="small-button"
+                    disableRipple
+                    mat-icon-button
+                    type="button"
+                    [attr.aria-label]="'Edit' | translate"
+                    (click)="onEdit()"
+                >
                     <mat-icon>edit</mat-icon>
                 </button>
             }
