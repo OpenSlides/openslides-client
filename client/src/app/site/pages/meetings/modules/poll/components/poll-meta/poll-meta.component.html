@@ -51,6 +51,12 @@
 }
 
 <div class="meta-info-right subtitle">
+    @if (poll().live_voting_enabled) {
+        <div>
+            {{ 'Live voting' | translate }}
+        </div>
+    }
+
     <!-- Groups that can vote -->
     @let entitledGroups = poll().entitled_groups$ | async;
     @if (entitledGroups && poll().isEVoting) {
