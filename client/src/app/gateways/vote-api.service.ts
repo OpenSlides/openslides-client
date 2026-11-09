@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { Id } from '../domain/definitions/key-types';
 import { PollVisibility } from '../domain/models/poll/poll-constants';
@@ -20,28 +20,43 @@ export interface PollUpdatePayload {
     option_type?: 'text' | 'meeting_user';
     result?: unknown;
     allow_vote_split: boolean;
+    allow_empty?: boolean;
 }
 
-@Injectable({ providedIn: 'root' })
+@Service()
 export class VoteApiService {
     private readonly BASE = '/system/vote';
 
-    public constructor(private http: HttpService) {}
+    private http = inject(HttpService);
 
     public create(payload: PollCreatePayload): Promise<any> {
         return this.http.post(`${this.BASE}/poll`, payload);
     }
 
     public update(id: Id, payload: any): Promise<any> {
-        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}`, payload);
+        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}`, payload, {
+            catchError: false
+        });
     }
 
     public deletePoll(id: Id): Promise<any> {
-        return this.http.delete(`${this.BASE}/poll/${encodeURIComponent(id)}`, {});
+        return this.http.delete(
+            `${this.BASE}/poll/${encodeURIComponent(id)}`,
+            {},
+            {
+                catchError: false
+            }
+        );
     }
 
     public start(id: Id): Promise<any> {
-        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}/start`, {});
+        return this.http.post(
+            `${this.BASE}/poll/${encodeURIComponent(id)}/start`,
+            {},
+            {
+                catchError: false
+            }
+        );
     }
 
     public finalize(id: Id, options?: { publish?: boolean; anonymize?: boolean }): Promise<any> {
@@ -53,18 +68,30 @@ export class VoteApiService {
         if (options?.anonymize) {
             queryParams[`anonymize`] = ``;
         }
-        return this.http.post(url, {}, { queryParams });
+        return this.http.post(url, {}, { queryParams, catchError: false });
     }
 
     public reset(id: Id): Promise<any> {
-        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}/reset`, {});
+        return this.http.post(
+            `${this.BASE}/poll/${encodeURIComponent(id)}/reset`,
+            {},
+            {
+                catchError: false
+            }
+        );
     }
 
     public vote(id: Id, value: unknown, meetingUserId: Id, split = false): Promise<any> {
-        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}/vote`, {
-            meeting_user_id: meetingUserId,
-            value,
-            split
-        });
+        return this.http.post(
+            `${this.BASE}/poll/${encodeURIComponent(id)}/vote`,
+            {
+                meeting_user_id: meetingUserId,
+                value,
+                split
+            },
+            {
+                catchError: false
+            }
+        );
     }
 }

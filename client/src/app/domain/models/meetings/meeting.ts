@@ -165,20 +165,12 @@ export class Settings {
     public assignments_export_preamble!: string;
 
     public assignment_poll_add_candidates_to_list_of_speakers!: boolean;
-    public assignment_poll_default_method: string;
     public assignment_poll_config_id: Id;
 
     // topic poll
-    public topic_poll_default_method: string;
     public topic_poll_config_id: Id;
 
     // General poll settings
-    public poll_enable_max_yes_votes: boolean;
-    public poll_default_required_majority: `no_majority` | `two_third_majority` | `absolute_majority`;
-    public poll_default_live_voting_enabled: boolean;
-    public poll_enable_max_votes_per_option: boolean;
-    public poll_default_allow_invalid: boolean;
-    public poll_default_allow_vote_split: boolean;
     public poll_projection_name_order_first: `first_name` | `last_name`;
     public poll_projection_max_columns: boolean;
 
@@ -412,17 +404,9 @@ export class Meeting extends BaseModel<Meeting> {
         `assignments_export_title`,
         `assignments_export_preamble`,
         `assignment_poll_add_candidates_to_list_of_speakers`,
-        `assignment_poll_default_method`,
         `assignment_poll_config_id`,
         `motion_poll_config_id`,
-        `topic_poll_default_method`,
         `topic_poll_config_id`,
-        `poll_enable_max_yes_votes`,
-        `poll_enable_max_votes_per_option`,
-        `poll_default_required_majority`,
-        `poll_default_live_voting_enabled`,
-        `poll_default_allow_invalid`,
-        `poll_default_allow_vote_split`,
         `poll_projection_name_order_first`,
         `poll_projection_max_columns`,
         `projector_ids`,

@@ -1,6 +1,6 @@
 <div class="option-list">
     <div class="option-list-caption" role="row">
-        <ng-template #optionAmount>
+        <div>
             @if (poll().option_ids.length > 1) {
                 <div>
                     <b>
@@ -15,10 +15,7 @@
             } @else {
                 <div></div>
             }
-        </ng-template>
 
-        <div>
-            <ng-container *ngTemplateOutlet="optionAmount"></ng-container>
             <div class="available-votes">
                 {{ 'Available votes' | translate }}:
                 <b>{{ availableVotes() }}/{{ config()?.max_vote_sum }}</b>
@@ -29,7 +26,7 @@
                         {{ 'Votes' | translate }}
                     </div>
                 }
-                @if (config()?.max_yes_amount < config()?.max_vote_sum) {
+                @if (config()?.max_yes_amount > 0 && config()?.max_yes_amount < config()?.max_vote_sum) {
                     <div>
                         {{ 'Available yes votes' | translate }}:
                         <b>{{ config()?.max_yes_amount - yesVotesUsed() }}/{{ config()?.max_yes_amount }}</b>
@@ -98,7 +95,7 @@
     }
 </div>
 
-@if (config()?.min_vote_sum === 0) {
+@if (poll().allow_empty) {
     <div class="or-divider">
         <div class="hr-wrapper"><hr /></div>
         <div>{{ 'OR' | translate }}</div>
@@ -106,7 +103,7 @@
     </div>
 
     <div class="option-list">
-        @if (config().min_vote_sum === 0) {
+        @if (poll().allow_empty) {
             <div class="option-row" role="row">
                 <div class="vote-option-title grid-name-area" role="rowheader">
                     {{ 'General abstain' | translate }}

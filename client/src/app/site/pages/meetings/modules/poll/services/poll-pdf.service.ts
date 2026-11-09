@@ -273,10 +273,10 @@ export class PollPdfService {
                     isSummary: true
                 });
             }
-            if (config.min_options_amount === 0) {
+            if (config.poll.allow_empty) {
                 rows.push({
                     label: this.translate.instant(`General abstain`),
-                    value: this.formatAmountAndPercent(+selectionResult.abstain || 0, config.onehundredPercentBaseNum),
+                    value: this.formatAmountAndPercent(+selectionResult.empty || 0, config.onehundredPercentBaseNum),
                     isSummary: true
                 });
             }

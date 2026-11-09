@@ -47,11 +47,26 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     public async update(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
-        if (payload.visibility === PollVisibility.Manually) {
-            return this.updateAnalogPoll(poll, payload);
+        if (poll.state !== PollState.Created) {
+            const methodConfig: {
+                display_chart?: string;
+                onehundred_percent_base?: string;
+                required_majority?: string;
+            } = payload.method_config || {};
+            return this.voteApi.update(poll.id, {
+                title: payload.title,
+                method_config: {
+                    display_chart: methodConfig.display_chart,
+                    onehundred_percent_base: methodConfig.onehundred_percent_base,
+                    required_majority: methodConfig.required_majority
+                },
+                result: poll.visibility === PollVisibility.Manually && payload.result ? payload.result : undefined
+            });
+        } else if (poll.config.method === payload.method) {
+            delete payload[`method`];
         }
 
-        return this.updateElectronicPoll(poll, payload);
+        return this.voteApi.update(poll.id, payload);
     }
 
     private async createAnalogPoll(payload: any): Promise<Identifiable> {
@@ -66,36 +81,6 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
         }
 
         return this.voteApi.create(payload);
-    }
-
-    private async updateAnalogPoll(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
-        if (poll.config.method === payload.method) {
-            delete payload[`method`];
-        }
-
-        return this.voteApi.update(poll.id, payload);
-    }
-
-    private async updateElectronicPoll(poll: ViewPoll, payload: PollUpdatePayload): Promise<void> {
-        if (poll.state !== PollState.Created) {
-            const methodConfig: {
-                display_chart?: string;
-                onehundred_percent_base?: string;
-                required_majority?: string;
-            } = payload.method_config || {};
-            return this.voteApi.update(poll.id, {
-                title: payload.title,
-                method_config: {
-                    display_chart: methodConfig.display_chart,
-                    onehundred_percent_base: methodConfig.onehundred_percent_base,
-                    required_majority: methodConfig.required_majority
-                }
-            });
-        } else if (poll.config.method === payload.method) {
-            delete payload[`method`];
-        }
-
-        return this.voteApi.update(poll.id, payload);
     }
 
     public async delete(poll: Identifiable): Promise<void> {

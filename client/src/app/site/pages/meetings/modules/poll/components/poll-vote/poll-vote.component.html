@@ -6,9 +6,9 @@
         </h4>
     }
 
-    @if (loading() || (voteProhibited.hasValue() && voteProhibited.value())) {
+    @if (sendingVote() || (voteProhibited.hasValue() && voteProhibited.value())) {
         <os-poll-cannot-vote-message
-            [isDeliveringVote]="loading()"
+            [isDeliveringVote]="sendingVote()"
             [poll]="poll()"
             [reason]="voteProhibited.value()"
             [user]="user()"
@@ -17,7 +17,7 @@
         @switch (configType()) {
             @case ('poll_config_approval') {
                 <os-poll-vote-approval
-                    [loading]="loading()"
+                    [loading]="sendingVote()"
                     [poll]="poll()"
                     [user]="user()"
                     (voted)="sendVote($event)"
@@ -25,7 +25,7 @@
             }
             @case ('poll_config_rating_approval') {
                 <os-poll-vote-rating-approval
-                    [loading]="loading()"
+                    [loading]="sendingVote()"
                     [poll]="poll()"
                     [user]="user()"
                     (voted)="sendVote($event)"
@@ -33,7 +33,7 @@
             }
             @case ('poll_config_rating_score') {
                 <os-poll-vote-rating-score
-                    [loading]="loading()"
+                    [loading]="sendingVote()"
                     [poll]="poll()"
                     [user]="user()"
                     (voted)="sendVote($event)"
@@ -41,7 +41,7 @@
             }
             @case ('poll_config_selection') {
                 <os-poll-vote-selection
-                    [loading]="loading()"
+                    [loading]="sendingVote()"
                     [poll]="poll()"
                     [user]="user()"
                     (voted)="sendVote($event)"

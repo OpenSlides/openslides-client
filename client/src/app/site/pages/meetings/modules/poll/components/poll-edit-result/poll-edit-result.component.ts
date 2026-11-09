@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, input, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, input, signal, untracked } from '@angular/core';
 import { applyEach, disabled, form, FormField, schema } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -39,7 +39,7 @@ interface OptionFormEntry {
 
 interface PollEditResultModel {
     options: OptionFormEntry[];
-    abstain: number;
+    empty: number;
     nota: number;
     invalid: number;
     total_ballots: number;
@@ -59,10 +59,9 @@ interface PollEditResultModel {
         FormField,
         TranslatePipe,
         NgTemplateOutlet
-    ],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    ]
 })
-export class PollEditResultComponent implements OnInit {
+export class PollEditResultComponent {
     public readonly pollData = input.required<Partial<Poll>>();
     public readonly pollConfigData = input.required<Partial<AnyPollConfig>>();
     public readonly options = input.required<{ key: string; title: string }[]>();
@@ -72,7 +71,7 @@ export class PollEditResultComponent implements OnInit {
 
     private readonly model = signal<PollEditResultModel>({
         options: [],
-        abstain: 0,
+        empty: 0,
         nota: 0,
         invalid: 0,
         total_ballots: 0
@@ -102,62 +101,63 @@ export class PollEditResultComponent implements OnInit {
     });
 
     public showAbstain = computed(() => {
-        const cfg = this.pollConfigDataLax();
-        return cfg.min_options_amount === 0 && (cfg.min_vote_sum === 0 || cfg.min_vote_sum === undefined);
+        return this.pollData().allow_empty;
     });
 
     public showNota = computed(() => {
         return !!this.pollConfigDataLax().allow_nota;
     });
 
-    public ngOnInit(): void {
-        const result = this.pollData().result ? JSON.parse(this.pollData().result) : {};
-        const builtOptions =
-            this.configType() === 'approval'
-                ? [
-                      {
-                          value: {
-                              yes: this.parseResultAmount(result?.yes),
-                              no: this.parseResultAmount(result?.no),
-                              abstain: this.parseResultAmount(result?.abstain)
-                          },
-                          majority: null,
-                          majority_value: this.getResultOptionMajorityKey(result)
-                      }
-                  ]
-                : this.options().map(opt => {
-                      const rOpt = result[opt.key] ?? {};
-                      const majorityValue = this.getResultOptionMajorityKey(rOpt);
-
-                      if (this.configType() === 'rating_approval') {
-                          return {
+    public constructor() {
+        effect(() => {
+            const result = this.pollData().result ? JSON.parse(this.pollData().result) : (this.serializeResult() ?? {});
+            const builtOptions =
+                this.configType() === 'approval'
+                    ? [
+                          {
                               value: {
-                                  yes: this.parseResultAmount(rOpt.yes),
-                                  no: this.parseResultAmount(rOpt.no),
-                                  abstain: this.parseResultAmount(rOpt.abstain)
+                                  yes: this.parseResultAmount(result?.yes),
+                                  no: this.parseResultAmount(result?.no),
+                                  abstain: this.parseResultAmount(result?.abstain)
                               },
                               majority: null,
+                              majority_value: this.getResultOptionMajorityKey(result)
+                          }
+                      ]
+                    : this.options().map(opt => {
+                          const rOpt = result[opt.key] ?? {};
+                          const majorityValue = this.getResultOptionMajorityKey(rOpt);
+
+                          if (this.configType() === 'rating_approval') {
+                              return {
+                                  value: {
+                                      yes: this.parseResultAmount(rOpt.yes),
+                                      no: this.parseResultAmount(rOpt.no),
+                                      abstain: this.parseResultAmount(rOpt.abstain)
+                                  },
+                                  majority: null,
+                                  majority_value: majorityValue
+                              };
+                          }
+
+                          return {
+                              value: {
+                                  yes: this.parseResultAmount(rOpt),
+                                  no: null,
+                                  abstain: null
+                              },
+                              majority: rOpt === VOTE_MAJORITY,
                               majority_value: majorityValue
                           };
-                      }
+                      });
 
-                      return {
-                          value: {
-                              yes: this.parseResultAmount(rOpt),
-                              no: null,
-                              abstain: null
-                          },
-                          majority: rOpt === VOTE_MAJORITY,
-                          majority_value: majorityValue
-                      };
-                  });
-
-        this.model.set({
-            options: builtOptions,
-            abstain: this.showAbstain() ? (result[`abstain`] ?? null) : null,
-            nota: result[`nota`] ?? null,
-            invalid: result[`invalid`] ?? null,
-            total_ballots: result[`total_ballots`] ?? null
+            this.model.set({
+                options: builtOptions,
+                empty: this.showAbstain() ? (result[`empty`] ?? null) : null,
+                nota: result[`nota`] ?? null,
+                invalid: result[`invalid`] ?? null,
+                total_ballots: result[`total_ballots`] ?? null
+            });
         });
     }
 
@@ -172,7 +172,7 @@ export class PollEditResultComponent implements OnInit {
                 .total_ballots()
                 .value.set(
                     data.invalid +
-                        data.abstain +
+                        data.empty +
                         data.nota +
                         data.options.reduce((p, c) => p + c.value.yes + c.value.no + c.value.abstain, 0)
                 );
@@ -181,7 +181,7 @@ export class PollEditResultComponent implements OnInit {
                 .total_ballots()
                 .value.set(
                     data.invalid +
-                        data.abstain +
+                        data.empty +
                         data.nota +
                         data.options.reduce((p, c) => Math.max(c.value.yes + c.value.no + c.value.abstain, p), 0)
                 );
@@ -189,7 +189,7 @@ export class PollEditResultComponent implements OnInit {
     }
 
     public serializeResult(): Record<string, unknown> {
-        const m = this.model();
+        const m = untracked(this.model);
         const serializedOptions: Record<string, number | string | Record<string, number | string>> = {};
 
         if (this.configType() === `approval` || this.configType() === `rating_approval`) {
@@ -223,7 +223,7 @@ export class PollEditResultComponent implements OnInit {
                 : serializedOptions),
             ...(m.invalid !== null ? { invalid: m.invalid } : {}),
             ...(m.total_ballots !== null ? { total_ballots: m.total_ballots } : {}),
-            ...(this.showAbstain() ? { abstain: m.abstain } : {}),
+            ...(this.showAbstain() ? { empty: m.empty } : {}),
             ...(this.showNota() ? { nota: m.nota } : {})
         };
     }

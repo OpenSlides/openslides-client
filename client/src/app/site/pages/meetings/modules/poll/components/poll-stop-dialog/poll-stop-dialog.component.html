@@ -1,14 +1,16 @@
 <h2 mat-dialog-title>{{ 'Are you sure you want to stop this voting?' | translate }}</h2>
 
 <mat-dialog-content>
-    <div class="poll-action-row">
-        <button class="stop-poll-button" mat-stroked-button [mat-dialog-close]="[]">
-            <mat-icon>stop</mat-icon>
-            <span class="next-state-label">
-                {{ 'Stop' | translate }}
-            </span>
-        </button>
-    </div>
+    @if (!poll.published) {
+        <div class="poll-action-row">
+            <button class="stop-poll-button" mat-stroked-button [mat-dialog-close]="[]">
+                <mat-icon>stop</mat-icon>
+                <span class="next-state-label">
+                    {{ 'Stop' | translate }}
+                </span>
+            </button>
+        </div>
+    }
 
     <div class="poll-action-row">
         <button class="publish-poll-button" mat-stroked-button [mat-dialog-close]="['publish']">
