@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { VoteApiService } from '@app/gateways/vote-api.service';
 import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
@@ -32,10 +32,7 @@ export class PollVoteComponent {
     public poll = input.required<ViewPoll>();
     public user = input.required<ViewUser>();
 
-    public loading = signal(false);
-    public deliveringVote = computed(() => {
-        return this.loading() && this.voteProhibited.value() !== VotingProhibition.USER_HAS_VOTED;
-    });
+    public sendingVote = signal(false);
 
     public configType = computed(() => {
         return this.poll().config_id ? collectionFromFqid(this.poll().config_id) : null;
@@ -54,12 +51,20 @@ export class PollVoteComponent {
         return this.user().id !== this.operator.user.id;
     });
 
+    public constructor() {
+        effect(() => {
+            if (this.voteProhibited.value() === VotingProhibition.USER_HAS_VOTED) {
+                this.sendingVote.set(false);
+            }
+        });
+    }
+
     public async sendVote(value: unknown): Promise<void> {
-        this.loading.set(true);
+        this.sendingVote.set(true);
         try {
             await this.voteApi.vote(this.poll().id, value, this.user().getMeetingUser().id);
         } catch {
-            this.loading.set(false);
+            this.sendingVote.set(false);
         }
     }
 }
