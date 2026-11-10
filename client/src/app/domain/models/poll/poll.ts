@@ -19,6 +19,7 @@ export class Poll extends BaseModel<Poll> {
     public result!: string;
     public anonymized!: boolean;
     public published!: boolean;
+    public allow_empty!: boolean;
     public allow_invalid!: boolean;
     public allow_vote_split!: boolean;
     public option_ids!: Id[];
@@ -42,6 +43,7 @@ export class Poll extends BaseModel<Poll> {
         `result`,
         `published`,
         `anonymized`,
+        `allow_empty`,
         `allow_invalid`,
         `allow_vote_split`,
         `live_voting_enabled`,

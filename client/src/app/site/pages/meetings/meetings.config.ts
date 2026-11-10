@@ -1,11 +1,11 @@
-import { MeetingPollDefault } from '@app/domain/models/meetings/meeting-poll-default';
+import { MeetingPollSetting } from '@app/domain/models/meetings/meeting-poll-setting';
 import { MeetingRepositoryService } from '@app/gateways/repositories/meeting-repository.service';
-import { MeetingPollDefaultRepositoryService } from '@app/gateways/repositories/meetings/meeting-poll-default-repository.service';
+import { MeetingPollSettingRepositoryService } from '@app/gateways/repositories/meetings/meeting-poll-setting-repository.service';
 
 import { Meeting } from '../../../domain/models/meetings/meeting';
 import { AppConfig } from '../../../infrastructure/definitions/app-config';
 import { ViewMeeting } from './view-models/view-meeting';
-import { ViewMeetingPollDefault } from './view-models/view-meeting-poll-default';
+import { ViewMeetingPollSetting } from './view-models/view-meeting-poll-setting';
 
 export const MeetingsAppConfig: AppConfig = {
     name: `meeting`,
@@ -16,9 +16,9 @@ export const MeetingsAppConfig: AppConfig = {
             repository: MeetingRepositoryService
         },
         {
-            model: MeetingPollDefault,
-            viewModel: ViewMeetingPollDefault,
-            repository: MeetingPollDefaultRepositoryService
+            model: MeetingPollSetting,
+            viewModel: ViewMeetingPollSetting,
+            repository: MeetingPollSettingRepositoryService
         }
     ]
 };

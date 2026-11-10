@@ -84,6 +84,10 @@ export class VotingService {
         );
     }
 
+    public getVotingProhibitionReasonVerboseFromName(reason: VotingProhibition): string {
+        return VotingProhibitionVerbose[reason] ?? _(`There is an unknown voting problem.`);
+    }
+
     private getVotingProhibitionReason(
         poll: ViewPoll,
         user: ViewUser,
@@ -124,64 +128,5 @@ export class VotingService {
         }
 
         return null;
-    }
-
-    /**
-     * checks whether the operator can vote on the given poll
-     */
-    public canVote(poll: ViewPoll, user?: ViewUser): boolean {
-        const error = this.getVotingProhibitionReasonLegacy(poll, user);
-        return !error;
-    }
-
-    /**
-     * checks whether the operator can vote on the given poll
-     * @returns null if no errors exist (= user can vote) or else a VotingProhibition reason
-     */
-    private getVotingProhibitionReasonLegacy(
-        poll: ViewPoll,
-        user: ViewUser | null = this._currentUser
-    ): VotingProhibition | void {
-        if (this._currentUser?.id === user?.id) {
-            if (user?.isVoteRightDelegated && this._voteDelegationEnabled && this._forbidDelegationToVote) {
-                return VotingProhibition.USER_HAS_DELEGATED_RIGHT;
-            }
-        }
-
-        if (this._currentUser?.id !== user?.id) {
-            if (poll.ballots.find(b => b.represented_meeting_user_id === user.getMeetingUser().id) !== undefined) {
-                return VotingProhibition.USER_HAS_VOTED;
-            }
-        }
-        if (this.operator.isAnonymous) {
-            return VotingProhibition.USER_IS_ANONYMOUS;
-        }
-        if (
-            !(poll.entitled_group_ids || []).some(id =>
-                user.group_ids(this.activeMeetingService.meetingId).includes(id)
-            )
-        ) {
-            return VotingProhibition.USER_HAS_NO_PERMISSION;
-        }
-        if (poll.isAnalog) {
-            return VotingProhibition.POLL_WRONG_TYPE;
-        }
-        if (poll.state !== PollState.Started) {
-            return VotingProhibition.POLL_WRONG_STATE;
-        }
-        if (!user?.isPresentInMeeting() && !this._currentUser?.canVoteFor(user)) {
-            return VotingProhibition.USER_NOT_PRESENT;
-        }
-    }
-
-    public getVotingProhibitionReasonVerbose(poll: ViewPoll, user: ViewUser | null = this._currentUser): string | void {
-        const reason = this.getVotingProhibitionReasonLegacy(poll, user);
-        if (reason) {
-            return VotingProhibitionVerbose[reason];
-        }
-    }
-
-    public getVotingProhibitionReasonVerboseFromName(reason: VotingProhibition): string {
-        return VotingProhibitionVerbose[reason] ?? _(`There is an unknown voting problem.`);
     }
 }
