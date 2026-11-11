@@ -223,7 +223,10 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
             this.meetingSettingsService
                 .get(`motions_enable_consultation_sequence`)
                 .pipe(map(v => !!v))
-                .subscribe((v: boolean) => this.displayFutureForward.set(v)),
+                .subscribe((v: boolean) => {
+                    this.displayFutureForward.set(v);
+                    this.refreshOriginMotions();
+                }),
             this.motion.all_derived_motions$.subscribe(_ => this.refreshOriginMotions())
         );
     }
