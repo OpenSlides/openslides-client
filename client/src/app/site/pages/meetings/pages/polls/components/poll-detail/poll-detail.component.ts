@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, Signal, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, Signal, signal } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -116,13 +116,20 @@ export class PollDetailComponent extends BaseComponent {
 
     public constructor() {
         super();
-        super.setTitle(this.translate.instant(`Singular poll`));
         this.poll = toSignal(
             this.activatedRoute.params.pipe(
                 map(params => params['id']),
                 switchMap(id => this.pollRepo.getViewModelObservable(id))
             )
         );
+
+        effect(() => {
+            if (this.poll()?.content_object) {
+                super.setTitle(this.poll().getTitle() + ` - ` + this.poll().content_object.getTitle());
+            } else {
+                super.setTitle(this.poll()?.getTitle());
+            }
+        });
     }
 
     public async exportPollResults(): Promise<void> {
