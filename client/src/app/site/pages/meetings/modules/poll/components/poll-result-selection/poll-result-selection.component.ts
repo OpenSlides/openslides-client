@@ -224,7 +224,9 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
         }
 
         if (this.config().required_majority === PollRequiredMajority.AbsoluteMajority) {
-            return Math.ceil(this.config().onehundredPercentBaseNum / 2 + 1);
+            return Math.ceil(
+                this.config().onehundredPercentBaseNum / 2 - (this.config().onehundredPercentBaseNum % 2) + 1
+            );
         } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
             return Math.ceil((this.config().onehundredPercentBaseNum * 2) / 3);
         } else if (this.config().required_majority === PollRequiredMajority.SimpleMajority) {
