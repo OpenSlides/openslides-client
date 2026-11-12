@@ -66,7 +66,7 @@
                                                     ></mat-checkbox>
                                                 } @else {
                                                     <mat-checkbox
-                                                        name="cb-{{ group.id }}-{{ perm.value }}"
+                                                        [name]="'cb-' + group.id + '-' + perm.value"
                                                         [(ngModel)]="currentPermissions[group.id][perm.value]"
                                                         (change)="onChange(group, perm.value, $event.checked)"
                                                     ></mat-checkbox>
