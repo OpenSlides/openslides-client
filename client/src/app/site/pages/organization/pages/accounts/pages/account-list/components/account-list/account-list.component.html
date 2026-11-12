@@ -107,8 +107,8 @@
             @if (user.isLastEmailSent) {
                 <os-icon-container
                     icon="mail"
-                    matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                     matTooltipPosition="left"
+                    [matTooltip]="('Email sent' | translate) + ' (' + (user.last_email_sent | localizedDate) + ')'"
                 ></os-icon-container>
             }
         </div>
