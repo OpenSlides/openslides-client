@@ -28,9 +28,12 @@ export class WorkflowExportService {
             `merge_amendment_into_final`,
             `weight`,
             `set_workflow_timestamp`,
-            `allow_motion_forwarding`
+            `allow_motion_forwarding`,
+            `allow_amendment_forwarding`,
+            `is_internal`,
+            `state_button_label`
         ];
-        const json = [];
+
         const getNextWorkflowJson = (workflow: ViewMotionWorkflow): any => {
             const nextWorkflow = workflowKeysToCopy.mapToObject<any>(key => ({ [key]: workflow[key] }));
             nextWorkflow[`states`] = [];
@@ -45,13 +48,20 @@ export class WorkflowExportService {
                 nextState[`previous_state_names`] = (state.previous_state_ids || []).map(
                     id => this.stateRepo.getViewModel(id)!.name
                 );
+
+                if (state.submitter_withdraw_state_id) {
+                    nextState[`submitter_withdraw_state_name`] = state.submitter_withdraw_state.name;
+                }
                 nextWorkflow[`states`].push(nextState);
             }
             return nextWorkflow;
         };
+
+        const json = [];
         for (const workflow of workflows) {
             json.push(getNextWorkflowJson(workflow));
         }
+
         const blob = new Blob([JSON.stringify(json, undefined, 2)], { type: `application/json` });
         const isMultiple = workflows.length > 1;
         const workflowTranslation = isMultiple
