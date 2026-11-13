@@ -1179,6 +1179,26 @@ describe(`MotionDiffService`, () => {
             );
         });
 
+        it(`keeps formatting removal at a line break in the correct position`, () => {
+            const before =
+                    `<p>` +
+                    noMarkup(1) +
+                    `<strong>Jemand musste</strong> Josef K. verleumdet haben, denn ohne dass er etwas BÖSES getan <strong>hätte,</strong> ` +
+                    brMarkup(2) +
+                    `wurde er eines</p>`,
+                after = `<p><strong>Jemand musste</strong> Josef K. verleumdet haben, denn ohne dass er etwas BÖSES getan hätte, wurde er eines</p>`;
+
+            const diff = HtmlDiff.diff(before, after);
+            expect(diff).toBe(
+                `<p>` +
+                noMarkup(1) +
+                `<strong>Jemand musste</strong> Josef K. verleumdet haben, denn ohne dass er etwas BÖSES getan ` +
+                `<del><strong>hätte,</strong> </del><ins>hätte, </ins>` +
+                brMarkup(2) +
+                `wurde er eines</p>`
+            );
+        });
+
         it(`does not delete a paragraph before an inserted one`, () => {
                 const inHtml =
                         `<ul class="os-split-before"><li>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</li>\n` +
