@@ -96,7 +96,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 percent:
                     this.onehundredPercentBase() !== `yes_no` &&
                     this.onehundredPercentBase() !== `disabled` &&
-                    this.config().onehundredPercentBaseNum
+                    showPercent
                         ? Big(results.abstain || 0)
                               .div(this.config().onehundredPercentBaseNum)
                               .mul(100)

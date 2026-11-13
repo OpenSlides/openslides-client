@@ -76,7 +76,7 @@ export class PollResultRatingApprovalComponent extends PollResultBaseComponent<
                 majority
             };
 
-            if (this.config().onehundred_percent_base !== `yes_no`) {
+            if (this.config().onehundred_percent_base !== `yes_no` && +results[option.id]?.abstain >= 0) {
                 row.abstain_percent = onehundredBase
                     ? Big(results[option.id]?.abstain || 0)
                           .div(onehundredBase)
