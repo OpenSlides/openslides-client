@@ -2,7 +2,6 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "baseUrl": "./",
         "declaration": false,
         "experimentalDecorators": true,
         "esModuleInterop": true,
@@ -15,6 +14,12 @@
         "noImplicitReturns": true,
         "noPropertyAccessFromIndexSignature": true,
         "outDir": "./dist/out-tsc",
+        "paths": {
+            "@openslides/motion-diff": ["../packages/openslides-motion-diff"],
+            "@app/*": ["./src/app/*"],
+            "node_modules/chart.js/dist/types/basic": ["./node_modules/chart.js/dist/types/basic"],
+            "node_modules/chart.js/dist/types/utils": ["./node_modules/chart.js/dist/types/utils"]
+        },
         "sourceMap": true,
         "strict": false,
         "target": "ES2022",
@@ -25,5 +30,16 @@
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
         "strictTemplates": true
-    }
+    },
+    "references": [
+        {
+            "path": "./tsconfig.app.json"
+        },
+        {
+            "path": "./tsconfig.spec.json"
+        },
+        {
+            "path": "./tsconfig.worker.json"
+        }
+    ]
 }

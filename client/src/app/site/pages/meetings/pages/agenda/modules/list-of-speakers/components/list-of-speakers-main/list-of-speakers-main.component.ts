@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ListOfSpeakers } from 'src/app/domain/models/list-of-speakers/list-of-speakers';
-import { BaseModelRequestHandlerComponent } from 'src/app/site/base/base-model-request-handler.component';
-import { SequentialNumberMappingService } from 'src/app/site/pages/meetings/services/sequential-number-mapping.service';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { ListOfSpeakers } from '@app/domain/models/list-of-speakers/list-of-speakers';
+import { BaseModelRequestHandlerComponent } from '@app/site/base/base-model-request-handler.component';
+import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
 
 import { getListOfSpeakersDetailSubscriptionConfig } from '../../../../agenda.subscription';
 
@@ -10,6 +10,7 @@ import { getListOfSpeakersDetailSubscriptionConfig } from '../../../../agenda.su
     selector: `os-list-of-speakers-main`,
     templateUrl: `./list-of-speakers-main.component.html`,
     styleUrls: [`./list-of-speakers-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ListOfSpeakersMainComponent extends BaseModelRequestHandlerComponent {

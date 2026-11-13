@@ -1,14 +1,15 @@
-import { HasAgendaItemId, HasListOfSpeakersId } from 'src/app/domain/interfaces';
-import { BaseModel, ModelConstructor } from 'src/app/domain/models/base/base-model';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { AgendaListTitle, HasAgendaItem, HasListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
+import { inject, Service } from '@angular/core';
+import { HasAgendaItemId, HasListOfSpeakersId } from '@app/domain/interfaces';
+import { BaseModel } from '@app/domain/models/base/base-model';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { AgendaListTitle, HasAgendaItem, HasListOfSpeakers } from '@app/site/pages/meetings/pages/agenda';
 
 import { AgendaItemRepositoryService } from './agenda/agenda-item-repository.service';
 import { AgendaItemContentObjectRepository } from './base-agenda-item-content-object-repository';
 import { ListOfSpeakersContentObjectRepository } from './base-list-of-speakers-content-object-repository';
 import { BaseMeetingRelatedRepository } from './base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from './repository-meeting-service-collector.service';
 
+@Service()
 export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     V extends BaseViewModel & HasListOfSpeakers & HasAgendaItem,
     M extends BaseModel & HasListOfSpeakersId & HasAgendaItemId
@@ -16,13 +17,7 @@ export abstract class BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     extends BaseMeetingRelatedRepository<V, M>
     implements ListOfSpeakersContentObjectRepository<V, M>, AgendaItemContentObjectRepository<V, M>
 {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        baseModelCtor: ModelConstructor<M>,
-        protected agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, baseModelCtor);
-    }
+    protected agendaItemRepo = inject(AgendaItemRepositoryService);
 
     public getAgendaListTitle(viewModel: V): AgendaListTitle {
         // Return the agenda title with the model's verbose name appended

@@ -1,4 +1,4 @@
-import { Identifiable } from 'src/app/domain/interfaces';
+import { Identifiable } from '@app/domain/interfaces';
 
 import { Id } from '../../../domain/definitions/key-types';
 import { SharedImportContext } from './import-context';

@@ -1,6 +1,6 @@
-import { OrganizationTag } from 'src/app/domain/models/organization-tags/organization-tag';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { ViewOrganization } from 'src/app/site/pages/organization/view-models/view-organization';
+import { OrganizationTag } from '@app/domain/models/organization-tags/organization-tag';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
 
 import { HasOrganizationTags } from './has-organization-tags';
 export class ViewOrganizationTag extends BaseViewModel<OrganizationTag> {

@@ -5,7 +5,7 @@
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Chat</h1>
+        <h1 class="mock-h2">{{ 'Chat' | translate }}</h1>
     </div>
 </os-head-bar>
 
@@ -48,6 +48,10 @@
                                             class="tab-label-notification-wrapper"
                                             matBadgeColor="accent"
                                             matBadgeOverlap="false"
+                                            [attr.aria-hidden]="false"
+                                            [attr.aria-label]="
+                                                ('New messages' | translate) + ': ' + notifications.amount
+                                            "
                                             [matBadge]="notifications.amount"
                                             [matBadgeHidden]="!notifications.amount"
                                         ></div>

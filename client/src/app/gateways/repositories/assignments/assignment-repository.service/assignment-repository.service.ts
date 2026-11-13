@@ -1,30 +1,24 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { AgendaItemRepositoryService } from 'src/app/gateways/repositories/agenda';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { Fieldsets } from 'src/app/site/services/model-request-builder';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { SequentialNumberMappingService } from '@app/site/pages/meetings/services/sequential-number-mapping.service';
+import { Fieldsets } from '@app/site/services/model-request-builder';
 
 import { Assignment } from '../../../../domain/models/assignments/assignment';
-import { createAgendaItem } from '../../agenda';
+import { createAgendaItem } from '../../agenda/functions';
 import { BaseAgendaItemAndListOfSpeakersContentObjectRepository } from '../../base-agenda-item-and-list-of-speakers-content-object-repository';
 import { CreateResponse } from '../../base-repository';
-import { RepositoryMeetingServiceCollectorService } from '../../repository-meeting-service-collector.service';
 import { AssignmentAction } from './assignment.action';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakersContentObjectRepository<
     ViewAssignment,
     Assignment
 > {
-    public constructor(
-        repositoryServiceCollector: RepositoryMeetingServiceCollectorService,
-        agendaItemRepo: AgendaItemRepositoryService
-    ) {
-        super(repositoryServiceCollector, Assignment, agendaItemRepo);
-    }
+    private sequentialNumber = inject(SequentialNumberMappingService);
+
+    public baseModelCtor = Assignment;
 
     public override getFieldsets(): Fieldsets<Assignment> {
         const titleFields: (keyof Assignment)[] = [`sequential_number`, `meeting_id`, `title`];
@@ -36,14 +30,24 @@ export class AssignmentRepositoryService extends BaseAgendaItemAndListOfSpeakers
         };
     }
 
-    public create(partialAssignment: Partial<Assignment>): Promise<CreateResponse> {
+    public async create(partialAssignment: Partial<Assignment>): Promise<CreateResponse> {
         partialAssignment.phase = undefined;
         const payload = {
             meeting_id: this.activeMeetingId,
             ...this.getPartialPayload(partialAssignment),
             ...createAgendaItem(partialAssignment)
         };
-        return this.sendActionToBackend(AssignmentAction.CREATE, payload);
+        const data: CreateResponse = await this.sendActionToBackend(AssignmentAction.CREATE, payload);
+        if (data.sequential_number) {
+            this.sequentialNumber.setSequentialNumber(
+                ViewAssignment.COLLECTION,
+                payload.meeting_id,
+                data.sequential_number,
+                data.id
+            );
+        }
+
+        return data;
     }
 
     public update(update: Partial<Assignment>, viewModel: ViewAssignment): Promise<void> {

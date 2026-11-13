@@ -5,6 +5,7 @@ import { isOsLineBreakNode, isOsLineNumberNode } from "./utils";
 
 export class LineNumbering {
     private root: HTMLDivElement = document.createElement(`div`);
+    private lineBreak: HTMLBRElement;
     private currentInlineOffset = 0;
     private lastInlineBreakablePoint: BreakablePoint | null = null;
     private currentLineNumber: number | null;
@@ -24,6 +25,9 @@ export class LineNumbering {
         if (html) {
             html = html.replace(/(<br[^>]*>)[\n\r]+/gi, `$1`);
         }
+
+        this.lineBreak = document.createElement(`br`);
+        this.lineBreak.className = `os-line-break`;
 
         this.root.innerHTML = html;
     }
@@ -240,8 +244,9 @@ export class LineNumbering {
             return lineNode;
         };
         const addLinebreakToPreviousNode = (lineNode: Element, offset: number): void => {
-            const firstText = lineNode.nodeValue!.substr(0, offset + 1);
-            const secondText = lineNode.nodeValue!.substr(offset + 1);
+            const nodeValue = lineNode.nodeValue!;
+            const firstText = nodeValue.substr(0, offset + 1);
+            const secondText = nodeValue.substr(offset + 1);
             const lineBreak = this.createLineBreak();
             const firstNode = document.createTextNode(firstText);
             lineNode.parentNode!.insertBefore(firstNode, lineNode);
@@ -252,7 +257,8 @@ export class LineNumbering {
             lineNode.nodeValue = secondText;
         };
 
-        if (node.nodeValue === `\n`) {
+        const nodeText = node.nodeValue!;
+        if (nodeText === `\n`) {
             out.push(node);
         } else {
             // This happens if a previous inline element exactly stretches to the end of the line
@@ -272,7 +278,7 @@ export class LineNumbering {
             }
             this.prependLineNumberToFirstText = false;
 
-            while (i < node.nodeValue!.length) {
+            while (i < nodeText.length) {
                 let lineBreakAt = null;
                 if ((this.currentInlineOffset as number) >= length) {
                     if (this.lastInlineBreakablePoint !== null) {
@@ -284,10 +290,10 @@ export class LineNumbering {
                         };
                     }
                 }
-                if (lineBreakAt !== null && node.nodeValue![i] !== ` ` && node.nodeValue![i] !== `\n`) {
+                if (lineBreakAt !== null && nodeText[i] !== ` ` && nodeText[i] !== `\n`) {
                     if (lineBreakAt.node === node) {
                         // The last possible breaking point is in this text node
-                        const currLine = node.nodeValue!.substring(currLineStart, lineBreakAt.offset + 1);
+                        const currLine = nodeText.substring(currLineStart, lineBreakAt.offset + 1);
                         addLine(currLine);
 
                         currLineStart = lineBreakAt.offset + 1;
@@ -303,7 +309,7 @@ export class LineNumbering {
                     }
                 }
 
-                if (node.nodeValue![i] === ` ` || node.nodeValue![i] === `-` || node.nodeValue![i] === `\n`) {
+                if (nodeText[i] === ` ` || nodeText[i] === `-` || nodeText[i] === `\n`) {
                     this.lastInlineBreakablePoint = {
                         node,
                         offset: i
@@ -313,7 +319,7 @@ export class LineNumbering {
                 (this.currentInlineOffset as number)++;
                 i++;
             }
-            const lastLine = addLine(node.nodeValue!.substring(currLineStart));
+            const lastLine = addLine(nodeText.substring(currLineStart));
             if (this.lastInlineBreakablePoint !== null) {
                 this.lastInlineBreakablePoint.node = lastLine;
             }
@@ -452,10 +458,9 @@ export class LineNumbering {
 
     private getLineNumberElement(lineNumber: number): Element {
         const el = document.createElement(`span`);
-        el.appendChild(document.createTextNode(`\u00A0`)); // Prevent ckeditor from stripping out empty span's
-        el.setAttribute(`class`, `line-number-${lineNumber} os-line-number`);
-        el.setAttribute(`contenteditable`, `false`);
-        el.setAttribute(`data-line-number`, lineNumber + ``);
+        el.textContent = `\u00A0`;
+        el.className = `line-number-${lineNumber} os-line-number`;
+        el.dataset.lineNumber = lineNumber.toString();
 
         return el;
     }
@@ -466,8 +471,6 @@ export class LineNumbering {
      * @returns {Element}
      */
     private createLineBreak(): Element {
-        const br = document.createElement(`br`);
-        br.setAttribute(`class`, `os-line-break`);
-        return br;
+        return this.lineBreak.cloneNode() as HTMLBRElement;
     }
 }

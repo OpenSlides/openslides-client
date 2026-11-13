@@ -1,6 +1,6 @@
 import { Id } from '../../definitions/key-types';
-import { HasSequentialNumber } from '../../interfaces';
 import { HasMeetingId } from '../../interfaces/has-meeting-id';
+import { HasSequentialNumber } from '../../interfaces/has-sequential-number';
 import { BaseModel } from '../base/base-model';
 
 /**

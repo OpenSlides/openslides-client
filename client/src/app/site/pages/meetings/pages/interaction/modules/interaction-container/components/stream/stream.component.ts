@@ -8,9 +8,9 @@ import {
     OnDestroy,
     Output
 } from '@angular/core';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
 
 import { ApplauseService } from '../../../../services/applause.service';
 import { StreamService } from '../../../../services/stream.service';

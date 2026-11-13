@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -6,15 +6,11 @@ import { Router } from '@angular/router';
 import { StorageService } from '../../gateways/storage.service';
 import { ModelRequestService } from './model-request.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class ComponentServiceCollectorService {
-    public constructor(
-        public router: Router,
-        public titleService: Title,
-        public matSnackBar: MatSnackBar,
-        public storage: StorageService,
-        public modelRequestService: ModelRequestService
-    ) {}
+    public router = inject(Router);
+    public titleService = inject(Title);
+    public matSnackBar = inject(MatSnackBar);
+    public storage = inject(StorageService);
+    public modelRequestService = inject(ModelRequestService);
 }

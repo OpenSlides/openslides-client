@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { CML, OML } from 'src/app/domain/definitions/organization-permission';
+import { CML, OML } from '@app/domain/definitions/organization-permission';
 
 import {
     GetUserRelatedModelsPresenterResult,

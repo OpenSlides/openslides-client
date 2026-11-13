@@ -1,9 +1,9 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import { ViewMotion } from '../../../../../../view-models';
+import { ViewMotion } from '../../../../../../view-models/view-motion';
 
 interface MotionDeleteDialogData {
     motion: ViewMotion;
@@ -13,6 +13,7 @@ interface MotionDeleteDialogData {
     selector: `os-motion-delete-dialog`,
     templateUrl: `./motion-delete-dialog.component.html`,
     styleUrls: [`./motion-delete-dialog.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDialogModule, MatButtonModule, TranslatePipe]
 })
 export class MotionDeleteDialogComponent {

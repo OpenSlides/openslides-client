@@ -1,13 +1,11 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { HttpService } from '@app/gateways/http.service';
 import { saveAs } from 'file-saver';
 import JSZip from 'jszip';
-import { HttpService } from 'src/app/gateways/http.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class FileExportService {
-    public constructor(private http: HttpService) {}
+    private http = inject(HttpService);
 
     /**
      * Saves a file

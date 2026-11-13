@@ -3,8 +3,8 @@ import * as yaml from 'js-yaml';
 import * as path from 'path';
 import { Project, Scope } from 'ts-morph';
 
-const SOURCE_META = path.resolve(path.join(__dirname, `../../meta/collection-meta.yml`));
-const SOURCE_COLLECTIONS = path.resolve(path.join(__dirname, `../../meta/collections/`));
+import { getCollectionsYaml, snakeToPascal } from './utils';
+
 const DESTINATION = path.resolve(path.join(__dirname, `../src/app/domain/models`));
 
 function findModelFile(startPath: string, name: string): string | null {
@@ -28,33 +28,6 @@ function findModelFile(startPath: string, name: string): string | null {
     }
 
     return null;
-}
-
-function getCollectionsYaml(): string {
-    if (!fs.existsSync(SOURCE_COLLECTIONS)) {
-        console.log(`no dir `, SOURCE_COLLECTIONS);
-        return null;
-    }
-
-    let content = fs.readFileSync(SOURCE_META).toString();
-    content += `\nmodels:`;
-    const files = fs.readdirSync(SOURCE_COLLECTIONS);
-    for (const file of files) {
-        const filename = path.join(SOURCE_COLLECTIONS, file);
-        if (filename.endsWith(`.yml`)) {
-            const collection = fs.readFileSync(filename).toString().replace(/^(.)/gm, `    $1`);
-            content += `\n  ${file.substring(0, file.length - 4)}:\n${collection}`;
-        }
-    }
-
-    return content;
-}
-
-function snakeToPascal(input: string): string {
-    return input
-        .split(`_`)
-        .map(substr => substr.charAt(0).toUpperCase() + substr.slice(1))
-        .join(``);
 }
 
 (async (): Promise<void> => {

@@ -1,10 +1,9 @@
 import { Directive, Inject, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
-import { Fqid, Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { BaseModel } from 'src/app/domain/models/base/base-model';
+import { Fqid, Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { BaseModel } from '@app/domain/models/base/base-model';
 import {
     FormPollMethod,
     LOWEST_VOTE_VALUE,
@@ -15,11 +14,12 @@ import {
     VoteKey,
     VoteValue,
     VoteValueVerbose
-} from 'src/app/domain/models/poll';
-import { Option } from 'src/app/domain/models/poll/option';
-import { OneOfValidator } from 'src/app/site/modules/user-components';
-import { ViewPoll } from 'src/app/site/pages/meetings/pages/polls';
-import { BaseUiComponent } from 'src/app/ui/base/base-ui-component';
+} from '@app/domain/models/poll';
+import { Option } from '@app/domain/models/poll/option';
+import { OneOfValidator } from '@app/site/modules/user-components';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 
 import { BasePollFormComponent } from '../components/base-poll-form/base-poll-form.component';
 

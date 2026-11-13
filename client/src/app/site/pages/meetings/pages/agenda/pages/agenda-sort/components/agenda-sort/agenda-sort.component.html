@@ -1,7 +1,7 @@
 <os-head-bar [editMode]="hasChanged" [nav]="false" (mainEvent)="onCancel()" (saveEvent)="onSave()">
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Sort agenda</h1>
+        <h1 class="mock-h2">{{ 'Sort agenda' | translate }}</h1>
     </div>
 </os-head-bar>
 <div class="custom-table-header sort-header">
@@ -30,7 +30,7 @@
             <mat-selection-list #visibilities (selectionChange)="onFilterChange(visibilities.selectedOptions.selected)">
                 @for (option of filterOptions; track option) {
                     <mat-list-option [selected]="option.state" [value]="option.id">
-                        <mat-icon matListItemIcon matTooltip="{{ option.label | translate }}" matTooltipPosition="left">
+                        <mat-icon matListItemIcon matTooltipPosition="left" [matTooltip]="option.label | translate">
                             {{ getIcon(option.id) }}
                         </mat-icon>
                         <div matListItemTitle>

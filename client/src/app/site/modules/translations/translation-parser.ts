@@ -25,7 +25,7 @@ export class CustomTranslationParser extends TranslateDefaultParser {
         params?: InterpolationParameters
     ): string | undefined {
         if (typeof expr === `string` && CustomTranslationParser.ct[expr]) {
-            return CustomTranslationParser.ct[expr];
+            return super.interpolate(CustomTranslationParser.ct[expr], params);
         }
 
         return super.interpolate(expr, params);

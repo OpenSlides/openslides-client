@@ -1,21 +1,20 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { MotionFormattingRepresentation } from '@app/domain/models/motions/motion';
+import { ChangeRecoMode, LineNumberingMode } from '@app/domain/models/motions/motions.constants';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { TranslateService } from '@ngx-translate/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MotionFormattingRepresentation } from 'src/app/domain/models/motions/motion';
-import { ChangeRecoMode, LineNumberingMode } from 'src/app/domain/models/motions/motions.constants';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
-import { ViewUnifiedChange, ViewUnifiedChangeType } from '../../../modules';
-import {
-    LineNumberingService,
-    MotionChangeRecommendationControllerService,
-    MotionDiffService
-} from '../../../modules/change-recommendations/services';
+import { ViewUnifiedChangeType } from '../../../modules';
 import { DiffServiceFactory } from '../../../modules/change-recommendations/services/diff-factory.service';
-import { ViewMotion } from '../../../view-models';
+import { LineNumberingService } from '../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { MotionChangeRecommendationControllerService } from '../../../modules/change-recommendations/services/motion-change-recommendation-controller.service/motion-change-recommendation-controller.service';
+import { MotionDiffService } from '../../../modules/change-recommendations/services/motion-diff.service/motion-diff.service';
+import { ViewUnifiedChange } from '../../../modules/change-recommendations/view-models/view-unified-change';
+import { ViewMotion } from '../../../view-models/view-motion';
 import { ViewMotionAmendedParagraph } from '../../../view-models/view-motion-amended-paragraph';
-import { AmendmentControllerService } from '../amendment-controller.service';
-import { MotionLineNumberingService } from '../motion-line-numbering.service';
+import { AmendmentControllerService } from '../amendment-controller.service/amendment-controller.service';
+import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
 
 export interface MotionFormatResult {
     origin_id: Id;
@@ -70,17 +69,13 @@ interface MotionFormatDiffServices {
     lineNumberingService: LineNumberingService;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionFormatService {
-    public constructor(
-        private diffFactory: DiffServiceFactory,
-        private amendmentController: AmendmentControllerService,
-        private changeRecoRepo: MotionChangeRecommendationControllerService,
-        private settings: MeetingSettingsService,
-        private translate: TranslateService
-    ) {}
+    private diffFactory = inject(DiffServiceFactory);
+    private amendmentController = inject(AmendmentControllerService);
+    private changeRecoRepo = inject(MotionChangeRecommendationControllerService);
+    private settings = inject(MeetingSettingsService);
+    private translate = inject(TranslateService);
 
     /**
      * Format the motion text using the line numbering and change

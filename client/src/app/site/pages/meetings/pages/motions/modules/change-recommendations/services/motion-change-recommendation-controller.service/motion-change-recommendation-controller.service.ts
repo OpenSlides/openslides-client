@@ -1,35 +1,30 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { MotionChangeRecommendation } from '@app/domain/models/motions/motion-change-recommendation';
+import { ChangeRecoMode, ModificationType } from '@app/domain/models/motions/motions.constants';
+import { MotionChangeRecommendationRepositoryService } from '@app/gateways/repositories/motions/motion-change-recommendation-repository.service';
+import { viewModelListEqual } from '@app/infrastructure/utils';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
 import { VERSION as CURRENT_DIFF_VERSION } from '@openslides/motion-diff';
 import { distinctUntilChanged, map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { MotionChangeRecommendation } from 'src/app/domain/models/motions/motion-change-recommendation';
-import { ChangeRecoMode, ModificationType } from 'src/app/domain/models/motions/motions.constants';
-import { MotionChangeRecommendationRepositoryService } from 'src/app/gateways/repositories/motions';
-import { viewModelListEqual } from 'src/app/infrastructure/utils';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { LineRange } from '../../../../definitions';
-import { ViewMotion } from '../../../../view-models';
-import { ViewMotionChangeRecommendation, ViewUnifiedChange } from '../../view-models';
+import { ViewMotion } from '../../../../view-models/view-motion';
+import { ViewMotionChangeRecommendation } from '../../view-models/view-motion-change-recommendation';
+import { ViewUnifiedChange } from '../../view-models/view-unified-change';
 import { DiffServiceFactory } from '../diff-factory.service';
-import { MotionDiffService } from '../motion-diff.service';
+import { MotionDiffService } from '../motion-diff.service/motion-diff.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MotionChangeRecommendationControllerService extends BaseMeetingControllerService<
     ViewMotionChangeRecommendation,
     MotionChangeRecommendation
 > {
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionChangeRecommendationRepositoryService,
-        private diffServiceFactory: DiffServiceFactory
-    ) {
-        super(controllerServiceCollector, MotionChangeRecommendation, repo);
-    }
+    protected repo: MotionChangeRecommendationRepositoryService = inject(MotionChangeRecommendationRepositoryService);
+    private diffServiceFactory = inject(DiffServiceFactory);
+
+    public baseModelCtor = MotionChangeRecommendation;
 
     public create(changeRecommendation: Partial<MotionChangeRecommendation>, firstLine = 1): Promise<Identifiable> {
         return this.repo.create(changeRecommendation, firstLine);
@@ -202,16 +197,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
         lineRange: LineRange
     ): any {
         const consolidatedText = lineNumberedParagraphs.join(`\n`);
-
-        const extracted = amendment
-            .services()
-            .diff.extractRangeByLineNumbers(consolidatedText, lineRange.from, lineRange.to);
-        const extractedHtml =
-            extracted.outerContextStart +
-            extracted.innerContextStart +
-            extracted.html +
-            extracted.innerContextEnd +
-            extracted.outerContextEnd;
+        const extractedHtml = amendment.services().diff.extractMotionLineRange(consolidatedText, lineRange, false);
 
         const changeReco: any = {};
         changeReco.line_from = lineRange.from;
@@ -220,6 +206,7 @@ export class MotionChangeRecommendationControllerService extends BaseMeetingCont
         changeReco.rejected = false;
         changeReco.motion_id = amendment.id;
         changeReco.text = extractedHtml;
+
         return changeReco;
     }
 

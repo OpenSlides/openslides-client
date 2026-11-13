@@ -48,32 +48,6 @@
             </mat-form-field>
         }
     }
-
-    <!-- State -->
-    @if (isAllowed('change_state')) {
-        <mat-form-field>
-            <mat-label>{{ 'State' | translate }}</mat-label>
-            <mat-select [(ngModel)]="infoDialog.state_id">
-                @for (state of selectedMotion.state!.next_states; track state) {
-                    <mat-option [value]="state.id">
-                        {{ state.getTitle() }}
-                    </mat-option>
-                }
-            </mat-select>
-        </mat-form-field>
-    }
-
-    <!-- Recommendation -->
-    <mat-form-field *osMeetingSetting="'motions_recommendations_by'; and: hasRecommendations()">
-        <mat-label>{{ 'Recommendation' | translate }}</mat-label>
-        <mat-select [(ngModel)]="infoDialog.recommendation_id">
-            @for (recommendation of getPossibleRecommendations(); track recommendation) {
-                <mat-option [value]="recommendation.id">
-                    {{ recommendation.recommendation_label }}
-                </mat-option>
-            }
-        </mat-select>
-    </mat-form-field>
 </mat-dialog-content>
 
 <mat-dialog-actions>

@@ -1,5 +1,5 @@
+import { HttpMethod } from '@app/infrastructure/definitions/http';
 import fetchMock from 'fetch-mock';
-import { HttpMethod } from 'src/app/infrastructure/definitions/http';
 
 import { AutoupdateSetEndpointParams } from '../autoupdate/interfaces-autoupdate';
 import { HttpStream } from './http-stream';

@@ -1,8 +1,8 @@
-<h1 mat-dialog-title translate>Insert/edit link</h1>
+<h1 mat-dialog-title>{{ 'Insert/edit link' | translate }}</h1>
 <div mat-dialog-content>
     <div>
         <mat-form-field>
-            <mat-label translate>URL</mat-label>
+            <mat-label>{{ 'URL' | translate }}</mat-label>
             <input matInput [(ngModel)]="link.href" />
         </mat-form-field>
     </div>
@@ -10,7 +10,7 @@
     <div>
         @if (data.needsText) {
             <mat-form-field>
-                <mat-label translate>Text to display</mat-label>
+                <mat-label>{{ 'Text to display' | translate }}</mat-label>
                 <input matInput [(ngModel)]="text" />
             </mat-form-field>
         }
@@ -18,7 +18,7 @@
 
     <div>
         <mat-form-field>
-            <mat-label translate>Open link in ...</mat-label>
+            <mat-label>{{ 'Open link in ...' | translate }}</mat-label>
             <select matNativeControl [(ngModel)]="link.target">
                 <option translate value="_self">Current window</option>
                 <option translate value="_blank">New window</option>

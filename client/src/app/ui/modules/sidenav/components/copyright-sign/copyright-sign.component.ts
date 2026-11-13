@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 
 import { EasterEggContentPlatformService } from '../../modules/easter-egg/services/easter-egg-content-platform.service';
 
@@ -6,13 +6,14 @@ import { EasterEggContentPlatformService } from '../../modules/easter-egg/servic
     selector: `os-copyright-sign`,
     templateUrl: `./copyright-sign.component.html`,
     styleUrls: [`./copyright-sign.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class CopyrightSignComponent {
     private clickTimeout: number | null = null;
     private clickCounter = 0;
 
-    public constructor(private dialog: EasterEggContentPlatformService) {}
+    private dialog = inject(EasterEggContentPlatformService);
 
     public launchC4(event: Event): void {
         event.stopPropagation();

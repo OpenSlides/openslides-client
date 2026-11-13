@@ -1,6 +1,6 @@
 import { Injector, ProviderToken } from '@angular/core';
 
-import { Deferred } from '../promises';
+import { Deferred } from '../promises/deferred';
 
 interface InjectOptions {
     defaultValue?: any;

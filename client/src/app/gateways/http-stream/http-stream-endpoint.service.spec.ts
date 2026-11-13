@@ -1,6 +1,6 @@
 import { HttpHeaders } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
-import { HttpMethod, QueryParams, ResponseType } from 'src/app/infrastructure/definitions/http';
+import { HttpMethod, QueryParams, ResponseType } from '@app/infrastructure/definitions/http';
 
 import { HttpService } from '../http.service';
 import { EndpointConfiguration } from './endpoint-configuration';

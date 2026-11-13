@@ -1,41 +1,39 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id, Ids } from '@app/domain/definitions/key-types';
+import { Identifiable } from '@app/domain/interfaces';
+import { Motion } from '@app/domain/models/motions/motion';
+import { ChangeRecoMode } from '@app/domain/models/motions/motions.constants';
+import { Action, createEmptyAction } from '@app/gateways/actions';
+import { CreateResponse } from '@app/gateways/repositories/base-repository';
+import { MotionRepositoryService } from '@app/gateways/repositories/motions/motion-repository.service';
+import { TreeIdNode } from '@app/infrastructure/definitions/tree';
+import { NullablePartial } from '@app/infrastructure/utils';
+import { BaseMeetingControllerService } from '@app/site/pages/meetings/base/base-meeting-controller.service';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { map, Observable } from 'rxjs';
-import { Id, Ids } from 'src/app/domain/definitions/key-types';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { Motion } from 'src/app/domain/models/motions/motion';
-import { ChangeRecoMode } from 'src/app/domain/models/motions/motions.constants';
-import { Action, createEmptyAction } from 'src/app/gateways/actions';
-import { CreateResponse } from 'src/app/gateways/repositories/base-repository';
-import { MotionRepositoryService } from 'src/app/gateways/repositories/motions';
-import { UserRepositoryService } from 'src/app/gateways/repositories/users';
-import { TreeIdNode } from 'src/app/infrastructure/definitions/tree';
-import { NullablePartial } from 'src/app/infrastructure/utils';
-import { BaseMeetingControllerService } from 'src/app/site/pages/meetings/base/base-meeting-controller.service';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { MeetingControllerServiceCollectorService } from 'src/app/site/pages/meetings/services/meeting-controller-service-collector.service';
 
 import { DiffLinesInParagraph } from '../../../definitions';
-import { LineNumberingService, MotionDiffService } from '../../../modules/change-recommendations/services';
 import { DiffServiceFactory } from '../../../modules/change-recommendations/services/diff-factory.service';
+import { LineNumberingService } from '../../../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
+import { MotionDiffService } from '../../../modules/change-recommendations/services/motion-diff.service/motion-diff.service';
 import { MotionLineNumberingService } from '../motion-line-numbering.service/motion-line-numbering.service';
 
 export const REFERENCED_MOTION_REGEX = /\[motion[:/](\d+)\]/g;
 
-@Injectable({ providedIn: `root` })
+@Service()
 export class MotionControllerService extends BaseMeetingControllerService<ViewMotion, Motion> {
     private _lineLength = 80;
+    protected repo: MotionRepositoryService = inject(MotionRepositoryService);
+    private motionLineNumbering = inject(MotionLineNumberingService);
+    private diffFactroy = inject(DiffServiceFactory);
 
-    public constructor(
-        controllerServiceCollector: MeetingControllerServiceCollectorService,
-        protected override repo: MotionRepositoryService,
-        private motionLineNumbering: MotionLineNumberingService,
-        private diffFactroy: DiffServiceFactory,
-        private userRepo: UserRepositoryService
-    ) {
-        super(controllerServiceCollector, Motion, repo);
+    public baseModelCtor = Motion;
+
+    public constructor() {
+        super();
 
         this.meetingSettingsService.get(`motions_line_length`).subscribe(lineLength => (this._lineLength = lineLength));
-        repo.registerCreateViewModelPipe(viewModel => this.onCreateViewModel(viewModel));
+        this.repo.registerCreateViewModelPipe(viewModel => this.onCreateViewModel(viewModel));
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////

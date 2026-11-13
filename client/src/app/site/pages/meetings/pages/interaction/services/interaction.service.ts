@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { NotifyService } from '@app/gateways/notify.service';
+import { OperatorService } from '@app/site/services/operator.service';
+import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { map, Observable } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { NotifyService } from 'src/app/gateways/notify.service';
-import { OperatorService } from 'src/app/site/services/operator.service';
-import { PromptService } from 'src/app/ui/modules/prompt-dialog';
 
 import { ActiveMeetingService } from '../../../services/active-meeting.service';
 import { ViewUser } from '../../../view-models/view-user';
@@ -31,10 +31,13 @@ export interface kickMessage {
 export const InviteMessage = `invitationToCall`;
 export const KickMessage = `kickFromCall`;
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class InteractionService {
+    private notifyService = inject(NotifyService);
+    private operator = inject(OperatorService);
+    private interactionReceive = inject(InteractionReceiveService);
+    private activeMeetingService = inject(ActiveMeetingService);
+
     public conferenceStateObservable = this.interactionReceive.conferenceStateObservable;
 
     public get showLiveConfObservable(): Observable<boolean> {
@@ -61,18 +64,13 @@ export class InteractionService {
         return this.conferenceStateObservable.pipe(map(state => state === ConferenceState.none));
     }
 
-    public constructor(
-        streamService: StreamService,
-        rtcService: RtcService,
-        callRestrictionService: CallRestrictionService,
-        private notifyService: NotifyService,
-        private operator: OperatorService,
-        promptService: PromptService,
-        broadcast: BroadcastService,
-        private interactionReceive: InteractionReceiveService,
-        private activeMeetingService: ActiveMeetingService
-    ) {
-        interactionReceive.startListening({
+    public constructor() {
+        const streamService = inject(StreamService);
+        const rtcService = inject(RtcService);
+        const callRestrictionService = inject(CallRestrictionService);
+        const promptService = inject(PromptService);
+        const broadcast = inject(BroadcastService);
+        this.interactionReceive.startListening({
             streamService,
             rtcService,
             callRestrictionService,

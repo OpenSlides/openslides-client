@@ -17,6 +17,7 @@ $text-margin-top: 10px;
 
 .column-title {
     margin-top: $text-margin-top;
+
     & h1 {
         font-family: typography.$font-family;
         padding-bottom: 0%;
@@ -40,6 +41,7 @@ os-grid-layout {
         width: 100%;
         padding: 0 8px;
     }
+
     .tile-block-title {
         font-size: 36px;
 
@@ -111,4 +113,8 @@ os-grid-layout {
 
 .non-overflowing-chip {
     max-width: calc(100% - 20px);
+}
+
+h1 a {
+    color: inherit;
 }

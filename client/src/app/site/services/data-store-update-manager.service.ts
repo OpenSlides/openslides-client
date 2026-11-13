@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
-import { Deferred } from '../../infrastructure/utils/promises';
-import { CollectionMapperService } from './collection-mapper.service';
+import { Deferred } from '../../infrastructure/utils/promises/deferred';
+import { CollectionMapperService } from './collection-mapper.service/collection-mapper.service';
 import { DataStoreService } from './data-store.service';
 import { ChangedModels } from './view-model-store-update.service';
 
@@ -112,9 +112,7 @@ class UpdateSlot {
     }
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class DataStoreUpdateManagerService {
     /**
      * The current update slot
@@ -126,10 +124,7 @@ export class DataStoreUpdateManagerService {
      */
     private updateSlotRequests: Deferred[] = [];
 
-    /**
-     * @param mapperService
-     */
-    public constructor(private mapperService: CollectionMapperService) {}
+    private mapperService = inject(CollectionMapperService);
 
     /**
      * Retrieve the current update slot.

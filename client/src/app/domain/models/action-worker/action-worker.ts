@@ -27,5 +27,3 @@ export class ActionWorker extends BaseModel {
         `result`
     ];
 }
-
-export interface ActionWorker {}

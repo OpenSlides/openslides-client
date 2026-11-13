@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { environment } from '../../environments/environment';
 import { HttpService } from './http.service';
@@ -9,9 +9,7 @@ interface AuthServiceResponse {
     token?: string;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class AuthAdapterService {
     private get authUrl(): string {
         return `/${environment.authUrlPrefix}`;
@@ -21,7 +19,7 @@ export class AuthAdapterService {
         return `${this.authUrl}/${environment.authSecurePrefix}`;
     }
 
-    public constructor(private http: HttpService) {}
+    private http = inject(HttpService);
 
     public login(user: { username: string; password: string }): Promise<AuthServiceResponse> {
         return this.http.post<AuthServiceResponse>(`${this.authUrl}/login/`, user);

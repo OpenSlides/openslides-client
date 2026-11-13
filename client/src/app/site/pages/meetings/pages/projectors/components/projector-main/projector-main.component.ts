@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { SubscriptionConfig } from 'src/app/domain/interfaces/subscription-config';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { SubscriptionConfig } from '@app/domain/interfaces/subscription-config';
 
 import { BaseMeetingModelRequestHandler } from '../../../../base/base-meeting-model-request-handler.component';
 import { getProjectorListSubscriptionConfig } from '../../projectors.subscription';
@@ -9,6 +9,7 @@ import { getProjectorListSubscriptionConfig } from '../../projectors.subscriptio
     selector: `os-projector-main`,
     templateUrl: `./projector-main.component.html`,
     styleUrls: [`./projector-main.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class ProjectorMainComponent extends BaseMeetingModelRequestHandler {

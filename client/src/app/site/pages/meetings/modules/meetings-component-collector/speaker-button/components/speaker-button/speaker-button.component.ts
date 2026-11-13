@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+import { Permission } from '@app/domain/definitions/permission';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { HasListOfSpeakers, ViewListOfSpeakers } from '@app/site/pages/meetings/pages/agenda';
+import { OperatorService } from '@app/site/services/operator.service';
 import { distinctUntilChanged, Observable, of, Subscription } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { HasListOfSpeakers, ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 @Component({
     selector: `os-speaker-button`,

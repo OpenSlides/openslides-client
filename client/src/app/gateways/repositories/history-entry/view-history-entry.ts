@@ -1,9 +1,9 @@
-import { HistoryEntry } from 'src/app/domain/models/history-entry/history-entry';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { ViewAssignment } from 'src/app/site/pages/meetings/pages/assignments';
-import { ViewMotion } from 'src/app/site/pages/meetings/pages/motions';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
+import { HistoryEntry } from '@app/domain/models/history-entry/history-entry';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
+import { ViewAssignment } from '@app/site/pages/meetings/pages/assignments';
+import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 
 import { ViewHistoryPosition } from '../history-position/view-history-position';
 

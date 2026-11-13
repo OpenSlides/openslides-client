@@ -9,14 +9,14 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { FormBuilder, UntypedFormGroup } from '@angular/forms';
+import { Permission } from '@app/domain/definitions/permission';
+import { ListOfSpeakersRepositoryService } from '@app/gateways/repositories/list-of-speakers/list-of-speakers-repository.service';
+import { BaseViewModel } from '@app/site/base/base-view-model';
+import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
+import { ViewListOfSpeakers } from '@app/site/pages/meetings/pages/agenda';
+import { OperatorService } from '@app/site/services/operator.service';
 import { TranslateService } from '@ngx-translate/core';
 import { map, Observable } from 'rxjs';
-import { Permission } from 'src/app/domain/definitions/permission';
-import { ListOfSpeakersRepositoryService } from 'src/app/gateways/repositories/list-of-speakers/list-of-speakers-repository.service';
-import { BaseViewModel } from 'src/app/site/base/base-view-model';
-import { BaseMeetingComponent } from 'src/app/site/pages/meetings/base/base-meeting.component';
-import { ViewListOfSpeakers } from 'src/app/site/pages/meetings/pages/agenda';
-import { OperatorService } from 'src/app/site/services/operator.service';
 
 import { ListOfSpeakersContentTitleDirective } from '../../directives/list-of-speakers-content-title.directive';
 import { ModerationNotePdfService } from '../../services/moderation-note-pdf.service/moderation-note-pdf.service';

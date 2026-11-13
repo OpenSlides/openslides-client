@@ -1,13 +1,13 @@
 <os-head-bar
     [hasMainButton]="true"
-    [mainActionTooltip]="'New category' | translate"
+    [mainActionTooltip]="'New workflow' | translate"
     [multiSelectMode]="isMultiSelect"
     [nav]="false"
     (mainEvent)="onNewButton(newWorkflowDialog)"
 >
     <!-- Title -->
     <div class="title-slot">
-        <h1 class="mock-h2" translate>Workflows</h1>
+        <h1 class="mock-h2">{{ 'Workflows' | translate }}</h1>
     </div>
     <!-- Menu -->
     <ng-container class="menu-slot">
@@ -51,8 +51,8 @@
         @if (!isMultiSelect) {
             <button
                 mat-icon-button
-                matTooltip="{{ 'Delete' | translate }}"
                 type="button"
+                [matTooltip]="'Delete' | translate"
                 (click)="onDeleteWorkflow(workflow)"
             >
                 <mat-icon color="warn">delete</mat-icon>

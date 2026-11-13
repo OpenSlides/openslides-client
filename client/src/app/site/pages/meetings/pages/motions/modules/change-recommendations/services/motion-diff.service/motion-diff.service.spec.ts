@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { VERSION } from '@openslides/motion-diff';
-import { E2EImportsModule } from 'src/e2e-imports.module';
 
+import { E2EImportsModule } from '../../../../../../../../../../e2e-imports.module';
 import { DIFF_VERSION } from '../diff-factory.service';
 import { MotionDiffService } from './motion-diff.service';
 

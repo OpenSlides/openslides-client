@@ -1,5 +1,5 @@
+import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { _ } from '@ngx-translate/core';
-import { ViewUser } from 'src/app/site/pages/meetings/view-models/view-user';
 
 export const userHeadersAndVerboseNames: Partial<Record<keyof ViewUser, any>> = {
     title: _(`Title`),

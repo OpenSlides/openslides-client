@@ -1,8 +1,8 @@
+import { Identifiable } from '@app/domain/interfaces';
+import { ImportModel } from '@app/infrastructure/utils/import/import-model';
+import { ImportStep } from '@app/infrastructure/utils/import/import-step';
+import { ValueLabelCombination } from '@app/infrastructure/utils/import/import-utils';
 import { Observable } from 'rxjs';
-import { Identifiable } from 'src/app/domain/interfaces';
-import { ImportModel } from 'src/app/infrastructure/utils/import/import-model';
-import { ImportStep } from 'src/app/infrastructure/utils/import/import-step';
-import { ValueLabelCombination } from 'src/app/infrastructure/utils/import/import-utils';
 
 import { BackendImportPhase } from '../modules/import-list/components/via-backend-import-list/backend-import-list.component';
 import { BackendImportPreview } from '../modules/import-list/definitions/backend-import-preview';

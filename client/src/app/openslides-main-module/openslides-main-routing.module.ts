@@ -9,7 +9,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules, initialNavigation: `disabled` })],
+    imports: [
+        RouterModule.forRoot(routes, {
+            preloadingStrategy: PreloadAllModules,
+            initialNavigation: `disabled`,
+            scrollPositionRestoration: `top`
+        })
+    ],
     exports: [RouterModule]
 })
 export class OpenSlidesMainRoutingModule {}

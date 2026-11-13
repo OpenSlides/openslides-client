@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 /**
  * Helper service to convert numbers to time representation
@@ -28,15 +28,8 @@ import { Injectable } from '@angular/core';
  * const a = this.durationService.durationToString(30, 'm');
  * ```
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class DurationService {
-    /**
-     * Constructor
-     */
-    public constructor() {}
-
     /**
      * Transform a duration string to duration in minutes or seconds. This depends on the
      * provided suffix for the input.

@@ -1,5 +1,5 @@
+import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { _ } from '@ngx-translate/core';
-import { ViewMeeting } from 'src/app/site/pages/meetings/view-models/view-meeting';
 
 import {
     PROJECTIONDEFAULT,

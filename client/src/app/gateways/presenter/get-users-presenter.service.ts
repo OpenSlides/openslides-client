@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
 
 import { Id } from '../../domain/definitions/key-types';
 import { Presenter } from './presenter';
@@ -16,11 +16,9 @@ interface GetUsersPresenterPayload {
     entries?: number;
 }
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class GetUsersPresenterService {
-    public constructor(private presenter: PresenterService) {}
+    private presenter = inject(PresenterService);
 
     public async call({ start_index = 0, entries = 1000 }: GetUsersPresenterPayload): Promise<GetUsersPresenterResult> {
         const response = await this.presenter.call<GetUsersPresenterResult>(Presenter.GET_USERS, {

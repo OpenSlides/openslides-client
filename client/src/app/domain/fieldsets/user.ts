@@ -1,4 +1,4 @@
-import { BaseSimplifiedModelRequest } from 'src/app/site/services/model-request-builder';
+import { BaseSimplifiedModelRequest } from '@app/site/services/model-request-builder';
 
 export class UserFieldsets {
     public static readonly FullNameSubscription: BaseSimplifiedModelRequest = {

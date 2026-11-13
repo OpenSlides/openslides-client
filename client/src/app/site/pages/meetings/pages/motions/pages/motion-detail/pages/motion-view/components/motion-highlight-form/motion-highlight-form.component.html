@@ -64,8 +64,8 @@
             @if (showCreateFinalVersionButton) {
                 <button
                     mat-icon-button
-                    matTooltip="{{ 'Create editorial final version' | translate }}"
                     type="button"
+                    [matTooltip]="'Create editorial final version' | translate"
                     (click)="createModifiedFinalVersion()"
                 >
                     <mat-icon>file_copy</mat-icon>
@@ -76,8 +76,8 @@
                 @if (!isEditingFinalVersion) {
                     <button
                         mat-icon-button
-                        matTooltip="{{ 'Edit editorial final version' | translate }}"
                         type="button"
+                        [matTooltip]="'Edit editorial final version' | translate"
                         (click)="editModifiedFinalVersion()"
                     >
                         <mat-icon>edit</mat-icon>
@@ -86,8 +86,8 @@
                     <!-- save final version -->
                     <button
                         mat-icon-button
-                        matTooltip="{{ 'Save editorial final version' | translate }}"
                         type="button"
+                        [matTooltip]="'Save editorial final version' | translate"
                         (click)="saveModifiedFinalVersion()"
                     >
                         <mat-icon>done</mat-icon>
@@ -96,8 +96,8 @@
                     <!-- cancel final version edit -->
                     <button
                         mat-icon-button
-                        matTooltip="{{ 'Cancel editing without saving' | translate }}"
                         type="button"
+                        [matTooltip]="'Cancel editing without saving' | translate"
                         (click)="cancelEditingModifiedFinalVersion()"
                     >
                         <mat-icon>close</mat-icon>
@@ -107,8 +107,8 @@
                     <button
                         class="red-warning-text"
                         mat-icon-button
-                        matTooltip="{{ 'Delete editorial final version' | translate }}"
                         type="button"
+                        [matTooltip]="'Delete editorial final version' | translate"
                         (click)="deleteModifiedFinalVersion()"
                     >
                         <mat-icon>delete</mat-icon>

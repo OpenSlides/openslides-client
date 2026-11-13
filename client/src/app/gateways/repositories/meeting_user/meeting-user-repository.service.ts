@@ -1,28 +1,22 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MeetingUser } from 'src/app/domain/models/meeting-users/meeting-user';
-import { toDecimal } from 'src/app/infrastructure/utils';
-import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
-import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from 'src/app/site/services/model-request-builder';
+import { Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { MeetingUser } from '@app/domain/models/meeting-users/meeting-user';
+import { toDecimal } from '@app/infrastructure/utils';
+import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
+import { DEFAULT_FIELDSET, Fieldsets, TypedFieldset } from '@app/site/services/model-request-builder';
 
 import { BaseMeetingRelatedRepository } from '../base-meeting-related-repository';
-import { RepositoryMeetingServiceCollectorService } from '../repository-meeting-service-collector.service';
 
 export type MeetingUserPatchFn =
-    | { [key in keyof MeetingUser]?: any }
-    | ((user: ViewMeetingUser) => { [key in keyof MeetingUser]?: any });
+    { [key in keyof MeetingUser]?: any } | ((user: ViewMeetingUser) => { [key in keyof MeetingUser]?: any });
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingUserRepositoryService extends BaseMeetingRelatedRepository<ViewMeetingUser, MeetingUser> {
     public override readonly resetOnMeetingChange = false;
 
     private meetingUserIdMap = new Map<Id, Map<Id, Id>>();
 
-    public constructor(repositoryServiceCollector: RepositoryMeetingServiceCollectorService) {
-        super(repositoryServiceCollector, MeetingUser);
-    }
+    public baseModelCtor = MeetingUser;
 
     public override getFieldsets(): Fieldsets<MeetingUser> {
         const groupFields: TypedFieldset<MeetingUser> = [`group_ids`, `meeting_id`, `user_id`];

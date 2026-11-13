@@ -1,23 +1,21 @@
-import { Injectable } from '@angular/core';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { MeetingMediafile } from 'src/app/domain/models/meeting-mediafile/meeting-mediafile';
-import { ViewMeetingMediafile } from 'src/app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { MeetingMediafile } from '@app/domain/models/meeting-mediafile/meeting-mediafile';
+import { ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
 
 import { ActiveMeetingIdService } from '../../../site/pages/meetings/services/active-meeting-id.service';
 import { BaseRepository } from '../base-repository';
-import { RepositoryServiceCollectorService } from '../repository-service-collector.service';
 
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class MeetingMediafileRepositoryService extends BaseRepository<ViewMeetingMediafile, MeetingMediafile> {
     private mediafileMap = new Map<Id, Map<Id, Id>>();
 
-    public constructor(
-        repositoryServiceCollector: RepositoryServiceCollectorService,
-        private activeMeetingIdService: ActiveMeetingIdService
-    ) {
-        super(repositoryServiceCollector, MeetingMediafile);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+
+    public baseModelCtor = MeetingMediafile;
+
+    public constructor() {
+        super();
 
         this.viewModelSortFn = (a: ViewMeetingMediafile, b: ViewMeetingMediafile): number =>
             this.languageCollator.compare(a.mediafile?.title, b.mediafile?.title);

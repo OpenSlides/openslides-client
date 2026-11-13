@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { Observable } from 'rxjs';
 import {
     OptionData,
     PollClassType,
@@ -9,10 +8,11 @@ import {
     PollState,
     PollTableData,
     PollType
-} from 'src/app/domain/models/poll';
+} from '@app/domain/models/poll';
+import { Observable } from 'rxjs';
 
 import { PollService } from '../../services/poll.service';
-import { PollServiceMapperService } from '../../services/poll-service-mapper.service';
+import { PollServiceMapperService } from '../../services/poll-service-mapper.service/poll-service-mapper.service';
 import { PollPercentBasePipe } from './poll-percent-base.pipe';
 
 class MockPollServiceMapperService {

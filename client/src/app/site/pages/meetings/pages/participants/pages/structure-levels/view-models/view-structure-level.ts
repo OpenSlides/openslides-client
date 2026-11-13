@@ -1,7 +1,7 @@
-import { StructureLevel } from 'src/app/domain/models/structure-levels/structure-level';
-import { BaseViewModel, ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { HasMeeting } from 'src/app/site/pages/meetings/view-models/has-meeting';
-import { ViewMeetingUser } from 'src/app/site/pages/meetings/view-models/view-meeting-user';
+import { StructureLevel } from '@app/domain/models/structure-levels/structure-level';
+import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
+import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
+import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 
 import { ViewStructureLevelListOfSpeakers } from './view-structure-level-list-of-speakers';
 

@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
+import { MockTranslateService } from '@app/site/pages/meetings/modules/poll/pipes/poll-parse-number/poll-parse-number.pipe.spec';
 import { TranslateService } from '@ngx-translate/core';
-import { MockTranslateService } from 'src/app/site/pages/meetings/modules/poll/pipes/poll-parse-number/poll-parse-number.pipe.spec';
 
-import { MeetingAction } from '../repositories/meetings';
-import { MotionAction } from '../repositories/motions';
+import { MeetingAction } from '../repositories/meetings/meeting-action';
+import { MotionAction } from '../repositories/motions/motion-repository.service';
 import { ErrorMapService } from './error-map.service';
 import { ErrorMap, UrlFragmentToHttpErrorMap } from './error-map-utils';
 
@@ -163,7 +163,7 @@ describe(`ErrorMapService`, () => {
     for (const date of testData) {
         const test = date.test;
         it(date.title, () => {
-            expect(service.getCleanErrorMessage(test.message, test.options)).toEqual(date.expect);
+            expect(service.getCleanErrorMessage(test.message, test.options, undefined)).toEqual(date.expect);
         });
         if (date.testConditionCheck !== undefined) {
             it(`Conditions for '${date.title}' are present`, () => {
@@ -181,7 +181,7 @@ describe(`ErrorMapService`, () => {
             ])
         );
 
-        expect(service.getCleanErrorMessage(`1, 2, 3, 4, 5, 6, 7, 8, 9`, { url: `test123456789` })).toBe(
+        expect(service.getCleanErrorMessage(`1, 2, 3, 4, 5, 6, 7, 8, 9`, { url: `test123456789` }, {})).toBe(
             `Error: Number range begins with 1`
         );
         expect(console.warn).toHaveBeenCalledOnceWith(

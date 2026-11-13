@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 
 const IMAGE_USABLE_FOR_PDF_MIMETYPES = [`image/png`, `image/jpeg`];
 
@@ -6,9 +6,7 @@ const IMAGE_USABLE_FOR_PDF_MIMETYPES = [`image/png`, `image/jpeg`];
  * This is a helper service that caches the URLs of the images in the attachment
  * so that they can be loaded into the virtual file system before PDF creation.
  */
-@Injectable({
-    providedIn: `root`
-})
+@Service()
 export class PdfImagesService {
     private imageUrls: string[] = [];
 

@@ -1,7 +1,7 @@
 <button
-    aria-label="{{ getAriaLabel() }}"
     class="accountButton flex-center"
     data-cy="accountButton"
+    [aria-label]="getAriaLabel()"
     [matMenuTriggerFor]="userMenu"
 >
     @if (isPresent) {
@@ -46,10 +46,8 @@
                 <div>
                     <button
                         mat-icon-button
-                        matTooltip="{{
-                            ((isDarkModeActiveObservable | async) ? 'Light mode' : 'Dark mode') | translate
-                        }}"
                         matTooltipPosition="left"
+                        [matTooltip]="((isDarkModeActiveObservable | async) ? 'Light mode' : 'Dark mode') | translate"
                         (click)="toggleDarkMode($event)"
                     >
                         <mat-icon>
@@ -64,9 +62,9 @@
                     <!-- present toggle -->
                     @if (isAllowedSelfSetPresent && hasActiveMeeting) {
                         <button
-                            aria-checked="{{ isPresent }}"
                             mat-menu-item
                             role="menuitemcheckbox"
+                            [aria-checked]="isPresent"
                             [ngClass]="{ active: isPresent }"
                             (click)="toggleOperatorPresence()"
                         >

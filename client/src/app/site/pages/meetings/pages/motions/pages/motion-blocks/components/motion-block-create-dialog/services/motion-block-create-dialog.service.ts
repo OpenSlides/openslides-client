@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Service } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MotionBlock } from 'src/app/domain/models/motions/motion-block';
-import { infoDialogSettings } from 'src/app/infrastructure/utils/dialog-settings';
-import { BaseDialogService } from 'src/app/ui/base/base-dialog-service';
+import { MotionBlock } from '@app/domain/models/motions/motion-block';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { BaseDialogService } from '@app/ui/base/base-dialog-service';
 
 import { MotionBlockCreateDialogComponent } from '../components/motion-block-create-dialog/motion-block-create-dialog.component';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class MotionBlockCreateDialogService extends BaseDialogService<
     MotionBlockCreateDialogComponent,
     null,

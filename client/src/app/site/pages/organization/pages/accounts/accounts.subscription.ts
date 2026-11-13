@@ -1,5 +1,5 @@
-import { Id } from 'src/app/domain/definitions/key-types';
-import { SubscriptionConfigGenerator } from 'src/app/domain/interfaces/subscription-config';
+import { Id } from '@app/domain/definitions/key-types';
+import { SubscriptionConfigGenerator } from '@app/domain/interfaces/subscription-config';
 
 import { ViewMeeting } from '../../../meetings/view-models/view-meeting';
 import { ViewUser } from '../../../meetings/view-models/view-user';

@@ -2,7 +2,7 @@ import { TemplatePortal } from '@angular/cdk/portal';
 import { Directive, Input, OnDestroy, OnInit, TemplateRef, ViewContainerRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
-import { ScrollingTableManageService } from '../services';
+import { ScrollingTableManageService } from '../services/scrolling-table-manage.service';
 import { ScrollingTableCellDefConfig } from './scrolling-table-cell-config';
 import { ScrollingTableCellDefinition } from './scrolling-table-cell-definition';
 import { ScrollingTableCellPosition } from './scrolling-table-cell-position';

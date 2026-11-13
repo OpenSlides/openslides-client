@@ -1,10 +1,10 @@
+import { SpeechState } from '@app/domain/models/speakers/speech-state';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
+import { ViewModelRelations } from '@app/site/base/base-view-model';
+import { BaseHasMeetingUserViewModel } from '@app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { CountdownData } from '@app/site/pages/meetings/modules/projector/modules/countdown-time/countdown-time.component';
+import { ViewStructureLevelListOfSpeakers } from '@app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 import { _ } from '@ngx-translate/core';
-import { SpeechState } from 'src/app/domain/models/speakers/speech-state';
-import { collectionFromFqid } from 'src/app/infrastructure/utils/transform-functions';
-import { ViewModelRelations } from 'src/app/site/base/base-view-model';
-import { BaseHasMeetingUserViewModel } from 'src/app/site/pages/meetings/base/base-has-meeting-user-view-model';
-import { CountdownData } from 'src/app/site/pages/meetings/modules/projector/modules/countdown-time/countdown-time.component';
-import { ViewStructureLevelListOfSpeakers } from 'src/app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
 
 import { Id } from '../../../../../../../../domain/definitions/key-types';
 import { Speaker } from '../../../../../../../../domain/models/speakers/speaker';

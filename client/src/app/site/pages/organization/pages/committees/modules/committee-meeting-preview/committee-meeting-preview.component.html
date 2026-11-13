@@ -72,11 +72,7 @@
             </a>
         }
         @if (!canEnter) {
-            <span
-                matTooltip="{{
-                    'You cannot enter this meeting because you are not assigned to any group.' | translate
-                }}"
-            >
+            <span [matTooltip]="'You cannot enter this meeting because you are not assigned to any group.' | translate">
                 <button color="accent" mat-stroked-button [disabled]="true">
                     {{ 'Open meeting' | translate }}
                 </button>
@@ -101,8 +97,10 @@
 </mat-card>
 
 <ng-template #canNotManageUsersTemplate>
-    <div class="fake-button-no-touch" matTooltip="{{ userAmount }} {{ 'participants' | translate }}">
+    <div class="fake-button-no-touch" [matTooltip]="userAmount + ' ' + ('participants' | translate)">
         <mat-icon
+            [attr.aria-hidden]="false"
+            [attr.aria-label]="('Number of participants' | translate) + ' ' + userAmount"
             [class.smaller-badge-text]="shouldUseSmallerBadgeText"
             [matBadge]="formattedUserAmount"
             [matBadgeColor]="'accent'"
@@ -115,10 +113,12 @@
 <ng-template #canManageUsersTemplate>
     <button
         mat-icon-button
-        matTooltip="{{ userAmount }} {{ 'participants' | translate }}"
+        [matTooltip]="userAmount + ' ' + ('participants' | translate)"
         (click)="changeToMeetingUsers()"
     >
         <mat-icon
+            [attr.aria-hidden]="false"
+            [attr.aria-label]="('Number of participants' | translate) + ' ' + userAmount"
             [class.smaller-badge-text]="shouldUseSmallerBadgeText"
             [matBadge]="formattedUserAmount"
             [matBadgeColor]="'accent'"

@@ -1,16 +1,14 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { BaseBackendImportService } from '@app/site/base/base-import.service/base-backend-import.service';
+import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
+import { ImportServiceCollectorService } from '@app/site/services/import-service-collector.service';
+import { BackendImportRawPreview } from '@app/ui/modules/import-list/definitions/backend-import-preview';
 import { _ } from '@ngx-translate/core';
-import { BaseBackendImportService } from 'src/app/site/base/base-import.service/base-backend-import.service';
-import { ParticipantControllerService } from 'src/app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
-import { ActiveMeetingIdService } from 'src/app/site/pages/meetings/services/active-meeting-id.service';
-import { ImportServiceCollectorService } from 'src/app/site/services/import-service-collector.service';
-import { BackendImportRawPreview } from 'src/app/ui/modules/import-list/definitions/backend-import-preview';
 
 import { ParticipantCsvExportService } from '../../../../export/participant-csv-export.service/participant-csv-export.service';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ParticipantImportService extends BaseBackendImportService {
     /**
      * The minimimal number of header entries needed to successfully create an entry
@@ -41,12 +39,12 @@ export class ParticipantImportService extends BaseBackendImportService {
         'structure levels created': _(`Structure levels created`)
     };
 
-    public constructor(
-        importServiceCollector: ImportServiceCollectorService,
-        private repo: ParticipantControllerService,
-        private activeMeetingIdService: ActiveMeetingIdService,
-        private exporter: ParticipantCsvExportService
-    ) {
+    private repo = inject(ParticipantControllerService);
+    private activeMeetingIdService = inject(ActiveMeetingIdService);
+    private exporter = inject(ParticipantCsvExportService);
+
+    public constructor() {
+        const importServiceCollector = inject(ImportServiceCollectorService);
         super(importServiceCollector);
     }
 

@@ -1,19 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Service } from '@angular/core';
+import { Id } from '@app/domain/definitions/key-types';
+import { ApplauseType } from '@app/domain/models/meetings/applause';
+import { BaseICCGatewayService } from '@app/gateways/base-icc-gateway.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, Observable, Subject } from 'rxjs';
-import { Id } from 'src/app/domain/definitions/key-types';
-import { ApplauseType } from 'src/app/domain/models/meetings/applause';
-import { BaseICCGatewayService } from 'src/app/gateways/base-icc-gateway.service';
-import { ActiveMeetingService } from 'src/app/site/pages/meetings/services/active-meeting.service';
-import { MeetingSettingsService } from 'src/app/site/pages/meetings/services/meeting-settings.service';
 
 export interface Applause {
     level: number;
     present_users: number;
 }
 
-@Injectable({
-    providedIn: 'root'
-})
+@Service()
 export class ApplauseService extends BaseICCGatewayService<Applause> {
     public get showParticles(): Observable<boolean> {
         return this.applauseTypeObservable.pipe(map(type => type === ApplauseType.particles));
@@ -62,13 +60,13 @@ export class ApplauseService extends BaseICCGatewayService<Applause> {
         return this.activeMeetingService.meetingId!;
     }
 
-    public constructor(
-        settingService: MeetingSettingsService,
-        private activeMeetingService: ActiveMeetingService
-    ) {
+    private activeMeetingService = inject(ActiveMeetingService);
+
+    public constructor() {
         super();
         this.setupConnections();
 
+        const settingService = inject(MeetingSettingsService);
         this.showApplauseObservable = settingService.get(`applause_enable`);
         this.applauseTypeObservable = settingService.get(`applause_type`);
         this.showApplauseLevelConfigObservable = settingService.get(`applause_show_level`);

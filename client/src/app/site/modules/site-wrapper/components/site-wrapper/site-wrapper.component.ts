@@ -1,8 +1,16 @@
-import { Component, EmbeddedViewRef, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EmbeddedViewRef,
+    OnDestroy,
+    OnInit,
+    TemplateRef,
+    ViewChild
+} from '@angular/core';
 import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { ActivationEnd, Router } from '@angular/router';
-import { SubscriptionMap } from 'src/app/infrastructure/utils/subscription-map';
-import { ThemeService } from 'src/app/site/services/theme.service';
+import { SubscriptionMap } from '@app/infrastructure/utils/subscription-map';
+import { ThemeService } from '@app/site/services/theme.service';
 
 import { UpdateService } from '../../services/update.service';
 import { VotingBannerService } from '../../services/voting-banner.service';
@@ -19,6 +27,7 @@ interface RoutingData {
     selector: `os-site-wrapper`,
     templateUrl: `./site-wrapper.component.html`,
     styleUrls: [`./site-wrapper.component.scss`],
+    changeDetection: ChangeDetectionStrategy.Eager,
     standalone: false
 })
 export class SiteWrapperComponent implements OnInit, OnDestroy {

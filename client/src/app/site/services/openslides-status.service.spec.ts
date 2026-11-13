@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Deferred } from 'src/app/infrastructure/utils/promises';
+import { Deferred } from '@app/infrastructure/utils/promises';
 
 import { OpenSlidesStatusService } from './openslides-status.service';
 
