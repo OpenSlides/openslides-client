@@ -74,6 +74,7 @@ export interface TocLineDefinition {
     identifier: string;
     title: string;
     pageReference: string;
+    level?: number;
     style?: StyleType;
     fillColor?: string;
 }
@@ -479,17 +480,26 @@ export class PdfDocumentService {
      * @returns A line for the toc
      */
     public createTocLine(
-        { identifier, title, pageReference, fillColor = `` }: TocLineDefinition,
+        { identifier, title, pageReference,  level = 0, fillColor = `` }: TocLineDefinition,
         ...subTitle: Content[]
     ): Content[] {
+        const isSubItem = level > 0;
         return [
             {
-                text: identifier,
+                text:  isSubItem ? `` : identifier,
+                noWrap: true,
                 style: `tocEntry`,
                 fillColor
             },
             {
-                text: [title, ...subTitle],
+                text: isSubItem
+                    ? [
+                        { text: identifier ? `${identifier} · ` : ``},
+                        title,
+                        ...subTitle
+                    ]
+                    : [title, ...subTitle],
+                margin: isSubItem ? [0, 0, 0, 0] : undefined,
                 style: `tocEntry`,
                 fillColor
             },
