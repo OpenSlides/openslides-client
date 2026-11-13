@@ -3,7 +3,11 @@ import { BaseViaBackendImportListMeetingComponent } from '@app/site/base/base-vi
 import { ImportListHeaderDefinition } from '@app/ui/modules/import-list';
 import { TranslateService } from '@ngx-translate/core';
 
-import { participantColumns, participantHeadersAndVerboseNames } from '../../definitions';
+import {
+    participantColumns,
+    participantColumnsDescriptions,
+    participantHeadersAndVerboseNames
+} from '../../definitions';
 import { ParticipantImportService } from '../../services/participant-import.service/participant-import.service';
 
 @Component({
@@ -19,6 +23,7 @@ export class ParticipantImportListComponent extends BaseViaBackendImportListMeet
     public columns: ImportListHeaderDefinition[] = this.possibleFields.map(header => ({
         property: header,
         label: (participantHeadersAndVerboseNames as any)[header],
+        description: (participantColumnsDescriptions as any)[header],
         isTableColumn: true
     }));
 

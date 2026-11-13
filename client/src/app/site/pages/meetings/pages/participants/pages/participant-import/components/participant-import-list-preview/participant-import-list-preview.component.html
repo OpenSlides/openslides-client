@@ -1,0 +1,358 @@
+<os-head-bar [goBack]="false" [nav]="false">
+    <div class="title-slot">
+        <h1 class="mock-h2">{{ 'Import participants' | translate }}</h1>
+    </div>
+    <ng-container class="menu-slot">
+        <button mat-button [disabled]="uploadButton" [hidden]="importDone" (click)="importData()">
+            <span class="upper">{{ 'Import' | translate }}</span>
+        </button>
+    </ng-container>
+</os-head-bar>
+<div class="static-sort-filter-bar">
+    <os-view-list
+        [filterService]="filterService"
+        [horizontalScroll]="true"
+        [listObservable]="dataSource"
+        [searchFieldInput]="searchFieldInput()"
+        [searchService]="searchService"
+        [showFilterBar]="true"
+        [showHeader]="true"
+        [totalCount]="totalCount"
+        [vScrollFixed]="50"
+        (searchFilterUpdated)="searchFilterUpdated.emit($event)"
+    >
+        <!-- CSV-Reload Button -->
+        <div class="filter-bar-button-slot button-positions">
+            <div>
+                <button mat-button type="button" (click)="reloadFileInput.click()">
+                    <mat-icon>autorenew</mat-icon>
+                    @if ((vp.isMobileSubject | async) === false) {
+                        <span class="upper">
+                            {{ 'CSV-Reload' | translate }}
+                        </span>
+                    }
+                </button>
+                <input #reloadFileInput accept="text" hidden type="file" (change)="importer.onSelectFile($event)" />
+            </div>
+            <!-- CSV-Encoding Button -->
+            <div>
+                <button mat-button (click)="openCsvConfig()">
+                    <mat-icon>settings</mat-icon>
+                    @if ((vp.isMobileSubject | async) === false) {
+                        <span class="upper">
+                            {{ 'CSV-Configuration' | translate }}
+                        </span>
+                    }
+                </button>
+            </div>
+        </div>
+        <div class="filter-bar-drawer-slot">
+            <mat-drawer #csvConfigMenu autoFocus="false" mode="push" position="end">
+                <div class="custom-table-header filter-menu-head" role="none" (click)="openCsvConfig()">
+                    <span tabindex="0" (keyup.enter)="openCsvConfig()">
+                        <mat-icon>keyboard_arrow_right</mat-icon>
+                    </span>
+                </div>
+                <div class="section">
+                    <!-- ENCODING -->
+                    <h2>{{ 'File encoding' | translate }}</h2>
+                    <mat-radio-group
+                        class="radio-group encoding-options-display"
+                        [(ngModel)]="selectedEncoding"
+                        (ngModelChange)="onEncodingChange($event)"
+                    >
+                        <mat-radio-button
+                            value="utf-8"
+                            [class.not-selected-button]="selectedEncoding !== 'utf-8'"
+                            [class.selected-button]="selectedEncoding === 'utf-8'"
+                        >
+                            {{ 'UTF 8 - UNICODE' | translate }}
+                        </mat-radio-button>
+                        <mat-radio-button
+                            value="iso-8859-1"
+                            [class.not-selected-button]="selectedEncoding !== 'iso-8859-1'"
+                            [class.selected-button]="selectedEncoding === 'iso-8859-1'"
+                        >
+                            {{ 'ISO 8859-1 - West European' | translate }}
+                        </mat-radio-button>
+                        <mat-radio-button
+                            value="iso-8859-15"
+                            [class.not-selected-button]="selectedEncoding !== 'iso-8859-15'"
+                            [class.selected-button]="selectedEncoding === 'iso-8859-15'"
+                        >
+                            {{ 'ISO 8859-15 West European (with €)' | translate }}
+                        </mat-radio-button>
+                    </mat-radio-group>
+
+                    <mat-divider class="divider"></mat-divider>
+
+                    <!-- COLUMN SEPARATOR -->
+                    <h2>{{ 'Column separator' | translate }}</h2>
+                    <mat-radio-group
+                        class="radio-group"
+                        [(ngModel)]="selectedColumnSeparator"
+                        (ngModelChange)="onColumnSeparatorChange($event)"
+                    >
+                        <mat-radio-button
+                            value=""
+                            [class.not-selected-button]="selectedColumnSeparator !== ''"
+                            [class.selected-button]="selectedColumnSeparator === ''"
+                        >
+                            {{ 'Automatic' | translate }}
+                        </mat-radio-button>
+                        <mat-radio-button
+                            value=","
+                            [class.not-selected-button]="selectedColumnSeparator !== ','"
+                            [class.selected-button]="selectedColumnSeparator === ','"
+                        >
+                            {{ 'Comma' | translate }}
+                        </mat-radio-button>
+                        <mat-radio-button
+                            value=";"
+                            [class.not-selected-button]="selectedColumnSeparator !== ';'"
+                            [class.selected-button]="selectedColumnSeparator === ';'"
+                        >
+                            {{ 'Semicolon' | translate }}
+                        </mat-radio-button>
+                    </mat-radio-group>
+
+                    <mat-divider class="divider"></mat-divider>
+
+                    <!-- TEXT SEPARATOR -->
+                    <h2>{{ 'Text separator' | translate }}</h2>
+                    <mat-radio-group
+                        class="radio-group"
+                        [(ngModel)]="selectedTextSeparator"
+                        (ngModelChange)="onTextSeparatorChange($event)"
+                    >
+                        <mat-radio-button
+                            value='"'
+                            [class.not-selected-button]="selectedTextSeparator !== `&quot;`"
+                            [class.selected-button]="selectedTextSeparator === `&quot;`"
+                        >
+                            {{ 'Double quotes (")' | translate }}
+                        </mat-radio-button>
+                        <mat-radio-button
+                            value="'"
+                            [class.not-selected-button]="selectedTextSeparator !== `'`"
+                            [class.selected-button]="selectedTextSeparator === `'`"
+                        >
+                            {{ "Single quotes (')" | translate }}
+                        </mat-radio-button>
+                        <mat-radio-button
+                            value="`"
+                            [class.not-selected-button]="selectedTextSeparator !== '`'"
+                            [class.selected-button]="selectedTextSeparator === '`'"
+                        >
+                            {{ 'Gravis (`)' | translate }}
+                        </mat-radio-button>
+                    </mat-radio-group>
+
+                    <mat-divider class="divider"></mat-divider>
+                </div>
+            </mat-drawer>
+        </div>
+
+        @if (dataSource | async) {
+            @for (column of previewColumns; track column) {
+                <div
+                    *osScrollingTableCell="
+                        column.property;
+                        row as row;
+                        definition as def;
+                        isDefault: true;
+                        config: getColumnConfig(column.property)
+                    "
+                    [class.error-icon]="containsError(row.data, def)"
+                >
+                    @let entry = row.data;
+                    @let type = column.type;
+                    @let changes = checkChanges(row, column.property);
+                    <div *osScrollingTableCellLabel>{{ getColumnLabel(column.property) | translate }}</div>
+                    @if (entry && (entry[def] || type === 'boolean')) {
+                        <div class="flex-vertical-center">
+                            @let header = getHeader(def);
+                            @let headerType = header.type;
+                            @let entryDef = entry[def];
+                            @if (header.is_list && entryDef) {
+                                @for (item of entryDef; track item; let last = $last) {
+                                    @let icon = getEntryIcon(item);
+                                    @let color = getColorIcon(entry[def]);
+                                    <span class="flex">
+                                        {{ item.value }}
+                                        <ng-container
+                                            [ngTemplateOutlet]="iconTemplate"
+                                            [ngTemplateOutletContext]="{
+                                                icon: icon,
+                                                color: color
+                                            }"
+                                        />
+                                        @if (!$last) {
+                                            <div>,&nbsp;</div>
+                                        }
+                                    </span>
+                                }
+                            }
+                            <span>
+                                @if (!header.is_list && entryDef !== undefined && header.is_object) {
+                                    @let actionIconEntry = getActionIconEntry(entry?.[def]);
+                                    <div class="cell-wrapper">
+                                        <div>
+                                            @if (headerType === 'decimal') {
+                                                {{ this.getShortenedDecimal(entryDef.value) }}
+                                            } @else if (headerType === 'boolean') {
+                                                <mat-checkbox disabled [checked]="entryDef.value" />
+                                            } @else {
+                                                {{ entryDef.value }}
+                                            }
+                                        </div>
+                                        <div>
+                                            @let icon =
+                                                actionIconEntry === 'error_outline'
+                                                    ? 'error_outline'
+                                                    : (changes?.[0] ?? actionIconEntry);
+                                            @if (icon !== '') {
+                                                @let color = getColorIcon(entry[def]);
+                                                <ng-container
+                                                    [ngTemplateOutlet]="iconTemplate"
+                                                    [ngTemplateOutletContext]="{
+                                                        icon: icon,
+                                                        color: color
+                                                    }"
+                                                />
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </span>
+                        </div>
+                    }
+                </div>
+            }
+            <div
+                *osScrollingTableCell="'errors'; row as row; config: { width: 100, position: START_POSITION }"
+                class="flex-vertical-center icon-container"
+            >
+                <div *osScrollingTableCellLabel class="text-align-center full-width">Action</div>
+                @if (row.state === 'error') {
+                    <mat-icon class="red-warning-text" matTooltipPosition="right" [matTooltip]="getRowTooltip(row)">
+                        {{ getActionIconRow(row) }}
+                    </mat-icon>
+                } @else if (row.messages?.length) {
+                    <mat-icon class="warn" matTooltipPosition="right" [matTooltip]="getWarningRowTooltip(row)">
+                        warning
+                    </mat-icon>
+                }
+                @if (row.state === 'referenced') {
+                    <mat-icon
+                        matTooltipPosition="right"
+                        [matTooltip]="getRowTooltip(row)"
+                        [ngClass]="getColorIcon(row)"
+                    >
+                        merge
+                    </mat-icon>
+                    @if (checkChanges(row)) {
+                        <mat-icon class="os-yellow" matTooltipPosition="right" [matTooltip]="updatedRowTooltip()">
+                            {{ 'autorenew' }}
+                        </mat-icon>
+                    }
+                } @else if (row.state !== 'error') {
+                    <mat-icon
+                        matTooltipPosition="right"
+                        [matTooltip]="getRowTooltip(row)"
+                        [ngClass]="getColorIcon(row)"
+                    >
+                        {{ getActionIconRow(row) }}
+                    </mat-icon>
+                }
+            </div>
+        }
+
+        <footer class="footer-slot footer">
+            @let cols = shortenSummary(summary);
+            @for (col of cols; track col; let i = $index) {
+                @let colInfo = getSummaryInformation(col.name);
+                <mat-icon class="margin-top-13 font-size-large" inline [ngClass]="colInfo[1]">
+                    {{ colInfo[0] }}
+                </mat-icon>
+                <div class="margin-bottom-0">&nbsp;{{ col.value }}&nbsp;{{ col.name }}&nbsp; &nbsp;</div>
+            }
+            @if (importDone) {
+                <div class="import-successful">
+                    {{ 'Import successful' | translate }}
+                </div>
+            }
+            <div class="info-button">
+                <button matButton (click)="openDialog()">
+                    <mat-icon color="accent">info</mat-icon>
+                    <mat-label>{{ 'INFO' | translate }}</mat-label>
+                </button>
+            </div>
+        </footer>
+    </os-view-list>
+</div>
+
+<ng-template #ImportDialog>
+    <div class="import-dialog">
+        <h2 class="import-dialog-title" mat-dialog-title>
+            {{ 'Importing participants' | translate }}
+        </h2>
+
+        <mat-dialog-content class="import-dialog-content">
+            <mat-spinner color="accent" diameter="100" strokeWidth="8"></mat-spinner>
+            <div class="import-status">
+                <div class="import-status-title">{{ 'Import in progress!' | translate }}</div>
+                <div class="import-status-subtitle">
+                    {{ 'Do not close the tab if you want to see the import status!' | translate }}
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+</ng-template>
+
+<ng-template #ImportDialogSummary>
+    <div class="summary-dialog">
+        <div cdk-focus-start class="summary-dialog-header">
+            <h2 class="summary-dialog-title" mat-dialog-title>{{ 'Import successful' | translate }}</h2>
+            <button class="close-button" mat-dialog-close mat-icon-button>
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <h4 class="summary-dialog-subtitle">
+            {{ summary[0]?.value }}&nbsp;{{ 'participants have been processed' | translate }}
+        </h4>
+        <div class="summary-dialog-content-wrapper">
+            <mat-dialog-content class="summary-dialog-content">
+                <div>
+                    @let shortenedSummary = shortenSummary(summary);
+                    @for (row of shortenedSummary; track row) {
+                        @let colInfo = getSummaryInformation(row.name);
+                        <div class="summary-row">
+                            <mat-icon inline [ngClass]="colInfo[1]">
+                                {{ colInfo[0] }}
+                            </mat-icon>
+                            <div class="summary-text">{{ row.value }}&nbsp;{{ row.name | translate }}</div>
+                        </div>
+                    }
+                </div>
+            </mat-dialog-content>
+            @let extraInformation = summaryRest(summary);
+            @for (row of extraInformation; track row) {
+                <div class="summary-dialog-extraInfo">{{ row.value }}&nbsp;{{ row.name }}</div>
+            }
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #iconTemplate let-color="color" let-icon="icon">
+    <mat-icon
+        class="lower-margin-top"
+        inline
+        [class.error-icon]="icon === 'error_outline'"
+        [class.os-green]="icon === 'add_circle_outline'"
+        [class.os-yellow]="icon === 'autorenew'"
+        [color]="color"
+    >
+        {{ icon }}
+    </mat-icon>
+</ng-template>
