@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OsFilterOptionCondition } from '@app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
@@ -137,6 +137,12 @@ export class MotionListComponent extends BaseMeetingListViewComponent<ViewMotion
             this._forwardingAvailable = forwardingAvailable;
         });
         this.storage.set('motion-navigation-last', 'motion-list');
+        effect(() => {
+            if (this.multiselectService.onSuccess()) {
+                this.toggleMultiSelect();
+                this.multiselectService.onSuccess.set(false);
+            }
+        });
     }
 
     /**

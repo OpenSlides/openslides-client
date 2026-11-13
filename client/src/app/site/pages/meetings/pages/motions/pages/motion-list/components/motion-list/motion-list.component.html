@@ -573,6 +573,24 @@
                         <mat-icon>sort</mat-icon>
                         <span>{{ 'Move to agenda item' | translate }} ...</span>
                     </button>
+                    <div *osPerms="permission.agendaItemCanManage">
+                        @if (selectedRows.length) {
+                            @let notInAgenda = selectedRows.filter(row => !row.agenda_item_id);
+                            @let inAgenda = selectedRows.filter(row => row.agenda_item_id);
+                            @if (notInAgenda.length) {
+                                <button mat-menu-item (click)="multiselectService.addToAgenda(notInAgenda)">
+                                    <mat-icon>add</mat-icon>
+                                    <span>{{ 'Add to agenda' | translate }}</span>
+                                </button>
+                            }
+                            @if (inAgenda.length) {
+                                <button mat-menu-item (click)="multiselectService.removeFromAgenda(inAgenda)">
+                                    <mat-icon>remove</mat-icon>
+                                    <span>{{ 'Remove from agenda' | translate }}</span>
+                                </button>
+                            }
+                        }
+                    </div>
                     <button
                         mat-menu-item
                         [disabled]="!selectedRows.length"
