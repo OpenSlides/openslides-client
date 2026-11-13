@@ -61,7 +61,7 @@ export class VotingBannerService {
 
     private subscribeVoted(...viewPolls: ViewPoll[]): Observable<[ViewPoll, boolean][]> {
         const userIds = [
-            this.operator.user.getMeetingUser().id,
+            this.operator.user.getMeetingUser()?.id,
             ...(this.operator.user.vote_delegations_from_meeting_user_ids() || [])
         ];
         return combineLatest(

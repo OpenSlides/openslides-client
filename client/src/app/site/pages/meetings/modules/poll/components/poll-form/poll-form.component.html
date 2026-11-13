@@ -28,18 +28,22 @@
                             <mat-error>{{ 'This field is required.' | translate }}</mat-error>
                         </mat-form-field>
 
-                        <!-- Groups entitled to Vote -->
-                        <mat-form-field>
-                            <mat-label>{{ 'Entitled to vote' | translate }}</mat-label>
-                            <os-repo-search-selector
-                                [formField]="form.entitled_group_ids"
-                                [multiple]="true"
-                                [pipeFn]="groupRepo.getFilterSystemGroupFn()"
-                                [repo]="groupRepo"
-                                [showChips]="false"
-                                [sortFn]="sortFn"
-                            ></os-repo-search-selector>
-                        </mat-form-field>
+                        @if (form.visibility().value() !== 'manually') {
+                            <!-- Groups entitled to Vote -->
+                            <mat-form-field>
+                                <mat-label>{{ 'Entitled to vote' | translate }}</mat-label>
+                                <os-repo-search-selector
+                                    [formField]="form.entitled_group_ids"
+                                    [multiple]="true"
+                                    [pipeFn]="groupRepo.getFilterSystemGroupFn()"
+                                    [repo]="groupRepo"
+                                    [showChips]="false"
+                                    [sortFn]="sortFn"
+                                ></os-repo-search-selector>
+                            </mat-form-field>
+                        } @else {
+                            <div></div>
+                        }
                     </div>
                 }
 

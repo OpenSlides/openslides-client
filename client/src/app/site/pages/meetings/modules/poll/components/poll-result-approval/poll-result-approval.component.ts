@@ -96,7 +96,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                 percent:
                     this.onehundredPercentBase() !== `yes_no` &&
                     this.onehundredPercentBase() !== `disabled` &&
-                    this.config().onehundredPercentBaseNum
+                    showPercent
                         ? Big(results.abstain || 0)
                               .div(this.config().onehundredPercentBaseNum)
                               .mul(100)
@@ -148,7 +148,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public validBallots = computed<number | null>(() => {
-        if (this.onehundredPercentBase() === `cast`) {
+        if (this.onehundredPercentBase() === `cast` && !this.invalidBallots()) {
             return null;
         }
 
@@ -168,15 +168,11 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public invalidBallots = computed<number | null>(() => {
-        if (this.onehundredPercentBase() === `cast`) {
-            return null;
-        }
-
         return this.config().invalidBallots;
     });
 
     public invalidBallotsPercent = computed<string | null>(() => {
-        if (!this.config().onehundredPercentBaseNum) {
+        if (!this.config().onehundredPercentBaseNum || this.onehundredPercentBase() !== `cast`) {
             return null;
         }
 
@@ -184,7 +180,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public castedBallots = computed<number | null>(() => {
-        if (this.onehundredPercentBase() !== `cast`) {
+        if (this.onehundredPercentBase() !== `cast` && !this.invalidBallots()) {
             return null;
         }
 

@@ -90,6 +90,10 @@ export function getActiveMeetingSubscriptionConfig(
                     ]
                 },
                 {
+                    idField: `structure_level_ids`,
+                    fieldset: [`name`, `meeting_id`]
+                },
+                {
                     idField: `projector_ids`,
                     fieldset: [`name`],
                     follow: [{ idField: `current_projection_ids`, fieldset: [`content_object_id`] }]

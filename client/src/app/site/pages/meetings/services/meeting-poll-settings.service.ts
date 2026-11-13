@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, filter, Observable, switchMap } from 'r
 
 import { ActiveMeetingService } from './active-meeting.service';
 
-type MeetingPollSettingCollection = 'motion' | 'topic' | 'assignment';
+export type MeetingPollSettingCollection = 'motion' | 'topic' | 'assignment';
 
 @Service()
 export class MeetingPollSettingsService {

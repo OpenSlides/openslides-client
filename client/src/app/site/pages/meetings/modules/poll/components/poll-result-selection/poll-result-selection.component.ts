@@ -2,6 +2,11 @@ import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { PollRequiredMajority, VOTE_MAJORITY } from '@app/domain/models/poll';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
+import {
+    MeetingPollSettingCollection,
+    MeetingPollSettingsService
+} from '@app/site/pages/meetings/services/meeting-poll-settings.service';
 import { ThemeService } from '@app/site/services/theme.service';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -18,6 +23,7 @@ import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.co
 
 type Results = ResultRow[];
 interface ResultRow {
+    num?: number;
     key: string;
     votingOption: string;
     color: string;
@@ -66,8 +72,16 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
 > {
     public shouldShowEntitled = signal<boolean>(false);
 
+    public pollSettingsService = inject(MeetingPollSettingsService);
     public themeService = inject(ThemeService);
     public translate = inject(TranslateService);
+
+    public sortByVotes = computed(() =>
+        this.pollSettingsService.signal(
+            collectionFromFqid(this.poll().content_object_id) as MeetingPollSettingCollection,
+            `sort_result_by_votes`
+        )()
+    );
 
     public resultOptions = computed<Results>(() => {
         const results = this.results();
@@ -79,7 +93,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
             !this.options().some(o => +results[o.id] === VOTE_MAJORITY);
         const colors = this.generateChartColors(this.options()?.length ?? 0);
 
-        const rows: Results = [];
+        let rows: Results = [];
         for (const i in this.options()) {
             const option = this.options()[i];
             const optionText = option.getOptionTitle()?.title ?? this.translate.instant(UnknownUserLabel);
@@ -98,6 +112,14 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
                           .mul(100)
                           .toNumber()
                     : null
+            });
+        }
+
+        if (this.sortByVotes()) {
+            rows.sort((a, b) => b.amount - a.amount);
+            rows = rows.map((opt, i) => {
+                opt.num = i + 1;
+                return opt;
             });
         }
 
@@ -141,7 +163,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public validBallots = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base === `cast`) {
+        if (this.config().onehundred_percent_base === `cast` && !this.invalidBallots()) {
             return null;
         }
 
@@ -157,15 +179,11 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public invalidBallots = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base === `cast`) {
-            return null;
-        }
-
         return this.config().invalidBallots;
     });
 
     public invalidBallotsPercent = computed<string | null>(() => {
-        if (!this.config().onehundredPercentBaseNum || this.config().onehundred_percent_base === 'no_general') {
+        if (!this.config().onehundredPercentBaseNum || this.config().onehundred_percent_base !== 'cast') {
             return null;
         }
 
@@ -173,7 +191,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public castedBallots = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base !== `cast`) {
+        if (this.config().onehundred_percent_base !== `cast` && !this.invalidBallots()) {
             return null;
         }
 
@@ -202,7 +220,9 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
         }
 
         if (this.config().required_majority === PollRequiredMajority.AbsoluteMajority) {
-            return Math.ceil(this.config().onehundredPercentBaseNum / 2 + 1);
+            return Math.ceil(
+                this.config().onehundredPercentBaseNum / 2 - (this.config().onehundredPercentBaseNum % 2) + 1
+            );
         } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
             return Math.ceil((this.config().onehundredPercentBaseNum * 2) / 3);
         } else if (this.config().required_majority === PollRequiredMajority.SimpleMajority) {
