@@ -11,6 +11,7 @@
                             <button
                                 color="warn"
                                 mat-icon-button
+                                [attr.aria-label]="'Save' | translate"
                                 [matTooltip]="'Save' | translate"
                                 (click)="saveChangesModerationNote()"
                             >
@@ -18,6 +19,7 @@
                             </button>
                             <button
                                 mat-icon-button
+                                [attr.aria-label]="'Close' | translate"
                                 [matTooltip]="'Cancel edit' | translate"
                                 (click)="toggleEditModeratorNote()"
                             >
@@ -26,6 +28,7 @@
                         } @else {
                             <button
                                 mat-icon-button
+                                [attr.aria-label]="'Edit' | translate"
                                 [matTooltip]="'Edit moderation note' | translate"
                                 (click)="toggleEditModeratorNote()"
                             >
