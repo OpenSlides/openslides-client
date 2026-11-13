@@ -163,7 +163,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public validBallots = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base === `cast`) {
+        if (this.config().onehundred_percent_base === `cast` && !this.invalidBallots()) {
             return null;
         }
 
@@ -179,15 +179,11 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public invalidBallots = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base === `cast`) {
-            return null;
-        }
-
         return this.config().invalidBallots;
     });
 
     public invalidBallotsPercent = computed<string | null>(() => {
-        if (!this.config().onehundredPercentBaseNum || this.config().onehundred_percent_base === 'no_general') {
+        if (!this.config().onehundredPercentBaseNum || this.config().onehundred_percent_base !== 'cast') {
             return null;
         }
 
@@ -195,7 +191,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public castedBallots = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base !== `cast`) {
+        if (this.config().onehundred_percent_base !== `cast` && !this.invalidBallots()) {
             return null;
         }
 

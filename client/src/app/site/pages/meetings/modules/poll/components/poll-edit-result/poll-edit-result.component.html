@@ -100,6 +100,13 @@
 
     <div class="option">
         <mat-form-field class="option-amount">
+            <mat-label>Valid votes</mat-label>
+            <input matInput type="number" [formField]="resultForm.valid" />
+        </mat-form-field>
+    </div>
+
+    <div class="option">
+        <mat-form-field class="option-amount">
             <mat-label>Invalid votes</mat-label>
             <input matInput type="number" [formField]="resultForm.invalid" />
         </mat-form-field>

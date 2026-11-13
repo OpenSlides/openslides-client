@@ -94,21 +94,6 @@
             </tr>
         }
 
-        @if (castedBallots() !== null) {
-            <tr>
-                <td></td>
-                <td>{{ 'Casted ballots' | translate }}</td>
-                <td></td>
-                <ng-container
-                    [ngTemplateOutlet]="resultCol"
-                    [ngTemplateOutletContext]="{
-                        amount: castedBallots(),
-                        percent: '100'
-                    }"
-                />
-            </tr>
-        }
-
         @if (entitledUsers() !== null) {
             <tr>
                 <td></td>
@@ -149,6 +134,21 @@
                     [ngTemplateOutletContext]="{
                         amount: invalidBallots(),
                         percent: invalidBallotsPercent()
+                    }"
+                />
+            </tr>
+        }
+
+        @if (castedBallots() !== null) {
+            <tr>
+                <td></td>
+                <td>{{ 'Casted ballots' | translate }}</td>
+                <td></td>
+                <ng-container
+                    [ngTemplateOutlet]="resultCol"
+                    [ngTemplateOutletContext]="{
+                        amount: castedBallots(),
+                        percent: '100'
                     }"
                 />
             </tr>
