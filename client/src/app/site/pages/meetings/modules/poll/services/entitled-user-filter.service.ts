@@ -15,7 +15,7 @@ export class EntitledUsersListFilterService extends BaseFilterListService<any> {
     protected getFilterDefinitions(): OsFilter<any>[] {
         return [
             {
-                property: `present`,
+                property: `isPresent`,
                 label: _(`Is present`),
                 options: [
                     { label: _(`Is present`), condition: true },
@@ -23,7 +23,7 @@ export class EntitledUsersListFilterService extends BaseFilterListService<any> {
                 ]
             },
             {
-                property: `voted`,
+                property: `hasVoted`,
                 label: _(`Voted`),
                 options: [
                     { label: _(`Has voted`), condition: true },

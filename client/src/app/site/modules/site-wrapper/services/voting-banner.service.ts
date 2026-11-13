@@ -1,17 +1,15 @@
 import { inject, Service } from '@angular/core';
-import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
+import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
 import { viewModelListEqual } from '@app/infrastructure/utils';
-import { VoteControllerService } from '@app/site/pages/meetings/modules/poll/services/vote-controller.service';
-import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ActivePollsService } from '@app/site/pages/meetings/services/active-polls.service';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { OperatorService } from '@app/site/services/operator.service';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, distinctUntilChanged, Subscription } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, Observable, of, switchMap } from 'rxjs';
 
 import { BannerDefinition, BannerService } from './banner.service';
 
@@ -27,13 +25,11 @@ export class VotingBannerService {
     private subText = _(`Click here to vote!`);
 
     private pollsToVote: ViewPoll[] = [];
-    private pollsToVoteSubscription: Subscription;
 
     private banner = inject(BannerService);
     private translate = inject(TranslateService);
-    private votingService = inject(VotingService);
     private activeMeeting = inject(ActiveMeetingService);
-    private sendVotesService = inject(VoteControllerService);
+    private pollRepo = inject(PollRepositoryService);
     private operator = inject(OperatorService);
     private activePolls = inject(ActivePollsService);
     private meetingSettingsService = inject(MeetingSettingsService);
@@ -49,23 +45,45 @@ export class VotingBannerService {
             this.operator.userObservable.pipe(
                 distinctUntilChanged((p, c) => p?.isPresentInMeeting() === c?.isPresentInMeeting())
             )
-        ]).subscribe(([_, polls]) => this.updateVotablePollSubscription(polls));
+        ])
+            .pipe(
+                map(([_, polls]) => polls),
+                switchMap(polls => {
+                    if (!polls.length) {
+                        return of([]);
+                    }
+
+                    return this.subscribeVoted(...polls);
+                })
+            )
+            .subscribe(polls => this.updateBanner(polls));
     }
 
-    private async updateVotablePollSubscription(polls: ViewPoll[]): Promise<void> {
-        this.pollsToVoteSubscription?.unsubscribe();
-
-        this.pollsToVoteSubscription = this.sendVotesService.subscribeVoted(...polls).subscribe(voted => {
-            this.updateBanner(polls, voted);
-        });
+    private subscribeVoted(...viewPolls: ViewPoll[]): Observable<[ViewPoll, boolean][]> {
+        const userIds = [
+            this.operator.user.getMeetingUser()?.id,
+            ...(this.operator.user.vote_delegations_from_meeting_user_ids() || [])
+        ];
+        return combineLatest(
+            viewPolls.map(poll => {
+                return combineLatest(userIds.map(userId => this.pollRepo.pollBallotUsersByUser(poll.id, userId))).pipe(
+                    map(ballots => !!ballots.map(b => !!b.length).some(b => b))
+                );
+            })
+        ).pipe(
+            map(voted => {
+                return viewPolls.map((p, i) => [p, voted[i]]);
+            })
+        );
     }
 
-    private updateBanner(polls: ViewPoll[], voted: Record<Id, Id[]>): void {
+    private updateBanner(polls: [ViewPoll, boolean][]): void {
         if (this.activeMeeting.meetingId && !this.operator.isAnonymous && this.operator.readyDeferred.wasResolved) {
-            const checkUsers = [this.operator.user, ...(this.operator.user.vote_delegations_from() || [])];
-            this.pollsToVote = polls.filter(
-                poll => checkUsers.some(user => this.votingService.canVote(poll, user)) && voted[poll.id] !== undefined
-            );
+            this.pollsToVote = polls
+                .filter(([_, voted]) => {
+                    return voted === false;
+                })
+                .map(([poll, _]) => poll);
         } else {
             this.pollsToVote = [];
         }

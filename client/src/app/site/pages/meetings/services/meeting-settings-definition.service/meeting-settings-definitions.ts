@@ -2,18 +2,11 @@ import { ValidatorFn, Validators } from '@angular/forms';
 import { AgendaItemType } from '@app/domain/models/agenda/agenda-item';
 import { Settings } from '@app/domain/models/meetings/meeting';
 import { MotionWorkflow } from '@app/domain/models/motions/motion-workflow';
-import {
-    PollBackendDurationChoices,
-    PollPercentBaseVerbose,
-    PollTypeVerbose
-} from '@app/domain/models/poll/poll-constants';
 import { ObjectReplaceKeysConfig } from '@app/infrastructure/utils';
 import { createEmailValidator } from '@app/infrastructure/utils/validators/email';
 import { _ } from '@ngx-translate/core';
 
 import { OrganizationSettingsService } from '../../../organization/services/organization-settings.service';
-import { AssignmentPollMethodVerbose } from '../../pages/assignments/modules/assignment-poll/definitions';
-import { MotionPollMethodVerbose } from '../../pages/motions/modules/motion-poll/definitions';
 import { ViewMeeting } from '../../view-models/view-meeting';
 
 export type SettingsValueMap = { [key in keyof Settings]?: any };
@@ -31,7 +24,7 @@ export type SettingsType =
     | `groups`
     | `daterange`;
 
-export type ChoicesMap = Record<string, string | number>;
+export type ChoicesMap = Record<string, string | number> | string[];
 
 /**
  * Need for settings that depend on models. The collection is resolved via the
@@ -44,14 +37,22 @@ export interface ChoicesFunctionDefinition<V> {
     labelKey: keyof V;
 }
 
+export interface SettingsSubscriptionKey<V> {
+    idField: keyof Settings;
+    field: keyof V & string;
+}
+
 export interface SettingsInput<V = any> {
-    key: keyof Settings | (keyof Settings)[]; // Can be used with multi value fields (like the type === 'daterange')
+    // Can be used with multi value fields (like the type === 'daterange')
+    key: keyof Settings | (keyof Settings)[] | string;
+    subscriptionKey?: SettingsSubscriptionKey<any>;
     label: string;
     type?: SettingsType; // default: text
     // if true, the default value will not be translated
     // (only valid for type == string)
     dontTranslateDefault?: boolean;
     // mandatory for type=choice; maps value <-> label
+    choiceI18nPrefix?: string;
     choices?: ChoicesMap;
     // alternative to `choices`; overwrites `choices` if both are given
     choicesFunc?: ChoicesFunctionDefinition<V>;
@@ -327,16 +328,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         key: `agenda_show_internal_items_on_projector`,
                         label: _(`Show internal items when projecting agenda`),
                         type: `boolean`
-                    }
-                ]
-            },
-            {
-                label: _(`Vote`),
-                settings: [
-                    {
-                        key: `topic_poll_default_group_ids`,
-                        label: _(`Default groups with voting rights`),
-                        type: `groups`
                     }
                 ]
             }
@@ -792,93 +783,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 ]
             },
             {
-                label: _(`Vote`),
-                settings: [
-                    {
-                        key: `motion_poll_default_type`,
-                        label: _(`Default voting type`),
-                        type: `choice`,
-                        choices: PollTypeVerbose,
-                        restrictionFn: (orgaSettings, value: any): any => {
-                            const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
-                            if (!isElectronicVotingEnabled && typeof value !== `string`) {
-                                return { analog: `analog` };
-                            }
-                            return value;
-                        }
-                    },
-                    {
-                        key: `poll_default_live_voting_enabled`,
-                        label: _(`Set live voting enabled by default`),
-                        type: `boolean`,
-                        helpText: _(`Only available for nominal voting`)
-                    },
-                    {
-                        key: `motion_poll_default_group_ids`,
-                        label: _(`Default groups with voting rights`),
-                        type: `groups`
-                    },
-                    {
-                        key: `motion_poll_default_method`,
-                        label: _(`Default voting method`),
-                        type: `choice`,
-                        choices: MotionPollMethodVerbose
-                    },
-                    {
-                        key: `motion_poll_default_onehundred_percent_base`,
-                        label: _(`Default 100 % base`),
-                        type: `choice`,
-                        choices: PollPercentBaseVerbose
-                    },
-                    {
-                        key: `motion_poll_default_backend`,
-                        label: _(`Default voting duration`),
-                        type: `choice`,
-                        choices: PollBackendDurationChoices,
-                        helpText: _(
-                            `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
-                        )
-                    },
-                    {
-                        key: `motion_poll_projection_name_order_first`,
-                        label: _(`Sort participant names on single votes projection by`),
-                        type: `choice`,
-                        choices: {
-                            first_name: _(`Given name`),
-                            last_name: _(`Surname`)
-                        },
-                        helpText: _(`Only for nominal votes.`)
-                    },
-                    {
-                        key: `motion_poll_projection_max_columns`,
-                        label: _(`Maximum number of columns in single votes projection`),
-                        type: `integer`,
-                        helpText: _(`Only for nominal votes.`)
-                    }
-                ]
-            },
-            {
-                label: _(`Ballot papers`),
-                settings: [
-                    {
-                        key: `motion_poll_ballot_paper_selection`,
-                        label: _(`Number of ballot papers`),
-                        type: `choice`,
-                        choices: {
-                            NUMBER_OF_DELEGATES: _(`Number of all delegates`),
-                            NUMBER_OF_ALL_PARTICIPANTS: _(`Number of all participants`),
-                            CUSTOM_NUMBER: _(`Use the following custom number`)
-                        }
-                    },
-                    {
-                        key: `motion_poll_ballot_paper_number`,
-                        label: _(`Custom number of ballot papers`),
-                        type: `integer`,
-                        validators: [Validators.min(1)]
-                    }
-                ]
-            },
-            {
                 label: _(`Forwarding`),
                 settings: [
                     {
@@ -903,60 +807,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
         icon: `how_to_vote`,
         subgroups: [
             {
-                label: _(`Ballot`),
-                settings: [
-                    {
-                        key: `assignment_poll_default_type`,
-                        label: _(`Default voting type`),
-                        type: `choice`,
-                        choices: PollTypeVerbose,
-                        restrictionFn: (orgaSettings, value: any): any => {
-                            const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
-                            if (!isElectronicVotingEnabled && typeof value !== `string`) {
-                                return { analog: `analog` };
-                            }
-                            return value;
-                        }
-                    },
-                    {
-                        key: `assignment_poll_default_group_ids`,
-                        label: _(`Default groups with voting rights`),
-                        type: `groups`
-                    },
-                    {
-                        key: `assignment_poll_default_method`,
-                        label: _(`Default election method`),
-                        type: `choice`,
-                        choices: AssignmentPollMethodVerbose
-                    },
-                    {
-                        key: `assignment_poll_default_onehundred_percent_base`,
-                        label: _(`Default 100 % base`),
-                        type: `choice`,
-                        choices: PollPercentBaseVerbose
-                    },
-                    {
-                        key: `assignment_poll_default_backend`,
-                        label: _(`Default voting duration`),
-                        type: `choice`,
-                        choices: PollBackendDurationChoices,
-                        helpText: _(
-                            `Voting ends after short (some seconds/minutes) or long (some days/weeks) time period.`
-                        )
-                    },
-                    {
-                        key: `assignment_poll_enable_max_votes_per_option`,
-                        label: _(`Allow to accumulate several votes on one candidate ("comulative voting")`),
-                        type: `boolean`
-                    },
-                    {
-                        key: `assignment_poll_sort_poll_result_by_votes`,
-                        label: _(`Sort election results by amount of votes`),
-                        type: `boolean`
-                    }
-                ]
-            },
-            {
                 label: _(`List of speakers`),
                 settings: [
                     {
@@ -965,25 +815,372 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         type: `boolean`
                     }
                 ]
-            },
+            }
+        ]
+    },
+    {
+        label: _(`Vote`),
+        icon: `check_circle`,
+        subgroups: [
             {
-                label: _(`Ballot papers`),
+                label: _(`General`),
                 settings: [
                     {
-                        key: `assignment_poll_ballot_paper_selection`,
-                        label: _(`Number of ballot papers`),
+                        key: `poll_projection_name_order_first`,
+                        label: _(`Sort participant names on single votes projection by`),
                         type: `choice`,
                         choices: {
-                            NUMBER_OF_DELEGATES: _(`Number of all delegates`),
-                            NUMBER_OF_ALL_PARTICIPANTS: _(`Number of all participants`),
-                            CUSTOM_NUMBER: _(`Use the following custom number`)
+                            first_name: _(`Given name`),
+                            last_name: _(`Surname`)
                         }
                     },
                     {
-                        key: `assignment_poll_ballot_paper_number`,
-                        label: _(`Custom number of ballot papers`),
+                        key: `poll_projection_max_columns`,
+                        label: _(`Maximum number of columns in single votes projection`),
                         type: `integer`,
-                        validators: [Validators.min(1)]
+                        helpText: _(`Only for nominal votes.`)
+                    }
+                ]
+            },
+            {
+                label: _(`Agenda`),
+                settings: [
+                    {
+                        key: `topic_poll_setting_visibility`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `visibility`
+                        },
+                        label: _(`Default voting type`),
+                        type: `choice`,
+                        choiceI18nPrefix: 'poll_visibility',
+                        choices: ['manually', 'named', 'open', 'secret'],
+                        restrictionFn: (orgaSettings, value: any): any => {
+                            const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
+                            if (!isElectronicVotingEnabled && typeof value !== `string`) {
+                                return [`manually`];
+                            }
+                            return value;
+                        }
+                    },
+                    {
+                        key: `topic_poll_setting_group_ids`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `group_ids`
+                        },
+                        label: _(`Default groups with voting rights`),
+                        type: `groups`
+                    },
+                    {
+                        key: `topic_poll_setting_method`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `method`
+                        },
+                        label: _(`Default agenda voting method`),
+                        type: `choice`,
+                        choices: {
+                            'approval.yes_no': _(`Yes/No`),
+                            'approval.yes_no_abstain': _(`Yes/No/Abstain`),
+                            'selection.yes': _(`Yes per option`),
+                            rating_score: _(`Amount per option`)
+                        }
+                    },
+                    {
+                        key: `topic_poll_setting_enable_max_yes_votes`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `enable_max_yes_votes`
+                        },
+                        label: _(`Allow limiting the amount of yes votes in per candidate polls`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `topic_poll_setting_enable_cumulative_voting`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `enable_cumulative_voting`
+                        },
+                        label: _(`Allow to accumulate several votes on one option ("cumulative voting")`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `topic_poll_setting_enable_max_options_limit`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `enable_max_options_limit`
+                        },
+                        label: _(`Allow to limit options that can be voted`),
+                        type: `boolean`,
+                        indentation: 1
+                    },
+                    {
+                        key: `topic_poll_setting_allow_live_voting`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `allow_live_voting`
+                        },
+                        label: _(`Activate live voting`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `topic_poll_setting_enable_live_voting`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `enable_live_voting`
+                        },
+                        label: _(`Set live voting as default`),
+                        type: `boolean`,
+                        indentation: 1
+                    },
+                    {
+                        key: `topic_poll_setting_required_majority`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `required_majority`
+                        },
+                        label: _(`Default required majority`),
+                        type: `choice`,
+                        choiceI18nPrefix: 'poll_required_majority',
+                        choices: ['no_majority', 'simple_majority', 'absolute_majority', 'two_third_majority']
+                    },
+                    {
+                        key: `topic_poll_setting_onehundred_percent_base`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `onehundred_percent_base`
+                        },
+                        label: _(`Default 100 % base`),
+                        type: `choice`,
+                        choiceI18nPrefix: 'poll_percent_base',
+                        choices: ['yes_no', 'valid', 'cast', 'no_general', 'entitled', 'entitled_present', 'disabled']
+                    },
+                    {
+                        key: `topic_poll_setting_sort_result_by_votes`,
+                        subscriptionKey: {
+                            idField: `topic_poll_config_id`,
+                            field: `sort_result_by_votes`
+                        },
+                        label: _(`Sort election results by amount of votes`),
+                        type: `boolean`
+                    }
+                ]
+            },
+            {
+                label: _(`Motion`),
+                settings: [
+                    {
+                        key: `motion_poll_setting_visibility`,
+                        subscriptionKey: {
+                            idField: `motion_poll_config_id`,
+                            field: `visibility`
+                        },
+                        label: _(`Default voting type`),
+                        type: `choice`,
+                        choiceI18nPrefix: 'poll_visibility',
+                        choices: ['manually', 'named', 'open', 'secret'],
+                        restrictionFn: (orgaSettings, value: any): any => {
+                            const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
+                            if (!isElectronicVotingEnabled && typeof value !== `string`) {
+                                return [`manually`];
+                            }
+                            return value;
+                        }
+                    },
+                    {
+                        key: `motion_poll_setting_group_ids`,
+                        subscriptionKey: {
+                            idField: `motion_poll_config_id`,
+                            field: `group_ids`
+                        },
+                        label: _(`Default groups with voting rights`),
+                        type: `groups`
+                    },
+                    {
+                        key: `motion_poll_setting_method`,
+                        subscriptionKey: {
+                            idField: `motion_poll_config_id`,
+                            field: `method`
+                        },
+                        label: _(`Default motion voting method`),
+                        type: `choice`,
+                        choices: {
+                            'approval.yes_no': _(`Yes/No`),
+                            'approval.yes_no_abstain': _(`Yes/No/Abstain`)
+                        }
+                    },
+                    {
+                        key: `motion_poll_setting_allow_live_voting`,
+                        subscriptionKey: {
+                            idField: `motion_poll_config_id`,
+                            field: `allow_live_voting`
+                        },
+                        label: _(`Activate live voting`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `motion_poll_setting_enable_live_voting`,
+                        subscriptionKey: {
+                            idField: `motion_poll_config_id`,
+                            field: `enable_live_voting`
+                        },
+                        label: _(`Set live voting as default`),
+                        type: `boolean`,
+                        indentation: 1
+                    },
+                    {
+                        key: `motion_poll_setting_required_majority`,
+                        subscriptionKey: {
+                            idField: `motion_poll_config_id`,
+                            field: `required_majority`
+                        },
+                        label: _(`Default required majority`),
+                        type: `choice`,
+                        choiceI18nPrefix: 'poll_required_majority',
+                        choices: ['no_majority', 'simple_majority', 'absolute_majority', 'two_third_majority']
+                    },
+                    {
+                        key: `motion_poll_setting_onehundred_percent_base`,
+                        subscriptionKey: {
+                            idField: `motion_poll_config_id`,
+                            field: `onehundred_percent_base`
+                        },
+                        label: _(`Default 100 % base`),
+                        type: `choice`,
+                        choiceI18nPrefix: 'poll_percent_base',
+                        choices: ['yes_no', 'valid', 'cast', 'entitled', 'entitled_present', 'disabled']
+                    }
+                ]
+            },
+            {
+                label: _(`Elections`),
+                settings: [
+                    {
+                        key: `assignment_poll_setting_visibility`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `visibility`
+                        },
+                        label: _(`Default voting type`),
+                        type: `choice`,
+                        choiceI18nPrefix: 'poll_visibility',
+                        choices: ['manually', 'named', 'open', 'secret'],
+                        restrictionFn: (orgaSettings, value: any): any => {
+                            const isElectronicVotingEnabled = orgaSettings.instant(`enable_electronic_voting`);
+                            if (!isElectronicVotingEnabled && typeof value !== `string`) {
+                                return [`manually`];
+                            }
+                            return value;
+                        }
+                    },
+                    {
+                        key: `assignment_poll_setting_group_ids`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `group_ids`
+                        },
+                        label: _(`Default groups with voting rights`),
+                        type: `groups`
+                    },
+                    {
+                        key: `assignment_poll_setting_method`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `method`
+                        },
+                        label: _(`Default assignment voting method`),
+                        type: `choice`,
+                        choices: {
+                            'selection.yes': _(`Yes per candidate`),
+                            'selection.no': _(`No per candidate`),
+                            rating_score: _(`Amount per candidate`),
+                            'rating_approval.yes_no': _(`Yes/No per candidate`),
+                            'rating_approval.yes_no_abstain': _(`Yes/No/Abstain per candidate`),
+                            'approval.yes_no': _(`Yes/No per list`),
+                            'approval.yes_no_abstain': _(`Yes/No/Abstain per list`)
+                        },
+                        helpText: _(
+                            `Polls with one candidate will always default to Yes/No/Abstain regardless of what is set here.`
+                        )
+                    },
+                    {
+                        key: `assignment_poll_setting_enable_max_yes_votes`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `enable_max_yes_votes`
+                        },
+                        label: _(`Allow limiting the amount of yes votes in per candidate polls`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `assignment_poll_setting_enable_cumulative_voting`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `enable_cumulative_voting`
+                        },
+                        label: _(`Allow to accumulate several votes on one option ("cumulative voting")`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `assignment_poll_setting_enable_max_options_limit`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `enable_max_options_limit`
+                        },
+                        label: _(`Allow to limit options that can be voted`),
+                        type: `boolean`,
+                        indentation: 1
+                    },
+                    {
+                        key: `assignment_poll_setting_allow_live_voting`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `allow_live_voting`
+                        },
+                        label: _(`Activate live voting`),
+                        type: `boolean`
+                    },
+                    {
+                        key: `assignment_poll_setting_enable_live_voting`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `enable_live_voting`
+                        },
+                        label: _(`Set live voting as default`),
+                        type: `boolean`,
+                        indentation: 1
+                    },
+                    {
+                        key: `assignment_poll_setting_required_majority`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `required_majority`
+                        },
+                        label: _(`Default required majority`),
+                        type: `choice`,
+                        choiceI18nPrefix: 'poll_required_majority',
+                        choices: ['no_majority', 'simple_majority', 'absolute_majority', 'two_third_majority']
+                    },
+                    {
+                        key: `assignment_poll_setting_onehundred_percent_base`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `onehundred_percent_base`
+                        },
+                        label: _(`Default 100 % base`),
+                        type: `choice`,
+                        choiceI18nPrefix: 'poll_percent_base',
+                        choices: ['yes_no', 'valid', 'cast', 'no_general', 'entitled', 'entitled_present', 'disabled']
+                    },
+                    {
+                        key: `assignment_poll_setting_sort_result_by_votes`,
+                        subscriptionKey: {
+                            idField: `assignment_poll_config_id`,
+                            field: `sort_result_by_votes`
+                        },
+                        label: _(`Sort election results by amount of votes`),
+                        type: `boolean`
                     }
                 ]
             }

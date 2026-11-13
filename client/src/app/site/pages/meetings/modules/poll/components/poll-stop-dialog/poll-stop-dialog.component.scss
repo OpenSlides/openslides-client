@@ -1,0 +1,9 @@
+@use 'src/assets/styles/poll-styles-common.scss';
+
+.poll-action-row:not(:last-of-type) {
+    margin-bottom: 28px;
+}
+
+.poll-action-row {
+    text-align: center;
+}

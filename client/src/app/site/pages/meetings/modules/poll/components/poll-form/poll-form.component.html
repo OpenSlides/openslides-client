@@ -1,0 +1,174 @@
+<div class="os-form-card-mobile">
+    <!-- Poll Title -->
+    <form [formRoot]="form">
+        <mat-form-field>
+            <mat-label>{{ 'Title' | translate }}</mat-label>
+            <h2 class="poll-preview-title">
+                <input matInput [formField]="form.title" />
+            </h2>
+        </mat-form-field>
+
+        <div class="poll-preview-meta-info-form">
+            @if (!data() || isCreated()) {
+                @if (isEVotingEnabled()) {
+                    <div class="info-grid">
+                        <!-- Poll Visibility -->
+                        <mat-form-field>
+                            <mat-label>{{ 'Visibility' | translate }}</mat-label>
+                            <mat-select [formField]="form.visibility">
+                                @for (entry of visibilityOptions | keyvalue; track entry.value) {
+                                    <mat-option [value]="entry.value">
+                                        {{ entry.value | translateKey: 'poll_visibility' }}
+                                    </mat-option>
+                                }
+                            </mat-select>
+                            @if (showNonNominalWarning) {
+                                <mat-icon color="primary" matSuffix (click)="openVotingWarning($event)">info</mat-icon>
+                            }
+                            <mat-error>{{ 'This field is required.' | translate }}</mat-error>
+                        </mat-form-field>
+
+                        @if (form.visibility().value() !== 'manually') {
+                            <!-- Groups entitled to Vote -->
+                            <mat-form-field>
+                                <mat-label>{{ 'Entitled to vote' | translate }}</mat-label>
+                                <os-repo-search-selector
+                                    [formField]="form.entitled_group_ids"
+                                    [multiple]="true"
+                                    [pipeFn]="groupRepo.getFilterSystemGroupFn()"
+                                    [repo]="groupRepo"
+                                    [showChips]="false"
+                                    [sortFn]="sortFn"
+                                ></os-repo-search-selector>
+                            </mat-form-field>
+                        } @else {
+                            <div></div>
+                        }
+                    </div>
+                }
+
+                <div class="margin-bottom-15 child-options">
+                    <!-- Live voting -->
+                    @if (isLiveVotingAvailable()) {
+                        <mat-checkbox [formField]="form.live_voting_enabled">
+                            {{ 'Live voting' | translate }}
+                        </mat-checkbox>
+                        <mat-hint>
+                            {{ 'Allows single votes projection during voting process' | translate }}
+                        </mat-hint>
+                    }
+                </div>
+
+                @if (!customConfigForm()) {
+                    <div class="margin-bottom-15">
+                        <div class="info-grid">
+                            <mat-form-field>
+                                <mat-label>{{ 'Election method' | translate }}</mat-label>
+                                <mat-select [formField]="form.method_preselection">
+                                    @if (optionEdit() || (optionAmount() <= 1 && form.options().value().length <= 1)) {
+                                        <mat-option value="approval.yes_no">{{ 'Yes/No' | translate }}</mat-option>
+                                        <mat-option value="approval.yes_no_abstain">
+                                            {{ 'Yes/No/Abstain' | translate }}
+                                        </mat-option>
+                                    }
+
+                                    @if (optionEdit() || optionAmount() > 1 || form.options().value().length > 1) {
+                                        @if (optionType() === 'text') {
+                                            <mat-option value="selection.yes">
+                                                {{ 'Yes per option' | translate }}
+                                            </mat-option>
+                                            @if (allowCumulative()) {
+                                                <mat-option value="rating_score">
+                                                    {{ 'Amount per option' | translate }}
+                                                </mat-option>
+                                            }
+                                        } @else if (optionType() === 'meeting_user') {
+                                            <mat-option value="selection.yes">
+                                                {{ 'Yes per candidate' | translate }}
+                                            </mat-option>
+                                            <mat-option value="selection.no">
+                                                {{ 'No per candidate' | translate }}
+                                            </mat-option>
+                                            <mat-option value="rating_approval.yes_no">
+                                                {{ 'Yes/No per candidate' | translate }}
+                                            </mat-option>
+                                            <mat-option value="rating_approval.yes_no_abstain">
+                                                {{ 'Yes/No/Abstain per candidate' | translate }}
+                                            </mat-option>
+                                            @if (allowCumulative()) {
+                                                <mat-option value="rating_score">
+                                                    {{ 'Amount per candidate' | translate }}
+                                                </mat-option>
+                                            }
+
+                                            <mat-option value="approval.yes_no">
+                                                {{ 'Yes/No per list' | translate }}
+                                            </mat-option>
+                                            <mat-option value="approval.yes_no_abstain">
+                                                {{ 'Yes/No/Abstain per list' | translate }}
+                                            </mat-option>
+                                        }
+                                    }
+                                </mat-select>
+                                <mat-error>{{ 'This field is required.' | translate }}</mat-error>
+                            </mat-form-field>
+                            <div></div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </form>
+
+    <ng-content>
+        <div class="method">
+            @switch (selectedMethod()) {
+                @case ('approval') {
+                    <os-poll-form-approval
+                        [formData]="form().value()"
+                        [hideMethod]="true"
+                        [initialData]="data()"
+                        [settings]="pollSettings()"
+                    />
+                }
+                @case ('selection') {
+                    <os-poll-form-selection
+                        [formData]="form().value()"
+                        [hideMethod]="true"
+                        [initialData]="data()"
+                        [optionAmount]="optionAmount()"
+                        [settings]="pollSettings()"
+                    />
+                }
+                @case ('rating_approval') {
+                    <os-poll-form-rating-approval
+                        [formData]="form().value()"
+                        [hideMethod]="true"
+                        [initialData]="data()"
+                        [optionAmount]="optionAmount()"
+                        [settings]="pollSettings()"
+                    />
+                }
+                @case ('rating_score') {
+                    <os-poll-form-rating-score
+                        [formData]="form().value()"
+                        [initialData]="data()"
+                        [optionAmount]="optionAmount()"
+                        [settings]="pollSettings()"
+                    />
+                }
+            }
+        </div>
+    </ng-content>
+
+    @if (optionEdit() && selectedMethod() !== `approval` && isCreated()) {
+        <div class="option-section">
+            <h4 class="option-section-title">{{ 'Options' | translate }}</h4>
+            <os-editable-list
+                placeholder="New option"
+                [items]="form.options().value()"
+                (itemsChange)="onOptionsChange($event)"
+            />
+        </div>
+    }
+</div>

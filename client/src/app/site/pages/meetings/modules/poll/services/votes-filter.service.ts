@@ -4,19 +4,19 @@ import { ActiveFiltersService } from '@app/site/services/active-filters.service'
 
 import { GroupControllerService } from '../../../pages/participants/modules/groups/services/group-controller.service';
 import { StructureLevelControllerService } from '../../../pages/participants/pages/structure-levels/services/structure-level-controller.service';
-import { ViewVote } from '../../../pages/polls/view-models/view-vote';
+import { ViewPollBallot } from '../../../pages/polls/view-models/poll-ballot';
 
 @Service()
 export class VotesFilterService extends BaseFilterListService<any> {
     protected storageKey = `VotesEntry`;
 
-    private groupFilterOptions: OsFilter<ViewVote> = {
+    private groupFilterOptions: OsFilter<ViewPollBallot> = {
         property: `groupIds`,
         label: `Groups`,
         options: []
     };
 
-    private structureLevelFilterOptions: OsFilter<ViewVote> = {
+    private structureLevelFilterOptions: OsFilter<ViewPollBallot> = {
         property: `structureLevelIds`,
         label: `Structure level`,
         options: []

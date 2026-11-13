@@ -1,29 +1,13 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
-import { PollPropertyVerboseKey } from '@app/domain/models/poll';
-import {
-    BasePollFormComponent,
-    PollFormHideSelectsData
-} from '@app/site/pages/meetings/modules/poll/components/base-poll-form/base-poll-form.component';
-import { _ } from '@ngx-translate/core';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
+import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 
 @Component({
     selector: `os-motion-poll-form`,
-    templateUrl: `../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.html`,
-    styleUrls: [`../../../../../../modules/poll/components/base-poll-form/base-poll-form.component.scss`],
-    providers: [{ provide: BasePollFormComponent, useExisting: MotionPollFormComponent }],
+    templateUrl: `./motion-poll-form.component.html`,
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    changeDetection: ChangeDetectionStrategy.Eager
 })
-export class MotionPollFormComponent extends BasePollFormComponent {
-    public override PollPropertyVerbose: Record<PollPropertyVerboseKey, string> = {
-        ...this.PollPropertyVerbose,
-        pollmethod: _(`Voting method`)
-    };
-
-    public get hideSelects(): PollFormHideSelectsData {
-        return {
-            globalOptions: true
-        };
-    }
+export class MotionPollFormComponent extends BaseUiComponent {
+    @Input()
+    public data: any;
 }

@@ -227,7 +227,7 @@ export class UserRepositoryService extends BaseRepository<ViewUser, User> {
         const update = typeof patch === `function` ? patch(user) : patch;
         const payload: any = {
             username: update.username,
-            vote_delegated_to_id: update.vote_delegated_to_id,
+            vote_delegated_to_ids: update.vote_delegated_to_ids,
             vote_delegations_from_ids: update.vote_delegations_from_ids,
             meeting_id: update.meeting_id ?? this.meetingUserRepo.getActiveMeetingId()
         };

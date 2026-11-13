@@ -1,0 +1,54 @@
+import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { PollState } from '@app/domain/models/poll';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
+
+import { ViewMeetingPollSetting } from '../../../view-models/view-meeting-poll-setting';
+
+@Component({ template: `` })
+export abstract class PollFormBaseComponent {
+    public form: UntypedFormGroup;
+
+    public initialData = input.required<Partial<ViewPoll>>();
+    public formData = input<Partial<ViewPoll>>();
+    public settings = input.required<ViewMeetingPollSetting>();
+
+    public formValid = signal<boolean>(false);
+
+    public pollStarted = computed<boolean>(() => {
+        return this.initialData().state && this.initialData().state !== PollState.Created;
+    });
+
+    protected readonly fb = inject(UntypedFormBuilder);
+
+    public constructor() {
+        this.initForm();
+
+        effect(this.onDataUpdated.bind(this));
+        this.form.valueChanges.pipe(takeUntilDestroyed()).subscribe(() => this.formValid.set(this.form.valid));
+    }
+
+    protected abstract initForm(): void;
+    protected abstract getPatchedFormData(data: Partial<ViewPoll>): Record<string, unknown>;
+    public abstract getSerialzedForm(): Record<string, unknown>;
+
+    public getSerialzedAdditionalData(): Record<string, unknown> {
+        return {};
+    }
+
+    private onDataUpdated(): void {
+        if (!this.initialData() || !this.form) {
+            return;
+        }
+
+        const patch = this.getPatchedFormData(this.initialData());
+        for (const field of Object.keys(patch)) {
+            if (!this.form.get(field)?.pristine) {
+                delete patch[field];
+            }
+        }
+
+        this.form.patchValue(patch);
+    }
+}

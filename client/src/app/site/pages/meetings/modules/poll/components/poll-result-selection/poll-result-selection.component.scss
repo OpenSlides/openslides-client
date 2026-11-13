@@ -1,0 +1,14 @@
+@use 'src/assets/styles/poll-styles-common.scss';
+@use 'src/assets/styles/poll/result-chart.scss';
+@use 'src/assets/styles/poll/result-table.scss';
+
+:host {
+    outline: none;
+}
+
+.result-col-header,
+.result-col,
+.result-col-percent,
+.result-col-small {
+    color: var(--theme-yes);
+}

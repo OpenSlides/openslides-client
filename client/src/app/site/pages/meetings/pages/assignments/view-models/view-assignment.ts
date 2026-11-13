@@ -3,6 +3,7 @@ import { Assignment } from '@app/domain/models/assignments/assignment';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
 import { HasHistoryEntries } from '@app/gateways/repositories/history-entry/has-history-entries';
 import { ViewModelRelations } from '@app/site/base/base-view-model';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { BaseProjectableViewModel } from '@app/site/pages/meetings/view-models';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { _ } from '@ngx-translate/core';
@@ -13,7 +14,6 @@ import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachmentMeetingMediafiles } from '../../mediafiles/view-models/has-attachment';
 import { HasTags } from '../../motions/modules/tags/view-models/has-tags';
 import { HasPolls, VotingTextContext } from '../../polls/view-models/has-polls';
-import { ViewPoll } from '../../polls/view-models/view-poll';
 import { AssignmentPhases } from '../definitions';
 import { ViewAssignmentCandidate } from './view-assignment-candidate';
 

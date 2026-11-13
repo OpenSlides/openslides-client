@@ -21,6 +21,7 @@ import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers/view-mo
 import { HasAgendaItem } from '../../agenda/view-models/has-agenda-item';
 import { HasAttachmentMeetingMediafiles } from '../../mediafiles/view-models/has-attachment';
 import { HasPolls, VotingTextContext } from '../../polls/view-models/has-polls';
+import { ViewPollConfigApproval } from '../../polls/view-models/poll-config-approval';
 import { DiffLinesInParagraph } from '../definitions';
 import { ViewMotionCategory } from '../modules/categories/view-models/view-motion-category';
 import { LineNumberingService } from '../modules/change-recommendations/services/line-numbering.service/line-numbering.service';
@@ -411,7 +412,7 @@ export class ViewMotion extends BaseProjectableViewModel<Motion> {
     }
 }
 
-interface IMotionRelations extends HasPolls<ViewMotion> {
+interface IMotionRelations extends HasPolls<ViewMotion, ViewPollConfigApproval> {
     lead_motion?: ViewMotion;
     amendments: ViewMotion[]; // children to lead_motion
     sort_parent?: ViewMotion;

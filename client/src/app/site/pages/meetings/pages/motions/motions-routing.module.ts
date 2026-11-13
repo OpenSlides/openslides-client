@@ -54,11 +54,6 @@ const routes: Routes = [
                 data: { meetingPermissions: [Permission.motionCanSee] }
             },
             {
-                path: `polls`,
-                loadChildren: () => import(`./pages/motion-polls/motion-polls.module`).then(m => m.MotionPollsModule),
-                data: { meetingPermissions: [Permission.motionCanSee] }
-            },
-            {
                 path: `call-list`,
                 loadChildren: () =>
                     import(`./pages/motion-call-list/motion-call-list.module`).then(m => m.MotionCallListModule),

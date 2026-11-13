@@ -7,6 +7,6 @@ import { PollsRoutingModule } from './polls-routing.module';
 
 @NgModule({
     declarations: [PollMainComponent],
-    imports: [CommonModule, PollsRoutingModule, RouterModule]
+    imports: [PollsRoutingModule, RouterModule, CommonModule]
 })
 export class PollsModule {}
