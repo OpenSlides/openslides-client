@@ -1,4 +1,5 @@
 import { BaseModel } from '@app/domain/models/base/base-model';
+import { djb2hash } from '@app/infrastructure/utils';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 
 import { BasePollResult } from './base-poll-result';
@@ -10,14 +11,17 @@ export abstract class BasePollConfigViewModel<
 > extends BaseViewModel<M> {
     public readonly method: string;
 
+    private _parsedResultChecksum: string;
     private _parsedResult: R;
     public parsedResult(): R | null {
         if (!this.poll.result) {
             return null;
         }
 
-        if (!this._parsedResult) {
+        const hash = djb2hash(this.poll.result);
+        if (!this._parsedResult || hash !== this._parsedResultChecksum) {
             this._parsedResult = this.getResultFromString(this.poll.result);
+            this._parsedResultChecksum = hash;
         }
 
         return this._parsedResult || null;
