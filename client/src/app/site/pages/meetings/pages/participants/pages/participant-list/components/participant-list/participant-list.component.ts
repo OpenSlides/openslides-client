@@ -11,7 +11,6 @@ import { OsFilterOption } from '@app/site/base/base-filter.service';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
 import { ParticipantControllerService } from '@app/site/pages/meetings/pages/participants/services/common/participant-controller.service/participant-controller.service';
 import { MeetingPollSettingsService } from '@app/site/pages/meetings/services/meeting-poll-settings.service';
-import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { OperatorService } from '@app/site/services/operator.service';
@@ -36,14 +35,6 @@ import { ParticipantListSortService } from '../../services/participant-list-sort
 import { ParticipantSwitchDialogComponent } from '../participant-switch-dialog/participant-switch-dialog.component';
 
 const PARTICIPANTS_LIST_STORAGE_INDEX = `participants`;
-
-export function areGroupsDiminished(oldGroupIds: number[], newGroupIds: number[], activeMeeting: ViewMeeting): boolean {
-    return (
-        oldGroupIds
-            .filter(group => group !== activeMeeting.default_group_id)
-            .some(id => !(newGroupIds ?? []).includes(id)) && !newGroupIds.includes(activeMeeting.admin_group_id)
-    );
-}
 
 @Component({
     selector: `os-participant-list`,
@@ -352,7 +343,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     /**
      * This function opens the dialog,
      * where the user can quick change the groups,
-     * the gender and the participant number.
+     * the participant number and the delegations.
      *
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
@@ -373,18 +364,29 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
             vote_delegated_to_ids: user.vote_delegated_to_meeting_user_ids()
         });
+        const selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
+        const selfGroupRemovalDialogContent = _(
+            `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
+        );
 
         dialogRef.afterClosed().subscribe(async result => {
             if (result) {
                 if (!result.group_ids?.length) {
-                    result.group_ids = [this.activeMeeting!.default_group_id];
+                    result.group_ids = [this.activeMeeting.meeting!.default_group_id];
+                }
+                if (result.vote_delegated_to_ids.length) {
+                    result.vote_delegated_to_ids = null;
                 }
                 if (
                     !(
                         user.id === this.operator.operatorId &&
-                        areGroupsDiminished(this.operator.user.group_ids(), result.group_ids, this.activeMeeting)
+                        this.infoDialog.areGroupsDiminished(
+                            this.operator.user.group_ids(),
+                            result.group_ids,
+                            this.activeMeeting
+                        )
                     ) ||
-                    (await this.prompt.open(this.selfGroupRemovalDialogTitle, this.selfGroupRemovalDialogContent))
+                    (await this.prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
                 ) {
                     if (
                         this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
@@ -461,7 +463,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
                     user =>
                         !(
                             user.id === this.operator.operatorId &&
-                            areGroupsDiminished(
+                            this.infoDialog.areGroupsDiminished(
                                 this.operator.user.group_ids(),
                                 this.operator.user.group_ids().filter(id => !chosenGroupIds.includes(id)),
                                 this.activeMeeting
@@ -635,8 +637,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     public canSeeItemMenu(): boolean {
         return (
-            this.operator.hasPerms(Permission.userCanUpdate) ||
-            this.operator.hasPerms(Permission.userCanEditOwnDelegation)
+            this.hasOptions() &&
+            (this.operator.hasPerms(Permission.userCanUpdate) ||
+                this.operator.hasPerms(Permission.userCanEditOwnDelegation))
         );
     }
 
@@ -730,5 +733,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     public goToEditUser(userId: number): void {
         this.router.navigate([userId, `edit`], { relativeTo: this.route });
+    }
+
+    protected hasOptions(): boolean {
+        return this.operator.hasPermsInMeeting(this.activeMeetingId, ...[this.permission.userCanUpdate]);
     }
 }
