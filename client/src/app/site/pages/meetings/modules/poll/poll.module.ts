@@ -18,18 +18,13 @@ import { ListModule } from '@app/ui/modules/list';
 import { SearchSelectorModule } from '@app/ui/modules/search-selector';
 
 import { ChartComponent } from './components/chart/chart.component';
-import { CheckInputComponent } from './components/check-input/check-input.component';
-import { EntitledUsersTableComponent } from './components/entitled-users-table/entitled-users-table.component';
 import { PollCannotVoteMessageComponent } from './components/poll-cannot-vote-message/poll-cannot-vote-message.component';
 import { PollProgressComponent } from './components/poll-progress/poll-progress.component';
-import { PollKeyVerbosePipe } from './pipes/poll-key-verbose/poll-key-verbose.pipe';
 import { PollParseNumberPipe } from './pipes/poll-parse-number/poll-parse-number.pipe';
 
-const PIPES = [PollKeyVerbosePipe, PollParseNumberPipe];
-const COMPONENTS = [CheckInputComponent, EntitledUsersTableComponent];
+const PIPES = [PollParseNumberPipe];
 
 @NgModule({
-    declarations: [...COMPONENTS],
     imports: [
         CommonModule,
         ChartComponent,
@@ -54,7 +49,7 @@ const COMPONENTS = [CheckInputComponent, EntitledUsersTableComponent];
         ...PIPES,
         OpenSlidesTranslationModule
     ],
-    exports: [...PIPES, ...COMPONENTS, ChartComponent, PollCannotVoteMessageComponent, PollProgressComponent],
+    exports: [...PIPES, ChartComponent, PollCannotVoteMessageComponent, PollProgressComponent],
     providers: [...PIPES]
 })
 export class PollModule {}

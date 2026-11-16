@@ -51,6 +51,7 @@ export class MeetingSettingsService {
      * Usefull for synchronos code, e.g. during generation of PDFs, when the DataStore is filled.
      *
      * @param key The setting value to get from.
+     * @deprecated Use `signal` instead
      */
     public instant<T extends keyof Settings>(key: T): Settings[T] | null {
         const meeting = this.activeMeetingService.meeting;

@@ -4,12 +4,11 @@ import { PollRequiredMajority, VOTE_MAJORITY } from '@app/domain/models/poll';
 import { ApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-approval';
 import { ThemeService } from '@app/site/services/theme.service';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import Big from 'big.js';
 
 import { ViewPollConfigApproval } from '../../../../pages/polls/view-models/poll-config-approval';
 import { ApprovalPollResult } from '../../../../pages/polls/view-models/poll-result-approval';
-import { PollKeyVerbosePipe } from '../../pipes/poll-key-verbose/poll-key-verbose.pipe';
 import { PollParseNumberPipe } from '../../pipes/poll-parse-number/poll-parse-number.pipe';
 import { ChartComponent, ChartData } from '../chart/chart.component';
 import { PollResultBaseComponent } from '../poll-result-base.component';
@@ -27,19 +26,13 @@ interface ResultRow {
 
 @Component({
     selector: 'os-poll-result-approval',
-    imports: [
-        IconContainerComponent,
-        ChartComponent,
-        TranslatePipe,
-        PollKeyVerbosePipe,
-        PollParseNumberPipe,
-        NgTemplateOutlet
-    ],
+    imports: [IconContainerComponent, ChartComponent, TranslatePipe, PollParseNumberPipe, NgTemplateOutlet],
     templateUrl: './poll-result-approval.component.html',
     styleUrl: './poll-result-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPollConfigApproval, ApprovalPollResult> {
+    private translate = inject(TranslateService);
     private themeService = inject(ThemeService);
 
     public shouldShowEntitled = signal<boolean>(false);
@@ -63,6 +56,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
         const rows = [
             {
                 key: `Y`,
+                votingLabel: this.translate.instant(`Yes`),
                 votingOption: `yes`,
                 icon: `check_circle`,
                 amount: +results.yes || 0,
@@ -75,6 +69,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             },
             {
                 key: `N`,
+                votingLabel: this.translate.instant(`No`),
                 votingOption: `no`,
                 icon: `cancel`,
                 amount: +results.no || 0,
@@ -90,6 +85,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
         if (this.config().allow_abstain) {
             rows.push({
                 key: `A`,
+                votingLabel: this.translate.instant(`Abstain`),
                 votingOption: `abstain`,
                 icon: `circle`,
                 amount: +results.abstain || 0,

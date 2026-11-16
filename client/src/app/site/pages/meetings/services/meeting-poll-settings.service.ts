@@ -85,21 +85,6 @@ export class MeetingPollSettingsService {
     }
 
     /**
-     * Get the constant named by key from the DataStore. If the DataStore isn't up to date or
-     * not filled via autoupdates the results may be wrong/empty. Use this with caution.
-     *
-     * Usefull for synchronos code, e.g. during generation of PDFs, when the DataStore is filled.
-     *
-     * @param key The setting value to get from.
-     */
-    public instant<T extends keyof MeetingPollSetting>(
-        collection: MeetingPollSettingCollection,
-        key: T
-    ): MeetingPollSetting[T] | null {
-        return this.activeMeetingService.meeting[`${collection}_poll_config`][key];
-    }
-
-    /**
      * Get an observer for the setting value given by the key.
      *
      * @param key The setting value to get from.
@@ -127,5 +112,20 @@ export class MeetingPollSettingsService {
             this.settingSignals[collection][key] = signal<MeetingPollSetting[T]>(this.instant(collection, key));
         }
         return this.settingSignals[collection][key] as Signal<MeetingPollSetting[T]>;
+    }
+
+    /**
+     * Get the constant named by key from the DataStore. If the DataStore isn't up to date or
+     * not filled via autoupdates the results may be wrong/empty. Use this with caution.
+     *
+     * Usefull for synchronos code, e.g. during generation of PDFs, when the DataStore is filled.
+     *
+     * @param key The setting value to get from.
+     */
+    private instant<T extends keyof MeetingPollSetting>(
+        collection: MeetingPollSettingCollection,
+        key: T
+    ): MeetingPollSetting[T] | null {
+        return this.activeMeetingService.meeting[`${collection}_poll_config`][key];
     }
 }

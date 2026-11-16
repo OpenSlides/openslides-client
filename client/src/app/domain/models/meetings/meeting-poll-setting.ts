@@ -3,14 +3,24 @@ import { BaseModel } from '../base/base-model';
 import { BaseOnehundredPercentBase } from '../poll/poll-config-types';
 import { PollVisibility } from '../poll/poll-constants';
 
+export type RequiredMajoritySetting = `two_third_majority` | `absolute_majority` | `simple_majority` | `no_majority`;
+export type PollMethodSetting =
+    | 'approval.yes_no'
+    | 'approval.yes_no_abstain'
+    | 'selection.yes'
+    | 'selection.no'
+    | 'rating_score'
+    | 'rating_approval.yes_no'
+    | 'rating_approval.yes_no_abstain';
+
 export class MeetingPollSetting extends BaseModel<MeetingPollSetting> {
     public static COLLECTION = `meeting_poll_setting`;
 
     public allow_live_voting: boolean;
     public sort_result_by_votes: boolean;
 
-    public method: string; // TODO: Enum
-    public required_majority: string; // TODO: Enum
+    public method: PollMethodSetting;
+    public required_majority: RequiredMajoritySetting;
     public visibility: PollVisibility;
     public onehundred_percent_base: BaseOnehundredPercentBase;
     public group_ids: number[];

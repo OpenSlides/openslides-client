@@ -34,7 +34,7 @@ export const PROJECTIONDEFAULT_VERBOSE: Record<ProjectiondefaultKey, string> = {
     projectorMessage: _(`Messages`),
     projectorCountdown: _(`Timers`),
     assignmentPoll: _(`Ballots`),
-    motionPoll: _(`Motion polls`),
+    motionPoll: _(`Motion votes`),
     topicPoll: _(`Topic polls`)
 };
 

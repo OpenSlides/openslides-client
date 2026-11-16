@@ -17,15 +17,13 @@
                     <tr class="result-row" [class]="votingOption">
                         <!-- YNA/Valid etc -->
                         <td>
-                            @let label = votingLabel ? votingLabel : (votingOption | pollKeyVerbose | translate);
-
                             @if (icon) {
                                 <os-icon-container size="large" [icon]="icon">
-                                    {{ label }}
+                                    {{ votingLabel }}
                                 </os-icon-container>
                             } @else {
                                 <span>
-                                    {{ label }}
+                                    {{ votingLabel }}
                                 </span>
                             }
                         </td>
