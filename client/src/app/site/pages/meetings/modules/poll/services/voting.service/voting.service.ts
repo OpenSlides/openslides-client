@@ -1,5 +1,4 @@
 import { inject, Service, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PollState } from '@app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
