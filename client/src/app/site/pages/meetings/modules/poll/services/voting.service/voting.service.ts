@@ -39,7 +39,7 @@ const VotingProhibitionVerbose = {
 
 @Service()
 export class VotingService {
-    public voteStateVersion = signal(0);
+    public votingStateVersion = signal(0);
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
     private _forbidDelegationToVote = false;
@@ -51,9 +51,9 @@ export class VotingService {
     private pollRepo = inject(PollRepositoryService);
 
     public constructor() {
-        this.operator.userObservable.pipe(takeUntilDestroyed()).subscribe(user => {
+        this.operator.userObservable.subscribe(user => {
             this._currentUser = user;
-            this.voteStateVersion.update(value => value + 1);
+            if (this._forbidDelegationToVote) this.votingStateVersion.update(version => version + 1);
         });
         this.meetingSettingsService
             .get(`users_enable_vote_delegations`)

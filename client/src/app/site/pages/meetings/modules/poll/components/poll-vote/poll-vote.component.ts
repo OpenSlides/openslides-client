@@ -43,7 +43,7 @@ export class PollVoteComponent {
     private votingService = inject(VotingService);
 
     public voteProhibited = rxResource({
-        params: () => ({ poll: this.poll(), user: this.user(), voteState: this.votingService.voteStateVersion() }),
+        params: () => ({ poll: this.poll(), user: this.user(), voteState: this.votingService.votingStateVersion() }),
         stream: ({ params }) => this.votingService.votingProhibited(params.poll, params.user)
     });
 

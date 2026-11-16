@@ -48,7 +48,7 @@ export class VotingBannerService {
             this.operator.userObservable.pipe(
                 distinctUntilChanged((p, c) => p?.isPresentInMeeting() === c?.isPresentInMeeting())
             ),
-            toObservable(this.votingService.voteStateVersion)
+            toObservable(this.votingService.votingStateVersion)
         ])
             .pipe(
                 map(([_, polls]) => polls),
@@ -82,17 +82,21 @@ export class VotingBannerService {
     }
 
     private updateBanner(polls: [ViewPoll, boolean][]): void {
-        if (
-            this.activeMeeting.meetingId &&
-            !this.operator.isAnonymous &&
-            this.operator.readyDeferred.wasResolved &&
-            !this.operator.user.vote_delegated_to_ids()?.length
-        ) {
-            this.pollsToVote = polls
-                .filter(([_, voted]) => {
-                    return voted === false;
-                })
-                .map(([poll, _]) => poll);
+        if (this.activeMeeting.meetingId && !this.operator.isAnonymous && this.operator.readyDeferred.wasResolved) {
+            combineLatest(
+                polls
+                    .filter(([_, voted]) => !voted)
+                    .map(([poll]) =>
+                        this.votingService.votingProhibited(poll, this.operator.user).pipe(
+                            map(prohibition => ({
+                                poll,
+                                canVote: prohibition === null
+                            }))
+                        )
+                    )
+            ).subscribe(results => {
+                this.pollsToVote = results.filter(result => result.canVote).map(result => result.poll);
+            });
         } else {
             this.pollsToVote = [];
         }
