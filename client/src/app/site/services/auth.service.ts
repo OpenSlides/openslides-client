@@ -97,8 +97,8 @@ export class AuthService {
         return;
     }
 
-    public async startSamlLogin(): Promise<string> {
-        return this.authAdapter.startSamlLogin();
+    public async startSamlLogin(redirectUrl?: string): Promise<string> {
+        return this.authAdapter.startSamlLogin(redirectUrl);
     }
 
     public async updateUser(userId: number): Promise<void> {
