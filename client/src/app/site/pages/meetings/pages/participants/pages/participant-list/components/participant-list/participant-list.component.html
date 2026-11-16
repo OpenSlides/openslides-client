@@ -205,8 +205,8 @@
             @if (user.isLastEmailSent && canSeeSensitiveData) {
                 <mat-icon
                     inline
-                    matTooltip="{{ 'Email sent' | translate }} ({{ user.last_email_sent | localizedDate }})"
                     matTooltipPosition="above"
+                    [matTooltip]="('Email sent' | translate) + ' (' + (user.last_email_sent | localizedDate) + ')'"
                 >
                     mail
                 </mat-icon>
@@ -368,14 +368,6 @@
             >
                 <mat-icon>record_voice_over</mat-icon>
                 <span>{{ 'Contributions' | translate }}</span>
-            </button>
-            <button
-                *osPerms="permission.userCanUpdate; or: canEditOwnDelegation(operator.user)"
-                mat-menu-item
-                (click)="openEditInfo(operator.user)"
-            >
-                <mat-icon>edit</mat-icon>
-                <span>{{ 'Change your delegation' | translate }}</span>
             </button>
             <button mat-menu-item (click)="pdfExportUserList()">
                 <mat-icon>picture_as_pdf</mat-icon>

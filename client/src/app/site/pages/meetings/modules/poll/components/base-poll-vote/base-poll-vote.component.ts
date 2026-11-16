@@ -227,8 +227,9 @@ export abstract class BasePollVoteComponent<C extends PollContentObject = any> e
 
     public canVoteForObservable(user: ViewUser = this.user): Observable<boolean> {
         if (!this._canVoteForSubjectMap[user.id]) {
-            this._canVoteForSubjectMap[user.id] = new BehaviorSubject(this.canVote(user));
+            return (this._canVoteForSubjectMap[user.id] = new BehaviorSubject(this.canVote(user)));
         }
+        this._canVoteForSubjectMap[user.id].next(this.canVote(user));
         return this._canVoteForSubjectMap[user.id];
     }
 

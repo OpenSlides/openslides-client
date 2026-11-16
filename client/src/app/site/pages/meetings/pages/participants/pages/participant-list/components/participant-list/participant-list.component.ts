@@ -350,7 +350,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     /**
      * This function opens the dialog,
      * where the user can quick change the groups,
-     * the gender and the participant number.
+     * the participant number and the delegations.
      *
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
@@ -362,44 +362,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             return;
         }
         ev?.stopPropagation();
-        const dialogRef = await this.infoDialog.open({
-            id: user.id,
-            name: user.short_name,
-            group_ids: user.group_ids(),
-            number: user.number(),
-            structure_level_ids: user.structure_level_ids(),
-            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
-            vote_delegated_to_id: user.vote_delegated_to_meeting_user_id()
-        });
-
-        dialogRef.afterClosed().subscribe(async result => {
-            if (result) {
-                if (!result.group_ids?.length) {
-                    result.group_ids = [this.activeMeeting!.default_group_id];
-                }
-                if (result.vote_delegated_to_id === 0) {
-                    result.vote_delegated_to_id = null;
-                }
-                if (
-                    !(
-                        user.id === this.operator.operatorId &&
-                        areGroupsDiminished(this.operator.user.group_ids(), result.group_ids, this.activeMeeting)
-                    ) ||
-                    (await this.prompt.open(this.selfGroupRemovalDialogTitle, this.selfGroupRemovalDialogContent))
-                ) {
-                    if (
-                        this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
-                        !this.operator.hasPerms(Permission.userCanManage) &&
-                        !this.operator.hasPerms(Permission.userCanUpdate) &&
-                        user.id === this.operator.operatorId
-                    ) {
-                        this.repo.updateSelfDelegation(result, user);
-                    } else {
-                        this.repo.update(result, user).resolve();
-                    }
-                }
-            }
-        });
+        await this.infoDialog.openDialog(user, this.activeMeeting);
     }
 
     public getOtherUsersObservable(user: ViewUser): Observable<ViewUser[]> {
@@ -636,8 +599,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     public canSeeItemMenu(): boolean {
         return (
-            this.operator.hasPerms(Permission.userCanUpdate) ||
-            this.operator.hasPerms(Permission.userCanEditOwnDelegation)
+            this.operator.hasPermsInMeeting(this.activeMeetingId, ...[this.permission.userCanUpdate]) &&
+            (this.operator.hasPerms(Permission.userCanUpdate) ||
+                this.operator.hasPerms(Permission.userCanEditOwnDelegation))
         );
     }
 
