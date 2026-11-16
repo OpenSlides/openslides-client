@@ -34,19 +34,11 @@ export class VoteApiService {
     }
 
     public update(id: Id, payload: any): Promise<any> {
-        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}`, payload, {
-            catchError: false
-        });
+        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}`, payload);
     }
 
     public deletePoll(id: Id): Promise<any> {
-        return this.http.delete(
-            `${this.BASE}/poll/${encodeURIComponent(id)}`,
-            {},
-            {
-                catchError: false
-            }
-        );
+        return this.http.delete(`${this.BASE}/poll/${encodeURIComponent(id)}`, {});
     }
 
     public start(id: Id): Promise<any> {
