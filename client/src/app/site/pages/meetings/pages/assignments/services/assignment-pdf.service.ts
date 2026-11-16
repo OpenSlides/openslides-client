@@ -1,13 +1,12 @@
 import { inject, Service } from '@angular/core';
 import { AssignmentPhase } from '@app/domain/models/assignments/assignment-phase';
-import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
-import { PollTableData, VotingResult } from '@app/domain/models/poll/poll-constants';
 import { HtmlToPdfService } from '@app/gateways/export/html-to-pdf.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentColumns, ContentText } from 'pdfmake/interfaces';
 
-import { AssignmentPollService, UnknownUserLabel } from '../modules/assignment-poll/services/assignment-poll.service';
+import { PollPdfService } from '../../../modules/poll/services/poll-pdf.service';
+import { UnknownUserLabel } from '../modules/assignment-poll/services/assignment-poll.service';
 import { ViewAssignment } from '../view-models/view-assignment';
 
 /**
@@ -17,7 +16,7 @@ import { ViewAssignment } from '../view-models/view-assignment';
 export class AssignmentPdfService {
     private translate = inject(TranslateService);
     private htmlToPdfService = inject(HtmlToPdfService);
-    private assignmentPollService = inject(AssignmentPollService);
+    private pollPdfService = inject(PollPdfService);
 
     /**
      * Main function to control the pdf generation.
@@ -139,7 +138,6 @@ export class AssignmentPdfService {
 
     /**
      * Creates the poll result table for all published polls
-     * TODO: Make this reusable (also used in topic-pdf.service)
      *
      * @param polls the ViewPoll objects to create the document for
      * @returns the table as pdfmake object
@@ -147,126 +145,9 @@ export class AssignmentPdfService {
     private createPollResultTable(polls: ViewPoll[]): Content {
         const resultBody = [];
         for (const poll of polls) {
-            if (poll.isPublished) {
-                const pollTableBody = [];
-
-                resultBody.push({
-                    text: poll.title,
-                    bold: true,
-                    style: `textItem`,
-                    margin: [0, 15, 0, 0]
-                });
-
-                pollTableBody.push([
-                    {
-                        text: ``,
-                        style: `tableHeader`
-                    },
-                    {
-                        text: this.translate.instant(poll.isListPoll ? `Option` : `Candidates`),
-                        style: `tableHeader`
-                    },
-                    {
-                        text: this.translate.instant(`Votes`),
-                        style: `tableHeader`
-                    }
-                ]);
-
-                const tableData = this.assignmentPollService.generateTableData(poll);
-                for (const [index, pollResult] of tableData.entries()) {
-                    const rank = [`user`, `list`].includes(pollResult.class) ? index + 1 : ``;
-                    const voteOption = this.translate.instant(
-                        this.assignmentPollService.pollKeyVerbose(pollResult.votingOption)
-                    );
-                    const resultLine = this.getPollResult(pollResult, poll);
-                    const tableLine = [
-                        {
-                            text: rank
-                        },
-                        {
-                            text: voteOption
-                        },
-                        {
-                            text: resultLine
-                        }
-                    ];
-
-                    pollTableBody.push(tableLine);
-                }
-
-                resultBody.push({
-                    table: {
-                        widths: [`6%`, `58%`, `33%`],
-                        headerRows: 1,
-                        body: pollTableBody
-                    },
-                    layout: `switchColorTableLayout`
-                });
-
-                if (poll.isListPoll) {
-                    resultBody.push({
-                        text: this.translate.instant(`Nomination list`) + `:`,
-                        style: `textItem`,
-                        margin: [0, 15, 0, 0]
-                    });
-
-                    resultBody.push(this.createNominationList(poll));
-                }
-            }
+            resultBody.push(this.pollPdfService.createResultsTable(poll));
         }
 
         return resultBody;
-    }
-
-    /**
-     * Creates the nomination list for an assignment poll
-     *
-     * @param assignment the ViewAssignment to create the document for
-     * @returns the assignment list as PDF document
-     */
-    private createNominationList(poll: ViewPoll): object {
-        if (poll.isListPoll) {
-            const userList = poll.options?.map(candidate => ({
-                text: candidate.getListTitle() || UnknownUserLabel,
-                margin: [0, 0, 0, 10]
-            }));
-            const listType = (poll.content_object as ViewAssignment).number_poll_candidates ? `ol` : `ul`;
-
-            return {
-                [listType]: userList,
-                style: `textItem`
-            };
-        } else {
-            return {};
-        }
-    }
-
-    /**
-     * Converts pollData to a printable string representation
-     */
-    private getPollResult(votingResult: PollTableData, poll: ViewPoll): string {
-        const resultList = votingResult.value
-            .filter((singleResult: VotingResult) => {
-                if (poll.config instanceof PollConfigSelection) {
-                    return singleResult.vote !== `no` && singleResult.vote !== `abstain`;
-                } else if (!poll.config?.allow_abstain) {
-                    return singleResult.vote !== `abstain`;
-                } else {
-                    return true;
-                }
-            })
-            .map((singleResult: VotingResult) => {
-                const pollKey = this.assignmentPollService.pollKeyVerbose(singleResult.vote!);
-                const votingKey = pollKey ? `${this.translate.instant(pollKey)}: ` : ``;
-                const resultValue = this.assignmentPollService.parseNumber(singleResult.amount!);
-                const resultInPercent = this.assignmentPollService.getVoteValueInPercent(singleResult.amount!, {
-                    poll: poll,
-                    row: votingResult
-                });
-                return `${votingKey}${resultValue} ${
-                    singleResult.showPercent && resultInPercent ? `(${resultInPercent})` : ``
-                }`;
-            });
-        return resultList.join(`\n`);
     }
 }

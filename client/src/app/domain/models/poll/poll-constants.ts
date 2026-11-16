@@ -1,5 +1,3 @@
-import { _ } from '@ngx-translate/core';
-
 import { OptionDataKey } from './generic-poll';
 
 export enum PollState {
@@ -56,21 +54,6 @@ export type SingleVoteOptionKey = `yes` | `no` | `abstain`;
 export const VOTE_MAJORITY = -1;
 export const VOTE_UNDOCUMENTED = -2;
 export const LOWEST_VOTE_VALUE = VOTE_UNDOCUMENTED;
-
-// TODO: Should be moved to `domain/translations/poll` or removed
-export const PollValues: any = {
-    votesvalid: `Valid votes`,
-    votesinvalid: `Invalid votes`,
-    votescast: `Total votes cast`,
-    votesno: `Votes No`,
-    votesabstain: `Votes abstain`,
-    yes: `Yes`,
-    no: `No`,
-    abstain: `Abstain`,
-    amount_global_yes: _(`General approval`),
-    amount_global_no: _(`General rejection`),
-    amount_global_abstain: _(`General abstain`)
-};
 
 /**
  * Interface describes the possible data for the result-table.
