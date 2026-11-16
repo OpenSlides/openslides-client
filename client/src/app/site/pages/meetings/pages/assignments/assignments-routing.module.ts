@@ -15,11 +15,6 @@ const routes: Routes = [
                     import(`./pages/assignment-list/assignment-list.module`).then(m => m.AssignmentListModule)
             },
             {
-                path: `polls`,
-                loadChildren: () =>
-                    import(`./pages/assignment-polls/assignment-polls.module`).then(m => m.AssignmentPollsModule)
-            },
-            {
                 path: `new`,
                 loadChildren: () =>
                     import(`./pages/assignment-detail/assignment-detail.module`).then(m => m.AssignmentDetailModule)

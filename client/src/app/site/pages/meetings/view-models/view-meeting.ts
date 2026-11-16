@@ -6,9 +6,11 @@ import {
     ViewMeetingDefaultProjectorsKey,
     ViewMeetingMediafileUsageKey
 } from '@app/domain/models/meetings/meeting.constants';
+import { MeetingPollSetting } from '@app/domain/models/meetings/meeting-poll-setting';
 import { ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
 import { ViewHistoryEntry } from '@app/gateways/repositories/history-entry/view-history-entry';
 import { ViewModelRelations } from '@app/site/base/base-view-model';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { endOfDay, fromUnixTime, startOfDay } from 'date-fns';
 
 import { ViewCommittee } from '../../organization/pages/committees/view-models/view-committee';
@@ -42,15 +44,12 @@ import { ViewMotionWorkingGroupSpeaker } from '../pages/motions/modules/working-
 import { ViewMotion } from '../pages/motions/view-models/view-motion';
 import { ViewGroup } from '../pages/participants/modules/groups/view-models/view-group';
 import { ViewStructureLevel } from '../pages/participants/pages/structure-levels/view-models/view-structure-level';
-import { ViewOption } from '../pages/polls/view-models/view-option';
-import { ViewPoll } from '../pages/polls/view-models/view-poll';
-import { ViewPollCandidate } from '../pages/polls/view-models/view-poll-candidate';
-import { ViewPollCandidateList } from '../pages/polls/view-models/view-poll-candidate-list';
-import { ViewVote } from '../pages/polls/view-models/view-vote';
+import { ViewPollBallot } from '../pages/polls/view-models/poll-ballot';
 import { ViewProjection } from '../pages/projectors/view-models/view-projection';
 import { ViewProjector } from '../pages/projectors/view-models/view-projector';
 import { ViewProjectorCountdown } from '../pages/projectors/view-models/view-projector-countdown';
 import { ViewProjectorMessage } from '../pages/projectors/view-models/view-projector-message';
+import { ViewMeetingPollSetting } from './view-meeting-poll-setting';
 import { ViewUser } from './view-user';
 
 export const MEETING_LIST_SUBSCRIPTION = `meeting_list`;
@@ -98,6 +97,123 @@ export class ViewMeeting extends BaseHasMeetingUsersViewModel<Meeting> {
 
     public get isTemplate(): boolean {
         return !!this.template_for_organization_id;
+    }
+
+    // Poll defaults aliases
+    public get topic_poll_setting_enable_cumulative_voting(): MeetingPollSetting[`enable_cumulative_voting`] {
+        return this.topic_poll_config.enable_cumulative_voting;
+    }
+
+    public get topic_poll_setting_allow_live_voting(): MeetingPollSetting[`allow_live_voting`] {
+        return this.topic_poll_config.allow_live_voting;
+    }
+
+    public get topic_poll_setting_visibility(): MeetingPollSetting[`visibility`] {
+        return this.topic_poll_config.visibility;
+    }
+
+    public get topic_poll_setting_method(): MeetingPollSetting[`method`] {
+        return this.topic_poll_config.method;
+    }
+
+    public get topic_poll_setting_group_ids(): MeetingPollSetting[`group_ids`] {
+        return this.topic_poll_config.group_ids;
+    }
+
+    public get topic_poll_setting_enable_max_yes_votes(): MeetingPollSetting[`enable_max_yes_votes`] {
+        return this.topic_poll_config.enable_max_yes_votes;
+    }
+
+    public get topic_poll_setting_enable_max_options_limit(): MeetingPollSetting[`enable_max_options_limit`] {
+        return this.topic_poll_config.enable_max_options_limit;
+    }
+
+    public get topic_poll_setting_enable_live_voting(): MeetingPollSetting[`enable_live_voting`] {
+        return this.topic_poll_config.enable_live_voting;
+    }
+
+    public get topic_poll_setting_required_majority(): MeetingPollSetting[`required_majority`] {
+        return this.topic_poll_config.required_majority;
+    }
+
+    public get topic_poll_setting_onehundred_percent_base(): MeetingPollSetting[`onehundred_percent_base`] {
+        return this.topic_poll_config.onehundred_percent_base;
+    }
+
+    public get topic_poll_setting_sort_result_by_votes(): MeetingPollSetting[`sort_result_by_votes`] {
+        return this.topic_poll_config.sort_result_by_votes;
+    }
+
+    public get motion_poll_setting_visibility(): MeetingPollSetting[`visibility`] {
+        return this.motion_poll_config.visibility;
+    }
+
+    public get motion_poll_setting_group_ids(): MeetingPollSetting[`group_ids`] {
+        return this.motion_poll_config.group_ids;
+    }
+
+    public get motion_poll_setting_method(): MeetingPollSetting[`method`] {
+        return this.motion_poll_config.method;
+    }
+
+    public get motion_poll_setting_allow_live_voting(): MeetingPollSetting[`allow_live_voting`] {
+        return this.motion_poll_config.allow_live_voting;
+    }
+
+    public get motion_poll_setting_enable_live_voting(): MeetingPollSetting[`enable_live_voting`] {
+        return this.motion_poll_config.enable_live_voting;
+    }
+
+    public get motion_poll_setting_required_majority(): MeetingPollSetting[`required_majority`] {
+        return this.motion_poll_config.required_majority;
+    }
+
+    public get motion_poll_setting_onehundred_percent_base(): MeetingPollSetting[`onehundred_percent_base`] {
+        return this.motion_poll_config.onehundred_percent_base;
+    }
+
+    public get assignment_poll_setting_visibility(): MeetingPollSetting[`visibility`] {
+        return this.assignment_poll_config.visibility;
+    }
+
+    public get assignment_poll_setting_group_ids(): MeetingPollSetting[`group_ids`] {
+        return this.assignment_poll_config.group_ids;
+    }
+
+    public get assignment_poll_setting_method(): MeetingPollSetting[`method`] {
+        return this.assignment_poll_config.method;
+    }
+
+    public get assignment_poll_setting_enable_max_yes_votes(): MeetingPollSetting[`enable_max_yes_votes`] {
+        return this.assignment_poll_config.enable_max_yes_votes;
+    }
+
+    public get assignment_poll_setting_enable_cumulative_voting(): MeetingPollSetting[`enable_cumulative_voting`] {
+        return this.assignment_poll_config.enable_cumulative_voting;
+    }
+
+    public get assignment_poll_setting_enable_max_options_limit(): MeetingPollSetting[`enable_max_options_limit`] {
+        return this.assignment_poll_config.enable_max_options_limit;
+    }
+
+    public get assignment_poll_setting_allow_live_voting(): MeetingPollSetting[`allow_live_voting`] {
+        return this.assignment_poll_config.allow_live_voting;
+    }
+
+    public get assignment_poll_setting_enable_live_voting(): MeetingPollSetting[`enable_live_voting`] {
+        return this.assignment_poll_config.enable_live_voting;
+    }
+
+    public get assignment_poll_setting_required_majority(): MeetingPollSetting[`required_majority`] {
+        return this.assignment_poll_config.required_majority;
+    }
+
+    public get assignment_poll_setting_onehundred_percent_base(): MeetingPollSetting[`onehundred_percent_base`] {
+        return this.assignment_poll_config.onehundred_percent_base;
+    }
+
+    public get assignment_poll_setting_sort_result_by_votes(): MeetingPollSetting[`sort_result_by_votes`] {
+        return this.assignment_poll_config.sort_result_by_votes;
     }
 
     public get relatedTime(): RelatedTime {
@@ -201,10 +317,7 @@ interface IMeetingRelations {
     motion_states: ViewMotionState[];
     forwarded_motions: ViewMotion[];
     polls: ViewPoll[];
-    poll_candidates: ViewPollCandidate[];
-    poll_candidate_lists: ViewPollCandidateList[];
-    options: ViewOption[];
-    votes: ViewVote[];
+    votes: ViewPollBallot[];
     assignments: ViewAssignment[];
     assignment_candidates: ViewAssignmentCandidate[];
     chat_groups: ViewChatGroup[];
@@ -226,6 +339,9 @@ interface IMeetingRelations {
     point_of_order_categories: ViewPointOfOrderCategory[];
     structure_levels: ViewStructureLevel[];
     relevant_history_entries: ViewHistoryEntry[];
+    assignment_poll_config: ViewMeetingPollSetting;
+    motion_poll_config: ViewMeetingPollSetting;
+    topic_poll_config: ViewMeetingPollSetting;
 }
 export interface ViewMeeting
     extends

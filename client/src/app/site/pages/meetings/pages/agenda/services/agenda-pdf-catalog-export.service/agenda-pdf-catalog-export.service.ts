@@ -2,6 +2,8 @@ import { Location } from '@angular/common';
 import { inject, Service } from '@angular/core';
 import { BorderType, PdfError, StyleType } from '@app/gateways/export/pdf-document.service';
 import { PdfImagesService } from '@app/gateways/export/pdf-document.service/pdf-images.service';
+import { PollPdfService } from '@app/site/pages/meetings/modules/poll/services/poll-pdf.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { DurationService } from '@app/site/services/duration.service';
 import { TreeService } from '@app/ui/modules/sorting/modules/sorting-tree/services';
@@ -9,9 +11,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Content, ContentText, TableCell } from 'pdfmake/interfaces';
 
 import { MeetingPdfExportService } from '../../../../services/export/meeting-pdf-export.service';
-import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
 import { MotionHtmlToPdfService } from '../../../motions/services/export/motion-html-to-pdf.service/motion-html-to-pdf.service';
-import { ViewPoll } from '../../../polls/view-models/view-poll';
 import { ViewSpeaker } from '../../modules/list-of-speakers/view-models/view-speaker';
 import { ViewTopic } from '../../modules/topics/view-models/view-topic';
 import { ViewAgendaItem } from '../../view-models/view-agenda-item';
@@ -37,7 +37,7 @@ export class AgendaPdfCatalogExportService {
     private pdfService = inject(MeetingPdfExportService);
     private htmlToPdfService = inject(MotionHtmlToPdfService);
     private organizationSettingsService = inject(OrganizationSettingsService);
-    private meetingSettingsService = inject(MeetingSettingsService);
+    private pollPdfService = inject(PollPdfService);
     private pdfImagesService = inject(PdfImagesService);
     private durationService = inject(DurationService);
     private treeService = inject(TreeService);
@@ -339,7 +339,7 @@ export class AgendaPdfCatalogExportService {
                 },
                 {
                     border: extraBorder,
-                    text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.currentLang() ?? `en`),
+                    text: speaker.getBeginTimeAsDate()!.toLocaleString(this.translate.getCurrentLang() ?? `en`),
                     fillColor: backgroundColor
                 }
             ]);
@@ -423,58 +423,19 @@ export class AgendaPdfCatalogExportService {
             return [];
         }
         const entries: Content[] = [];
-        const isA4 = this.pdfService.pageSize === `A4`;
-        const optionWidth = `*`;
-        const votesWidth = isA4 ? 200 : 100;
-        const firstPlaceWidth = 10;
-        const useVoteWeight = this.meetingSettingsService.instant(`users_enable_vote_weight`);
-
         if (agendaItem.content_object?.polls.length) {
             for (let pollIndex = 0; pollIndex < agendaItem.content_object?.polls.length; pollIndex++) {
                 const poll: ViewPoll = agendaItem.content_object?.polls[pollIndex];
-                const tableCells: Content[][] = [];
                 entries.push({
                     text: poll.title,
                     style: this.getStyle(`level-content`),
                     margin: this.getStyle(`level-margin-normal`)
                 });
-                // poll table header
-                tableCells.push([
-                    { text: `` },
-                    { text: this.translate.instant(`Options`), style: `tocHeaderRow` },
-                    { text: this.translate.instant(`Votes`), style: `tocHeaderRow` }
-                ]);
-                // poll table rows
-                let optionIndex = 0;
-                for (const option of poll.options) {
-                    let votesForOption: string | number = ``;
-                    if (poll.stateHasVotes && useVoteWeight) {
-                        votesForOption = option.votes.map(v => parseFloat(`${v.weight}`)).reduce((a, b) => a + b, 0);
-                    } else if (poll.stateHasVotes) {
-                        votesForOption = option.votes.length;
-                    }
-                    const backgroundColor = optionIndex % 2 ? TABLEROW_GREY : undefined;
-                    tableCells.push([
-                        { text: optionIndex + 1, fillColor: backgroundColor },
-                        { text: option.getOptionTitle().title, fillColor: backgroundColor },
-                        { text: `${votesForOption}`, fillColor: backgroundColor }
-                    ]);
-                    optionIndex++;
-                }
-                // poll table valid votes line
-                const amount: string = poll.votesvalid ? String(poll.votesvalid) : ``;
-                tableCells.push([{ text: `` }, { text: this.translate.instant(`Valid votes`) }, { text: amount }]);
 
                 // table configuration
+                entries.push(this.pollPdfService.createResultsTable(poll));
                 entries.push({
-                    table: {
-                        headerRows: 0,
-                        keepWithHeaderRows: 0,
-                        dontBreakRows: true,
-                        widths: [firstPlaceWidth, optionWidth, votesWidth],
-                        body: tableCells
-                    },
-                    layout: BorderType.LIGHT_HORIZONTAL_LINES,
+                    text: ``,
                     margin: this.getStyle(`level-margin-normal`)
                 });
             }

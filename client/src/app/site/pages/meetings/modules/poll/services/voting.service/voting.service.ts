@@ -1,12 +1,17 @@
 import { inject, Service } from '@angular/core';
-import { PollState, PollType } from '@app/domain/models/poll/poll-constants';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
+import { PollState } from '@app/domain/models/poll/poll-constants';
+import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
+import { ViewPollBallotUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-ballot-user';
 import { ViewUser } from '@app/site/pages/meetings/view-models/view-user';
 import { OperatorService } from '@app/site/services/operator.service';
+import { UserControllerService } from '@app/site/services/user-controller.service';
 import { _ } from '@ngx-translate/core';
+import { combineLatest, map, Observable } from 'rxjs';
 
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
+import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
 
 export enum VotingProhibition {
     POLL_WRONG_STATE = 1, // 1 so we can check with negation
@@ -40,6 +45,8 @@ export class VotingService {
     private activeMeetingService = inject(ActiveMeetingService);
     private operator = inject(OperatorService);
     private meetingSettingsService = inject(MeetingSettingsService);
+    private userRepo = inject(UserControllerService);
+    private pollRepo = inject(PollRepositoryService);
 
     public constructor() {
         this.operator.userObservable.subscribe(user => (this._currentUser = user));
@@ -54,33 +61,52 @@ export class VotingService {
     /**
      * checks whether the operator can vote on the given poll
      */
-    public canVote(poll: ViewPoll, user?: ViewUser): boolean {
-        const error = this.getVotingProhibitionReason(poll, user);
-        return !error;
+    public hasVotedObservable(poll: ViewPoll, user?: ViewMeetingUser): Observable<boolean> {
+        if (!user) {
+            user = this.operator.user.getMeetingUser();
+        }
+
+        return this.pollRepo.pollBallotUsersByUser(poll.id, user.id).pipe(map(ballots => !!ballots.length));
     }
 
     /**
      * checks whether the operator can vote on the given poll
-     * @returns null if no errors exist (= user can vote) or else a VotingProhibition reason
      */
+    public votingProhibited(poll: ViewPoll, user: ViewUser): Observable<VotingProhibition | null> {
+        return combineLatest([
+            this.userRepo.getViewModelObservable(user.id),
+            this.pollRepo.getViewModelObservable(poll.id),
+            this.pollRepo.pollBallotUsersByUser(poll.id, user.getMeetingUser().id)
+        ]).pipe(
+            map(([user, poll, ballotUsers]) => {
+                return this.getVotingProhibitionReason(poll, user, ballotUsers);
+            })
+        );
+    }
+
+    public getVotingProhibitionReasonVerboseFromName(reason: VotingProhibition): string {
+        return VotingProhibitionVerbose[reason] ?? _(`There is an unknown voting problem.`);
+    }
+
     private getVotingProhibitionReason(
         poll: ViewPoll,
-        user: ViewUser | null = this._currentUser
-    ): VotingProhibition | void {
+        user: ViewUser,
+        ballots: ViewPollBallotUser[]
+    ): VotingProhibition | null {
+        if (this.operator.isAnonymous) {
+            return VotingProhibition.USER_IS_ANONYMOUS;
+        }
+
+        if (ballots.find(b => b.represented_meeting_user_id === user.getMeetingUser().id) !== undefined) {
+            return VotingProhibition.USER_HAS_VOTED;
+        }
+
         if (this._currentUser?.id === user?.id) {
             if (user?.isVoteRightDelegated && this._voteDelegationEnabled && this._forbidDelegationToVote) {
                 return VotingProhibition.USER_HAS_DELEGATED_RIGHT;
             }
-            if (poll.hasVoted) {
-                return VotingProhibition.USER_HAS_VOTED;
-            }
         }
-        if (this._currentUser?.id !== user?.id && poll.hasVotedForDelegations(user?.id)) {
-            return VotingProhibition.USER_HAS_VOTED;
-        }
-        if (this.operator.isAnonymous) {
-            return VotingProhibition.USER_IS_ANONYMOUS;
-        }
+
         if (
             !(poll.entitled_group_ids || []).some(id =>
                 user.group_ids(this.activeMeetingService.meetingId).includes(id)
@@ -88,25 +114,19 @@ export class VotingService {
         ) {
             return VotingProhibition.USER_HAS_NO_PERMISSION;
         }
-        if (poll.type === PollType.Analog) {
+
+        if (poll.isAnalog) {
             return VotingProhibition.POLL_WRONG_TYPE;
         }
+
         if (poll.state !== PollState.Started) {
             return VotingProhibition.POLL_WRONG_STATE;
         }
+
         if (!user?.isPresentInMeeting() && !this._currentUser?.canVoteFor(user)) {
             return VotingProhibition.USER_NOT_PRESENT;
         }
-    }
 
-    public getVotingProhibitionReasonVerbose(poll: ViewPoll, user: ViewUser | null = this._currentUser): string | void {
-        const reason = this.getVotingProhibitionReason(poll, user);
-        if (reason) {
-            return VotingProhibitionVerbose[reason];
-        }
-    }
-
-    public getVotingProhibitionReasonVerboseFromName(reasonName: string): string {
-        return VotingProhibitionVerbose[VotingProhibition[reasonName]] ?? _(`There is an unknown voting problem.`);
+        return null;
     }
 }

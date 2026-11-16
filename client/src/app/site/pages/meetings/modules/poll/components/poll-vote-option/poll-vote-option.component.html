@@ -1,0 +1,13 @@
+@if (option().text !== undefined && option().text !== null) {
+    {{ option().text }}
+} @else {
+    @let optionTitle = option().getOptionTitle();
+    @if (optionTitle.title) {
+        <span class="name">{{ optionTitle.title }}</span>
+        @if (optionTitle.subtitle) {
+            <div class="user-subtitle">{{ optionTitle.subtitle }}</div>
+        }
+    } @else {
+        {{ 'Unknown user' | translate }}
+    }
+}

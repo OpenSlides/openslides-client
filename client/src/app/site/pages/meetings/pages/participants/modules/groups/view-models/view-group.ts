@@ -1,5 +1,6 @@
 import { ViewModelRelations } from '@app/site/base/base-view-model';
 import { BaseHasMeetingUsersViewModel } from '@app/site/pages/meetings/base/base-has-meeting-user-view-model';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 import { Permission } from '../../../../../../../../domain/definitions/permission';
 import { permissionChildren } from '../../../../../../../../domain/definitions/permission-relations';
@@ -9,7 +10,6 @@ import { ViewMeeting } from '../../../../../view-models/view-meeting';
 import { ViewChatGroup } from '../../../../chat/view-models/view-chat-group';
 import { ViewMediafile } from '../../../../mediafiles/view-models/view-mediafile';
 import { ViewMotionCommentSection } from '../../../../motions/modules/comments/view-models/view-motion-comment-section';
-import { ViewPoll } from '../../../../polls/view-models/view-poll';
 
 export class ViewGroup extends BaseHasMeetingUsersViewModel<Group> {
     public static COLLECTION = Group.COLLECTION;

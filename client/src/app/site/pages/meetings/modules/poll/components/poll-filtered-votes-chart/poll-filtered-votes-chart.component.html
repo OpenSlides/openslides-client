@@ -19,7 +19,7 @@
                 @for (cat of voteAmounts; track cat.value) {
                     <span class="one-option">
                         <div class="box" [style.background]="cat.backgroundColor"></div>
-                        {{ cat.name | translate }}: {{ cat.weightedAmount }}
+                        {{ cat.value | translateKey: 'poll_option' }}: {{ cat.weightedAmount }}
                         @if (cat.amount > 0 && !cat.hiddenInBase) {
                             ({{ ((cat.weightedAmount / totalAmountWeighted) * 100).toFixed(2) }}%)
                         }
@@ -33,7 +33,7 @@
                     <span class="no-space">{{ 'Ballots cast' | translate }}: {{ totalAmount }} (</span>
                     <div class="categories">
                         @for (cat of voteAmounts; track cat.value) {
-                            <span>{{ cat.name | translate }}: {{ cat.amount }}</span>
+                            <span>{{ cat.value | translateKey: 'poll_option' }}: {{ cat.amount }}</span>
                             <span class="seperator">&middot;</span>
                         }
                     </div>

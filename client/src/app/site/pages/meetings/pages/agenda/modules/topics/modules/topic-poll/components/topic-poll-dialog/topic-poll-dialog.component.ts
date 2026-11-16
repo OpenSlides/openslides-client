@@ -1,251 +1,84 @@
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTabsModule } from '@angular/material/tabs';
+import { djb2hash } from '@app/infrastructure/utils';
 import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    Inject,
-    QueryList,
-    ViewChild,
-    ViewChildren
-} from '@angular/core';
-import { Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Selectable } from '@app/domain/interfaces';
-import {
-    GeneralValueVerbose,
-    LOWEST_VOTE_VALUE,
-    PollMethod,
-    PollPercentBaseVerbose,
-    PollPropertyVerbose,
-    PollTypeVerbose,
-    VoteValue
-} from '@app/domain/models/poll';
-import { BasePollDialogComponent } from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
-import { ViewPoll } from '@app/site/pages/meetings/pages/polls';
-import { _ } from '@ngx-translate/core';
-import { BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
-
-import { ViewTopic } from '../../../../view-models/view-topic';
-import { TopicPollMethodVerbose } from '../../definitions';
-import { TopicPollService } from '../../services/topic-poll.service';
-
-let uniqueId = 0;
-export class TextOptionSelectable implements Selectable {
-    public readonly id = ++uniqueId;
-
-    public constructor(private readonly text: string) {}
-
-    public getTitle(): string {
-        return this.text;
-    }
-
-    public getListTitle(): string {
-        return `Options`;
-    }
-}
+    BasePollDialogComponent,
+    PollMethodPayload,
+    PollOptionsPayload
+} from '@app/site/pages/meetings/modules/poll/base/base-poll-dialog.component';
+import { PollEditResultComponent } from '@app/site/pages/meetings/modules/poll/components/poll-edit-result/poll-edit-result.component';
+import { PollFormComponent } from '@app/site/pages/meetings/modules/poll/components/poll-form/poll-form.component';
+import { PollService } from '@app/site/pages/meetings/modules/poll/services/poll.service';
+import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
+import { ViewMeetingPollSetting } from '@app/site/pages/meetings/view-models/view-meeting-poll-setting';
+import { TranslatePipe } from '@ngx-translate/core';
+import { Observable, switchMap } from 'rxjs';
 
 @Component({
     selector: `os-topic-poll-dialog`,
     templateUrl: `./topic-poll-dialog.component.html`,
     styleUrls: [`./topic-poll-dialog.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    standalone: false
+    imports: [
+        PollEditResultComponent,
+        PollFormComponent,
+        MatTabsModule,
+        MatDialogModule,
+        MatButtonModule,
+        TranslatePipe,
+        AsyncPipe
+    ],
+    changeDetection: ChangeDetectionStrategy.Eager
 })
-export class TopicPollDialogComponent extends BasePollDialogComponent implements AfterViewInit {
-    @ViewChild(`scrollframe`, { static: false }) public scrollFrame: ElementRef;
-    @ViewChildren(`item`) public itemElements: QueryList<any>;
+export class TopicPollDialogComponent extends BasePollDialogComponent {
+    public majority: string;
 
-    private scrollContainer: any;
-    private isNearBottom = true;
-
-    /**
-     * List of accepted special non-numerical values.
-     * See {@link PollService.specialPollVotes}
-     */
-    public specialValues: [number, string][];
-
-    public generalValueVerbose = GeneralValueVerbose;
-    public PollPropertyVerbose = PollPropertyVerbose;
-
-    public PollMethodVerbose = TopicPollMethodVerbose;
-    public PollPercentBaseVerbose = PollPercentBaseVerbose;
-    public PollTypes = PollTypeVerbose;
-
-    private minNumberOfOptions = 2;
-    public optionsWarning = _(`There should be at least 2 options.`);
-
-    public newOptions: TextOptionSelectable[] = [];
-    public optionsSubject = new BehaviorSubject<TextOptionSelectable[]>(this.newOptions);
-    public optionInput = ``;
-
-    public readonly globalValues = [`global_yes`, `global_no`, `global_abstain`];
-
-    public get isEdit(): boolean {
-        const viewPoll = this.pollData as Partial<ViewPoll>;
-        return !!viewPoll.state; // no state means, its under creation
+    public get isEVotingEnabled(): boolean {
+        return this.pollService.isElectronicVotingEnabled;
     }
 
-    public override get formsValid(): boolean {
-        this.submitOptionData();
-        return super.formsValid;
+    public options = computed(() => {
+        return this.pollForm().form.options().value();
+    });
+
+    public get pollSettings(): Observable<ViewMeetingPollSetting> {
+        return this.activeMeetingService.meetingObservable.pipe(switchMap(m => m.topic_poll_config$));
     }
 
-    public constructor(
-        public topicPollService: TopicPollService,
-        @Inject(MAT_DIALOG_DATA) pollData: ViewPoll<ViewTopic>
-    ) {
-        super(pollData);
-        this.optionTypeText = true;
+    private pollService = inject(PollService);
+    private activeMeetingService = inject(ActiveMeetingService);
+
+    public override methodPayload(): PollMethodPayload {
+        return {
+            method: this.pollForm().selectedMethod(),
+            method_config: this.pollForm().methodConfig()
+        };
     }
 
-    public ngAfterViewInit(): void {
-        if (this.scrollFrame) {
-            this.scrollContainer = this.scrollFrame.nativeElement;
-            this.itemElements.changes.subscribe(_ => this.onItemElementsChanged());
+    public override optionsPayload(): PollOptionsPayload {
+        if (this.pollForm().selectedMethod() === `approval`) {
+            return {};
         }
+
+        const formValues = this.pollForm().getValues();
+        return {
+            options: formValues.options,
+            option_type: `text`
+        };
     }
 
-    public override onBeforeInit(): void {
-        this.subscriptions.push(
-            this.pollForm.contentForm.valueChanges.pipe(debounceTime(150), distinctUntilChanged()).subscribe(() => {
-                this.triggerUpdate();
-            })
-        );
-    }
-
-    protected getAnalogVoteFields(): VoteValue[] {
-        const pollmethod = this.pollForm.contentForm.get(`pollmethod`).value;
-
-        const analogPollValues: VoteValue[] = [];
-
-        if (pollmethod === PollMethod.N) {
-            analogPollValues.push(`N`);
+    public analogPollOptions(): { key: string; title: string }[] {
+        const options = [];
+        if (this.pollForm().selectedMethod() === `approval`) {
+            options.push([{ key: `approval`, title: null }]);
         } else {
-            analogPollValues.push(`Y`);
-
-            if (pollmethod !== PollMethod.Y) {
-                analogPollValues.push(`N`);
-            }
-            if (pollmethod === PollMethod.YNA) {
-                analogPollValues.push(`A`);
+            for (const option of this.options()) {
+                options.push({ key: `text-${djb2hash(option)}`, title: option });
             }
         }
 
-        return analogPollValues;
-    }
-
-    protected getContentObjectsForOptions(): { text: string }[] {
-        const optionsArray = [];
-        this.newOptions.forEach(value => {
-            optionsArray.push({ text: value.getTitle() });
-        });
-        return optionsArray;
-    }
-
-    public removeOption(item: TextOptionSelectable): void {
-        this.newOptions.forEach((value, index) => {
-            if (value.id === item.id) {
-                this.newOptions.splice(index, 1);
-            }
-        });
-        this.updateOptionsSubject();
-    }
-
-    public addNewOption(): void {
-        const newOption = new TextOptionSelectable(this.optionInput);
-        this.newOptions.push(newOption);
-        this.optionInput = ``;
-        this.updateOptionsSubject();
-    }
-
-    /**
-     * Triggers an update of the sorting.
-     */
-    public onSortingChange(options: TextOptionSelectable[]): void {
-        this.newOptions = options;
-    }
-
-    private updateOptionsSubject(): void {
-        this.optionsSubject.next(this.newOptions);
-    }
-
-    private onItemElementsChanged(): void {
-        if (this.isNearBottom) {
-            this.scrollToBottom();
-        }
-    }
-
-    private submitOptionData(): void {
-        let key = 0;
-        const transformedOptions = this.newOptions.mapToObject(option => {
-            key++;
-            return {
-                [key.toString(10)]: this.formBuilder.group(
-                    // The text for the option
-                    {
-                        text: [option.getTitle(), [Validators.required]],
-                        // for each user, create a form group with a control for each valid input (Y, N, A)
-                        ...this.analogVoteFields?.mapToObject(value => ({
-                            [value]: [``, [Validators.min(LOWEST_VOTE_VALUE)]]
-                        }))
-                    }
-                )
-            };
-        });
-        this.dialogVoteForm.setControl(`options`, this.formBuilder.group(transformedOptions));
-    }
-
-    public hasEnoughVoteFormOptions(): boolean {
-        const length = Object.keys(this.optionsFromVoteForm.controls).length;
-        if (length < this.minNumberOfOptions) {
-            return false;
-        }
-        return true;
-    }
-
-    public hasEnoughOptions(): boolean {
-        const length = this.newOptions.length;
-        if (length < this.minNumberOfOptions) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Submits the values from dialog.
-     */
-    public override submitPoll(): void {
-        if (!this.isEdit) {
-            this.submitOptionData();
-            if (!this.hasEnoughOptions()) {
-                throw new Error(`Error: submitPoll called without neccessary amount of options.`);
-            }
-        }
-        super.submitPoll();
-    }
-
-    private scrollToBottom(): void {
-        if (this.scrollContainer) {
-            this.scrollContainer.scroll({
-                top: this.scrollContainer.scrollHeight,
-                left: 0,
-                behavior: `smooth`
-            });
-        }
-    }
-
-    private isUserNearBottom(): boolean {
-        if (this.scrollContainer) {
-            const threshold = 50;
-            const position = this.scrollContainer.scrollTop + this.scrollContainer.offsetHeight;
-            const height = this.scrollContainer.scrollHeight;
-            return position > height - threshold;
-        }
-        return true;
-    }
-
-    public scrolled(_e: any): void {
-        this.isNearBottom = this.isUserNearBottom();
+        return options;
     }
 }

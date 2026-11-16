@@ -1,30 +1,23 @@
-import { _ } from '@ngx-translate/core';
+import { OptionDataKey } from './generic-poll';
 
-import { OptionDataKey, PollDataKey } from './generic-poll';
-
-export const YES_KEY = `yes`;
-export const NO_KEY = `no`;
-export const ABSTAIN_KEY = `abstain`;
-export const INVALID_VOTES_KEY = `votesinvalid`;
-
-export enum PollBackendDurationType {
-    LONG = `long`,
-    FAST = `fast`
+export enum PollState {
+    Created = `created`,
+    Started = `started`,
+    Finished = `finished`
 }
 
-export const PollBackendDurationChoices = {
-    [PollBackendDurationType.FAST]: _(`short running`),
-    [PollBackendDurationType.LONG]: _(`long running`)
-};
+export enum PollVisibility {
+    Manually = `manually`,
+    Named = `named`,
+    Open = `open`,
+    Secret = `secret`
+}
 
-export type PollMethodYNA = `Y` | `N` | `A`;
-export type PollMethodYN = `Y` | `N`;
-export type GlobalVote = `Y` | `A` | `N`;
-
-export enum PollClassType {
-    Motion = `motion`,
-    Assignment = `assignment`,
-    Topic = `topic`
+export enum PollRequiredMajority {
+    NoMajority = `no_majority`,
+    TwoThirdMajority = `two_third_majority`,
+    AbsoluteMajority = `absolute_majority`,
+    SimpleMajority = `simple_majority`
 }
 
 /**
@@ -52,157 +45,15 @@ export const pollChartGreys = new Map<string, string>([
     [`grey5`, `#f5f5f5`]
 ]);
 
-export enum PollState {
-    Created = `created`,
-    Started = `started`,
-    Finished = `finished`,
-    Published = `published`
-}
+export const YES_KEY: SingleVoteOptionKey = `yes`;
+export const NO_KEY: SingleVoteOptionKey = `no`;
+export const ABSTAIN_KEY: SingleVoteOptionKey = `abstain`;
 
-export enum PollType {
-    Analog = `analog`,
-    Named = `named`,
-    Pseudoanonymous = `pseudoanonymous`
-}
-
-export enum PollMethod {
-    Y = `Y`,
-    YN = `YN`,
-    YNA = `YNA`,
-    N = `N`
-}
-
-export enum FormPollMethod {
-    Y = `Y`,
-    YN = `YN`,
-    YNA = `YNA`,
-    N = `N`,
-    LIST_YNA = `yna`
-}
-
-export enum PollPercentBase {
-    Y = `Y`,
-    YN = `YN`,
-    YNA = `YNA`,
-    Valid = `valid`,
-    Cast = `cast`,
-    Entitled = `entitled`,
-    EntitledPresent = `entitled_present`,
-    Disabled = `disabled`
-}
-
-export interface EntitledUsersEntry {
-    user_id: number;
-    present: boolean;
-    voted: boolean;
-    vote_delegated_to_user_id?: number;
-    user_merged_into_id?: number;
-    delegation_user_merged_into_id?: number;
-}
+export type SingleVoteOptionKey = `yes` | `no` | `abstain`;
 
 export const VOTE_MAJORITY = -1;
 export const VOTE_UNDOCUMENTED = -2;
 export const LOWEST_VOTE_VALUE = VOTE_UNDOCUMENTED;
-
-export const PollClassTypeVerbose = {
-    motion: `Vote`,
-    assignment: `Ballot`
-};
-
-export const PollStateVerbose = {
-    created: `created`,
-    started: `started`,
-    finished: `finished (unpublished)`,
-    published: `published`
-};
-
-export const PollStateChangeActionVerbose = {
-    created: _(`Reset`),
-    started: _(`Start voting`),
-    finished: _(`Stop voting`),
-    published: _(`Publish`)
-};
-
-export const PollTypeVerbose = {
-    analog: _(`analog`),
-    named: _(`nominal`),
-    pseudoanonymous: _(`non-nominal`)
-};
-
-export type PollTypeVerboseKey = keyof typeof PollTypeVerbose;
-
-export const PollPropertyVerbose = {
-    onehundred_percent_base: _(`100% base`),
-    type: _(`Voting type`),
-    pollmethod: _(`Voting method`),
-    state: _(`State`),
-    groups: _(`Entitled to vote`),
-    votes_amount: _(`Amount of votes`),
-    global_yes: _(`General approval`),
-    global_no: _(`General rejection`),
-    global_abstain: _(`General abstain`),
-    max_votes_amount: _(`Maximum amount of votes`),
-    min_votes_amount: _(`Minimum amount of votes`),
-    max_votes_per_option: _(`Maximum amount of votes per option`),
-    live_voting_enabled: _(`Live voting enabled`)
-};
-
-export type PollPropertyVerboseKey = keyof typeof PollPropertyVerbose;
-
-export const PollValues: any = {
-    votesvalid: `Valid votes`,
-    votesinvalid: `Invalid votes`,
-    votescast: `Total votes cast`,
-    votesno: `Votes No`,
-    votesabstain: `Votes abstain`,
-    yes: `Yes`,
-    no: `No`,
-    abstain: `Abstain`,
-    amount_global_yes: _(`General approval`),
-    amount_global_no: _(`General rejection`),
-    amount_global_abstain: _(`General abstain`)
-};
-
-export const PollMethodVerbose = {
-    Y: ``,
-    N: ``,
-    YN: _(`Yes/No`),
-    YNA: _(`Yes/No/Abstain`)
-};
-
-export const PollPercentBaseVerbose = {
-    Y: _(`Sum of votes without general options`),
-    YN: _(`Yes/No`),
-    YNA: _(`Yes/No/Abstain`),
-    valid: _(`All valid ballots`),
-    cast: _(`All casted ballots`),
-    entitled: _(`All entitled users`),
-    entitled_present: _(`Present entitled users`),
-    disabled: _(`Disabled (no percents)`)
-};
-
-export type PollPercentBaseVerboseKey = keyof typeof PollPercentBaseVerbose;
-
-export type GlobalOptionKey = `global_yes` | `global_no` | `global_abstain`;
-export type VoteKey = `votesvalid` | `votesinvalid` | `votescast`;
-
-/**
- * The possible keys of a poll object that represent numbers.
- * TODO Should be 'key of MotionPoll|AssinmentPoll if type of key is number'
- */
-export type CalculablePollKey = VoteKey | `yes` | `no` | `abstain`;
-
-/**
- * TODO: may be obsolete if the server switches to lower case only
- * (lower case variants are already in CalculablePollKey)
- */
-export type PollVoteValue = `Yes` | `No` | `Abstain` | `Votes`;
-
-export const VoteValuesVerbose = {
-    Y: `Yes`,
-    N: `No`,
-    A: `Abstain`
-};
 
 /**
  * Interface describes the possible data for the result-table.
@@ -223,7 +74,7 @@ export function isPollTableData(data: any): data is PollTableData {
 }
 
 export interface VotingResult {
-    vote?: OptionDataKey | PollDataKey;
+    vote?: OptionDataKey;
     amount?: number;
     icon?: string;
     hide?: boolean;

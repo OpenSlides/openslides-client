@@ -1,0 +1,70 @@
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { VoteApiService } from '@app/gateways/vote-api.service';
+import { collectionFromFqid } from '@app/infrastructure/utils/transform-functions';
+import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
+import { OperatorService } from '@app/site/services/operator.service';
+import { TranslatePipe } from '@ngx-translate/core';
+
+import { ViewUser } from '../../../../view-models/view-user';
+import { VotingProhibition, VotingService } from '../../services/voting.service/voting.service';
+import { PollCannotVoteMessageComponent } from '../poll-cannot-vote-message/poll-cannot-vote-message.component';
+import { PollVoteApprovalComponent } from '../poll-vote-approval/poll-vote-approval.component';
+import { PollVoteRatingApprovalComponent } from '../poll-vote-rating-approval/poll-vote-rating-approval.component';
+import { PollVoteRatingScoreComponent } from '../poll-vote-rating-score/poll-vote-rating-score.component';
+import { PollVoteSelectionComponent } from '../poll-vote-selection/poll-vote-selection.component';
+
+@Component({
+    selector: 'os-poll-vote',
+    imports: [
+        PollVoteApprovalComponent,
+        PollVoteRatingApprovalComponent,
+        PollVoteRatingScoreComponent,
+        PollVoteSelectionComponent,
+        PollCannotVoteMessageComponent,
+        TranslatePipe
+    ],
+    templateUrl: './poll-vote.component.html',
+    styleUrl: './poll-vote.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class PollVoteComponent {
+    public poll = input.required<ViewPoll>();
+    public user = input.required<ViewUser>();
+
+    public sendingVote = signal(false);
+
+    public configType = computed(() => {
+        return this.poll().config_id ? collectionFromFqid(this.poll().config_id) : null;
+    });
+
+    private operator = inject(OperatorService);
+    private voteApi = inject(VoteApiService);
+    private votingService = inject(VotingService);
+
+    public voteProhibited = rxResource({
+        params: () => ({ poll: this.poll(), user: this.user() }),
+        stream: ({ params }) => this.votingService.votingProhibited(params.poll, params.user)
+    });
+
+    public isDelegation = computed(() => {
+        return this.user().id !== this.operator.user.id;
+    });
+
+    public constructor() {
+        effect(() => {
+            if (this.voteProhibited.value() === VotingProhibition.USER_HAS_VOTED) {
+                this.sendingVote.set(false);
+            }
+        });
+    }
+
+    public async sendVote(value: unknown): Promise<void> {
+        this.sendingVote.set(true);
+        try {
+            await this.voteApi.vote(this.poll().id, value, this.user().getMeetingUser().id);
+        } catch {
+            this.sendingVote.set(false);
+        }
+    }
+}

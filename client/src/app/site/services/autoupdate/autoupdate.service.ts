@@ -333,8 +333,9 @@ export class AutoupdateService {
                         delete this._resolveDataReceived[requestId];
                     }
                 }
+            })
+            .finally(() => {
+                unlock();
             });
-
-        unlock();
     }
 }

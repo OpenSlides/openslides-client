@@ -29,8 +29,9 @@
             <os-list-search-selector
                 [includeNone]="true"
                 [inputListValues]="otherParticipantsObservable"
+                [multiple]="true"
                 [sortFn]="false"
-                [(ngModel)]="infoDialog.vote_delegated_to_id"
+                [(ngModel)]="infoDialog.vote_delegated_to_ids"
             />
         </mat-form-field>
     }
@@ -57,7 +58,7 @@
         [mat-dialog-close]="{
             group_ids: infoDialog.group_ids,
             vote_delegations_from_ids: infoDialog.vote_delegations_from_ids,
-            vote_delegated_to_id: infoDialog.vote_delegated_to_id,
+            vote_delegated_to_ids: infoDialog.vote_delegated_to_ids,
             number: infoDialog.number,
             structure_level_ids: infoDialog.structure_level_ids
         }"

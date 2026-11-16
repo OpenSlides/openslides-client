@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { ChartData as NgChartData, ChartOptions, ChartType } from 'chart.js';
 
@@ -24,59 +25,80 @@ type Label = SingleLineLabel | MultiLineLabel;
     selector: `os-chart`,
     templateUrl: `./chart.component.html`,
     styleUrls: [`./chart.component.scss`],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ChartjsComponent]
+    imports: [ChartjsComponent, MatIcon]
 })
 export class ChartComponent {
     /**
      * The type of the chart.
      */
-    @Input()
-    public type: ChartType = `bar`;
+    public readonly type = input<ChartType>(`bar`);
 
     /**
      * The labels for the separated sections.
      * Each label represent one section, e.g. one year.
      */
-    @Input()
-    public labels: Label[] = [];
+    public readonly labels = input<Label[]>([]);
 
     /**
      * Show a legend
      */
-    @Input()
-    public legend = false;
+    public readonly legend = input(false);
 
     /**
      * Required since circle charts demand SingleDataSet-Objects
      */
-    @Input()
-    public set circleColors(colors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[]) {
-        this.colors = colors;
-        this._circleColors = colors;
-    }
+    public readonly circleColors = input<{ backgroundColor?: string[]; hoverBackgroundColor?: string[] }[]>();
 
-    private _circleColors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];
+    public readonly data = input<ChartDate[]>();
 
-    public colors: { backgroundColor?: string[]; hoverBackgroundColor?: string[] }[];
+    public readonly majority = input<boolean | undefined>(undefined);
 
     /**
      * The general data for the chart.
      * This is only needed for `type == 'bar' || 'line'`
      */
-    public chartData: NgChartData<ChartType> = { datasets: [], labels: [] };
+    public chartData = computed<NgChartData<ChartType>>(() => {
+        const chartData = { datasets: [], labels: [] };
+        if (this.isCircle) {
+            let colors = this.circleColors();
+            const data = this.data().flatMap(chartDate => {
+                // removes undefined and null values
+                return chartDate.data.filter(data => !!data);
+            });
+            const newCircleColors = this.calculateCircleColors(this.data());
+            if (
+                !colors &&
+                newCircleColors?.length &&
+                newCircleColors[0].backgroundColor &&
+                newCircleColors[0].backgroundColor.length &&
+                JSON.stringify(newCircleColors) !== JSON.stringify(this.circleColors)
+            ) {
+                colors = newCircleColors;
+            }
 
-    @Input()
-    public set data(inputData: ChartDate[]) {
-        if (inputData && inputData.length) {
-            this.progressInputData(inputData);
+            chartData.datasets = [
+                {
+                    data: data,
+                    backgroundColor: colors[0].backgroundColor,
+                    hoverBackgroundColor: colors[0].hoverBackgroundColor,
+                    hoverBorderColor: colors[0].hoverBackgroundColor,
+                    hoverBorderWidth: 0
+                }
+            ];
+        } else {
+            chartData.datasets = this.data();
         }
-    }
+
+        const labels = this.labels() || this.data().map(chartDate => chartDate.label);
+        chartData.labels = labels;
+
+        return chartData;
+    });
 
     /**
      * The options used for the charts.
      */
-    public get chartOptions(): ChartOptions {
+    public chartOptions = computed<ChartOptions>(() => {
         if (this.isCircle) {
             return {
                 responsive: true,
@@ -89,7 +111,7 @@ export class ChartComponent {
                         enabled: false
                     },
                     legend: {
-                        display: this.legend,
+                        display: this.legend(),
                         position: `left`
                     }
                 }
@@ -124,19 +146,20 @@ export class ChartComponent {
                         enabled: false
                     },
                     legend: {
-                        display: this.legend
+                        display: this.legend()
                     }
                 }
             };
         }
-    }
+    });
 
-    public get isReadyToShow(): boolean {
-        return !!this.chartData.datasets.length;
-    }
+    public isReadyToShow = computed<boolean>(() => {
+        return !!this.chartData().datasets.length;
+    });
 
     public get isCircle(): boolean {
-        return this.type === `pie` || this.type === `doughnut`;
+        const type = this.type();
+        return type === `pie` || type === `doughnut`;
     }
 
     public get isBar(): boolean {
@@ -147,7 +170,7 @@ export class ChartComponent {
         if (!this.isCircle) {
             const baseHeight = 120;
             const perLabel = 60;
-            return `${baseHeight + perLabel * this.labels.length}px`;
+            return `${baseHeight + perLabel * this.labels().length}px`;
         } else {
             return `260px`;
         }
@@ -165,40 +188,5 @@ export class ChartComponent {
                     .filter(color => !!color)
             }
         ];
-    }
-
-    private progressInputData(inputChartData: ChartDate[]): void {
-        if (this.isCircle) {
-            const data = inputChartData.flatMap(chartDate => {
-                // removes undefined and null values
-                return chartDate.data.filter(data => !!data);
-            });
-            const newCircleColors = this.calculateCircleColors(inputChartData);
-            if (
-                !this._circleColors &&
-                newCircleColors?.length &&
-                newCircleColors[0].backgroundColor &&
-                newCircleColors[0].backgroundColor.length &&
-                JSON.stringify(newCircleColors) !== JSON.stringify(this.circleColors)
-            ) {
-                this.colors = newCircleColors;
-            }
-            this.chartData.datasets = [
-                {
-                    data: data,
-                    backgroundColor: this.colors[0].backgroundColor,
-                    hoverBackgroundColor: this.colors[0].hoverBackgroundColor,
-                    hoverBorderColor: this.colors[0].hoverBackgroundColor,
-                    hoverBorderWidth: 0
-                }
-            ];
-        } else {
-            this.chartData.datasets = inputChartData;
-        }
-
-        if (!this.labels) {
-            this.labels = inputChartData.map(chartDate => chartDate.label);
-            this.chartData.labels = this.labels;
-        }
     }
 }

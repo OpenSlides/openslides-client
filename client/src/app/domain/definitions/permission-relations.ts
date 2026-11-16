@@ -4,13 +4,20 @@ import { PermissionsMap } from './permission.config';
 
 export const permissionChildren: PermissionsMap = {
     'agenda_item.can_manage': [Permission.agendaItemCanSeeInternal, Permission.agendaItemCanSee],
+    'agenda_item.can_manage_polls': [
+        Permission.agendaItemCanSeePolls,
+        Permission.agendaItemCanSeeInternal,
+        Permission.agendaItemCanSee
+    ],
     'agenda_item.can_see': [],
     'agenda_item.can_see_internal': [Permission.agendaItemCanSee],
+    'agenda_item.can_see_polls': [Permission.agendaItemCanSeeInternal, Permission.agendaItemCanSee],
     'assignment.can_manage': [Permission.assignmentCanNominateOther, Permission.assignmentCanSee],
-    'assignment.can_manage_polls': [Permission.assignmentCanSee],
+    'assignment.can_manage_polls': [Permission.assignmentCanSeePolls, Permission.assignmentCanSee],
     'assignment.can_nominate_other': [Permission.assignmentCanSee],
     'assignment.can_nominate_self': [Permission.assignmentCanSee],
     'assignment.can_see': [],
+    'assignment.can_see_polls': [Permission.assignmentCanSee],
     'chat.can_manage': [],
     'list_of_speakers.can_be_speaker': [],
     'list_of_speakers.can_manage': [Permission.listOfSpeakersCanSee],
@@ -37,12 +44,12 @@ export const permissionChildren: PermissionsMap = {
         Permission.motionCanForward
     ],
     'motion.can_manage_metadata': [Permission.motionCanSee],
-    'motion.can_manage_polls': [Permission.motionCanSee],
+    'motion.can_manage_polls': [Permission.motionCanSeePolls, Permission.motionCanSee],
     'motion.can_see': [],
     'motion.can_see_internal': [Permission.motionCanSee],
     'motion.can_see_origin': [Permission.motionCanSee],
+    'motion.can_see_polls': [Permission.motionCanSee],
     'motion.can_support': [Permission.motionCanSee],
-    'poll.can_manage': [Permission.pollCanSeeProgress],
     'poll.can_see_progress': [],
     'projector.can_manage': [Permission.projectorCanSee],
     'projector.can_see': [],
@@ -62,8 +69,19 @@ export const permissionChildren: PermissionsMap = {
 
 export const permissionParents: PermissionsMap = {
     'agenda_item.can_manage': [],
-    'agenda_item.can_see': [Permission.agendaItemCanSeeInternal, Permission.agendaItemCanManage],
-    'agenda_item.can_see_internal': [Permission.agendaItemCanManage],
+    'agenda_item.can_manage_polls': [],
+    'agenda_item.can_see': [
+        Permission.agendaItemCanSeeInternal,
+        Permission.agendaItemCanManage,
+        Permission.agendaItemCanSeePolls,
+        Permission.agendaItemCanManagePolls
+    ],
+    'agenda_item.can_see_internal': [
+        Permission.agendaItemCanManage,
+        Permission.agendaItemCanSeePolls,
+        Permission.agendaItemCanManagePolls
+    ],
+    'agenda_item.can_see_polls': [Permission.agendaItemCanManagePolls],
     'assignment.can_manage': [],
     'assignment.can_manage_polls': [],
     'assignment.can_nominate_other': [Permission.assignmentCanManage],
@@ -71,9 +89,11 @@ export const permissionParents: PermissionsMap = {
     'assignment.can_see': [
         Permission.assignmentCanNominateOther,
         Permission.assignmentCanManage,
+        Permission.assignmentCanSeePolls,
         Permission.assignmentCanManagePolls,
         Permission.assignmentCanNominateSelf
     ],
+    'assignment.can_see_polls': [Permission.assignmentCanManagePolls],
     'chat.can_manage': [],
     'list_of_speakers.can_be_speaker': [],
     'list_of_speakers.can_manage': [],
@@ -101,15 +121,16 @@ export const permissionParents: PermissionsMap = {
         Permission.motionCanCreate,
         Permission.motionCanCreateAmendments,
         Permission.motionCanForward,
+        Permission.motionCanSeePolls,
         Permission.motionCanManagePolls,
         Permission.motionCanSupport,
         Permission.motionCanSeeOrigin
     ],
     'motion.can_see_internal': [Permission.motionCanManage],
     'motion.can_see_origin': [],
+    'motion.can_see_polls': [Permission.motionCanManagePolls],
     'motion.can_support': [],
-    'poll.can_manage': [],
-    'poll.can_see_progress': [Permission.pollCanManage],
+    'poll.can_see_progress': [],
     'projector.can_manage': [],
     'projector.can_see': [Permission.projectorCanManage],
     'tag.can_manage': [],

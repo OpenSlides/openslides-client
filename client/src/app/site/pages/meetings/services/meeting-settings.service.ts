@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Service, Signal, signal, WritableSignal } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { Settings } from '../../../../domain/models/meetings/meeting';
@@ -8,6 +8,11 @@ import { ActiveMeetingService } from './active-meeting.service';
 
 @Service()
 export class MeetingSettingsService {
+    /**
+     * Stores a subject per key. Values are published, if the DataStore gets an update.
+     */
+    private settingSignals: Record<string, WritableSignal<any>> = {};
+
     /**
      * Stores a subject per key. Values are published, if the DataStore gets an update.
      */
@@ -26,6 +31,12 @@ export class MeetingSettingsService {
                         this.settingSubjects[key].next(meeting[key as keyof ViewMeeting]);
                     }
                 }
+
+                for (const key of Object.keys(this.settingSignals)) {
+                    if (this.settingSignals[key]() !== meeting[key as keyof ViewMeeting]) {
+                        this.settingSignals[key].set(meeting[key as keyof ViewMeeting]);
+                    }
+                }
             }
         });
         this.get(`custom_translations`).subscribe(customTranslations =>
@@ -40,6 +51,7 @@ export class MeetingSettingsService {
      * Usefull for synchronos code, e.g. during generation of PDFs, when the DataStore is filled.
      *
      * @param key The setting value to get from.
+     * @deprecated Use `signal` instead
      */
     public instant<T extends keyof Settings>(key: T): Settings[T] | null {
         const meeting = this.activeMeetingService.meeting;
@@ -56,5 +68,17 @@ export class MeetingSettingsService {
             this.settingSubjects[key] = new BehaviorSubject<any>(this.instant(key));
         }
         return this.settingSubjects[key] as Observable<Settings[T]>;
+    }
+
+    /**
+     * Get a signal for the setting value given by the key.
+     *
+     * @param key The setting value to get from.
+     */
+    public signal<T extends keyof Settings>(key: T): Signal<Settings[T]> {
+        if (!this.settingSignals[key]) {
+            this.settingSignals[key] = signal<Settings[T]>(this.instant(key));
+        }
+        return this.settingSignals[key] as Signal<Settings[T]>;
     }
 }
