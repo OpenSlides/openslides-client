@@ -63,9 +63,9 @@
                     @if (hasActiveMeeting) {
                         @if (isAllowedSelfSetPresent) {
                             <button
-                                aria-checked="isPresent"
                                 mat-menu-item
                                 role="menuitemcheckbox"
+                                [aria-checked]="isPresent"
                                 [ngClass]="{ active: isPresent }"
                                 (click)="toggleOperatorPresence()"
                             >
@@ -90,7 +90,6 @@
                                 <span class="menu-text">{{ 'Not present' | translate }}</span>
                             </div>
                         }
-
                         @if (isVoteDelegationEnabled && canEditOwnDelegation()) {
                             <button mat-menu-item (click)="openEditInfo(user)">
                                 <mat-icon>edit</mat-icon>

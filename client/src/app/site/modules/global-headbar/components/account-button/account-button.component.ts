@@ -22,7 +22,7 @@ import { BaseUiComponent } from '@app/ui/base/base-ui-component';
 import { PromptService } from '@app/ui/modules/prompt-dialog/services/prompt.service';
 import { ChessDialogComponent } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/components/chess-dialog/chess-dialog.component';
 import { ChessChallengeService } from '@app/ui/modules/sidenav/modules/easter-egg/modules/chess-dialog/services/chess-challenge.service';
-import { _, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { AccountDialogMainComponent } from '../account-dialog-main/account-dialog-main.component';
@@ -111,9 +111,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     public constructor(chessChallengeService: ChessChallengeService) {
         super();
         chessChallengeService.startListening();
-        this.meetingSettingsService
-            .get(`users_enable_vote_delegations`)
-            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
     }
 
     public ngOnInit(): void {
@@ -122,7 +119,9 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
         this.meetingSettingsService
             .get(`users_allow_self_set_present`)
             .subscribe(allowed => (this._isAllowedSelfSetPresent = allowed));
-
+        this.meetingSettingsService
+            .get(`users_enable_vote_delegations`)
+            .subscribe(enabled => (this._voteDelegationEnabled = enabled));
         this.onOperatorUpdate(); // initially trigger the update manually to set initial values
     }
 
@@ -253,51 +252,6 @@ export class AccountButtonComponent extends BaseUiComponent implements OnInit {
     }
 
     public async openEditInfo(user: ViewUser): Promise<void> {
-        const dialogRef = await this.infoDialog.open({
-            id: user.id,
-            name: user.getName(),
-            number: user.number(),
-            group_ids: user.group_ids(),
-            structure_level_ids: user.structure_level_ids(),
-            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids() || [],
-            vote_delegated_to_ids: user.vote_delegated_to_meeting_user_ids()
-        });
-        const selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
-        const selfGroupRemovalDialogContent = _(
-            `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
-        );
-
-        dialogRef.afterClosed().subscribe(async result => {
-            if (result) {
-                if (!result.group_ids?.length) {
-                    result.group_ids = [this.activeMeeting.meeting!.default_group_id];
-                }
-                if (!this.participantRepo.getViewModel(result.vote_delegated_to_ids.length)) {
-                    result.vote_delegated_to_ids = null;
-                }
-                if (
-                    !(
-                        user.id === this.operator.operatorId &&
-                        this.infoDialog.areGroupsDiminished(
-                            this.operator.user.group_ids(),
-                            result.group_ids,
-                            this.activeMeeting.meeting
-                        )
-                    ) ||
-                    (await this.prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
-                ) {
-                    if (
-                        this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
-                        !this.operator.hasPerms(Permission.userCanManage) &&
-                        !this.operator.hasPerms(Permission.userCanUpdate) &&
-                        user.id === this.operator.operatorId
-                    ) {
-                        this.participantRepo.updateSelfDelegation(result, user);
-                    } else {
-                        this.participantRepo.update(result, user).resolve();
-                    }
-                }
-            }
-        });
+        await this.infoDialog.openDialog(user, this.activeMeeting.meeting!);
     }
 }
