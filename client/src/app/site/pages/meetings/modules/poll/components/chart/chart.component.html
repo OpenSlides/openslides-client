@@ -1,15 +1,15 @@
 <div class="chart-wrapper">
-    @if (isReadyToShow) {
+    @if (isReadyToShow()) {
         <c-chart
             [customTooltips]="false"
-            [data]="chartData"
-            [options]="chartOptions"
+            [data]="chartData()"
+            [options]="chartOptions()"
             [style.height]="calcBarChartHeight()"
-            [type]="type"
+            [type]="type()"
         ></c-chart>
-        @if (majority !== undefined) {
-            <div class="chart-icon" [class.color-green]="majority" [class.color-red]="!majority">
-                <mat-icon>{{ majority ? 'check' : 'close' }}</mat-icon>
+        @if (majority() !== undefined) {
+            <div class="chart-icon" [class.color-green]="majority()" [class.color-red]="!majority()">
+                <mat-icon>{{ majority() ? 'check' : 'close' }}</mat-icon>
             </div>
         }
     }
