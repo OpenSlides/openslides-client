@@ -686,36 +686,67 @@ export function diff(
 
     // <ins><STRONG></ins>formatted<ins></STRONG></ins> => <del>formatted</del><ins><STRONG>formatted</STRONG></ins>
     diffUnnormalized = diffUnnormalized.replace(
-        /<ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)<ins><\/\1><\/ins>/gi,
-        (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
-            `<del>` +
-            content +
-            `</del>` +
-            `<ins><` +
-            inlineTag +
-            (tagAttributes ? tagAttributes : ``) +
-            `>` +
-            content +
-            `</` +
-            inlineTag +
-            `></ins>`
+        /<ins><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/ins>([^<]*)(?:<del>(\s*)<\/del>)?<ins>\s*<\/\1>(\s*)<\/ins>/gi,
+        (
+            _whole: string,
+            inlineTag: string,
+            tagAttributes: string,
+            content: string,
+            delSpace = ``,
+            insSpace = ``
+        ): string => {
+            const trimmedContent = content.replace(/\s+$/, ``);
+            const contentSpace = content.slice(trimmedContent.length);
+            return (
+                `<del>` +
+                trimmedContent +
+                (contentSpace || delSpace || ``) +
+                `</del>` +
+                `<ins><` +
+                inlineTag +
+                (tagAttributes ? tagAttributes : ``) +
+                `>` +
+                trimmedContent +
+                `</` +
+                inlineTag +
+                `>` +
+                (insSpace || contentSpace || ``) +
+                `</ins>`
+            );
+        }
     );
 
     // <del><STRONG></del>formatted<del></STRONG></del> => <del><STRONG>formatted</STRONG></del><ins>formatted</ins>
     diffUnnormalized = diffUnnormalized.replace(
-        /<del><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del><\/\1><\/del>/gi,
-        (_whole: string, inlineTag: string, tagAttributes: string, content: string): string =>
-            `<del><` +
-            inlineTag +
-            (tagAttributes ? tagAttributes : ``) +
-            `>` +
-            content +
-            `</` +
-            inlineTag +
-            `></del>` +
-            `<ins>` +
-            content +
-            `</ins>`
+        /<del><(mark|span|strong|em|b|i|u|s|a|small|big|sup|sub)( [^>]*)?><\/del>([^<]*)<del>\s*<\/\1>(\s*)<\/del>(?:(\s*)(?=<BR[\s/>]))?/gi,
+        (
+            _whole: string,
+            inlineTag: string,
+            tagAttributes: string,
+            content: string,
+            delSpace = ``,
+            spaceBeforeBr = ``
+        ): string => {
+            const trimmedContent = content.replace(/\s+$/, ``);
+            const contentSpace = content.slice(trimmedContent.length);
+            const space = contentSpace || delSpace || spaceBeforeBr || ``;
+            return (
+                `<del><` +
+                inlineTag +
+                (tagAttributes ? tagAttributes : ``) +
+                `>` +
+                trimmedContent +
+                `</` +
+                inlineTag +
+                `>` +
+                space +
+                `</del>` +
+                `<ins>` +
+                trimmedContent +
+                space +
+                `</ins>`
+            );
+        }
     );
 
     // <del><STRONG>Körper</del><ins>alten <STRONG>Körpergehülle</ins></STRONG> => <ins>alten </ins><STRONG><del>Körper</del><ins>Körpergehülle</ins></STRONG>
