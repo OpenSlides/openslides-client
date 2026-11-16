@@ -82,6 +82,7 @@ describe(`HtmlToPdfService`, () => {
             ] as Content[]);
         });
 
+
         it(`struck span`, () => {
             const result = service.convertHtml({
                 htmlText: `<span style="text-decoration: line-through">Struck</span>`
