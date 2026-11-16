@@ -67,18 +67,6 @@
                     />
                 }
 
-                @if (castedBallots() !== null) {
-                    <ng-container
-                        [ngTemplateOutlet]="resultRow"
-                        [ngTemplateOutletContext]="{
-                            amount: castedBallots(),
-                            percent: '100',
-                            votingLabel: 'Casted ballots' | translate,
-                            votingOption: 'votesvalid'
-                        }"
-                    />
-                }
-
                 @if (entitledUsers() !== null) {
                     <ng-container
                         [ngTemplateOutlet]="resultRow"
@@ -108,6 +96,18 @@
                             amount: invalidBallots(),
                             percent: invalidBallotsPercent(),
                             votingLabel: 'Invalid votes' | translate
+                        }"
+                    />
+                }
+
+                @if (castedBallots() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: castedBallots(),
+                            percent: '100',
+                            votingLabel: 'Casted ballots' | translate,
+                            votingOption: 'votesvalid'
                         }"
                     />
                 }

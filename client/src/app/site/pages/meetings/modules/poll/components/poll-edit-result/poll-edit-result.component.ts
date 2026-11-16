@@ -41,6 +41,7 @@ interface PollEditResultModel {
     options: OptionFormEntry[];
     empty: number;
     nota: number;
+    valid: number;
     invalid: number;
     total_ballots: number;
 }
@@ -73,6 +74,7 @@ export class PollEditResultComponent {
         options: [],
         empty: 0,
         nota: 0,
+        valid: 0,
         invalid: 0,
         total_ballots: 0
     });
@@ -155,6 +157,7 @@ export class PollEditResultComponent {
                 options: builtOptions,
                 empty: this.showAbstain() ? (result[`empty`] ?? null) : null,
                 nota: result[`nota`] ?? null,
+                valid: result[`valid`] ?? null,
                 invalid: result[`invalid`] ?? null,
                 total_ballots: result[`total_ballots`] ?? null
             });
@@ -167,25 +170,7 @@ export class PollEditResultComponent {
             return;
         }
 
-        if (this.configType() !== 'rating_approval') {
-            this.resultForm
-                .total_ballots()
-                .value.set(
-                    data.invalid +
-                        data.empty +
-                        data.nota +
-                        data.options.reduce((p, c) => p + c.value.yes + c.value.no + c.value.abstain, 0)
-                );
-        } else {
-            this.resultForm
-                .total_ballots()
-                .value.set(
-                    data.invalid +
-                        data.empty +
-                        data.nota +
-                        data.options.reduce((p, c) => Math.max(c.value.yes + c.value.no + c.value.abstain, p), 0)
-                );
-        }
+        this.resultForm.total_ballots().value.set(data.invalid + data.valid);
     }
 
     public serializeResult(): Record<string, unknown> {
@@ -221,6 +206,7 @@ export class PollEditResultComponent {
             ...(this.configType() === `approval`
                 ? (serializedOptions[this.options()[0].key] as Record<string, number | string>)
                 : serializedOptions),
+            ...(m.valid !== null ? { valid: m.valid } : {}),
             ...(m.invalid !== null ? { invalid: m.invalid } : {}),
             ...(m.total_ballots !== null ? { total_ballots: m.total_ballots } : {}),
             ...(this.showAbstain() ? { empty: m.empty } : {}),

@@ -2,12 +2,17 @@
     <div class="result-wrapper">
         <div class="result-table-wrapper">
             <table class="result-table">
+                @if (sortByVotes()) {
+                    <col width="1" />
+                }
                 <col />
                 <col width="1" />
                 <col width="1" />
                 <col width="1" />
                 <tr>
-                    <th></th>
+                    @if (sortByVotes()) {
+                        <th colspan="2"></th>
+                    }
                     <th class="check-icon"></th>
                     <th class="result-col-header" colspan="2">{{ 'Votes' | translate }}</th>
                 </tr>
@@ -18,11 +23,20 @@
                     let-color="color"
                     let-firstSummary="firstSummary"
                     let-majority="majority"
+                    let-num="num"
                     let-option="option"
                     let-percent="percent"
                     let-votingOption="votingOption"
                 >
                     <tr [class.votesvalid]="firstSummary" [style.color]="color">
+                        @if (sortByVotes()) {
+                            <td class="num-col">
+                                @if (num) {
+                                    {{ num }}.
+                                }
+                            </td>
+                        }
+
                         <!-- YNA/Valid etc -->
                         <td>
                             @if (color) {
@@ -111,18 +125,6 @@
                     />
                 }
 
-                @if (castedBallots() !== null) {
-                    <ng-container
-                        [ngTemplateOutlet]="resultRow"
-                        [ngTemplateOutletContext]="{
-                            amount: castedBallots(),
-                            percent: '100',
-                            votingOption: 'Casted ballots' | translate,
-                            firstSummary: true
-                        }"
-                    />
-                }
-
                 @if (entitledUsers() !== null) {
                     <ng-container
                         [ngTemplateOutlet]="resultRow"
@@ -152,6 +154,18 @@
                             amount: invalidBallots(),
                             percent: invalidBallotsPercent(),
                             votingOption: 'Invalid votes' | translate
+                        }"
+                    />
+                }
+
+                @if (castedBallots() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: castedBallots(),
+                            percent: '100',
+                            votingOption: 'Casted ballots' | translate,
+                            firstSummary: true
                         }"
                     />
                 }

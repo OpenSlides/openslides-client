@@ -144,6 +144,7 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
 
     private foreignSortBaseKeys: Record<string, Record<string, string[]>> = {};
     private foreignSortBaseKeySubscriptions: Record<string, Subscription[]> = {};
+    private readonly viewModelPropertyDescriptorCache = new Map<PropertyKey, PropertyDescriptor>();
 
     protected DS = inject(DataStoreService);
     protected actions = inject(ActionService);
@@ -670,12 +671,29 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
         }
     }
 
+    private getViewModelPropertyDescriptor(target: V, property: PropertyKey): PropertyDescriptor | undefined {
+        const cachedDescriptor = this.viewModelPropertyDescriptorCache.get(property);
+        if (cachedDescriptor) {
+            return cachedDescriptor;
+        }
+
+        let prototype: object | null = target;
+        while (prototype) {
+            const descriptor = Object.getOwnPropertyDescriptor(prototype, property);
+            if (descriptor) {
+                this.viewModelPropertyDescriptorCache.set(property, descriptor);
+                return descriptor;
+            }
+            prototype = Object.getPrototypeOf(prototype);
+        }
+
+        return undefined;
+    }
+
     private createViewModelProxy(model?: M): V {
         let viewModel = new this.baseViewModelCtor(model);
         viewModel = new Proxy(viewModel, {
             get: (target: V, property): any => {
-                // target is our viewModel and property the requested value: viewModel[property]
-                let result: any; // This is what we have to resolve: viewModel[property] -> result
                 const _model: M = target.getModel();
                 const relation = typeof property === `string` ? this.relationsByKey[property] : null;
 
@@ -689,31 +707,16 @@ export abstract class BaseRepository<V extends BaseViewModel, M extends BaseMode
                 }
 
                 // try to find a getter for property
-                if (property in target) {
-                    // iterate over prototype chain
-                    let prototypeFunc = this.baseViewModelCtor;
-                    let descriptor = null;
-                    do {
-                        descriptor = Object.getOwnPropertyDescriptor(prototypeFunc.prototype, property);
-                        if (!descriptor || !descriptor.get) {
-                            prototypeFunc = Object.getPrototypeOf(prototypeFunc);
-                        }
-                    } while (!(descriptor && descriptor.get) && prototypeFunc && prototypeFunc.prototype);
-
-                    if (descriptor && descriptor.get) {
-                        // if getter was found in prototype chain, bind it with this proxy for right `this` access
-                        result = descriptor.get.bind(viewModel)();
-                    } else {
-                        result = target[property as keyof BaseViewModel];
-                    }
+                if (this.getViewModelPropertyDescriptor(target, property) || property in target) {
+                    return Reflect.get(target, property, viewModel);
                 } else if (property in _model) {
-                    result = _model[property as keyof BaseModel];
+                    return Reflect.get(_model, property);
                 } else if (relationAsObservable) {
-                    result = this.relationManager.getObservableForRelation(_model, relationAsObservable);
+                    return this.relationManager.getObservableForRelation(_model, relationAsObservable);
                 } else if (relation) {
-                    result = this.relationManager.handleRelation(_model, relation);
+                    return this.relationManager.handleRelation(_model, relation);
                 }
-                return result;
+                return undefined;
             },
             set: (obj, ...args): any => {
                 obj.viewModelUpdateTimestamp = Date.now();
