@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, computed, effect, inject, input, signal, viewChild, ViewEncapsulation } from '@angular/core';
+import { Component, computed, effect, inject, input, signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -62,8 +62,7 @@ interface PollForm {
         PipesModule,
         KeyValuePipe,
         ReactiveFormsModule
-    ],
-    encapsulation: ViewEncapsulation.None
+    ]
 })
 export class PollFormComponent extends BaseComponent {
     private approvalForm = viewChild(PollFormApprovalComponent);
@@ -202,6 +201,7 @@ export class PollFormComponent extends BaseComponent {
     }
 
     public onOptionsChange(items: string[]): void {
+        this.form.options().markAsDirty();
         this.form.options().value.set(items);
     }
 
@@ -234,8 +234,14 @@ export class PollFormComponent extends BaseComponent {
                 }
             }
 
-            if (data.options !== undefined && !data.options.some(option => option.content_object_id))
-                this.form['options']().value.set(data.options.map(option => option.text));
+            if (
+                data.options !== undefined &&
+                !this.form.options().dirty() &&
+                !data.options.some(option => option.content_object_id)
+            ) {
+                this.form.options().value.set(data.options.map(option => option.text));
+            }
+
             if (data.config?.method) {
                 let preselection = data.config.method;
                 if (!(data instanceof ViewPoll) && this.optionAmount() <= 1 && data.config.method !== `rating_score`) {

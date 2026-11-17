@@ -165,7 +165,7 @@
         <div class="option-section">
             <h4 class="option-section-title">{{ 'Options' | translate }}</h4>
             <os-editable-list
-                placeholder="New option"
+                [placeholder]="'New option' | translate"
                 [items]="form.options().value()"
                 (itemsChange)="onOptionsChange($event)"
             />
