@@ -6,8 +6,7 @@ import {
     Input,
     OnDestroy,
     OnInit,
-    Output,
-    ViewEncapsulation
+    Output
 } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { NavigationEnd, Router } from '@angular/router';
@@ -26,8 +25,7 @@ export interface SearchListDefinition {
     templateUrl: `./motion-extension-field.component.html`,
     styleUrls: [`./motion-extension-field.component.scss`],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
-    encapsulation: ViewEncapsulation.None
+    standalone: false
 })
 export class MotionExtensionFieldComponent implements OnInit, OnDestroy {
     /**
