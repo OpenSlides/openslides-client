@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Service, Signal, signal, WritableSignal } from '@angular/core';
 import { OrganizationRepositoryService } from '@app/gateways/repositories/organization-repository.service';
 import { BehaviorSubject, combineLatest, filter, map, Observable } from 'rxjs';
 
@@ -8,6 +8,11 @@ import { ORGANIZATION_ID, OrganizationService } from './organization.service';
 
 @Service()
 export class OrganizationSettingsService {
+    /**
+     * Stores a subject per key. Values are published, if the DataStore gets an update.
+     */
+    private settingSignals: Record<string, WritableSignal<any>> = {};
+
     /**
      * Stores a subject per key. Values are published, if the DataStore gets an update.
      */
@@ -29,6 +34,12 @@ export class OrganizationSettingsService {
             if (activeOrganization) {
                 for (const key of Object.keys(this.settingSubjects)) {
                     this.settingSubjects[key].next(activeOrganization[key as keyof ViewOrganization] as any);
+                }
+
+                for (const key of Object.keys(this.settingSignals)) {
+                    if (this.settingSignals[key]() !== activeOrganization[key as keyof ViewOrganization]) {
+                        this.settingSignals[key].set(activeOrganization[key as keyof ViewOrganization]);
+                    }
                 }
             }
         });
@@ -69,6 +80,18 @@ export class OrganizationSettingsService {
             filter(values => values[1]),
             map(values => values[0])
         );
+    }
+
+    /**
+     * Get a signal for the setting value given by the key.
+     *
+     * @param key The setting value to get from.
+     */
+    public signal<T extends keyof OrganizationSetting>(key: T): Signal<OrganizationSetting[T]> {
+        if (!this.settingSignals[key]) {
+            this.settingSignals[key] = signal<OrganizationSetting[T]>(this.instant(key));
+        }
+        return this.settingSignals[key] as Signal<OrganizationSetting[T]>;
     }
 
     private ensureSettingsSubject<T extends keyof OrganizationSetting>(key: T): void {

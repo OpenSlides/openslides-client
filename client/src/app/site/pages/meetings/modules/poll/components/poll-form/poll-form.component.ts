@@ -14,6 +14,7 @@ import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from '@app/site/base/base.component';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ViewMeetingPollSetting } from '@app/site/pages/meetings/view-models/view-meeting-poll-setting';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { DirectivesModule } from '@app/ui/directives';
 import { EditableListComponent } from '@app/ui/modules/editable-list';
 import { SearchSelectorModule } from '@app/ui/modules/search-selector';
@@ -78,7 +79,6 @@ export class PollFormComponent extends BaseComponent {
     public optionAmount = input<number>(0);
     public optionType = input<'meeting_user' | 'text'>('text');
     public optionEdit = input<boolean>(false);
-    public isEVotingEnabled = input.required<boolean>();
 
     public pollSettings = input.required<ViewMeetingPollSetting>();
 
@@ -163,6 +163,9 @@ export class PollFormComponent extends BaseComponent {
 
     public groupRepo = inject(GroupControllerService);
     private dialog = inject(MatDialog);
+    private organizationSettingsService = inject(OrganizationSettingsService);
+
+    public isEVotingEnabled = this.organizationSettingsService.signal(`enable_electronic_voting`);
 
     public allowCumulative = computed(() => {
         return this.pollSettings().enable_cumulative_voting;
