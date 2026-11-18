@@ -33,9 +33,9 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
             case 'cast':
                 return this.parsedResult().total_ballots;
             case 'entitled':
-                return this.poll?.entitled_user_ids?.length ?? null;
+                return this.parsedResult().entitled_users;
             case 'entitled_present':
-                return this.poll?.entitled_users.filter(u => u.present).length ?? null;
+                return this.parsedResult().entitled_users_present;
         }
 
         return null;
