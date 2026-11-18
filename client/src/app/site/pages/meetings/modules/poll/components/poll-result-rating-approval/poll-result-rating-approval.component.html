@@ -148,7 +148,7 @@
                     [ngTemplateOutlet]="resultCol"
                     [ngTemplateOutletContext]="{
                         amount: castedBallots(),
-                        percent: '100'
+                        percent: config().onehundred_percent_base === `cast` ? '100' : null,
                     }"
                 />
             </tr>
