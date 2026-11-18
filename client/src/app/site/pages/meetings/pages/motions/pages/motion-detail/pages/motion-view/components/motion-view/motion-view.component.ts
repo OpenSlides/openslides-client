@@ -398,18 +398,17 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
             })
             .afterClosed()
             .subscribe(result => {
-                if (result) {
-                    this.itemRepo
-                        .addToAgenda(
-                            {
-                                type: result?.agenda_type,
-                                parent_id: result?.agenda_parent_id
-                            },
-                            this.motion
-                        )
-                        .resolve()
-                        .catch(this.raiseError);
-                }
+                if (!result) return;
+                this.itemRepo
+                    .addToAgenda(
+                        {
+                            type: result.agenda_type,
+                            parent_id: result.agenda_parent_id
+                        },
+                        this.motion
+                    )
+                    .resolve()
+                    .catch(this.raiseError);
             });
     }
 

@@ -1,4 +1,4 @@
-import { inject, Service, signal } from '@angular/core';
+import { inject, Service } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Id, Ids } from '@app/domain/definitions/key-types';
@@ -10,6 +10,7 @@ import { ActionRequest } from '@app/gateways/actions/action-utils';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { SpinnerService } from '@app/site/modules/global-spinner';
 import { ListOfSpeakersControllerService } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ModelRequestService } from '@app/site/services/model-request.service';
 import { ChoiceService } from '@app/ui/modules/choice-dialog';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
@@ -42,6 +43,7 @@ export class MotionMultiselectService {
     protected dialog = inject(MatDialog);
     private repo = inject(MotionControllerService);
     private translate = inject(TranslateService);
+    private activeMeetingId = inject(ActiveMeetingIdService);
     private promptService = inject(PromptService);
     private choiceService = inject(ChoiceService);
     private userRepo = inject(ParticipantControllerService);
@@ -58,8 +60,6 @@ export class MotionMultiselectService {
     private snackbar = inject(MatSnackBar);
     private modelRequestService = inject(ModelRequestService);
     private actionService = inject(ActionService);
-
-    public readonly onSuccess = signal(false);
 
     private messageForSpinner = this.translate.instant(`Motions are in process. Please wait ...`);
     /**
@@ -347,37 +347,64 @@ export class MotionMultiselectService {
 
     public async addToAgenda(motions: ViewMotion[]): Promise<void> {
         if (!motions.length) return;
+        const sortedMotions = [...motions].sort((a, b) =>
+            a.number.localeCompare(b.number, undefined, {
+                numeric: true,
+                sensitivity: 'base'
+            })
+        );
+        const agendaItems = this.agendaRepo.getViewModelList();
+        const motionsNotInAgenda = sortedMotions.filter(motion => !motion.agenda_item_id);
+        const existingAgendaItems = sortedMotions
+            .filter(motion => !!motion.agenda_item_id)
+            .map(motion => agendaItems.find(item => item.id === motion.agenda_item_id))
+            .filter(item => !!item);
         this.dialog
             .open(AddItemToAgendaDialog, {
-                data: { meetingId: motions[0].meeting_id, isMultiSelect: true },
+                data: {
+                    meetingId: this.activeMeetingId,
+                    isMultiSelect: true,
+                    excludedIds: motions.map(motion => motion?.agenda_item_id).filter((id): id is number => !!id)
+                },
                 ...infoDialogSettings
             })
             .afterClosed()
-            .subscribe(result => {
-                if (result) {
-                    this.agendaRepo
-                        .addToAgenda(
+            .subscribe(async result => {
+                if (!result) return;
+                const actions: Action<any>[] = [];
+                const promises: Promise<any>[] = [];
+                if (motionsNotInAgenda.length) {
+                    actions.push(
+                        this.agendaRepo.addToAgenda(
                             {
-                                type: result?.agenda_type,
-                                parent_id: result?.agenda_parent_id
+                                type: result.agenda_type,
+                                parent_id: result.agenda_parent_id
                             },
-                            ...motions
+                            ...motionsNotInAgenda
                         )
-                        .resolve()
-                        .then(() => this.onSuccess.set(true));
+                    );
                 }
+                if (existingAgendaItems.length) {
+                    actions.push(
+                        this.agendaRepo.assignToParent({
+                            ids: existingAgendaItems.map(item => item.id),
+                            parent_id: result.agenda_parent_id
+                        })
+                    );
+                    promises.push(this.agendaRepo.bulkSetAgendaType(existingAgendaItems as any, result.agenda_type));
+                }
+                actions.forEach(action => {
+                    action.setSendActionFn((req: ActionRequest[], _) => this.actionService.sendRequests(req, true));
+                    promises.push(action.resolve());
+                });
+                if (promises.length) {
+                    const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
+                    this.spinnerService.show(message, {
+                        hideAfterPromiseResolved: () => Promise.all(promises)
+                    });
+                }
+                console.log(result);
             });
-    }
-
-    public async removeFromAgenda(motions: ViewMotion[]): Promise<void> {
-        if (!motions.length) return;
-        const title = this.translate.instant(`Are you sure you want to remove all selected items from the agenda?`);
-        const content = this.translate.instant(`All topics will be deleted and won't be accessible afterwards.`);
-        if (await this.promptService.open(title, content)) {
-            await this.agendaRepo
-                .removeFromAgenda(...motions.map(motion => motion?.agenda_item_id))
-                .then(() => this.onSuccess.set(true));
-        }
     }
 
     /**

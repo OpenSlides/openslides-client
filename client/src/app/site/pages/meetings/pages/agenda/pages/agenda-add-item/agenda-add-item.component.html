@@ -1,10 +1,13 @@
 <h2 class="dialog-title" mat-dialog-title>
-    {{ (data.isMultiSelect ? 'Move all selected items to agenda' : 'Move ' + data.title + ' to agenda') | translate }}
+    @if (data.isMultiSelect) {
+        {{ 'Move all selected items to agenda' | translate }}
+    } @else {
+        {{ data.title + ': Move to agenda' | translate }}
+    }
 </h2>
 <mat-dialog-content class="dialog-content padding-top">
     <form class="agenda-add-form" [formGroup]="toAgendaForm">
-        @let visibilityControl = toAgendaForm.controls.agenda_type;
-        <div [style.margin-bottom]="visibilityControl.touched && visibilityControl.value === null ? '1em' : null">
+        <div>
             <mat-form-field class="padding-top form-field">
                 <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
                 <mat-select formControlName="agenda_type" required>
@@ -14,11 +17,6 @@
                         </mat-option>
                     }
                 </mat-select>
-                @if (visibilityControl.touched) {
-                    <mat-error>
-                        {{ 'Please select an agenda visibility' | translate }}
-                    </mat-error>
-                }
             </mat-form-field>
         </div>
         <div>
@@ -35,7 +33,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions class="text-align-end">
-    <button color="primary" mat-button type="button" [disabled]="isVisibilitySet()" (click)="addToAgenda()">
+    <button color="primary" mat-button type="button" (click)="addToAgenda()">
         {{ 'Move to agenda' | translate }}
     </button>
     <button mat-button type="button" (click)="dialogRef.close()">{{ 'Cancel' | translate }}</button>

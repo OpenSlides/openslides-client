@@ -3,7 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Permission } from '@app/domain/definitions/permission';
 import { PROJECTIONDEFAULT } from '@app/domain/models/projector/projection-default';
+import { Action, ActionService } from '@app/gateways/actions';
+import { ActionRequest } from '@app/gateways/actions/action-utils';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { SpinnerService } from '@app/site/modules/global-spinner/services/spinner.service';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
 import { AddItemToAgendaDialog } from '@app/site/pages/meetings/pages/agenda/pages/agenda-add-item/agenda-add-item.component';
 import { AgendaItemControllerService } from '@app/site/pages/meetings/pages/agenda/services';
@@ -40,22 +43,26 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
      */
     public filterProps = [`title`, `candidates`, `assignment_related_users`, `tags`, `candidateAmount`];
 
+    private messageForSpinner = this.translate.instant(`Assignments are in process. Please wait ...`);
+
     public get canManageAssignments(): boolean {
         return this.operator.hasPerms(Permission.assignmentCanManage);
     }
 
     public constructor(
-        protected override translate: TranslateService,
         public repo: AssignmentControllerService,
-        private promptService: PromptService,
         public filterService: AssignmentFilterListService,
         public sortService: AssignmentSortListService,
         public dialog: MatDialog,
-        private pdfService: AssignmentExportService,
+        public vp: ViewPortService,
+        protected override translate: TranslateService,
         protected route: ActivatedRoute,
+        private promptService: PromptService,
+        private pdfService: AssignmentExportService,
         private operator: OperatorService,
         private itemRepo: AgendaItemControllerService,
-        public vp: ViewPortService
+        private spinnerService: SpinnerService,
+        private actionService: ActionService
     ) {
         super();
         this.canMultiSelect = true;
@@ -124,43 +131,69 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         }
     }
 
-    public addToAgenda(assignments: ViewAssignment[]): void {
+    public async addToAgenda(assignments: ViewAssignment[]): Promise<void> {
+        if (!assignments.length) return;
         const originalOrder = this.listComponent.source.map(item => item.assignment.id) ?? [];
         const sortedAssignments = [...assignments].sort(
             (a, b) => originalOrder.indexOf(a.id) - originalOrder.indexOf(b.id)
         );
-
+        const assignmentsNotInAgenda = sortedAssignments.filter(assignment => !assignment.agenda_item_id);
+        const existingAgendaItems = sortedAssignments
+            .filter(assignment => !!assignment.agenda_item_id)
+            .map(assignment => this.itemRepo.getViewModelList().find(item => item.id === assignment.agenda_item_id))
+            .filter(item => !!item);
         this.dialog
             .open(AddItemToAgendaDialog, {
-                data: { meetingId: assignments[0].meeting_id, isMultiSelect: true },
+                data: {
+                    meetingId: this.activeMeetingId,
+                    isMultiSelect: true,
+                    excludedIds: sortedAssignments
+                        .map(assignment => assignment?.agenda_item_id)
+                        .filter((id): id is number => !!id)
+                },
                 ...infoDialogSettings
             })
             .afterClosed()
-            .subscribe(result => {
-                if (result) {
-                    this.itemRepo
-                        .addToAgenda(
+            .subscribe(async result => {
+                if (!result) return;
+                const actions: Action<any>[] = [];
+                const promises: Promise<any>[] = [];
+
+                if (assignmentsNotInAgenda.length) {
+                    actions.push(
+                        this.itemRepo.addToAgenda(
                             {
-                                type: result?.agenda_type,
-                                parent_id: result?.agenda_parent_id
+                                type: result.agenda_type,
+                                parent_id: result.agenda_parent_id
                             },
-                            ...sortedAssignments
+                            ...assignmentsNotInAgenda
                         )
-                        .resolve()
-                        .then(() => this.toggleMultiSelect());
+                    );
+                }
+                if (existingAgendaItems.length) {
+                    actions.push(
+                        this.itemRepo.assignToParent({
+                            ids: existingAgendaItems.map(item => item.id),
+                            parent_id: result.agenda_parent_id
+                        })
+                    );
+
+                    promises.push(this.itemRepo.bulkSetAgendaType(existingAgendaItems as any, result.agenda_type));
+                }
+
+                for (const action of actions) {
+                    action.setSendActionFn((req: ActionRequest[], _) => this.actionService.sendRequests(req, true));
+                    promises.push(action.resolve());
+                }
+
+                if (promises.length) {
+                    const message = `${assignments.length} ${this.translate.instant(this.messageForSpinner)}`;
+
+                    this.spinnerService.show(message, {
+                        hideAfterPromiseResolved: () => Promise.all(promises)
+                    });
                 }
             });
-    }
-
-    public async removeFromAgenda(assignments: ViewAssignment[]): Promise<void> {
-        const title = this.translate.instant(`Are you sure you want to remove all selected items from the agenda?`);
-        const content = this.translate.instant(`All topics will be deleted and won't be accessible afterwards.`);
-        if (await this.promptService.open(title, content)) {
-            this.itemRepo
-                .removeFromAgenda(...assignments.map(assignment => assignment?.agenda_item_id))
-                .then(() => this.toggleMultiSelect())
-                .catch(this.raiseError);
-        }
     }
 
     public addToProjectorQueue(): MultiProjectionBuildDescriptor {
