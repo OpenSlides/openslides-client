@@ -32,10 +32,10 @@
     <button
         mat-icon-button
         matSuffix
-        matTooltip=" {{ 'Send' | translate }}"
         type="button"
         [color]="isPartOfMeeting() ? 'accent' : 'warn'"
         [disabled]="!isMessageFormValid"
+        [matTooltip]="'Send' | translate"
         (click)="sendChatMessage()"
     >
         <mat-icon>send</mat-icon>
