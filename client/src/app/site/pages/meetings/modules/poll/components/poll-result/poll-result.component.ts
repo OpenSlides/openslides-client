@@ -24,7 +24,8 @@ export class PollResultComponent {
 
     public config = rxResource<any, ViewPoll>({
         params: () => this.poll(),
-        stream: ({ params }) => params.config$
+        stream: ({ params }) => params.config$,
+        equal: () => false
     });
 
     public configType = computed(() => {

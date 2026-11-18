@@ -1,13 +1,13 @@
 import { computed, Directive, input } from '@angular/core';
-import { BaseViewModel } from '@app/site/base/base-view-model';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
+import { BasePollConfigViewModel } from '../../../pages/polls/view-models/base-poll-config-view-model';
 import { ViewPollOption } from '../../../pages/polls/view-models/poll-option';
 
 export const PERCENT_DECIMAL_PLACES = 3;
 
 @Directive()
-export abstract class PollResultBaseComponent<T extends BaseViewModel, U> {
+export abstract class PollResultBaseComponent<T extends BasePollConfigViewModel, U> {
     public poll = input.required<ViewPoll>();
     public config = input.required<T>();
 
@@ -16,7 +16,7 @@ export abstract class PollResultBaseComponent<T extends BaseViewModel, U> {
             return [];
         }
 
-        return this.poll()?.config?.parsedResult() || {};
+        return this.config()?.parsedResult() || {};
     });
 
     /**
