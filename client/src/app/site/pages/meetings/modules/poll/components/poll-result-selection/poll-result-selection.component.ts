@@ -86,10 +86,10 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     public resultOptions = computed<Results>(() => {
         const results = this.results();
 
-        const showPieChart = this.config().display_chart === `pie`;
+        const showPieChart = this.config.value().display_chart === `pie`;
         const showPercent =
-            this.config().onehundred_percent_base !== `disabled` &&
-            this.config().onehundredPercentBaseNum &&
+            this.config.value().onehundred_percent_base !== `disabled` &&
+            this.config.value().onehundredPercentBaseNum &&
             !this.options().some(o => +results[o.id] === VOTE_MAJORITY);
         const colors = this.generateChartColors(this.options()?.length ?? 0);
 
@@ -105,10 +105,12 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
                 color: showPieChart ? colors[i] : null,
                 amount,
                 majority:
-                    !this.config().strike_out && this.requiredMajority() !== null && amount >= this.requiredMajority(),
+                    !this.config.value().strike_out &&
+                    this.requiredMajority() !== null &&
+                    amount >= this.requiredMajority(),
                 percent: showPercent
                     ? Big(results[option.id] || 0)
-                          .div(this.config().onehundredPercentBaseNum)
+                          .div(this.config.value().onehundredPercentBaseNum)
                           .mul(100)
                           .toNumber()
                     : null
@@ -155,51 +157,54 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
             return false;
         }
 
-        return this.config().display_chart === `pie`;
+        return this.config.value().display_chart === `pie`;
     });
 
     public totalVoteSum = computed<number>(() => {
-        return this.config().totalVotes!;
+        return this.config.value().totalVotes!;
     });
 
     public validBallots = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base === `cast` && !this.invalidBallots()) {
+        if (this.config.value().onehundred_percent_base === `cast` && !this.invalidBallots()) {
             return null;
         }
 
-        return this.config().validBallots;
+        return this.config.value().validBallots;
     });
 
     public validBallotsPercent = computed<string | null>(() => {
-        if (!this.config().onehundredPercentBaseNum || this.config().onehundred_percent_base === 'no_general') {
+        if (
+            !this.config.value().onehundredPercentBaseNum ||
+            this.config.value().onehundred_percent_base === 'no_general'
+        ) {
             return null;
         }
 
-        return this.formatResultDecimal((this.validBallots() / this.config().onehundredPercentBaseNum) * 100);
+        return this.formatResultDecimal((this.validBallots() / this.config.value().onehundredPercentBaseNum) * 100);
     });
 
     public invalidBallots = computed<number | null>(() => {
-        return this.config().invalidBallots;
+        return this.config.value().invalidBallots;
     });
 
     public invalidBallotsPercent = computed<string | null>(() => {
-        if (!this.config().onehundredPercentBaseNum || this.config().onehundred_percent_base !== 'cast') {
+        if (!this.config.value().onehundredPercentBaseNum || this.config.value().onehundred_percent_base !== 'cast') {
             return null;
         }
 
-        return this.formatResultDecimal((this.invalidBallots() / this.config().onehundredPercentBaseNum) * 100);
+        return this.formatResultDecimal((this.invalidBallots() / this.config.value().onehundredPercentBaseNum) * 100);
     });
 
     public castedBallots = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base !== `cast` && !this.invalidBallots()) {
+        if (this.config.value().onehundred_percent_base !== `cast` && !this.invalidBallots()) {
             return null;
         }
 
-        return this.config().parsedResult()?.total_ballots || 0;
+        return this.config.value().parsedResult()?.total_ballots || 0;
     });
 
     public entitledUsers = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base !== `entitled`) {
+        if (this.config.value().onehundred_percent_base !== `entitled`) {
             return null;
         }
 
@@ -207,7 +212,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public presentEntitledUsers = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base !== `entitled_present`) {
+        if (this.config.value().onehundred_percent_base !== `entitled_present`) {
             return null;
         }
 
@@ -215,18 +220,20 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public requiredMajority = computed<number | null>(() => {
-        if (!this.config().onehundredPercentBaseNum) {
+        if (!this.config.value().onehundredPercentBaseNum) {
             return null;
         }
 
-        if (this.config().required_majority === PollRequiredMajority.AbsoluteMajority) {
+        if (this.config.value().required_majority === PollRequiredMajority.AbsoluteMajority) {
             return Math.ceil(
-                this.config().onehundredPercentBaseNum / 2 - (this.config().onehundredPercentBaseNum % 2) + 1
+                this.config.value().onehundredPercentBaseNum / 2 -
+                    (this.config.value().onehundredPercentBaseNum % 2) +
+                    1
             );
-        } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
-            return Math.ceil((this.config().onehundredPercentBaseNum * 2) / 3);
-        } else if (this.config().required_majority === PollRequiredMajority.SimpleMajority) {
-            const result = this.config().parsedResult();
+        } else if (this.config.value().required_majority === PollRequiredMajority.TwoThirdMajority) {
+            return Math.ceil((this.config.value().onehundredPercentBaseNum * 2) / 3);
+        } else if (this.config.value().required_majority === PollRequiredMajority.SimpleMajority) {
+            const result = this.config.value().parsedResult();
             return Math.max(
                 ...Object.keys({ ...result, 0: 1 })
                     .filter(k => !isNaN(+k) && !isNaN(+result[k]))
@@ -242,39 +249,39 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
             return null;
         }
 
-        return +this.config().parsedResult()?.empty || 0;
+        return +this.config.value().parsedResult()?.empty || 0;
     });
 
     public generalAbstainPercent = computed<string | null>(() => {
         if (
-            !this.config().onehundredPercentBaseNum ||
+            !this.config.value().onehundredPercentBaseNum ||
             !this.generalAbstain() ||
-            this.config().onehundred_percent_base === 'no_general'
+            this.config.value().onehundred_percent_base === 'no_general'
         ) {
             return null;
         }
 
-        return this.formatResultDecimal((this.generalAbstain() / this.config().onehundredPercentBaseNum) * 100);
+        return this.formatResultDecimal((this.generalAbstain() / this.config.value().onehundredPercentBaseNum) * 100);
     });
 
     public nota = computed<number | null>(() => {
-        if (!this.config().allow_nota) {
+        if (!this.config.value().allow_nota) {
             return null;
         }
 
-        return +this.config().parsedResult()?.nota || 0;
+        return +this.config.value().parsedResult()?.nota || 0;
     });
 
     public notaPercent = computed<string | null>(() => {
         if (
-            !this.config().onehundredPercentBaseNum ||
+            !this.config.value().onehundredPercentBaseNum ||
             !this.nota() ||
-            this.config().onehundred_percent_base === 'no_general'
+            this.config.value().onehundred_percent_base === 'no_general'
         ) {
             return null;
         }
 
-        return this.formatResultDecimal((this.nota() / this.config().onehundredPercentBaseNum) * 100);
+        return this.formatResultDecimal((this.nota() / this.config.value().onehundredPercentBaseNum) * 100);
     });
 
     private generateChartColors(amount: number): string[] {

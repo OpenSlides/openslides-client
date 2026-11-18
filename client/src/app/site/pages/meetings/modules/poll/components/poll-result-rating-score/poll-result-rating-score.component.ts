@@ -18,6 +18,6 @@ export class PollResultRatingScoreComponent extends PollResultBaseComponent<
     RatingScorePollResult
 > {
     public configSelection = computed(() => {
-        return this.config() as unknown as ViewPollConfigSelection;
+        return this.config.value() as unknown as ViewPollConfigSelection;
     });
 }

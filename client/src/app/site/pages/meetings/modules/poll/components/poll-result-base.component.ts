@@ -1,4 +1,5 @@
 import { computed, Directive, input } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 import { BasePollConfigViewModel } from '../../../pages/polls/view-models/base-poll-config-view-model';
@@ -9,14 +10,18 @@ export const PERCENT_DECIMAL_PLACES = 3;
 @Directive()
 export abstract class PollResultBaseComponent<T extends BasePollConfigViewModel, U> {
     public poll = input.required<ViewPoll>();
-    public config = input.required<T>();
+    public config = rxResource<T, ViewPoll>({
+        params: () => this.poll(),
+        stream: ({ params }) => params.config$,
+        equal: () => false
+    });
 
     public results = computed<U>(() => {
-        if (!this.poll().result) {
+        if (!this.poll().result || !this.config.hasValue()) {
             return [];
         }
 
-        return this.config()?.parsedResult() || {};
+        return this.config.value()?.parsedResult() || {};
     });
 
     /**
