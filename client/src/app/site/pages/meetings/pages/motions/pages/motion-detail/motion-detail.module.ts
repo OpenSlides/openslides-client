@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
@@ -69,6 +70,7 @@ import { MotionViewComponent } from './pages/motion-view/components/motion-view/
 import { OriginMotionMetaDataComponent } from './pages/motion-view/components/origin-motion-meta-data/origin-motion-meta-data.component';
 import { ParagraphBasedAmendmentComponent } from './pages/motion-view/components/paragraph-based-amendment/paragraph-based-amendment.component';
 import { MotionDetailServiceModule } from './services/motion-detail-service.module';
+import { CustomPaginatorIntl } from './services/paginator-intl/paginato-intl.service';
 
 @NgModule({
     declarations: [
@@ -136,6 +138,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatListModule,
         MatInputModule,
         MatProgressBarModule,
+        MatPaginatorModule,
         ParticipantSearchSelectorModule,
         OpenSlidesDateAdapterModule,
         DatepickerModule,
@@ -145,6 +148,7 @@ import { MotionDetailServiceModule } from './services/motion-detail-service.modu
         MatBadgeModule,
         MatProgressSpinnerModule,
         MotionManageSupportersComponent
-    ]
+    ],
+    providers: [{ provide: MatPaginatorIntl, useClass: CustomPaginatorIntl }]
 })
 export class MotionDetailModule {}
