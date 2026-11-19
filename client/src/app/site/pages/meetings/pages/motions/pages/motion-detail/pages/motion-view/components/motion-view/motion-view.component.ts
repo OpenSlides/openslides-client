@@ -117,7 +117,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     }
 
     public get showForwardButton(): boolean {
-        return this.showForwardMenuEntry && !this.motion.derived_motions.length;
+        return this.showForwardMenuEntry && !this.motion.derived_motions.length && !this.motion.isAmendment();
     }
 
     private _changeRecoMode: ChangeRecoMode = ChangeRecoMode.Original;
