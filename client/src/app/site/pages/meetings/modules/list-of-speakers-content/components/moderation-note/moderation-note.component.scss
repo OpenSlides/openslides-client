@@ -3,4 +3,5 @@
 
 .detail-view-appearance-container {
     @include detail-view-appearance.detail-view-appearance;
+    margin-top: 0px;
 }
