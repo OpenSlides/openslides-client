@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { effect, inject, Service } from '@angular/core';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
 import { viewModelListEqual } from '@app/infrastructure/utils';
@@ -37,6 +37,7 @@ export class VotingBannerService {
     private operator = inject(OperatorService);
     private activePolls = inject(ActivePollsService);
     private meetingSettingsService = inject(MeetingSettingsService);
+    private polls: ViewPoll[] = [];
 
     public constructor() {
         combineLatest([
@@ -49,7 +50,14 @@ export class VotingBannerService {
             this.operator.userObservable.pipe(
                 distinctUntilChanged((p, c) => p?.isPresentInMeeting() === c?.isPresentInMeeting())
             )
-        ]).subscribe(([_, polls]) => this.updateVotablePollSubscription(polls));
+        ]).subscribe(([_, polls]) => {
+            this.polls = polls;
+            this.updateVotablePollSubscription(this.polls);
+        });
+        effect(() => {
+            this.votingService.votingDataChanged();
+            this.updateVotablePollSubscription(this.polls);
+        });
     }
 
     private async updateVotablePollSubscription(polls: ViewPoll[]): Promise<void> {
