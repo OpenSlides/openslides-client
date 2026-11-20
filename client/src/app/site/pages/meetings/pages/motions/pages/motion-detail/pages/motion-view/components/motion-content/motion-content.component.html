@@ -11,7 +11,7 @@
         @if (lineNumberingMode === LineNumberingMode.Outside && changeRecoMode === ChangeRecoMode.Original) {
             <div
                 class="motion-text underlined-links line-numbers-outside"
-                [attr.aria-label]="'motion text' | translate"
+                [attr.aria-label]="'Motion text' | translate"
             >
                 <os-motion-detail-original-change-recommendations
                     [changeRecommendations]="changeRecommendations$ | async"
@@ -22,7 +22,7 @@
                 ></os-motion-detail-original-change-recommendations>
             </div>
         } @else {
-            <div [attr.aria-label]="'motion text' | translate">
+            <div [attr.aria-label]="'Motion text' | translate">
                 <os-motion-final-version
                     [formattedText]="formattedTextPlain$ | async"
                     [lineNumberingMode]="lineNumberingMode"
@@ -31,7 +31,7 @@
             </div>
         }
     } @else {
-        <div [attr.aria-label]="'motion text' | translate">
+        <div [attr.aria-label]="'Motion text' | translate">
             <os-motion-detail-diff
                 [changes]="changesForDiffMode$ | async"
                 [highlightedLine]="highlightedLine"
@@ -47,7 +47,7 @@
     }
 } @else {
     <!-- Paragraph-based amendments -->
-    <div [attr.aria-label]="'amendment text' | translate">
+    <div [attr.aria-label]="'Amendment text' | translate">
         <os-paragraph-based-amendment
             [changeRecoMode]="changeRecoMode"
             [changesForDiffMode]="changesForDiffMode$ | async"
@@ -65,7 +65,7 @@
     <!-- Reason -->
     @if (showReason) {
         <div>
-            <h3 class="motion-h3" [attr.aria-label]="'Reason text' | translate">
+            <h3 class="motion-h3" [attr.aria-label]="'Reason' | translate">
                 {{ 'Reason' | translate }}
             </h3>
             <div class="motion-text reason-text underlined-links" [innerHtml]="motion.reason | trust: 'html'"></div>
