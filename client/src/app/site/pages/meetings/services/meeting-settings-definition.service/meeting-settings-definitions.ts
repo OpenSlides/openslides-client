@@ -883,9 +883,8 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 settings: [
                     {
                         key: `motions_enable_consultation_sequence`,
-                        label: _(`Allow looking into the future`),
-                        type: `boolean`,
-                        helpText: _(`Requires permission to see origin motions`)
+                        label: _(`Activate consultation sequence`),
+                        type: `boolean`
                     },
                     {
                         key: `motions_enable_origin_motion_display`,
