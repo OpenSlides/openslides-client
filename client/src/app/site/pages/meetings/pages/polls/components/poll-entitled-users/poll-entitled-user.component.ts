@@ -23,12 +23,14 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { combineLatest, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
 
 import { ViewMeetingUser } from '../../../../view-models/view-meeting-user';
+import { ViewPollBallotUser } from '../../view-models/poll-ballot-user';
 import { ViewPollEntitledUser } from '../../view-models/poll-entitled-user';
 
 export interface EntitledUserData extends Identifiable {
     meetingUser: ViewMeetingUser;
     isPresent: boolean;
     hasVoted: boolean;
+    ballotUser?: ViewPollBallotUser;
 }
 
 @Component({
@@ -86,9 +88,9 @@ export class PollEntitledUserComponent extends BaseComponent {
                   ])
         ),
         map(([poll, entitledUsersAtStop, voted, entitledUsers]) => {
-            const votedSet = new Set<Id>();
+            const votedSet = new Map<Id, ViewPollBallotUser>();
             for (const user of voted) {
-                votedSet.add(user.represented_meeting_user_id);
+                votedSet.set(user.represented_meeting_user_id, user);
             }
 
             if (poll.state === PollState.Finished) {
@@ -97,7 +99,8 @@ export class PollEntitledUserComponent extends BaseComponent {
                         ({
                             meetingUser: eUser.meeting_user,
                             isPresent: eUser.present,
-                            hasVoted: votedSet.has(eUser.meeting_user_id)
+                            hasVoted: votedSet.has(eUser.meeting_user_id),
+                            ballotUser: votedSet.get(eUser.meeting_user_id)
                         }) as EntitledUserData
                 );
             }
@@ -107,7 +110,8 @@ export class PollEntitledUserComponent extends BaseComponent {
                     ({
                         meetingUser: eUser,
                         isPresent: eUser.user.is_present,
-                        hasVoted: votedSet.has(eUser.id)
+                        hasVoted: votedSet.has(eUser.id),
+                        ballotUser: votedSet.get(eUser.id)
                     }) as EntitledUserData
             );
         }),
