@@ -345,7 +345,7 @@
                                 <mat-icon class="lock-icon motion-forward-icon adjust-icon">lock</mat-icon>
                             }
                             @if (
-                                canAccess(origin) &&
+                                canView(origin) &&
                                 motion !== origin &&
                                 (displayOriginEnabled$ | async) &&
                                 (originToggleDefault$ | async) === false &&
