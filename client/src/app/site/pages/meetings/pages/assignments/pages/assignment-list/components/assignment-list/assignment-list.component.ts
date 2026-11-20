@@ -1,8 +1,15 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Permission } from '@app/domain/definitions/permission';
 import { PROJECTIONDEFAULT } from '@app/domain/models/projector/projection-default';
+import { Action, ActionService } from '@app/gateways/actions';
+import { ActionRequest } from '@app/gateways/actions/action-utils';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { SpinnerService } from '@app/site/modules/global-spinner/services/spinner.service';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { AddItemToAgendaDialog } from '@app/site/pages/meetings/pages/agenda/pages/agenda-add-item/agenda-add-item.component';
+import { AgendaItemControllerService } from '@app/site/pages/meetings/pages/agenda/services';
 import { MultiProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
@@ -36,20 +43,26 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
      */
     public filterProps = [`title`, `candidates`, `assignment_related_users`, `tags`, `candidateAmount`];
 
+    private messageForSpinner = this.translate.instant(`Assignments are in process. Please wait ...`);
+
     public get canManageAssignments(): boolean {
         return this.operator.hasPerms(Permission.assignmentCanManage);
     }
 
     public constructor(
-        protected override translate: TranslateService,
         public repo: AssignmentControllerService,
-        private promptService: PromptService,
         public filterService: AssignmentFilterListService,
         public sortService: AssignmentSortListService,
-        private pdfService: AssignmentExportService,
+        public dialog: MatDialog,
+        public vp: ViewPortService,
+        protected override translate: TranslateService,
         protected route: ActivatedRoute,
+        private promptService: PromptService,
+        private pdfService: AssignmentExportService,
         private operator: OperatorService,
-        public vp: ViewPortService
+        private itemRepo: AgendaItemControllerService,
+        private spinnerService: SpinnerService,
+        private actionService: ActionService
     ) {
         super();
         this.canMultiSelect = true;
@@ -116,6 +129,71 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         if (await this.promptService.open(title)) {
             await this.repo.delete(...this.selectedRows);
         }
+    }
+
+    public async addToAgenda(assignments: ViewAssignment[]): Promise<void> {
+        if (!assignments.length) return;
+        const originalOrder = this.listComponent.source.map(item => item.assignment.id) ?? [];
+        const sortedAssignments = [...assignments].sort(
+            (a, b) => originalOrder.indexOf(a.id) - originalOrder.indexOf(b.id)
+        );
+        const assignmentsNotInAgenda = sortedAssignments.filter(assignment => !assignment.agenda_item_id);
+        const existingAgendaItems = sortedAssignments
+            .filter(assignment => !!assignment.agenda_item_id)
+            .map(assignment => this.itemRepo.getViewModelList().find(item => item.id === assignment.agenda_item_id))
+            .filter(item => !!item);
+        this.dialog
+            .open(AddItemToAgendaDialog, {
+                data: {
+                    meetingId: this.activeMeetingId,
+                    isMultiSelect: true,
+                    excludedIds: sortedAssignments
+                        .map(assignment => assignment?.agenda_item_id)
+                        .filter((id): id is number => !!id)
+                },
+                ...infoDialogSettings
+            })
+            .afterClosed()
+            .subscribe(async result => {
+                if (!result) return;
+                const actions: Action<any>[] = [];
+                const promises: Promise<any>[] = [];
+
+                if (assignmentsNotInAgenda.length) {
+                    actions.push(
+                        this.itemRepo.addToAgenda(
+                            {
+                                type: result.agenda_type,
+                                parent_id: result.agenda_parent_id
+                            },
+                            ...assignmentsNotInAgenda
+                        )
+                    );
+                }
+                if (existingAgendaItems.length) {
+                    actions.push(
+                        this.itemRepo.assignToParent({
+                            ids: existingAgendaItems.map(item => item.id),
+                            parent_id: result.agenda_parent_id
+                        })
+                    );
+
+                    promises.push(this.itemRepo.bulkSetAgendaType(existingAgendaItems as any, result.agenda_type));
+                }
+
+                for (const action of actions) {
+                    action.setSendActionFn((req: ActionRequest[], _) => this.actionService.sendRequests(req, true));
+                    promises.push(action.resolve());
+                }
+
+                if (promises.length) {
+                    const message = `${assignments.length} ${this.translate.instant(this.messageForSpinner)}`;
+
+                    this.spinnerService.show(message, {
+                        hideAfterPromiseResolved: () => Promise.all(promises)
+                    });
+                }
+            });
     }
 
     public addToProjectorQueue(): MultiProjectionBuildDescriptor {
