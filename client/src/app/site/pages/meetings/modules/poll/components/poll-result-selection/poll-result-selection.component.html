@@ -91,7 +91,9 @@
 
                 @if (nota() !== null) {
                     @let notaOption =
-                        config().strike_out ? ('General approval' | translate) : ('General rejection' | translate);
+                        config.value().strike_out
+                            ? ('General approval' | translate)
+                            : ('General rejection' | translate);
                     <ng-container
                         [ngTemplateOutlet]="resultRow"
                         [ngTemplateOutletContext]="{
@@ -163,7 +165,7 @@
                         [ngTemplateOutlet]="resultRow"
                         [ngTemplateOutletContext]="{
                             amount: castedBallots(),
-                            percent: '100',
+                            percent: config.value().onehundred_percent_base === `cast` ? '100' : null,
                             votingOption: 'Casted ballots' | translate,
                             firstSummary: true
                         }"

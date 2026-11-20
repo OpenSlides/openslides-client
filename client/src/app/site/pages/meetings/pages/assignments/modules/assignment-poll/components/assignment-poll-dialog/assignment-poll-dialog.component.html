@@ -3,9 +3,8 @@
         <os-poll-form
             optionType="meeting_user"
             [data]="pollData"
-            [isEVotingEnabled]="isEVotingEnabled"
-            [optionAmount]="optionAmount"
-            [pollSettings]="pollSettings | async"
+            [optionAmount]="optionAmount()"
+            [pollSettings]="pollSettings()"
         ></os-poll-form>
     </div>
 

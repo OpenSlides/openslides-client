@@ -1,16 +1,13 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, computed, effect, inject, input, OnDestroy, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatCardModule } from '@angular/material/card';
 import { Id } from '@app/domain/definitions/key-types';
-import { Assignment } from '@app/domain/models/assignments/assignment';
 import { PollContentObject } from '@app/domain/models/poll';
-import { Topic } from '@app/domain/models/topics/topic';
 import { BaseComponent } from '@app/site/base/base.component';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { PollControllerService } from '@app/site/pages/meetings/modules/poll/services/poll-controller.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
-import { OperatorService } from '@app/site/services/operator.service';
-import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs';
 
 import { PollComponent } from '../../../../modules/poll/components/poll/poll.component';
@@ -21,80 +18,36 @@ import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-poll
     selector: `os-poll-collection`,
     templateUrl: `./poll-collection.component.html`,
     styleUrls: [`./poll-collection.component.scss`],
-    imports: [MatCardModule, NgTemplateOutlet, PollComponent],
-    changeDetection: ChangeDetectionStrategy.Eager
+    imports: [MatCardModule, NgTemplateOutlet, PollComponent]
 })
-export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnInit, OnDestroy {
-    public polls: ViewPoll[] = [];
-
-    public lastPublishedPoll: ViewPoll | null = null;
+export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnDestroy {
+    public lastPublishedPoll = signal<ViewPoll | null>(null);
 
     public currentSubscribed: Id | null = null;
 
-    private _currentProjection: (Partial<HasPolls<C>> & { readonly fqid: string }) | null = null;
+    public readonly disableRunning = input(false);
+    public readonly disableFinished = input(false);
+    public readonly displayInAutopilot = input(true);
+    public currentProjection = input<(Partial<HasPolls<C>> & { readonly fqid: string }) | null>(null);
 
-    @Input()
-    public disableRunning = false;
-
-    @Input()
-    public disableFinished = false;
-
-    @Input()
-    public displayInAutopilot = true;
-
-    @Input()
-    public set currentProjection(viewModel: (Partial<HasPolls<C>> & { readonly fqid: string }) | null) {
-        this._currentProjection = viewModel;
-        this.updateLastPublished();
-    }
-
-    public get currentProjection(): (Partial<HasPolls<C>> & { readonly fqid: string }) | null {
-        return this._currentProjection;
-    }
-
-    /**
-     * CLEANUP: This function belongs to "HasViewPolls"/ ViewModelWithPolls
-     */
-    public get hasProjectedModelOpenPolls(): boolean {
-        if (isHavingViewPolls(this.currentProjection)) {
-            const currPolls: ViewPoll[] = this.currentProjection.polls;
+    public hasProjectedModelOpenPolls = computed(() => {
+        if (isHavingViewPolls(this.currentProjection())) {
+            const currPolls: ViewPoll[] = this.currentProjection().polls;
             return currPolls.some((p: ViewPoll) => p.isStarted);
         }
         return false;
-    }
+    });
 
-    private get showExtendedTitle(): boolean {
-        const areAllPollsSameModel = this.polls.every(
-            poll => this.polls[0].getContentObject() === poll.getContentObject()
-        );
+    private repo = inject(PollControllerService);
 
-        if (this.currentProjection && areAllPollsSameModel) {
-            return this.polls[0]?.getContentObject() !== this.currentProjection;
-        } else {
-            return !areAllPollsSameModel;
-        }
-    }
+    public polls = toSignal(
+        this.repo.getViewModelListObservable().pipe(map(polls => polls.filter(poll => poll.canBeVotedFor())))
+    );
 
-    public constructor(
-        protected override translate: TranslateService,
-        private repo: PollControllerService,
-        private cd: ChangeDetectorRef,
-        private operator: OperatorService
-    ) {
+    public constructor() {
         super();
-    }
 
-    public ngOnInit(): void {
-        this.subscriptions.push(
-            this.repo
-                .getViewModelListObservable()
-                .pipe(map(polls => polls.filter(poll => poll.canBeVotedFor())))
-                .subscribe(polls => {
-                    this.polls = polls;
-                    this.cd.markForCheck();
-                    this.updateLastPublished();
-                })
-        );
+        effect(this.updateLastPublished.bind(this));
     }
 
     public override ngOnDestroy(): void {
@@ -105,45 +58,14 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
         super.ngOnDestroy();
     }
 
-    public getPollVoteTitle(poll: ViewPoll): string {
-        const contentObject = poll.getContentObject();
-        const listTitle = contentObject.getListTitle();
-        const objectCollection = contentObject.COLLECTION;
-        const pollTitle = poll.getTitle();
-
-        if (
-            this.showExtendedTitle &&
-            contentObject?.fqid !== this.currentProjection?.fqid &&
-            [Topic.COLLECTION, Assignment.COLLECTION].includes(objectCollection)
-        ) {
-            return `${listTitle}: ${pollTitle}`;
-        } else {
-            return pollTitle;
-        }
-    }
-
-    /**
-     * @param poll
-     */
-    public canManagePoll(poll: ViewPoll): boolean {
-        if (poll.isMotionPoll) {
-            return this.operator.hasPerms(this.permission.motionCanManagePolls);
-        } else if (poll.isAssignmentPoll) {
-            return this.operator.hasPerms(this.permission.assignmentCanManagePolls);
-        } else if (poll.isTopicPoll) {
-            return this.operator.hasPerms(this.permission.agendaItemCanManagePolls);
-        }
-        return false;
-    }
-
     /**
      * Helper function to detect new latest published polls and set them.
      */
     private updateLastPublished(): void {
-        const lastPublished = this.getLastFinishedOrPublishedPoll(this.currentProjection!);
-        if (lastPublished !== this.lastPublishedPoll) {
+        const lastPublished = this.getLastFinishedOrPublishedPoll(this.currentProjection()!);
+        if (lastPublished !== this.lastPublishedPoll()) {
             if (
-                (this.currentProjection as BaseViewModel)?.collection === `meeting` &&
+                (this.currentProjection() as BaseViewModel)?.collection === `meeting` &&
                 lastPublished &&
                 lastPublished.id !== this.currentSubscribed
             ) {
@@ -160,17 +82,10 @@ export class PollCollectionComponent<C extends PollContentObject> extends BaseCo
                 this.currentSubscribed = null;
             }
 
-            this.lastPublishedPoll = lastPublished;
-            this.cd.markForCheck();
+            this.lastPublishedPoll.set(lastPublished);
         }
     }
 
-    /**
-     * CLEANUP: This function belongs to "HasViewPolls"/ ViewModelWithPolls
-     * *class* (is an interface right now)
-     *
-     * @param viewModel
-     */
     private getLastFinishedOrPublishedPoll(viewModel: Partial<HasPolls<C>>): ViewPoll | null {
         if (isHavingViewPolls(viewModel)) {
             let currPolls: ViewPoll[] = viewModel.polls;

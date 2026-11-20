@@ -1,12 +1,7 @@
 <mat-dialog-content>
     <div class="poll-config">
-        <os-poll-form
-            [customConfigForm]="true"
-            [data]="pollData"
-            [isEVotingEnabled]="isEVotingEnabled"
-            [pollSettings]="pollSettings | async"
-        >
-            <os-poll-form-approval [formData]="pollData" [initialData]="pollData" [settings]="pollSettings | async" />
+        <os-poll-form [customConfigForm]="true" [data]="pollData" [pollSettings]="pollSettings()">
+            <os-poll-form-approval [formData]="pollData" [initialData]="pollData" [settings]="pollSettings()" />
         </os-poll-form>
     </div>
 
