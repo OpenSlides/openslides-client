@@ -583,7 +583,13 @@ export abstract class BasePollFormComponent extends BaseComponent implements OnI
             } else {
                 config.max_votes_amount = [
                     maxVotesPreselect,
-                    [Validators.required, Validators.min(1), Validators.max(this.pollOptionAmount)]
+                    [
+                        Validators.required,
+                        Validators.min(1),
+                        // read pollOptionAmount on each validation, it may change when switching the poll method
+                        (control: AbstractControl): Record<string, any> | null =>
+                            Validators.max(this.pollOptionAmount)(control)
+                    ]
                 ];
             }
         }
