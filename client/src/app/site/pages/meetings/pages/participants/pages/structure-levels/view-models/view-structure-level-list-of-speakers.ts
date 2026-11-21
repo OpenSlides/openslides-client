@@ -1,10 +1,12 @@
 import { SPECIAL_SPEECH_STATES } from '@app/domain/models/speakers/speech-state';
 import { StructureLevelListOfSpeakers } from '@app/domain/models/structure-levels/structure-level-list-of-speakers';
 import { BaseViewModel, ViewModelRelations } from '@app/site/base/base-view-model';
-import { CountdownData } from '@app/site/pages/meetings/modules/projector/modules/countdown-time/countdown-time.component';
-import { ViewListOfSpeakers, ViewSpeaker } from '@app/site/pages/meetings/pages/agenda';
-import { ViewStructureLevel } from '@app/site/pages/meetings/pages/participants/pages/structure-levels/view-models';
-import { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
+import type { CountdownData } from '@app/site/pages/meetings/modules/projector/modules/countdown-time/countdown-time.component';
+import type { ViewListOfSpeakers } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-list-of-speakers';
+import type { ViewSpeaker } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-speaker';
+import type { HasMeeting } from '@app/site/pages/meetings/view-models/has-meeting';
+
+import type { ViewStructureLevel } from './view-structure-level';
 
 export class ViewStructureLevelListOfSpeakers extends BaseViewModel<StructureLevelListOfSpeakers> {
     public static COLLECTION = StructureLevelListOfSpeakers.COLLECTION;

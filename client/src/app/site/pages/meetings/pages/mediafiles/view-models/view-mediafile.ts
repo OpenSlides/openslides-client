@@ -4,19 +4,19 @@ import { ViewMediafileMeetingUsageKey } from '@app/domain/models/mediafiles/medi
 import { Meeting } from '@app/domain/models/meetings/meeting';
 import { PROJECTIONDEFAULT, ProjectiondefaultValue } from '@app/domain/models/projector/projection-default';
 import { collectionIdFromFqid } from '@app/infrastructure/utils/transform-functions';
-import { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
+import type { ViewOrganization } from '@app/site/pages/organization/view-models/view-organization';
 
 import { Mediafile } from '../../../../../../domain/models/mediafiles/mediafile';
 import { BaseViewModel, ViewModelRelations } from '../../../../../base/base-view-model';
 import { BaseProjectableViewModel } from '../../../view-models/base-projectable-model';
-import { HasMeeting } from '../../../view-models/has-meeting';
-import { ViewMeeting } from '../../../view-models/view-meeting';
-import { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers/view-models/has-list-of-speakers';
-import { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
+import type { HasMeeting } from '../../../view-models/has-meeting';
+import type { ViewMeeting } from '../../../view-models/view-meeting';
+import type { HasListOfSpeakers } from '../../agenda/modules/list-of-speakers/view-models/has-list-of-speakers';
+import type { ViewGroup } from '../../participants/modules/groups/view-models/view-group';
 import { FONT_MIMETYPES, IMAGE_MIMETYPES, PDF_MIMETYPES } from '../definitions';
 import { VIDEO_MIMETYPES } from '../definitions/index';
-import { HasAttachmentMeetingMediafiles } from './has-attachment';
-import { ViewMeetingMediafile } from './view-meeting-mediafile';
+import type { HasAttachmentMeetingMediafiles } from './has-attachment';
+import type { ViewMeetingMediafile } from './view-meeting-mediafile';
 
 export class ViewMediafile extends BaseProjectableViewModel<Mediafile> {
     public static COLLECTION = Mediafile.COLLECTION;

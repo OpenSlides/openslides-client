@@ -16,7 +16,7 @@ import { ViewGroup } from '@app/site/pages/meetings/pages/participants';
 import { MeetingSettingsDefinitionService } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definition.service';
 import { SettingsInput } from '@app/site/pages/meetings/services/meeting-settings-definition.service/meeting-settings-definitions';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
-import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service/collection-mapper.service';
 import { ParentErrorStateMatcher } from '@app/ui/modules/search-selector/validators';
 import { _ } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
