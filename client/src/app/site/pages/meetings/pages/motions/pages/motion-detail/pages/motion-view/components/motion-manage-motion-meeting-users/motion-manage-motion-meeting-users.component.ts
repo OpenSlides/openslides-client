@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { Fqid, Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
@@ -108,9 +108,13 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         this._editMode = value;
         this._addUsersSet.clear();
         this._removeUsersMap = {};
+        const loadVersion = ++this.secondSelectorLoadVersion;
         if (value && this.loadSecondSelectorValues) {
             this.loadSecondSelectorValues().then(items => {
-                this.secondSelectorValues = items;
+                if (loadVersion === this.secondSelectorLoadVersion) {
+                    this.secondSelectorValues = items;
+                    this.cd.markForCheck();
+                }
             });
         }
     }
@@ -120,6 +124,8 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
     }
 
     private _editMode = false;
+
+    private secondSelectorLoadVersion = 0;
 
     private _motion!: ViewMotion;
 
@@ -133,7 +139,8 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         public perms: MotionPermissionService,
         private motionController: MotionControllerService,
         private actionService: ActionService,
-        private fb: UntypedFormBuilder
+        private fb: UntypedFormBuilder,
+        private cd: ChangeDetectorRef
     ) {
         super();
 

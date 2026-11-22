@@ -206,11 +206,11 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
         super();
 
         if (this.operator.hasPerms(Permission.motionCanManageMetadata)) {
-            this.motionForwardingService.forwardingMeetingsAvailable().then(_forwardingAvailable => {
-                this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
-                    return (await this.checkPresenter()) as Selectable[];
-                };
-            });
+            const forwardingMeetingsAvailable = this.motionForwardingService.forwardingMeetingsAvailable();
+            this.loadForwardingCommittees = async (): Promise<Selectable[]> => {
+                await forwardingMeetingsAvailable;
+                return (await this.checkPresenter()) as Selectable[];
+            };
         }
     }
 
