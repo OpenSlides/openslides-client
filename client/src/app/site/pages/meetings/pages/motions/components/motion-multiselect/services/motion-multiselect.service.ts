@@ -40,7 +40,7 @@ import { ViewMotion } from '../../../view-models/view-motion';
 
 @Service()
 export class MotionMultiselectService {
-    protected dialog = inject(MatDialog);
+    public dialog = inject(MatDialog);
     private repo = inject(MotionControllerService);
     private translate = inject(TranslateService);
     private activeMeetingId = inject(ActiveMeetingIdService);
@@ -347,63 +347,53 @@ export class MotionMultiselectService {
 
     public async addToAgenda(motions: ViewMotion[]): Promise<void> {
         if (!motions.length) return;
+
         const sortedMotions = [...motions].sort((a, b) =>
             a.number.localeCompare(b.number, undefined, {
                 numeric: true,
                 sensitivity: 'base'
             })
         );
-        const agendaItems = this.agendaRepo.getViewModelList();
-        const motionsNotInAgenda = sortedMotions.filter(motion => !motion.agenda_item_id);
-        const existingAgendaItems = sortedMotions
-            .filter(motion => !!motion.agenda_item_id)
-            .map(motion => agendaItems.find(item => item.id === motion.agenda_item_id))
-            .filter(item => !!item);
+
         this.dialog
             .open(AddItemToAgendaDialog, {
                 data: {
                     meetingId: this.activeMeetingId,
                     isMultiSelect: true,
-                    excludedIds: motions.map(motion => motion?.agenda_item_id).filter((id): id is number => !!id)
+                    excludedIds: motions.map(motion => motion.agenda_item_id).filter((id): id is number => !!id)
                 },
                 ...infoDialogSettings
             })
             .afterClosed()
             .subscribe(async result => {
                 if (!result) return;
-                const actions: Action<any>[] = [];
                 const promises: Promise<any>[] = [];
-                if (motionsNotInAgenda.length) {
-                    actions.push(
-                        this.agendaRepo.addToAgenda(
-                            {
-                                type: result.agenda_type,
-                                parent_id: result.agenda_parent_id
-                            },
-                            ...motionsNotInAgenda
-                        )
+                const existingItems = sortedMotions
+                    .filter(motion => !!motion.agenda_item_id)
+                    .map(motion => this.agendaRepo.getViewModelList().find(item => item.id === motion.agenda_item_id))
+                    .filter(item => !!item);
+                if (sortedMotions.some(motion => !motion.agenda_item_id)) {
+                    const action = this.agendaRepo.addToAgenda(
+                        { type: result.agenda_type, parent_id: result.agenda_parent_id },
+                        ...sortedMotions.filter(motion => !motion.agenda_item_id)
                     );
-                }
-                if (existingAgendaItems.length) {
-                    actions.push(
-                        this.agendaRepo.assignToParent({
-                            ids: existingAgendaItems.map(item => item.id),
-                            parent_id: result.agenda_parent_id
-                        })
-                    );
-                    promises.push(this.agendaRepo.bulkSetAgendaType(existingAgendaItems as any, result.agenda_type));
-                }
-                actions.forEach(action => {
-                    action.setSendActionFn((req: ActionRequest[], _) => this.actionService.sendRequests(req, true));
+                    action.setSendActionFn(req => this.actionService.sendRequests(req, true));
                     promises.push(action.resolve());
-                });
+                }
+                if (existingItems.length) {
+                    const action = this.agendaRepo.assignToParent({
+                        ids: existingItems.map(item => item.id),
+                        parent_id: result.agenda_parent_id
+                    });
+                    action.setSendActionFn(req => this.actionService.sendRequests(req, true));
+                    promises.push(this.agendaRepo.bulkSetAgendaType(existingItems as any, result.agenda_type));
+                    promises.push(action.resolve());
+                }
                 if (promises.length) {
-                    const message = `${motions.length} ${this.translate.instant(this.messageForSpinner)}`;
-                    this.spinnerService.show(message, {
+                    this.spinnerService.show(`${motions.length} ${this.translate.instant(this.messageForSpinner)}`, {
                         hideAfterPromiseResolved: () => Promise.all(promises)
                     });
                 }
-                console.log(result);
             });
     }
 

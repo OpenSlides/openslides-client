@@ -2,15 +2,15 @@
     @if (data.isMultiSelect) {
         {{ 'Move all selected items to agenda' | translate }}
     } @else {
-        {{ data.title + ': Move to agenda' | translate }}
+        {{ data.title + ': ' + 'Move to agenda' | translate }}
     }
 </h2>
 <mat-dialog-content class="dialog-content padding-top">
     <form class="agenda-add-form" [formGroup]="toAgendaForm">
         <div>
             <mat-form-field class="padding-top form-field">
-                <mat-label>{{ 'Agenda visibility' | translate }}</mat-label>
-                <mat-select formControlName="agenda_type" required>
+                <mat-label id="agenda_visibility">{{ 'Agenda visibility' | translate }}</mat-label>
+                <mat-select aria-labelledby="agenda_visibility" formControlName="agenda_type" required>
                     @for (type of visibilityChoices; track type) {
                         <mat-option [value]="type.key">
                             {{ type.name }}
@@ -21,8 +21,9 @@
         </div>
         <div>
             <mat-form-field class="form-field">
-                <mat-label>{{ 'Parent agenda item' | translate }}</mat-label>
+                <mat-label id="agenda_parent">{{ 'Parent agenda item' | translate }}</mat-label>
                 <os-list-search-selector
+                    aria-labelledby="agenda_parent"
                     formControlName="agenda_parent_id"
                     [includeNone]="true"
                     [inputListValues]="parentObserver"

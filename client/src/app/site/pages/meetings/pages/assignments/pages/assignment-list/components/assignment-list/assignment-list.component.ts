@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Permission } from '@app/domain/definitions/permission';
 import { PROJECTIONDEFAULT } from '@app/domain/models/projector/projection-default';
-import { Action, ActionService } from '@app/gateways/actions';
-import { ActionRequest } from '@app/gateways/actions/action-utils';
+import { ActionService } from '@app/gateways/actions';
 import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { SpinnerService } from '@app/site/modules/global-spinner/services/spinner.service';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
@@ -49,25 +48,19 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         return this.operator.hasPerms(Permission.assignmentCanManage);
     }
 
-    public constructor(
-        public repo: AssignmentControllerService,
-        public filterService: AssignmentFilterListService,
-        public sortService: AssignmentSortListService,
-        public dialog: MatDialog,
-        public vp: ViewPortService,
-        protected override translate: TranslateService,
-        protected route: ActivatedRoute,
-        private promptService: PromptService,
-        private pdfService: AssignmentExportService,
-        private operator: OperatorService,
-        private itemRepo: AgendaItemControllerService,
-        private spinnerService: SpinnerService,
-        private actionService: ActionService
-    ) {
-        super();
-        this.canMultiSelect = true;
-        this.listStorageIndex = ASSIGNMENT_LIST_STORAGE_INDEX;
-    }
+    public repo = inject(AssignmentControllerService);
+    public filterService = inject(AssignmentFilterListService);
+    public sortService = inject(AssignmentSortListService);
+    public dialog = inject(MatDialog);
+    public vp = inject(ViewPortService);
+    protected override translate = inject(TranslateService);
+    protected route = inject(ActivatedRoute);
+    private promptService = inject(PromptService);
+    private pdfService = inject(AssignmentExportService);
+    private operator = inject(OperatorService);
+    private itemRepo = inject(AgendaItemControllerService);
+    private spinnerService = inject(SpinnerService);
+    private actionService = inject(ActionService);
 
     /**
      * Init function.
@@ -75,6 +68,8 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
      */
     public ngOnInit(): void {
         super.setTitle(`Elections`);
+        this.canMultiSelect = true;
+        this.listStorageIndex = ASSIGNMENT_LIST_STORAGE_INDEX;
     }
 
     /**
@@ -137,61 +132,45 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         const sortedAssignments = [...assignments].sort(
             (a, b) => originalOrder.indexOf(a.id) - originalOrder.indexOf(b.id)
         );
-        const assignmentsNotInAgenda = sortedAssignments.filter(assignment => !assignment.agenda_item_id);
-        const existingAgendaItems = sortedAssignments
-            .filter(assignment => !!assignment.agenda_item_id)
-            .map(assignment => this.itemRepo.getViewModelList().find(item => item.id === assignment.agenda_item_id))
-            .filter(item => !!item);
         this.dialog
             .open(AddItemToAgendaDialog, {
                 data: {
                     meetingId: this.activeMeetingId,
                     isMultiSelect: true,
-                    excludedIds: sortedAssignments
-                        .map(assignment => assignment?.agenda_item_id)
-                        .filter((id): id is number => !!id)
+                    excludedIds: sortedAssignments.map(a => a.agenda_item_id).filter((id): id is number => !!id)
                 },
                 ...infoDialogSettings
             })
             .afterClosed()
             .subscribe(async result => {
                 if (!result) return;
-                const actions: Action<any>[] = [];
                 const promises: Promise<any>[] = [];
-
-                if (assignmentsNotInAgenda.length) {
-                    actions.push(
-                        this.itemRepo.addToAgenda(
-                            {
-                                type: result.agenda_type,
-                                parent_id: result.agenda_parent_id
-                            },
-                            ...assignmentsNotInAgenda
-                        )
+                const itemsToUpdate = sortedAssignments
+                    .filter(a => a.agenda_item_id)
+                    .map(a => this.itemRepo.getViewModelList().find(item => item.id === a.agenda_item_id))
+                    .filter(item => !!item);
+                if (sortedAssignments.some(a => !a.agenda_item_id)) {
+                    const action = this.itemRepo.addToAgenda(
+                        { type: result.agenda_type, parent_id: result.agenda_parent_id },
+                        ...sortedAssignments.filter(a => !a.agenda_item_id)
                     );
-                }
-                if (existingAgendaItems.length) {
-                    actions.push(
-                        this.itemRepo.assignToParent({
-                            ids: existingAgendaItems.map(item => item.id),
-                            parent_id: result.agenda_parent_id
-                        })
-                    );
-
-                    promises.push(this.itemRepo.bulkSetAgendaType(existingAgendaItems as any, result.agenda_type));
-                }
-
-                for (const action of actions) {
-                    action.setSendActionFn((req: ActionRequest[], _) => this.actionService.sendRequests(req, true));
+                    action.setSendActionFn(req => this.actionService.sendRequests(req, true));
                     promises.push(action.resolve());
                 }
-
-                if (promises.length) {
-                    const message = `${assignments.length} ${this.translate.instant(this.messageForSpinner)}`;
-
-                    this.spinnerService.show(message, {
-                        hideAfterPromiseResolved: () => Promise.all(promises)
+                if (itemsToUpdate.length) {
+                    const action = this.itemRepo.assignToParent({
+                        ids: itemsToUpdate.map(item => item.id),
+                        parent_id: result.agenda_parent_id
                     });
+                    action.setSendActionFn(req => this.actionService.sendRequests(req, true));
+                    promises.push(this.itemRepo.bulkSetAgendaType(itemsToUpdate, result.agenda_type));
+                    promises.push(action.resolve());
+                }
+                if (promises.length) {
+                    this.spinnerService.show(
+                        `${assignments.length} ${this.translate.instant(this.messageForSpinner)}`,
+                        { hideAfterPromiseResolved: () => Promise.all(promises) }
+                    );
                 }
             });
     }

@@ -37,11 +37,12 @@ import { ViewAgendaItem } from '../../view-models';
 })
 export class AddItemToAgendaDialog implements OnInit, OnDestroy {
     public parentObserver: Observable<ViewAgendaItem[]>;
-    protected visibilityChoices = ItemTypeChoices;
-    protected toAgendaForm = new FormGroup({
+    public toAgendaForm = new FormGroup({
         agenda_type: new FormControl<AgendaItemType>(AgendaItemType.COMMON),
         agenda_parent_id: new FormControl<number | null>(null)
     });
+
+    protected visibilityChoices = ItemTypeChoices;
 
     private subscriptionName: string;
 
@@ -65,7 +66,7 @@ export class AddItemToAgendaDialog implements OnInit, OnDestroy {
 
         this.parentObserver = this.agendaItemRepo
             .getViewModelListObservable()
-            .pipe(map(items => items.filter(item => !this.data.excludedIds.includes(item.id))));
+            .pipe(map(items => items.filter(item => !this.data.excludedIds?.includes(item.id))));
     }
 
     public ngOnDestroy(): void {

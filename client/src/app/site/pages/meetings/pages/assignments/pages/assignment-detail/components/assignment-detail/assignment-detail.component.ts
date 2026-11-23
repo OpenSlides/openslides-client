@@ -400,8 +400,8 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
                     this.itemRepo
                         .addToAgenda(
                             {
-                                type: result?.agenda_type,
-                                parent_id: result?.agenda_parent_id
+                                type: result.agenda_type,
+                                parent_id: result.agenda_parent_id
                             },
                             this.assignment
                         )
