@@ -37,12 +37,11 @@ import { ViewAgendaItem } from '../../view-models';
 })
 export class AddItemToAgendaDialog implements OnInit, OnDestroy {
     public parentObserver: Observable<ViewAgendaItem[]>;
+    public visibilityChoices = ItemTypeChoices;
     public toAgendaForm = new FormGroup({
         agenda_type: new FormControl<AgendaItemType>(AgendaItemType.COMMON),
         agenda_parent_id: new FormControl<number | null>(null)
     });
-
-    protected visibilityChoices = ItemTypeChoices;
 
     private subscriptionName: string;
 
