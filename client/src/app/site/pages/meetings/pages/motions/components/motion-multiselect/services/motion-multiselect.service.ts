@@ -368,7 +368,7 @@ export class MotionMultiselectService {
             .subscribe(async result => {
                 if (!result) return;
                 const promises: Promise<any>[] = [];
-                const existingItems = sortedMotions
+                const itemsToUpdate = sortedMotions
                     .filter(motion => !!motion.agenda_item_id)
                     .map(motion => this.agendaRepo.getViewModelList().find(item => item.id === motion.agenda_item_id))
                     .filter(item => !!item);
@@ -380,13 +380,13 @@ export class MotionMultiselectService {
                     action.setSendActionFn(req => this.actionService.sendRequests(req, true));
                     promises.push(action.resolve());
                 }
-                if (existingItems.length) {
+                if (itemsToUpdate.length) {
                     const action = this.agendaRepo.assignToParent({
-                        ids: existingItems.map(item => item.id),
+                        ids: itemsToUpdate.map(item => item.id),
                         parent_id: result.agenda_parent_id
                     });
                     action.setSendActionFn(req => this.actionService.sendRequests(req, true));
-                    promises.push(this.agendaRepo.bulkSetAgendaType(existingItems as any, result.agenda_type));
+                    promises.push(this.agendaRepo.bulkSetAgendaType(itemsToUpdate as any, result.agenda_type));
                     promises.push(action.resolve());
                 }
                 if (promises.length) {
