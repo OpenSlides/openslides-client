@@ -20,6 +20,10 @@ export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfi
     }
 
     public get onehundredPercentBaseNum(): number | null {
+        if (this.hasSpecialResult()) {
+            return null;
+        }
+
         switch (this.onehundred_percent_base) {
             case 'yes_no':
                 return this.totalVotes;
@@ -56,6 +60,11 @@ export class ViewPollConfigRatingScore extends BasePollConfigViewModel<PollConfi
 
     protected getResultFromString(result: string): RatingScorePollResult {
         return new RatingScorePollResult(this, JSON.parse(result));
+    }
+
+    protected hasSpecialResult(): boolean {
+        const result = this.parsedResult();
+        return this.poll?.options?.some(o => +(result[o.id] || 0) < 0) || false;
     }
 }
 

@@ -21,6 +21,10 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
     }
 
     public get onehundredPercentBaseNum(): number | null {
+        if (this.hasSpecialResult()) {
+            return null;
+        }
+
         switch (this.onehundred_percent_base) {
             case 'no_general':
                 return this.totalVotesNoGeneral;
@@ -77,6 +81,11 @@ export class ViewPollConfigSelection extends BasePollConfigViewModel<PollConfigS
 
     protected getResultFromString(result: string): SelectionPollResult {
         return new SelectionPollResult(this, JSON.parse(result));
+    }
+
+    protected hasSpecialResult(): boolean {
+        const result = this.parsedResult();
+        return this.poll?.options?.some(o => +(result[o.id] || 0) < 0) || false;
     }
 }
 

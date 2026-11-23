@@ -24,6 +24,10 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
     }
 
     public get onehundredPercentBaseNum(): number | null {
+        if (this.hasSpecialResult()) {
+            return null;
+        }
+
         switch (this.onehundred_percent_base) {
             case 'yes_no_abstain':
             case 'yes_no':
@@ -46,6 +50,10 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
     }
 
     public getOptionOnehundredPercentBaseNum(option: Identifiable): number | null {
+        if (this.hasSpecialResult()) {
+            return null;
+        }
+
         const result = this.parsedResult();
         switch (this.onehundred_percent_base) {
             case 'yes_no_abstain':
@@ -72,6 +80,15 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
 
     protected getResultFromString(result: string): RatingApprovalPollResult {
         return new RatingApprovalPollResult(this, JSON.parse(result));
+    }
+
+    protected hasSpecialResult(): boolean {
+        const result = this.parsedResult();
+        return (
+            this.poll?.options?.some(
+                o => +result[o.id].yes < 0 || +result[o.id].no < 0 || +(result[o.id].abstain || 0) < 0
+            ) || false
+        );
     }
 }
 
