@@ -114,6 +114,7 @@ export class Settings {
     public motions_reason_required!: boolean;
     public motions_origin_motion_toggle_default!: boolean;
     public motions_enable_origin_motion_display!: boolean;
+    public motions_enable_consultation_sequence!: boolean;
     public motions_enable_text_on_projector!: boolean;
     public motions_enable_reason_on_projector!: boolean;
     public motions_enable_sidebox_on_projector!: boolean;
@@ -411,6 +412,7 @@ export class Meeting extends BaseModel<Meeting> {
         `motions_export_follow_recommendation`,
         `motions_enable_restricted_editor_for_manager`,
         `motions_enable_restricted_editor_for_non_manager`,
+        `motions_enable_consultation_sequence`,
         `motion_poll_ballot_paper_selection`,
         `motion_poll_ballot_paper_number`,
         `motion_poll_default_type`,

@@ -882,6 +882,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                 label: _(`Forwarding`),
                 settings: [
                     {
+                        key: `motions_enable_consultation_sequence`,
+                        label: _(`Activate consultation sequence`),
+                        type: `boolean`
+                    },
+                    {
                         key: `motions_enable_origin_motion_display`,
                         label: _(`Allow backtracking of forwarded motions`),
                         type: `boolean`,

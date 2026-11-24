@@ -128,7 +128,12 @@
 
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
-    <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="dialogOpened.emit()">
+    <button
+        *osPerms="permission.motionCanManagePolls"
+        mat-menu-item
+        [attr.aria-label]="'Edit' | translate"
+        (click)="dialogOpened.emit()"
+    >
         <mat-icon>edit</mat-icon>
         <span>{{ 'Edit' | translate }}</span>
     </button>

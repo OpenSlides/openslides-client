@@ -4,6 +4,7 @@ import { HttpStream } from './http-stream';
 export const HTTP_POOL_CONFIG = {
     RETRY_AMOUNT: 3,
     CONNECTION_LOST_CLOSE_TIMEOUT: 10000,
+    SINGLE_REQUEST_TEST_RESULT_DELAY: 2000,
     SINGLE_REQUEST_TEST_DELAY: 5000
 };
 
