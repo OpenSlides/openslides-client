@@ -36,7 +36,7 @@ export class MotionPollDialogComponent extends BasePollDialogComponent {
     });
 
     public get approvalFormValue(): Partial<PollConfigApproval> {
-        return this.approvalForm().form.value;
+        return this.approvalForm().getSerialzedForm() as Partial<PollConfigApproval>;
     }
 
     private activeMeetingService = inject(ActiveMeetingService);

@@ -1,6 +1,5 @@
-import { Component, computed, effect, input, Signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { AbstractControl, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Component, computed, effect, input, Signal, signal } from '@angular/core';
+import { form, FormField, FormRoot, max, min, required, validate } from '@angular/forms/signals';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,12 +19,15 @@ export interface PollFormRatingScore {
     max_vote_sum: number;
     min_vote_sum: number;
     onehundred_percent_base: RatingScoreOnehundredPercentBase;
+    allow_empty: boolean;
+    required_majority: string;
 }
 
 @Component({
     selector: 'os-poll-form-rating-score',
     imports: [
-        ReactiveFormsModule,
+        FormField,
+        FormRoot,
         MatFormFieldModule,
         MatSelectModule,
         MatCheckboxModule,
@@ -36,13 +38,87 @@ export interface PollFormRatingScore {
     templateUrl: './poll-form-rating-score.component.html',
     styleUrls: [`../poll-form/poll-form.component.scss`, `./poll-form-rating-score.component.scss`]
 })
-export class PollFormRatingScoreComponent extends PollFormBaseComponent {
+export class PollFormRatingScoreComponent extends PollFormBaseComponent<PollFormRatingScore> {
+    public optionAmount = input<number>(null);
+
+    protected readonly model = signal<PollFormRatingScore>({
+        onehundred_percent_base: `valid`,
+        allow_empty: false,
+        max_votes_per_option: null,
+        max_options_amount: 1,
+        min_options_amount: 1,
+        max_vote_sum: 1,
+        min_vote_sum: 1,
+        required_majority: `no_majority`
+    });
+
+    public readonly form = form(this.model, s => {
+        required(s.onehundred_percent_base, { message: _('This field is required.') });
+        validate(s.onehundred_percent_base, ({ value }) => {
+            if (!this.validPercentBases().some(b => b[0] === value())) {
+                return { kind: 'required', message: _('This field is required.') };
+            }
+            return null;
+        });
+
+        required(s.max_vote_sum, { message: _('This field is required.') });
+        min(s.max_vote_sum, 1, { message: _('Amount needs to be at least 1') });
+
+        required(s.min_vote_sum, { message: _('This field is required.') });
+        min(s.min_vote_sum, 1, { message: _('Amount needs to be at least 1') });
+        validate(s.min_vote_sum, ({ value, valueOf }) => {
+            const minVal = Number(value());
+            const maxVal = Number(valueOf(s.max_vote_sum));
+            if (Number.isNaN(minVal) || Number.isNaN(maxVal)) {
+                return null;
+            }
+            return minVal <= maxVal
+                ? null
+                : { kind: 'minGreaterThanMax', message: _('Amount must not exceed max amount of votes') };
+        });
+
+        required(s.max_options_amount, {
+            message: _('This field is required.'),
+            when: () => !!this.settings().enable_max_options_limit
+        });
+        min(s.max_options_amount, 1, {
+            message: _('Amount needs to be at least 1'),
+            when: () => !!this.settings().enable_max_options_limit
+        });
+        max(s.max_options_amount, () => this.optionAmount(), {
+            message: _('Amount must not exceed amount of available options'),
+            when: () => !!this.settings().enable_max_options_limit && !!this.optionAmount()
+        });
+
+        required(s.min_options_amount, {
+            message: _('This field is required.'),
+            when: () => !!this.settings().enable_max_options_limit
+        });
+        min(s.min_options_amount, 1, {
+            message: _('Amount needs to be at least 1'),
+            when: () => !!this.settings().enable_max_options_limit
+        });
+        validate(s.min_options_amount, ({ value, valueOf }) => {
+            if (!this.settings().enable_max_options_limit) {
+                return null;
+            }
+            const minVal = Number(value());
+            const maxVal = Number(valueOf(s.max_options_amount));
+            if (Number.isNaN(minVal) || Number.isNaN(maxVal)) {
+                return null;
+            }
+            return minVal <= maxVal
+                ? null
+                : { kind: 'minGreaterThanMax', message: _('Amount must not exceed max amount of options') };
+        });
+    });
+
     public validPercentBases: Signal<[RatingScoreOnehundredPercentBase, string][]> = computed(() => {
         return [
             [`yes_no`, _('Yes/No per candidate')],
             [`valid`, _('All valid ballots')],
             [`cast`, _('All casted ballots')],
-            ...((this.formData().visibility !== PollVisibility.Manually
+            ...((this.formData()?.visibility !== PollVisibility.Manually
                 ? [
                       [`entitled`, _('All entitled users')],
                       [`entitled_present`, _('Present entitled users')]
@@ -52,11 +128,14 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
         ];
     });
 
-    public optionAmount = input<number>(null);
+    public constructor() {
+        super();
+        effect(this.onOptionAmountUpdate.bind(this));
+    }
 
     public getSerialzedForm(): Record<string, unknown> {
-        const data = {
-            ...this.form.value
+        const data: Record<string, unknown> = {
+            ...this.model()
         };
         delete data[`allow_empty`];
 
@@ -70,43 +149,11 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
 
     public override getSerialzedAdditionalData(): Record<string, unknown> {
         return {
-            allow_empty: this.form.value[`allow_empty`]
+            allow_empty: this.model().allow_empty
         };
     }
 
-    protected initForm(): void {
-        this.form = this.fb.group({
-            onehundred_percent_base: [`valid`],
-            allow_empty: [false],
-            max_votes_per_option: [null],
-            max_options_amount: [1, [Validators.required, Validators.min(1)]],
-            min_options_amount: [
-                1,
-                [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_options_amount`)]
-            ],
-            max_vote_sum: [1, [Validators.required, Validators.min(1)]],
-            min_vote_sum: [1, [Validators.required, Validators.min(1), this.minOptionsAmountValidator(`max_vote_sum`)]],
-            required_majority: [`no_majority`]
-        });
-
-        effect(this.onOptionAmountUpdate.bind(this));
-
-        this.form
-            .get(`max_options_amount`)
-            .valueChanges.pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                this.form.get(`min_options_amount`).updateValueAndValidity({ emitEvent: false });
-            });
-
-        this.form
-            .get(`max_vote_sum`)
-            .valueChanges.pipe(takeUntilDestroyed())
-            .subscribe(() => {
-                this.form.get(`min_vote_sum`).updateValueAndValidity({ emitEvent: false });
-            });
-    }
-
-    protected getPatchedFormData(data: Partial<ViewPoll>): Record<string, unknown> {
+    protected getPatchedFormData(data: Partial<ViewPoll>): Partial<PollFormRatingScore> {
         const patch: Record<string, unknown> = {};
         for (const field of [
             `onehundred_percent_base`,
@@ -119,35 +166,18 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent {
             `allow_empty`
         ]) {
             if (data && data[field] !== undefined) patch[field] = data[field];
-            else if (data && data.config[field] !== undefined) patch[field] = data.config[field];
+            else if (data?.config && data.config[field] !== undefined) patch[field] = data.config[field];
         }
 
-        return patch;
-    }
-
-    private minOptionsAmountValidator(dependant: string): ValidatorFn {
-        return (field: AbstractControl): ValidationErrors | null => {
-            const min = Number(field.getRawValue());
-            const max = Number(field.parent?.get(dependant)?.getRawValue());
-
-            if (Number.isNaN(min) || Number.isNaN(max)) {
-                return null;
-            }
-
-            return min <= max ? null : { minGreaterThanMax: true };
-        };
+        return patch as Partial<PollFormRatingScore>;
     }
 
     private onOptionAmountUpdate(): void {
-        const maxCtrl = this.form.get('max_options_amount');
-        if (this.optionAmount()) {
-            maxCtrl?.setValidators([Validators.required, Validators.min(1), Validators.max(this.optionAmount())]);
-            if (maxCtrl?.pristine) {
-                maxCtrl?.setValue(this.optionAmount(), { emitEvent: false });
+        const optionAmount = this.optionAmount();
+        if (optionAmount) {
+            if (!this.form.max_options_amount().dirty()) {
+                this.form.max_options_amount().value.set(optionAmount);
             }
-        } else {
-            maxCtrl?.setValidators([Validators.required, Validators.min(1)]);
         }
-        maxCtrl?.updateValueAndValidity({ emitEvent: false });
     }
 }
