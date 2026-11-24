@@ -207,6 +207,9 @@ export class Settings {
     // SSO
     public external_id!: string;
 
+    // IdM
+    public enable_idm_matching: boolean;
+
     // Structure Level
     public structure_level_ids: Id[]; // (structure_level/meeting_id)
 

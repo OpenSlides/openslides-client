@@ -193,6 +193,11 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                     {
                         key: `external_id`,
                         label: _(`External ID`)
+                    },
+                    {
+                        key: `enable_idm_matching`,
+                        label: _(`Activate automatic Identity Mapping`),
+                        type: `boolean`
                     }
                 ]
             },
