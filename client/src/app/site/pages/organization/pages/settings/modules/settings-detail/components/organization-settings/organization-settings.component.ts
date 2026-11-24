@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { availableTranslations } from '@app/domain/definitions/languages';
 import { Selectable } from '@app/domain/interfaces';
 import { objectToFormattedString } from '@app/infrastructure/utils';
 import { createEmailValidator } from '@app/infrastructure/utils/validators/email';
@@ -23,7 +22,12 @@ export class OrganizationSettingsComponent extends BaseComponent {
     public timeZoneInput = viewChild<ElementRef<HTMLInputElement>>('timeZoneInput');
 
     public readonly pageTitle = _(`Settings`);
-    public readonly translations = availableTranslations;
+
+    public translations: Record<string, string> = {
+        start: `Start`,
+        end: `End`,
+        inter: `Between`
+    };
 
     public orgaSettingsForm: UntypedFormGroup | null = null;
 
