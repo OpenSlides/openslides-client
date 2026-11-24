@@ -26,30 +26,20 @@
                             }
                         -->
 
-                        <!-- TODO:Delegation
-                            @if (
-                                displayDelegation &&
-                                entry.vote_delegated_to_user_id &&
-                                !entry.delegation_user_merged_into_id
-                            ) {
-                                <div>
-                                    <span>
-                                        ({{ 'represented by' | translate }}
-                                        {{ entry.vote_delegated_to?.getShortName() }})
-                                    </span>
-                                </div>
-                            }
-                            @if (entry.vote_delegated_to_user_id && entry.delegation_user_merged_into_id) {
-                                <div>
-                                    <span>
-                                        {{ entry.delegation_user_merged_into }}
-                                    </span>
-                                </div>
-                            }
-                        -->
+                        @if (
+                            entry.ballotUser &&
+                            entry.ballotUser.acting_meeting_user_id &&
+                            entry.ballotUser.acting_meeting_user_id !== entry.ballotUser.represented_meeting_user_id
+                        ) {
+                            <div>
+                                <span>
+                                    ({{ 'represented by' | translate }}
+                                    {{ entry.ballotUser.acting_meeting_user.user?.getShortName() }})
+                                </span>
+                            </div>
+                        }
                     </div>
                 </div>
-                <!-- TODO: Merged into handling(?): https://github.com/OpenSlides/openslides-client/blob/main/client/src/app/site/pages/meetings/modules/poll/components/entitled-users-table/entitled-users-table.component.html#L50 -->
             } @else {
                 <div>
                     <i>{{ 'Unknown user' | translate }}</i>

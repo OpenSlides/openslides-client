@@ -103,7 +103,7 @@
                         [ngTemplateOutlet]="resultRow"
                         [ngTemplateOutletContext]="{
                             amount: castedBallots(),
-                            percent: '100',
+                            percent: config.value().onehundred_percent_base === `cast` ? '100' : null,
                             votingLabel: 'Casted ballots' | translate,
                             votingOption: 'votesvalid'
                         }"

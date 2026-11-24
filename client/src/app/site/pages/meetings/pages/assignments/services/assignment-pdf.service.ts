@@ -146,6 +146,10 @@ export class AssignmentPdfService {
         const resultBody = [];
         for (const poll of polls) {
             resultBody.push(this.pollPdfService.createResultsTable(poll));
+            resultBody.push({
+                text: ``,
+                margin: [0, 0, 0, 7]
+            });
         }
 
         return resultBody;
