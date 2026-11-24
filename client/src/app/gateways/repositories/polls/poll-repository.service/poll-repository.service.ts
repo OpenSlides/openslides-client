@@ -6,7 +6,7 @@ import { PollCreatePayload, PollUpdatePayload, VoteApiService } from '@app/gatew
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ViewPollBallotUser } from '@app/site/pages/meetings/pages/polls/view-models/poll-ballot-user';
 import { Fieldsets } from '@app/site/services/model-request-builder';
-import { map, Observable, switchMap, takeWhile } from 'rxjs';
+import { filter, map, Observable, switchMap } from 'rxjs';
 
 import { Identifiable } from '../../../../domain/interfaces/identifiable';
 import { BaseMeetingRelatedRepository } from '../../base-meeting-related-repository';
@@ -96,7 +96,7 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
      */
     public pollBallotUsersByUser(pollId: Id, meetingUserId: number): Observable<ViewPollBallotUser[]> {
         return this.getViewModelObservable(pollId).pipe(
-            takeWhile(poll => poll?.state === PollState.Started),
+            filter(poll => poll?.state === PollState.Started),
             switchMap(poll => poll.ballot_users$),
             map(ballots => ballots.filter(b => b.represented_meeting_user_id === meetingUserId))
         );
