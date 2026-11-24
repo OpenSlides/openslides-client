@@ -893,7 +893,7 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                             idField: `topic_poll_config_id`,
                             field: `enable_max_yes_votes`
                         },
-                        label: _(`Allow limiting the amount of yes votes in per candidate polls`),
+                        label: _(`Allow limiting the amount of yes votes in per option polls`),
                         type: `boolean`
                     },
                     {
