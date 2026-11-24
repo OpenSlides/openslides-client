@@ -1,0 +1,62 @@
+<!-- Poll Infos -->
+<div class="poll-title-wrapper">
+    <!-- Title Area -->
+    <div class="poll-title-area">
+        <!-- Title -->
+        <span class="poll-title break-word">
+            @if (isSameMeeting() && getDetailLink()) {
+                <a [routerLink]="getDetailLink()">
+                    {{ poll().title | translate }}
+                </a>
+            } @else {
+                {{ poll().title | translate }}
+            }
+        </span>
+
+        <!-- Subtitle -->
+        <div class="italic spacer-bottom-20">
+            <!-- Type and State -->
+            <div class="type-and-state italic spacer-bottom-20 break-word">
+                <!-- State -->
+                <span class="break-word">
+                    @if (poll().isEVoting && poll().canBeVotedFor()) {
+                        {{ 'Voting in progress' | translate }}
+                    } @else if (poll().isFinished && !poll().published) {
+                        {{ 'Counting of votes is in progress ...' | translate }}
+                    }
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!poll().isFinished && poll().visibility !== 'manually') {
+    @if (poll().isStarted) {
+        <os-poll-progress [poll]="poll()" />
+    }
+}
+
+@if (poll().canBeVotedFor()) {
+    @if (poll() && user()) {
+        <!-- own voting -->
+        @if (!user().isInActiveMeeting) {
+            <div class="text-center">
+                {{ 'You are not part of the meeting' | translate }}
+            </div>
+        } @else {
+            <os-poll-vote [poll]="poll()" [user]="user()"></os-poll-vote>
+        }
+
+        <!-- Delegations -->
+        @if (user().isPresentInMeeting() && voteDelegationEnabled()) {
+            @for (delegation of delegations(); track delegation.id) {
+                <div class="poll-vote-delegation">
+                    <mat-divider></mat-divider>
+                    <os-poll-vote [poll]="poll()" [user]="delegation"></os-poll-vote>
+                </div>
+            }
+        }
+    }
+} @else if (poll().isFinished && poll().result) {
+    <os-poll-result [poll]="poll()" />
+}

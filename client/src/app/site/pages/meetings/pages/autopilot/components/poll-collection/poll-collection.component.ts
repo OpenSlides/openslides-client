@@ -10,15 +10,15 @@ import { PollControllerService } from '@app/site/pages/meetings/modules/poll/ser
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { map, of, tap } from 'rxjs';
 
-import { PollComponent } from '../../../../modules/poll/components/poll/poll.component';
 import { getPollDetailSubscriptionConfig, POLL_DETAIL_SUBSCRIPTION } from '../../../polls/polls.subscription';
 import { HasPolls, isHavingViewPolls } from '../../../polls/view-models/has-polls';
+import { AutopilotPollComponent } from '../autopilot-poll/autopilot-poll.component';
 
 @Component({
     selector: `os-poll-collection`,
     templateUrl: `./poll-collection.component.html`,
     styleUrls: [`./poll-collection.component.scss`],
-    imports: [MatCardModule, NgTemplateOutlet, PollComponent]
+    imports: [MatCardModule, NgTemplateOutlet, AutopilotPollComponent]
 })
 export class PollCollectionComponent<C extends PollContentObject> extends BaseComponent implements OnDestroy {
     public currentSubscribed: Id | null = null;
