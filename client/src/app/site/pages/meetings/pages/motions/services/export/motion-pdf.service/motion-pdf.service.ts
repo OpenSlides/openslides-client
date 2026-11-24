@@ -579,17 +579,33 @@ export class MotionPdfService {
                 const labels: any[] = [this.translate.instant(`Yes`), this.translate.instant(`No`)];
                 const relativeAmounts: number[] = [];
                 const amounts: number[] = [+result.yes || 0, +result.no || 0];
-                if (poll.config.onehundred_percent_base.startsWith(`yes_no`)) {
-                    relativeAmounts.push(Big(result.yes).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber());
-                    relativeAmounts.push(Big(result.no).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber());
+                if (poll.config.onehundred_percent_base.startsWith(`yes_no`) && poll.config.onehundredPercentBaseNum) {
+                    relativeAmounts.push(
+                        Big(result.yes || 0)
+                            .div(poll.config.onehundredPercentBaseNum)
+                            .mul(100)
+                            .toNumber()
+                    );
+                    relativeAmounts.push(
+                        Big(result.no || 0)
+                            .div(poll.config.onehundredPercentBaseNum)
+                            .mul(100)
+                            .toNumber()
+                    );
                 }
 
                 if (poll.config.allow_abstain) {
                     labels.push(this.translate.instant(`Abstain`));
                     amounts.push(+result.abstain || 0);
-                    if (poll.config.onehundred_percent_base === `yes_no_abstain`) {
+                    if (
+                        poll.config.onehundred_percent_base === `yes_no_abstain` &&
+                        poll.config.onehundredPercentBaseNum
+                    ) {
                         relativeAmounts.push(
-                            Big(result.abstain).div(poll.config.onehundredPercentBaseNum).mul(100).toNumber()
+                            Big(result.abstain || 0)
+                                .div(poll.config.onehundredPercentBaseNum)
+                                .mul(100)
+                                .toNumber()
                         );
                     }
                 }
