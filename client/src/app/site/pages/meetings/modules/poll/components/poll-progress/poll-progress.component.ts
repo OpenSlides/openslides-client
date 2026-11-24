@@ -97,7 +97,7 @@ export class PollProgressComponent extends BaseUiComponent implements OnDestroy 
             }
         });
 
-        this.operator.userObservable.pipe(takeUntilDestroyed()).subscribe(() => {
+        this.operator.permissionsObservable.pipe(takeUntilDestroyed()).subscribe(() => {
             this.canSeeProgressBar.set(this.operator.hasPerms(Permission.pollCanSeeProgress));
         });
     }
