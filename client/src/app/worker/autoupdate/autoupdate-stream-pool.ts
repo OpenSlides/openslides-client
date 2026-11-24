@@ -179,7 +179,9 @@ export class AutoupdateStreamPool extends HttpStreamPool<AutoupdateStream> {
                 params.set(`single`, `1`);
                 singleReqStream = stream.cloneWithSubscriptions(stream.subscriptions, params);
                 singleReqStream.start();
-                singleReqStream.receivedData.then(() => r(`single-win`));
+                singleReqStream.receivedData.then(() =>
+                    setTimeout(() => r(`single-win`), HTTP_POOL_CONFIG.SINGLE_REQUEST_TEST_RESULT_DELAY)
+                );
             }, HTTP_POOL_CONFIG.SINGLE_REQUEST_TEST_DELAY);
         });
 
