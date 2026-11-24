@@ -141,17 +141,33 @@ export class MotionHtmlToPdfService extends HtmlToPdfService {
                     ]
                 };
             }
-        } else if (element.getAttribute(`class`) === `amendment-nr-n-icon`) {
+        } else if (element.classList.contains(`amendment-nr-n-icon`)) {
             const children = this.parseChildren(data.element, data.styles);
-            const newParagraph = {
-                columns: [],
+            return {
+                columns: children.map((child: any) => {
+                    if (child.svg) {
+                        return {
+                            width: 12,
+                            svg: child.svg
+                        };
+                    }
+                    return {
+                        text: child.text ?? child
+                    };
+                }),
                 margin: [0, 0]
             };
-            newParagraph.columns = children;
-            return newParagraph;
         } else {
             return super.createSpanParagraph(data);
         }
+    }
+
+    protected override createSVGParagraph(data: CreateSpecificParagraphPayload): any {
+        return {
+            svg: data.element.outerHTML.replace(/\n/g, ``),
+            width: 12,
+            height: 12
+        };
     }
 
     protected override createListParagraph(data: CreateSpecificParagraphPayload): any {

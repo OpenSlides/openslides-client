@@ -704,68 +704,25 @@ export class MotionPdfService {
                 showAllChanges: showAllChanges,
                 brokenTextChangesAmount: brokenTextChangesAmount
             });
-            formattedText = this.createWarningPlaceholder(formattedText);
+            formattedText = this.createWarningIcon(formattedText);
             // reformat motion text to split long HTML elements to easier convert into PDF
             htmlText += motion.services().ln.splitInlineElementsAtLineBreaks(formattedText);
         }
 
-        return this.insertWarningIcon(htmlText, lnMode, lineHeight);
+        return this.htmlToPdfService.convertHtml({ htmlText, lnMode, lineHeight });
     }
 
-    private createWarningPlaceholder(text: string): string {
+    private createWarningIcon(text: string): string {
         return text.replace(
-            /<mat-icon class="margin-(?:right|left)-[\d]*">\s*warning\s*<\/mat-icon>\s*<span class="amendment-nr">([\s\S]*?)<\/span>\s*/gi,
-            (_match: string, ammendmentNumber: string): string => {
-                return `<warning-icon>${ammendmentNumber}</warning-icon>`;
-            }
-        );
-    }
-
-    private insertWarningIcon(htmlText: string, lnMode: LineNumberingMode, lineHeight: number): Content[] {
-        const regex = /<warning-icon>([\s\S]*?)<\/warning-icon>/gi;
-        const result: Content[] = [];
-        const warningIcon = {
-            svg: `<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24">
-            <path fill="#f44336" d="M12 2L1 21h22L12 2zm0 4l7.5 13h-15L12 6zm-1 4v5h2v-5h-2zm0 6v2h2v-2h-2z"/></svg>`,
-            width: 12,
-            height: 12
-        };
-        let lastIndex = 0;
-        let match: RegExpExecArray | null;
-        while ((match = regex.exec(htmlText)) !== null) {
-            const before = htmlText.substring(lastIndex, match.index);
-            if (before.trim()) {
-                result.push(
-                    ...this.htmlToPdfService.convertHtml({
-                        htmlText: before,
-                        lnMode,
-                        lineHeight
-                    })
+            // eslint-disable-next-line
+            /<mat-icon class="margin-[right|left]+-[\d]*">warning<\/mat-icon><span class="amendment-nr">([\s\S]*?)<\/span>/gi,
+            (_match: string, ammName: string): string => {
+                return (
+                    `<svg xmlns="http://www.w3.org/2000/svg" height="12px" viewBox="0 0 24 24" width="12px"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>` +
+                    ammName
                 );
             }
-            result.push({
-                columns: [
-                    warningIcon,
-                    {
-                        width: 'auto',
-                        text: match[1]
-                    }
-                ],
-                columnGap: 3
-            });
-            lastIndex = regex.lastIndex;
-        }
-        const rest = htmlText.substring(lastIndex);
-        if (rest.trim()) {
-            result.push(
-                ...this.htmlToPdfService.convertHtml({
-                    htmlText: rest,
-                    lnMode,
-                    lineHeight
-                })
-            );
-        }
-        return result;
+        );
     }
 
     /**

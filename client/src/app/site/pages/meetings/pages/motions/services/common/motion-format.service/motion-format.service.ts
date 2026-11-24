@@ -362,7 +362,7 @@ export class MotionFormatService {
         }
 
         return `<span class="amendment-nr-n-icon ${additionClasses}">
-                    ${warning} <span class="amendment-nr">${title}: </span>
+                    ${warning}<span class="amendment-nr">${title}: </span>
                 </span>`;
     }
 
