@@ -61,6 +61,15 @@
             <div class="committee-description">
                 {{ committee.description }}
             </div>
+            <!-- identity_key -->
+            @if (committee.identity_key) {
+                <div class="committee-description">
+                    <div>
+                        <b>{{ 'Committee Key' | translate }}</b>
+                    </div>
+                    <div>{{ committee.identity_key }}</div>
+                </div>
+            }
             <!-- forward motions to -->
             @if (committee.forward_to_committee_ids?.length > 0 && isOrgaAdmin()) {
                 <os-committee-meta-info icon="file_upload" [title]="'Forward motions to' | translate">
