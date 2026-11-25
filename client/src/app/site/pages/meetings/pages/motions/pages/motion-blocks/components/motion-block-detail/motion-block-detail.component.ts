@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormGroup } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Id } from '@app/domain/definitions/key-types';
 import { Permission } from '@app/domain/definitions/permission';
 import { MotionBlock } from '@app/domain/models/motions/motion-block';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { AddItemToAgendaDialog } from '@app/site/pages/meetings/pages/agenda/pages/agenda-add-item/agenda-add-item.component';
 import { ViewMotion, ViewMotionBlock } from '@app/site/pages/meetings/pages/motions';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { ColumnRestriction } from '@app/ui/modules/list';
@@ -80,6 +82,7 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
     private dialog = inject(MotionBlockEditDialogService);
     private itemRepo = inject(AgendaItemControllerService);
     private projectorService = inject(ProjectorControllerService);
+    private addToAgendaDialog = inject(MatDialog);
 
     /**
      * Init function.
@@ -195,7 +198,25 @@ export class MotionBlockDetailComponent extends BaseMeetingListViewComponent<Vie
     }
 
     public addToAgenda(): void {
-        this.itemRepo.addToAgenda({}, this.block).resolve().catch(this.raiseError);
+        this.addToAgendaDialog
+            .open(AddItemToAgendaDialog, {
+                data: { title: this.block.getTitle(), meetingId: this.activeMeetingId },
+                ...infoDialogSettings
+            })
+            .afterClosed()
+            .subscribe(result => {
+                if (!result) return;
+                this.itemRepo
+                    .addToAgenda(
+                        {
+                            type: result.agenda_type,
+                            parent_id: result.agenda_parent_id
+                        },
+                        this.block
+                    )
+                    .resolve()
+                    .catch(this.raiseError);
+            });
     }
 
     public removeFromAgenda(): void {
