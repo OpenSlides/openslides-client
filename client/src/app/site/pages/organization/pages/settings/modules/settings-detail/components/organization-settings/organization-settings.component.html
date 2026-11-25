@@ -219,6 +219,34 @@
                             <input formControlName="group_external_ids" matInput />
                             <mat-hint>Separate group ids with comma</mat-hint>
                         </mat-form-field>
+                        <!-- Condition -->
+                        <div class="full-width first-line">
+                            <!-- IDP Attribute-->
+                            <mat-form-field>
+                                <mat-label>{{ 'IDP-Attribute' | translate }}</mat-label>
+                                <input formControlName="email" matInput type="text" />
+                            </mat-form-field>
+                            <!-- -->
+                            <mat-form-field>
+                                <mat-label>{{ 'Regular Expression' | translate }}</mat-label>
+                                <input formControlName="member_number" matInput type="text" />
+                            </mat-form-field>
+                        </div>
+                        <!-- Mapping -->
+                        <div class="full-width first-line">
+                            <!-- IDP Attribute -->
+                            <mat-form-field>
+                                <mat-label>{{ 'IDP-Attribute' | translate }}</mat-label>
+                                <input formControlName="email" matInput type="text" />
+                            </mat-form-field>
+                            <!-- OpenSLides Attribute -->
+                            <span>Combo box: OS-Attribute</span>
+                            <!-- Attribute -->
+                            <mat-form-field>
+                                <mat-label>{{ 'Attribute' | translate }}</mat-label>
+                                <input formControlName="member_number" matInput type="text" />
+                            </mat-form-field>
+                        </div>
                         <div>
                             <mat-checkbox formControlName="allow_update">
                                 {{ 'Allow update on login' | translate }}
