@@ -72,11 +72,11 @@ export class PollEditResultComponent {
 
     private readonly model = signal<PollEditResultModel>({
         options: [],
-        empty: 0,
-        nota: 0,
-        valid: 0,
-        invalid: 0,
-        total_ballots: 0
+        empty: null,
+        nota: null,
+        valid: null,
+        invalid: null,
+        total_ballots: null
     });
 
     private optionSchema = schema<OptionFormEntry>(option => {
