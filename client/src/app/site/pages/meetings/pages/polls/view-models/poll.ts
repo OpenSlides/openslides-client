@@ -124,11 +124,16 @@ export class ViewPoll<C extends PollContentObject = any>
     }
 
     public override getDetailStateUrl(): string {
-        if (this.getContentObject()) {
-            return String(this.id);
-        } else {
-            return ``;
+        const co = this.getContentObject();
+        if (this.isMotionPoll) {
+            return `/${this.meeting_id}/motions/${co.sequential_number}`;
+        } else if (this.isAssignmentPoll) {
+            return `/${this.meeting_id}/assignments/${co.sequential_number}`;
+        } else if (this.isTopicPoll) {
+            return `/${this.meeting_id}/agenda/topics/${co.sequential_number}`;
         }
+
+        return ``;
     }
 
     public get hasVotes(): boolean {
