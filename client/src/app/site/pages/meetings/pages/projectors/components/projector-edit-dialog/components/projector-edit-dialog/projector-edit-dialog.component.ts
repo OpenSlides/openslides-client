@@ -19,11 +19,11 @@ import {
 import { Projector } from '@app/domain/models/projector/projector';
 import { HttpService } from '@app/gateways/http.service';
 import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectorLanguageService } from '@app/site/pages/meetings/pages/projectors/services/projector-language.service';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
-import { ProjectorLanguageService } from '@app/site/pages/meetings/pages/projectors/services/projector-language.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
-import { _ } from '@ngx-translate/core';
+import { _, TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs';
 
 const ASPECT_RATIO_FORM_KEY = `aspectRatio`;
@@ -92,7 +92,6 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
 
     public readonly projectorLanguages: Record<string, string>;
 
-
     public get projector(): ViewProjector | null {
         return this.data.projector || null;
     }
@@ -137,6 +136,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         private cd: ChangeDetectorRef,
         private http: HttpService,
         private activeMeeting: ActiveMeetingService,
+        protected translate: TranslateService,
         private projectorLanguageService: ProjectorLanguageService
     ) {
         super();
@@ -193,7 +193,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             this.updateForm.patchValue({
                 name: this.projector.name,
                 aspectRatio: this.projector.aspectRatio,
-                [PROJECTOR_LANGUAGE_FORM_KEY]: this.projectorLanguageService.getLanguage(
+                [PROJECTOR_LANGUAGE_FORM_KEY]: this.projectorLanguageService.getConfiguredLanguage(
                     this.projector.id,
                     this.translate.getCurrentLang() ?? `en`
                 )
@@ -234,7 +234,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             const nextProjector = this.fitUpdatePayload(this.updateForm.value);
 
             const projectorHtml = await this.http.post(
-                `/system/projector/preview/${this.data.projector.id}`,
+                `/system/projector/preview/${this.data.projector.id}?lang=${this.updateForm.value[PROJECTOR_LANGUAGE_FORM_KEY]}`,
                 nextProjector,
                 {
                     responseType: `text`
@@ -329,7 +329,10 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         if (!this.projector) {
             return;
         }
-        this.projectorLanguageService.setLanguage(this.projector.id, this.updateForm.value[PROJECTOR_LANGUAGE_FORM_KEY]);
+        this.projectorLanguageService.setLanguage(
+            this.projector.id,
+            this.updateForm.value[PROJECTOR_LANGUAGE_FORM_KEY]
+        );
     }
 
     private fitUpdatePayload(contentForm: any): Partial<Projector> {
