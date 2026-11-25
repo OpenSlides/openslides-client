@@ -389,8 +389,7 @@ export class AssignmentDetailComponent extends BaseMeetingComponent implements O
             .open(AddItemToAgendaDialog, {
                 data: {
                     title: this.assignment.getTitle(),
-                    meetingId: this.assignment.meeting_id,
-                    isMultiSelect: false
+                    meetingId: this.activeMeetingId
                 },
                 ...infoDialogSettings
             })

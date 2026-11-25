@@ -368,6 +368,11 @@ export class MotionMultiselectService {
             .subscribe(async result => {
                 if (!result) return;
                 const promises: Promise<any>[] = [];
+                // The distinction between items in agenda and not in agenda is needed since two different actions
+                // are performed by the backend:
+                //      "agenda_item.create" (requires fqid) and
+                //      "agenda_item.update" (requires id)
+                // In case of updating an existing item: "agenda_item.assign" and "agenda_item.update" are triggered
                 const itemsToUpdate = sortedMotions
                     .filter(motion => !!motion.agenda_item_id)
                     .map(motion => this.agendaRepo.getViewModelList().find(item => item.id === motion.agenda_item_id))

@@ -393,7 +393,7 @@ export class MotionViewComponent extends BaseMeetingComponent implements OnInit,
     public addToAgenda(): void {
         this.dialog
             .open(AddItemToAgendaDialog, {
-                data: { title: this.motion.getTitle(), meetingId: this.activeMeetingId, isMultiSelect: false },
+                data: { title: this.motion.getTitle(), meetingId: this.activeMeetingId },
                 ...infoDialogSettings
             })
             .afterClosed()

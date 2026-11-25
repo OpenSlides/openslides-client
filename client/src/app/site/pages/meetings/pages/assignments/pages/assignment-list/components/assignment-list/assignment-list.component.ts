@@ -13,7 +13,6 @@ import { MultiProjectionBuildDescriptor } from '@app/site/pages/meetings/view-mo
 import { OperatorService } from '@app/site/services/operator.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
-import { TranslateService } from '@ngx-translate/core';
 
 import { getAssignmentDetailSubscriptionConfig } from '../../../../assignments.subscription';
 import { AssignmentPhases } from '../../../../definitions/index';
@@ -53,7 +52,6 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
     public sortService = inject(AssignmentSortListService);
     public dialog = inject(MatDialog);
     public vp = inject(ViewPortService);
-    protected override translate = inject(TranslateService);
     protected route = inject(ActivatedRoute);
     private promptService = inject(PromptService);
     private pdfService = inject(AssignmentExportService);
@@ -145,6 +143,11 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
             .subscribe(async result => {
                 if (!result) return;
                 const promises: Promise<any>[] = [];
+                // The distinction between items in agenda and not in agenda is needed since two different actions
+                // are performed by the backend:
+                //      "agenda_item.create" (requires fqid)
+                //      "agenda_item.update" (requires id)
+                // In case of updating an existing item: "agenda_item.assign" and "agenda_item.update" are triggered
                 const itemsToUpdate = sortedAssignments
                     .filter(a => a.agenda_item_id)
                     .map(a => this.itemRepo.getViewModelList().find(item => item.id === a.agenda_item_id))
