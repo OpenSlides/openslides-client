@@ -14,6 +14,10 @@ export class ProjectorLanguageService {
             return queryLanguage;
         }
 
+        return this.getConfiguredLanguage(projectorId, fallbackLanguage);
+    }
+
+    public getConfiguredLanguage(projectorId: number, fallbackLanguage: string): string {
         const storedLanguage = localStorage.getItem(this.getStorageKey(projectorId));
         if (storedLanguage && this.isAvailableLanguage(storedLanguage)) {
             return storedLanguage;
