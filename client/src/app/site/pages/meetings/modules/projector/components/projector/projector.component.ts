@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnIni
 import { UnsafeHtml } from '@app/domain/definitions/key-types';
 import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
 import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
+import { ProjectorLanguageService } from '@app/site/pages/meetings/pages/projectors/services/projector-language.service';
 import { AuthTokenService } from '@app/site/services/auth-token.service';
 import { ConnectionStatusService } from '@app/site/services/connection-status.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
@@ -129,7 +130,8 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
         private elementRef: ElementRef,
         private meetingSettingsService: MeetingSettingsService,
         private authTokenService: AuthTokenService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private projectorLanguageService: ProjectorLanguageService
     ) {
         super();
 
@@ -177,7 +179,10 @@ export class ProjectorComponent extends BaseUiComponent implements OnInit, OnDes
                 this.projector.id,
                 () => this.authTokenService.rawAccessToken,
                 {
-                    lang: this.translate.getCurrentLang() ?? `en`
+                    lang: this.projectorLanguageService.getLanguage(
+                        this.projector.id,
+                        this.translate.getCurrentLang() ?? `en`
+                    )
                 }
             );
         });
