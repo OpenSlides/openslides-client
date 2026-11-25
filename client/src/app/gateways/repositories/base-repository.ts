@@ -1,25 +1,25 @@
 import { inject, Injectable } from '@angular/core';
-import { HasSequentialNumber, Identifiable } from '@app/domain/interfaces';
-import { OnAfterAppsLoaded } from '@app/infrastructure/definitions/hooks/after-apps-loaded';
-import { ListUpdateData } from '@app/infrastructure/utils';
+import type { HasSequentialNumber, Identifiable } from '@app/domain/interfaces';
+import type { OnAfterAppsLoaded } from '@app/infrastructure/definitions/hooks/after-apps-loaded';
+import type { ListUpdateData } from '@app/infrastructure/utils';
 import { getIntlCollatorForLang } from '@app/infrastructure/utils';
 import { Deferred } from '@app/infrastructure/utils/promises';
-import { OsSortProperty } from '@app/site/base/base-sort.service';
-import { SortListService } from '@app/ui/modules/list';
+import type { OsSortProperty } from '@app/site/base/base-sort.service/os-sort';
+import type { SortListService } from '@app/ui/modules/list/definitions/sort-service';
 import { TranslateService } from '@ngx-translate/core';
 import { auditTime, BehaviorSubject, filter, Observable, Subject, Subscription } from 'rxjs';
 
-import { Id } from '../../domain/definitions/key-types';
+import type { Id } from '../../domain/definitions/key-types';
 import { BaseModel, ModelConstructor } from '../../domain/models/base/base-model';
-import { Relation } from '../../infrastructure/definitions/relations/utils';
+import type { Relation } from '../../infrastructure/definitions/relations/utils';
 import { BaseViewModel, ViewModelConstructor } from '../../site/base/base-view-model';
 import { CollectionMapperService } from '../../site/services/collection-mapper.service/collection-mapper.service';
 import { DataStoreService } from '../../site/services/data-store.service';
-import { Fieldsets } from '../../site/services/model-request-builder/model-request-builder.service';
+import type { Fieldsets } from '../../site/services/model-request-builder/model-request-builder.service';
 import { RelationManagerService } from '../../site/services/relation-manager.service';
 import { Action } from '../actions/action';
 import { ActionService } from '../actions/action.service';
-import { ActionRequest } from '../actions/action-utils';
+import type { ActionRequest } from '../actions/action-utils';
 import { RepositoryServiceCollectorService } from './repository-service-collector.service';
 
 const RELATION_AS_OBSERVABLE_SUFFIX = `$`;

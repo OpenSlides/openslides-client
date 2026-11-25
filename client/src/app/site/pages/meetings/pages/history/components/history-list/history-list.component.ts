@@ -21,7 +21,7 @@ import {
 } from '@app/infrastructure/utils/transform-functions';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { BaseMeetingComponent } from '@app/site/pages/meetings/base/base-meeting.component';
-import { CollectionMapperService } from '@app/site/services/collection-mapper.service';
+import { CollectionMapperService } from '@app/site/services/collection-mapper.service/collection-mapper.service';
 import { DEFAULT_FIELDSET } from '@app/site/services/model-request-builder';
 import { OperatorService } from '@app/site/services/operator.service';
 import { ViewModelStoreService } from '@app/site/services/view-model-store.service';

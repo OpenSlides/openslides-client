@@ -14,9 +14,9 @@ import { ViewHistoryEntry } from '@app/gateways/repositories/history-entry/view-
 import { ViewHistoryPosition } from '@app/gateways/repositories/history-position/view-history-position';
 import { ViewPointOfOrderCategory } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/view-point-of-order-category';
 import { ViewMeetingMediafile } from '@app/site/pages/meetings/pages/mediafiles/view-models/view-meeting-mediafile';
-import { ViewMotionEditor } from '@app/site/pages/meetings/pages/motions/modules/editors';
+import { ViewMotionEditor } from '@app/site/pages/meetings/pages/motions/modules/editors/view-models/view-motion-editor';
 import { ViewMotionSupporter } from '@app/site/pages/meetings/pages/motions/modules/supporters/view-models/view-motion-supporter';
-import { ViewMotionWorkingGroupSpeaker } from '@app/site/pages/meetings/pages/motions/modules/working-group-speakers';
+import { ViewMotionWorkingGroupSpeaker } from '@app/site/pages/meetings/pages/motions/modules/working-group-speakers/view-models/view-motion-working-group-speaker';
 import {
     ViewStructureLevel,
     ViewStructureLevelListOfSpeakers
@@ -25,7 +25,7 @@ import { ViewPollCandidate } from '@app/site/pages/meetings/pages/polls/view-mod
 import { ViewPollCandidateList } from '@app/site/pages/meetings/pages/polls/view-models/view-poll-candidate-list';
 import { ViewMeetingUser } from '@app/site/pages/meetings/view-models/view-meeting-user';
 import { ViewGender } from '@app/site/pages/organization/pages/accounts/pages/gender/view-models/view-gender';
-import { ViewResource } from '@app/site/pages/organization/pages/resources/view-models';
+import { ViewResource } from '@app/site/pages/organization/pages/resources/view-models/view-resource';
 
 import { BaseViewModel, ViewModelConstructor } from '../../../site/base/base-view-model';
 import { HasListOfSpeakers } from '../../../site/pages/meetings/pages/agenda/modules/list-of-speakers/view-models/has-list-of-speakers';
