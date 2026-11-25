@@ -195,7 +195,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
                 aspectRatio: this.projector.aspectRatio,
                 [PROJECTOR_LANGUAGE_FORM_KEY]: this.projectorLanguageService.getLanguage(
                     this.projector.id,
-                    this.translate.currentLang ?? `en`
+                    this.translate.getCurrentLang() ?? `en`
                 )
             });
         }
