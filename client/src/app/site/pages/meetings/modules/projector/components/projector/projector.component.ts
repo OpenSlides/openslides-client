@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { UnsafeHtml } from '@app/domain/definitions/key-types';
 import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
-import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { ProjectorLanguageService } from '@app/site/pages/meetings/pages/projectors/services/projector-language.service';
+import { MeetingSettingsService } from '@app/site/pages/meetings/services/meeting-settings.service';
 import { AuthTokenService } from '@app/site/services/auth-token.service';
 import { ConnectionStatusService } from '@app/site/services/connection-status.service';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
