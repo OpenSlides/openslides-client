@@ -212,22 +212,33 @@
                             <input formControlName="saml_login_button_text" matInput />
                         </mat-form-field>
                     </section>
-                    <div>Start: This needs to be inside a mapper</div>
-                    <mat-checkbox formControlName="saml_enabled">
-                        {{ 'Allow update on login' | translate }}
-                    </mat-checkbox>
-                    <mat-checkbox formControlName="saml_enabled">
-                        {{ 'Allow overrite on login' | translate }}
-                    </mat-checkbox>
-                    <mat-form-field>
-                        <mat-label>{{ 'Committee Admin Mapping Attribute' | translate }}</mat-label>
-                        <input formControlName="saml_login_button_text" matInput />
-                    </mat-form-field>
-                    <mat-form-field>
-                        <mat-label>{{ 'Organizationadmin or Accountadmin Mapping Attribute' | translate }}</mat-label>
-                        <input formControlName="saml_login_button_text" matInput />
-                    </mat-form-field>
-                    <div>End: This needs to be inside a mapper</div>
+                    <section>
+                        <div><b>Start: This needs to be inside a mapper</b></div>
+                        <mat-form-field>
+                            <mat-label>{{ 'External group Title' | translate }}</mat-label>
+                            <input formControlName="group_external_ids" matInput />
+                            <mat-hint>Separate group ids with comma</mat-hint>
+                        </mat-form-field>
+                        <div>
+                            <mat-checkbox formControlName="allow_update">
+                                {{ 'Allow update on login' | translate }}
+                            </mat-checkbox>
+                        </div>
+                        <div>
+                        <mat-checkbox formControlName="override_default">
+                            {{ 'Allow overrite on login' | translate }}
+                        </mat-checkbox>
+                        </div>
+                        <mat-form-field>
+                            <mat-label>{{ 'Committee Admin Mapping Attribute' | translate }}</mat-label>
+                            <input formControlName="idm_committee_management_key" matInput />
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>{{ 'Organizationadmin or Accountadmin Mapping Attribute' | translate }}</mat-label>
+                            <input formControlName="idm_organization_management_key" matInput />
+                        </mat-form-field>
+                        </section>
+                        <div><b>End: This needs to be inside a mapper</b></div>
                     <section>
                         <mat-form-field>
                             <mat-label>{{ 'Metadata of Identity Provider (IdP)' | translate }}</mat-label>

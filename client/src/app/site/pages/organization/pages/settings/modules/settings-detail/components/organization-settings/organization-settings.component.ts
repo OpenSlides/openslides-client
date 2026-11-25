@@ -133,7 +133,18 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 restrict_editing_same_level_committee_admins: [
                     this._currentOrgaSettings.restrict_editing_same_level_committee_admins ?? false
                 ],
-                restrict_edit_forward_committees: [this._currentOrgaSettings.restrict_edit_forward_committees ?? false]
+                restrict_edit_forward_committees: [this._currentOrgaSettings.restrict_edit_forward_committees ?? false],
+                saml_enabled: [this._currentOrgaSettings.saml_enabled ?? false],
+                saml_login_button_text: [this._currentOrgaSettings.saml_login_button_text],
+                saml_attr_mapping: [
+                    this._currentOrgaSettings.saml_attr_mapping &&
+                    typeof this._currentOrgaSettings.saml_attr_mapping !== `string`
+                        ? JSON.stringify(this._currentOrgaSettings.saml_attr_mapping)
+                        : this._currentOrgaSettings.saml_attr_mapping
+                ],
+                saml_metadata_idp: [this._currentOrgaSettings.saml_metadata_idp],
+                saml_metadata_sp: [this._currentOrgaSettings.saml_metadata_sp],
+                saml_private_key: [this._currentOrgaSettings.saml_private_key]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {
@@ -144,17 +155,6 @@ export class OrganizationSettingsComponent extends BaseComponent {
                     enable_chat: [this._currentOrgaSettings.enable_chat],
                     limit_of_meetings: [this._currentOrgaSettings.limit_of_meetings ?? 0],
                     limit_of_users: [this._currentOrgaSettings.limit_of_users ?? 0],
-                    saml_enabled: [this._currentOrgaSettings.saml_enabled ?? false],
-                    saml_login_button_text: [this._currentOrgaSettings.saml_login_button_text],
-                    saml_attr_mapping: [
-                        this._currentOrgaSettings.saml_attr_mapping &&
-                        typeof this._currentOrgaSettings.saml_attr_mapping !== `string`
-                            ? JSON.stringify(this._currentOrgaSettings.saml_attr_mapping)
-                            : this._currentOrgaSettings.saml_attr_mapping
-                    ],
-                    saml_metadata_idp: [this._currentOrgaSettings.saml_metadata_idp],
-                    saml_metadata_sp: [this._currentOrgaSettings.saml_metadata_sp],
-                    saml_private_key: [this._currentOrgaSettings.saml_private_key]
                 };
             }
         } else {
