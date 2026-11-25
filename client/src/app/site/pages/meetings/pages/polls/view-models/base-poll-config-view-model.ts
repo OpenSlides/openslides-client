@@ -28,8 +28,12 @@ export abstract class BasePollConfigViewModel<
     }
 
     public get validBallots(): number | null {
-        if (this.parsedResult()?.valid) {
-            return this.parsedResult()?.valid;
+        if (this.parsedResult()?.valid !== undefined) {
+            return this.parsedResult()?.valid ?? null;
+        }
+
+        if (this.parsedResult()?.total_ballots === null || this.parsedResult()?.total_ballots === undefined) {
+            return null;
         }
 
         return (this.parsedResult()?.total_ballots || 0) - (this.parsedResult()?.invalid || 0);
