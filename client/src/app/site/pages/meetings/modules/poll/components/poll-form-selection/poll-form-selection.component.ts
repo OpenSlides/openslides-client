@@ -1,4 +1,4 @@
-import { Component, computed, effect, input, Signal, signal } from '@angular/core';
+import { Component, computed, input, Signal, signal } from '@angular/core';
 import { form, FormField, FormRoot, max, min, required, validate } from '@angular/forms/signals';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
@@ -97,7 +97,6 @@ export class PollFormSelectionComponent extends PollFormBaseComponent<PollFormSe
 
     public constructor() {
         super();
-        effect(this.onOptionAmountUpdate.bind(this));
     }
 
     public getSerialzedForm(): Record<string, unknown> {
@@ -136,14 +135,5 @@ export class PollFormSelectionComponent extends PollFormBaseComponent<PollFormSe
         }
 
         return patch as Partial<PollFormSelection>;
-    }
-
-    private onOptionAmountUpdate(): void {
-        const optionAmount = this.optionAmount();
-        if (optionAmount) {
-            if (!this.form.max_options_amount().dirty()) {
-                this.form.max_options_amount().value.set(optionAmount);
-            }
-        }
     }
 }
