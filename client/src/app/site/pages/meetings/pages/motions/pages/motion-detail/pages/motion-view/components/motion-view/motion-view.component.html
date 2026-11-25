@@ -13,7 +13,11 @@
             <div class="title-slot">
                 <h1 class="mock-h2">
                     @if (!isMobile) {
-                        <span>{{ (motion.isAmendment() ? 'Amendment' : 'Motion') | translate }}</span>
+                        @if (motion.isAmendment()) {
+                            <span>{{ 'Amendment' | translate }}</span>
+                        } @else {
+                            <span>{{ 'Motion' | translate }}</span>
+                        }
                         <!-- Whitespace between label and number -->
                         <span>&nbsp;</span>
                     }
