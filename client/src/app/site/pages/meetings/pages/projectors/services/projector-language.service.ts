@@ -1,8 +1,10 @@
+import { Injectable } from '@angular/core';
 import { availableTranslations } from '@app/domain/definitions/languages';
 
 const PROJECTOR_LANGUAGE_STORAGE_PREFIX = `projectorLanguage:`;
 const PROJECTOR_LANGUAGE_QUERY_PARAM = `projectorLanguage`;
 
+@Injectable({ providedIn: `root` })
 export class ProjectorLanguageService {
     public readonly availableLanguages = availableTranslations;
 
