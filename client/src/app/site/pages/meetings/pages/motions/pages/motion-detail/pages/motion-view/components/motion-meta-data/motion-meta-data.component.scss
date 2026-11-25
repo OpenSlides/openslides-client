@@ -37,10 +37,12 @@ span.referencelist {
 }
 
 .status-text {
-    font-size: 85%;
+    font-size: 12px;
+    line-height: 1.2;
     font-style: italic;
+    margin-top: 4px;
     margin-bottom: 7px;
-    height: 18px;
+    min-height: 18px;
 }
 
 .slider-margin {
