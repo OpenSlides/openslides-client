@@ -458,7 +458,7 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
                     currentId = motion.origin_id;
                 }
 
-                branch.push(...origins.reverse());
+                branch.push(...[...origins].reverse());
                 tree.push(branch);
             }
         } else {
