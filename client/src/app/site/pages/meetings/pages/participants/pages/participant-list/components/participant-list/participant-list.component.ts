@@ -352,7 +352,7 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
     /**
      * This function opens the dialog,
      * where the user can quick change the groups,
-     * the gender and the participant number.
+     * the participant number and the delegations.
      *
      * @param user is an instance of ViewUser. This is the given user, who will be modified.
      */
@@ -370,21 +370,26 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
             group_ids: user.group_ids(),
             number: user.number(),
             structure_level_ids: user.structure_level_ids(),
-            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids(),
-            vote_delegated_to_ids: user.vote_delegated_to_meeting_user_ids()
+            vote_delegations_from_ids: user.vote_delegations_from_meeting_user_ids() || [],
+            vote_delegated_to_ids: user.vote_delegated_to_meeting_user_ids() || []
         });
+        const selfGroupRemovalDialogTitle = _(`This action will remove you from one or more groups.`);
+        const selfGroupRemovalDialogContent = _(
+            `This may diminish your ability to do things in this meeting and you may not be able to revert it by yourself. Are you sure you want to do this?`
+        );
 
         dialogRef.afterClosed().subscribe(async result => {
             if (result) {
                 if (!result.group_ids?.length) {
-                    result.group_ids = [this.activeMeeting!.default_group_id];
+                    result.group_ids = [this.activeMeeting.meeting!.default_group_id];
                 }
+                if (!result.vote_delegated_to_ids) result.vote_delegated_to_ids = [];
                 if (
                     !(
                         user.id === this.operator.operatorId &&
                         areGroupsDiminished(this.operator.user.group_ids(), result.group_ids, this.activeMeeting)
                     ) ||
-                    (await this.prompt.open(this.selfGroupRemovalDialogTitle, this.selfGroupRemovalDialogContent))
+                    (await this.prompt.open(selfGroupRemovalDialogTitle, selfGroupRemovalDialogContent))
                 ) {
                     if (
                         this.operator.hasPerms(Permission.userCanEditOwnDelegation) &&
@@ -635,8 +640,9 @@ export class ParticipantListComponent extends BaseMeetingListViewComponent<ViewU
 
     public canSeeItemMenu(): boolean {
         return (
-            this.operator.hasPerms(Permission.userCanUpdate) ||
-            this.operator.hasPerms(Permission.userCanEditOwnDelegation)
+            this.operator.hasPermsInMeeting(this.activeMeetingId, ...[this.permission.userCanUpdate]) &&
+            (this.operator.hasPerms(Permission.userCanUpdate) ||
+                this.operator.hasPerms(Permission.userCanEditOwnDelegation))
         );
     }
 

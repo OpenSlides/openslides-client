@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Service, signal } from '@angular/core';
 import { PollState } from '@app/domain/models/poll/poll-constants';
 import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
@@ -38,6 +38,7 @@ const VotingProhibitionVerbose = {
 
 @Service()
 export class VotingService {
+    public votingStateVersion = signal(0);
     private _currentUser: ViewUser | null = null;
     private _voteDelegationEnabled = false;
     private _forbidDelegationToVote = false;
@@ -49,7 +50,10 @@ export class VotingService {
     private pollRepo = inject(PollRepositoryService);
 
     public constructor() {
-        this.operator.userObservable.subscribe(user => (this._currentUser = user));
+        this.operator.userObservable.subscribe(user => {
+            this._currentUser = user;
+            if (this._forbidDelegationToVote) this.votingStateVersion.update(version => version + 1);
+        });
         this.meetingSettingsService
             .get(`users_enable_vote_delegations`)
             .subscribe(enabled => (this._voteDelegationEnabled = enabled));

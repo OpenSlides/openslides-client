@@ -1,7 +1,9 @@
 import { inject, Service } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { Permission } from '@app/domain/definitions/permission';
 import { PollRepositoryService } from '@app/gateways/repositories/polls/poll-repository.service';
 import { viewModelListEqual } from '@app/infrastructure/utils';
+import { VotingService } from '@app/site/pages/meetings/modules/poll/services/voting.service';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ActivePollsService } from '@app/site/pages/meetings/services/active-polls.service';
@@ -32,6 +34,7 @@ export class VotingBannerService {
     private pollRepo = inject(PollRepositoryService);
     private operator = inject(OperatorService);
     private activePolls = inject(ActivePollsService);
+    private votingService = inject(VotingService);
     private meetingSettingsService = inject(MeetingSettingsService);
 
     public constructor() {
@@ -44,7 +47,8 @@ export class VotingBannerService {
             this.meetingSettingsService.get(`users_forbid_delegator_to_vote`).pipe(distinctUntilChanged()),
             this.operator.userObservable.pipe(
                 distinctUntilChanged((p, c) => p?.isPresentInMeeting() === c?.isPresentInMeeting())
-            )
+            ),
+            toObservable(this.votingService.votingStateVersion)
         ])
             .pipe(
                 map(([_, polls]) => polls),
@@ -79,11 +83,20 @@ export class VotingBannerService {
 
     private updateBanner(polls: [ViewPoll, boolean][]): void {
         if (this.activeMeeting.meetingId && !this.operator.isAnonymous && this.operator.readyDeferred.wasResolved) {
-            this.pollsToVote = polls
-                .filter(([_, voted]) => {
-                    return voted === false;
-                })
-                .map(([poll, _]) => poll);
+            combineLatest(
+                polls
+                    .filter(([_, voted]) => !voted)
+                    .map(([poll]) =>
+                        this.votingService.votingProhibited(poll, this.operator.user).pipe(
+                            map(prohibition => ({
+                                poll,
+                                canVote: prohibition === null
+                            }))
+                        )
+                    )
+            ).subscribe(results => {
+                this.pollsToVote = results.filter(result => result.canVote).map(result => result.poll);
+            });
         } else {
             this.pollsToVote = [];
         }
