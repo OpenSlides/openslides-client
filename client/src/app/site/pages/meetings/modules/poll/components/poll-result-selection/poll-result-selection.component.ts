@@ -259,7 +259,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     public generalAbstainPercent = computed<string | null>(() => {
         if (
             !this.config.value().onehundredPercentBaseNum ||
-            !this.generalAbstain() ||
+            this.generalAbstain() === null ||
             this.config.value().onehundred_percent_base === 'no_general'
         ) {
             return null;
@@ -279,7 +279,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     public notaPercent = computed<string | null>(() => {
         if (
             !this.config.value().onehundredPercentBaseNum ||
-            !this.nota() ||
+            this.nota() === null ||
             this.config.value().onehundred_percent_base === 'no_general'
         ) {
             return null;
