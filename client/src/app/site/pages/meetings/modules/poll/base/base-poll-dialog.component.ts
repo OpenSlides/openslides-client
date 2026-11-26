@@ -45,7 +45,10 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
             return false;
         }
 
-        return this.pollForm().isValid();
+        return (
+            this.pollForm().isValid() &&
+            (!this.isAnalogPoll() || !this.pollResultForm() || this.pollResultForm().resultForm().valid())
+        );
     });
 
     public isAnalogPoll = computed(() => {
