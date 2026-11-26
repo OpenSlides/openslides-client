@@ -186,7 +186,7 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
         const title = await firstValueFrom(this.translate.get('Amendment to', undefined, this.activeMeeting.language));
         const motionCreate = {
             ...this.contentForm.value,
-            title: title + ' ' + `${this.motion.getNumberOrTitle()}`,
+            title: title + ` ` + this.motion.getNumberOrTitle(),
             parent_id: this.motion.id,
             category_id: this.operator.hasPerms(Permission.motionCanManage) ? this.motion.category_id : undefined,
             lead_motion_id: this.motion.id,
