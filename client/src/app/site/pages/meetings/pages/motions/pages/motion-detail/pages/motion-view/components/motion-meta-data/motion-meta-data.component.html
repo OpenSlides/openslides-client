@@ -303,7 +303,7 @@
 }
 
 <!-- Origins - display only -->
-@if (originTreeData().length) {
+@if (originTreeData().length && originTreeData()[0].length) {
     <div>
         @if (displayFutureForward()) {
             <h4>

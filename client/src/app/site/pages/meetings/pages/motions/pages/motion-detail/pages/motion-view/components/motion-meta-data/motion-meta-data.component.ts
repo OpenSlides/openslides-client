@@ -138,13 +138,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
 
     public refreshOriginMotions(): void {
         const futureList: ViewMotion[] =
-            this.displayFutureForward() && this.motion.all_derived_motions ? this.motion.all_derived_motions : [];
+            this.displayFutureForward() && this.motion.all_derived_motions ? [...this.motion.all_derived_motions] : [];
         const pastList: ViewMotion[] =
-            this.displayFutureForward() || this.motion.origin_id ? this.motion.all_origins : [];
+            this.displayFutureForward() || this.motion.origin_id ? [...this.motion.all_origins] : [];
 
         if (this.displayFutureForward()) {
             if (futureList.length > 0 || pastList.length > 0) {
-                futureList.push(this.motion);
+                futureList.push(this.motionRepo.getViewModel(this.motion.id));
             }
             const origin_ids: number[] = [];
 
