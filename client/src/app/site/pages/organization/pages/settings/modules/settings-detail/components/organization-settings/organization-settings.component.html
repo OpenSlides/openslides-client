@@ -213,62 +213,88 @@
                         </mat-form-field>
                     </section>
                     <section>
-                        <div><b>Start: This will be a mapper</b></div>
-                        <mat-form-field>
-                            <mat-label>{{ 'External group Title' | translate }}</mat-label>
-                            <input formControlName="group_external_ids" matInput />
-                            <mat-hint>Separate group ids with comma</mat-hint>
-                        </mat-form-field>
-                        <!-- Condition -->
-                        <div class="full-width first-line">
-                            <!-- IDP Attribute-->
-                            <mat-form-field>
-                                <mat-label>{{ 'IDP-Attribute' | translate }}</mat-label>
-                                <input formControlName="email" matInput type="text" />
-                            </mat-form-field>
-                            <!-- -->
-                            <mat-form-field>
-                                <mat-label>{{ 'Regular Expression' | translate }}</mat-label>
-                                <input formControlName="member_number" matInput type="text" />
-                            </mat-form-field>
-                        </div>
-                        <!-- Mapping -->
-                        <div class="full-width first-line">
-                            <!-- IDP Attribute -->
-                            <mat-form-field>
-                                <mat-label>{{ 'IDP-Attribute' | translate }}</mat-label>
-                                <input formControlName="email" matInput type="text" />
-                            </mat-form-field>
-                            <!-- OpenSLides Attribute -->
-                            <span>Combo box: OS-Attribute</span>
-                            <!-- Attribute -->
-                            <mat-form-field>
-                                <mat-label>{{ 'Attribute' | translate }}</mat-label>
-                                <input formControlName="member_number" matInput type="text" />
-                            </mat-form-field>
-                        </div>
-                        <div>
-                            <mat-checkbox formControlName="allow_update">
-                                {{ 'Allow update on login' | translate }}
-                            </mat-checkbox>
-                        </div>
-                        <div>
-                            <mat-checkbox formControlName="override_default">
-                                {{ 'Allow overrite on login' | translate }}
-                            </mat-checkbox>
-                        </div>
-                        <mat-form-field>
-                            <mat-label>{{ 'Committee Admin Mapping Attribute' | translate }}</mat-label>
-                            <input formControlName="idm_committee_management_key" matInput />
-                        </mat-form-field>
-                        <mat-form-field>
-                            <mat-label>
-                                {{ 'Organizationadmin or Accountadmin Mapping Attribute' | translate }}
-                            </mat-label>
-                            <input formControlName="idm_organization_management_key" matInput />
-                        </mat-form-field>
+                        <mat-card class="os-card os-mat-card-header">
+                            <mat-card-header class="background-accent">
+                                {{ 'Identity Mapper' | translate }}
+                            </mat-card-header>
+                            <form [formGroup]="mapperForm">
+                                <mat-form-field>
+                                    <mat-label>{{ 'External group Title' | translate }}</mat-label>
+                                    <input formControlName="group_external_ids" matInput />
+                                    <mat-hint>Separate group ids with comma</mat-hint>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>{{ 'Committee Admin Mapping Attribute' | translate }}</mat-label>
+                                    <input formControlName="idm_committee_management_key" matInput />
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>
+                                        {{ 'Organizationadmin or Accountadmin Mapping Attribute' | translate }}
+                                    </mat-label>
+                                    <input formControlName="idm_organization_management_key" matInput />
+                                </mat-form-field>
+                                <!-- Condition -->
+                                <mat-card-header class="accent">
+                                    {{ 'Condition' | translate }}
+                                </mat-card-header>
+                                <form class="full-width condition-line" [formGroup]="conditionForm">
+                                    <!-- IDP Attribute-->
+                                    <mat-form-field>
+                                        <mat-label>{{ 'IDP-Attribute' | translate }}</mat-label>
+                                        <input formControlName="idm_field" matInput type="text" />
+                                    </mat-form-field>
+                                    <!-- -->
+                                    <mat-form-field>
+                                        <mat-label>{{ 'Regular Expression' | translate }}</mat-label>
+                                        <input formControlName="regex" matInput type="text" />
+                                    </mat-form-field>
+                                </form>
+                                <!-- Mapping -->
+                                <mat-card-header class="accent">
+                                    {{ 'Mapper' | translate }}
+                                </mat-card-header>
+                                <form class="full-width mapping-line" [formGroup]="mappingForm">
+                                    <!-- IDP Attribute -->
+                                    <mat-form-field>
+                                        <mat-label>{{ 'IDP-Attribute' | translate }}</mat-label>
+                                        <input formControlName="idm_field" matInput type="text" />
+                                    </mat-form-field>
+                                    <!-- OpenSLides Attribute -->
+                                    <div>
+                                        <mat-form-field class="padding-top form-field">
+                                            <mat-label id="OS-attribute">
+                                                {{ 'OpenSlides Attribute' | translate }}
+                                            </mat-label>
+                                            <mat-select
+                                                aria-labelledby="OS-attribute"
+                                                formControlName="os_field"
+                                                required
+                                            >
+                                                @for (type of mappingChoices; track type) {
+                                                    <mat-option [value]="type.key">
+                                                        {{ type.name }}
+                                                    </mat-option>
+                                                }
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                    <!-- Attribute -->
+                                    <mat-form-field>
+                                        <mat-label>{{ 'Default atribute' | translate }}</mat-label>
+                                        <input formControlName="default_value" matInput type="text" />
+                                    </mat-form-field>
+                                    <div class="checkbox-row">
+                                        <mat-checkbox formControlName="allow_update">
+                                            {{ 'Allow update on login' | translate }}
+                                        </mat-checkbox>
+                                        <mat-checkbox class="sub-set" formControlName="override_default">
+                                            {{ 'Allow overrite on login' | translate }}
+                                        </mat-checkbox>
+                                    </div>
+                                </form>
+                            </form>
+                        </mat-card>
                     </section>
-                    <div><b>End: This will be a mapper</b></div>
                     <section>
                         <mat-form-field>
                             <mat-label>{{ 'Metadata of Identity Provider (IdP)' | translate }}</mat-label>

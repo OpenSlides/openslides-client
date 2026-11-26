@@ -26,3 +26,24 @@ mat-card mat-card-content h2 {
     padding-bottom: 0px;
     font-size: 12px;
 }
+
+.condition-line {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 32px;
+}
+
+.mapping-line {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    column-gap: 32px;
+}
+
+.checkbox-row {
+    display: flex;
+    flex-direction: column;
+}
+
+.sub-set {
+    margin-left: 15px;
+}
