@@ -64,6 +64,16 @@ export class PollPdfService {
             pollResultPdfContent.push(this.createVotesTable(poll));
         }
 
+        if (poll.entitled_users?.length) {
+            pollResultPdfContent.push({
+                text: this.translate.instant(`Entitled users`),
+                margin: [0, 20, 0, 5],
+                bold: true,
+                pageBreak: poll.ballots?.length && !poll.isAnalog ? `before` : undefined
+            });
+            pollResultPdfContent.push(this.createUsersTable(poll));
+        }
+
         return pollResultPdfContent;
     }
 
@@ -195,6 +205,58 @@ export class PollPdfService {
         return {
             table: {
                 widths: showVoteWeight ? [`6%`, `38%`, `14%`, `42%`] : [`6%`, `44%`, `50%`],
+                headerRows: 1,
+                body: pollTableBody
+            },
+            layout: `switchColorTableLayout`
+        };
+    }
+
+    private createUsersTable(poll: ViewPoll): Content {
+        const votedSet = new Set((poll.ballot_users || []).map(b => b.represented_meeting_user_id));
+        const sortedUsers = [...(poll.entitled_users || [])].sort((a, b) => {
+            const aName = this.getBallotUserName(a.meeting_user);
+            const bName = this.getBallotUserName(b.meeting_user);
+            return aName.localeCompare(bName);
+        });
+        // TODO: Vote weight will later be available in poll_ballot_user
+        const pollTableBody: any[] = [
+            [
+                {
+                    text: ``,
+                    style: `tableHeader`
+                },
+                {
+                    text: this.translate.instant(`Participant`),
+                    style: `tableHeader`
+                },
+                {
+                    text: this.translate.instant(`Has voted`),
+                    style: `tableHeader`
+                }
+            ]
+        ];
+
+        let index = 1;
+        for (const entitledUser of sortedUsers) {
+            const hasVoted = votedSet.has(entitledUser.meeting_user_id);
+            const tableRow = [
+                {
+                    text: index++
+                },
+                {
+                    text: this.getBallotUserName(entitledUser.meeting_user)
+                },
+                {
+                    text: this.translate.instant(hasVoted ? `Yes` : `No`)
+                }
+            ];
+            pollTableBody.push(tableRow);
+        }
+
+        return {
+            table: {
+                widths: [`6%`, `70%`, `24%`],
                 headerRows: 1,
                 body: pollTableBody
             },
