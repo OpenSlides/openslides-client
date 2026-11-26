@@ -94,13 +94,15 @@
                 }
             </mat-form-field>
 
-            <mat-form-field>
-                <mat-label>{{ 'Display result as' | translate }}</mat-label>
-                <mat-select [formField]="form.display_chart">
-                    <mat-option value="table">{{ 'Table' | translate }}</mat-option>
-                    <mat-option value="pie">{{ 'Pie chart' | translate }}</mat-option>
-                </mat-select>
-            </mat-form-field>
+            @if (!hideDisplayChart()) {
+                <mat-form-field>
+                    <mat-label>{{ 'Display result as' | translate }}</mat-label>
+                    <mat-select [formField]="form.display_chart">
+                        <mat-option value="table">{{ 'Table' | translate }}</mat-option>
+                        <mat-option value="pie">{{ 'Pie chart' | translate }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            }
         </div>
     </div>
 </form>

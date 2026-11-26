@@ -134,6 +134,7 @@
                 @case ('selection') {
                     <os-poll-form-selection
                         [formData]="form().value()"
+                        [hideDisplayChart]="optionType() === 'meeting_user'"
                         [hideMethod]="true"
                         [initialData]="data()"
                         [optionAmount]="optionAmount()"

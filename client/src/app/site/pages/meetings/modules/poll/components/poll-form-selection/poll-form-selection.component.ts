@@ -30,6 +30,7 @@ export interface PollFormSelection {
 })
 export class PollFormSelectionComponent extends PollFormBaseComponent<PollFormSelection> {
     public hideMethod = input<boolean>(false);
+    public hideDisplayChart = input<boolean>(false);
     public optionAmount = input<number>(null);
 
     protected readonly model = signal<PollFormSelection>({
