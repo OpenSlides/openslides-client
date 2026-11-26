@@ -1,5 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
-import { Component, computed, effect, inject, input, signal, viewChild, ViewEncapsulation } from '@angular/core';
+import { Component, computed, effect, inject, input, signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -14,6 +14,7 @@ import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { BaseComponent } from '@app/site/base/base.component';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { ViewMeetingPollSetting } from '@app/site/pages/meetings/view-models/view-meeting-poll-setting';
+import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { DirectivesModule } from '@app/ui/directives';
 import { EditableListComponent } from '@app/ui/modules/editable-list';
 import { SearchSelectorModule } from '@app/ui/modules/search-selector';
@@ -62,8 +63,7 @@ interface PollForm {
         PipesModule,
         KeyValuePipe,
         ReactiveFormsModule
-    ],
-    encapsulation: ViewEncapsulation.None
+    ]
 })
 export class PollFormComponent extends BaseComponent {
     private approvalForm = viewChild(PollFormApprovalComponent);
@@ -79,7 +79,6 @@ export class PollFormComponent extends BaseComponent {
     public optionAmount = input<number>(0);
     public optionType = input<'meeting_user' | 'text'>('text');
     public optionEdit = input<boolean>(false);
-    public isEVotingEnabled = input.required<boolean>();
 
     public pollSettings = input.required<ViewMeetingPollSetting>();
 
@@ -164,6 +163,9 @@ export class PollFormComponent extends BaseComponent {
 
     public groupRepo = inject(GroupControllerService);
     private dialog = inject(MatDialog);
+    private organizationSettingsService = inject(OrganizationSettingsService);
+
+    public isEVotingEnabled = this.organizationSettingsService.signal(`enable_electronic_voting`);
 
     public allowCumulative = computed(() => {
         return this.pollSettings().enable_cumulative_voting;
@@ -202,6 +204,7 @@ export class PollFormComponent extends BaseComponent {
     }
 
     public onOptionsChange(items: string[]): void {
+        this.form.options().markAsDirty();
         this.form.options().value.set(items);
     }
 
@@ -216,24 +219,32 @@ export class PollFormComponent extends BaseComponent {
     }
 
     private serializeForm(): Partial<ViewPoll> {
-        // getRawValue() includes disabled controls
         return { ...this.pollModel() };
     }
 
     private updateData(): void {
         const data = this.data();
         if (data && this.form) {
-            if (data.method_preselection !== undefined && !this.form['method_preselection']().dirty())
-                this.form['method_preselection']().value.set(data.method_preselection);
-            if (data.entitled_group_ids !== undefined && !this.form['entitled_group_ids']().dirty())
-                this.form['entitled_group_ids']().value.set(data.entitled_group_ids);
-            if (data.live_voting_enabled !== undefined && !this.form['live_voting_enabled']().dirty())
-                this.form['live_voting_enabled']().value.set(!!data.live_voting_enabled);
-            if (data.title !== undefined && !this.form['title']().dirty()) this.form['title']().value.set(data.title);
-            if (data.visibility !== undefined && !this.form['visibility']().dirty())
-                this.form['visibility']().value.set(data.visibility);
-            if (data.options !== undefined && !data.options.some(option => option.content_object_id))
-                this.form['options']().value.set(data.options.map(option => option.text));
+            for (const key of [
+                `method_preselection`,
+                `entitled_group_ids`,
+                `live_voting_enabled`,
+                `title`,
+                `visibility`
+            ]) {
+                if (data[key] !== undefined && !this.form[key]().dirty()) {
+                    this.form[key]().value.set(data[key]);
+                }
+            }
+
+            if (
+                data.options !== undefined &&
+                !this.form.options().dirty() &&
+                !data.options.some(option => option.content_object_id)
+            ) {
+                this.form.options().value.set(data.options.map(option => option.text));
+            }
+
             if (data.config?.method) {
                 let preselection = data.config.method;
                 if (!(data instanceof ViewPoll) && this.optionAmount() <= 1 && data.config.method !== `rating_score`) {

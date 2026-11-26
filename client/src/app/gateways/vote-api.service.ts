@@ -1,4 +1,5 @@
 import { inject, Service } from '@angular/core';
+import { Identifiable } from '@app/domain/interfaces';
 
 import { Id } from '../domain/definitions/key-types';
 import { PollVisibility } from '../domain/models/poll/poll-constants';
@@ -29,27 +30,19 @@ export class VoteApiService {
 
     private http = inject(HttpService);
 
-    public create(payload: PollCreatePayload): Promise<any> {
+    public create(payload: PollCreatePayload): Promise<Identifiable> {
         return this.http.post(`${this.BASE}/poll`, payload);
     }
 
-    public update(id: Id, payload: any): Promise<any> {
-        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}`, payload, {
-            catchError: false
-        });
+    public update(id: Id, payload: Partial<PollUpdatePayload>): Promise<void> {
+        return this.http.post(`${this.BASE}/poll/${encodeURIComponent(id)}`, payload);
     }
 
-    public deletePoll(id: Id): Promise<any> {
-        return this.http.delete(
-            `${this.BASE}/poll/${encodeURIComponent(id)}`,
-            {},
-            {
-                catchError: false
-            }
-        );
+    public deletePoll(id: Id): Promise<void> {
+        return this.http.delete(`${this.BASE}/poll/${encodeURIComponent(id)}`, {});
     }
 
-    public start(id: Id): Promise<any> {
+    public start(id: Id): Promise<void> {
         return this.http.post(
             `${this.BASE}/poll/${encodeURIComponent(id)}/start`,
             {},
@@ -59,9 +52,9 @@ export class VoteApiService {
         );
     }
 
-    public finalize(id: Id, options?: { publish?: boolean; anonymize?: boolean }): Promise<any> {
+    public finalize(id: Id, options?: { publish?: boolean; anonymize?: boolean }): Promise<void> {
         const url = `${this.BASE}/poll/${encodeURIComponent(id)}/finalize`;
-        const queryParams: Record<string, any> = {};
+        const queryParams: Record<string, string> = {};
         if (options?.publish) {
             queryParams[`publish`] = ``;
         }
@@ -71,7 +64,7 @@ export class VoteApiService {
         return this.http.post(url, {}, { queryParams, catchError: false });
     }
 
-    public reset(id: Id): Promise<any> {
+    public reset(id: Id): Promise<void> {
         return this.http.post(
             `${this.BASE}/poll/${encodeURIComponent(id)}/reset`,
             {},
@@ -81,7 +74,7 @@ export class VoteApiService {
         );
     }
 
-    public vote(id: Id, value: unknown, meetingUserId: Id, split = false): Promise<any> {
+    public vote(id: Id, value: unknown, meetingUserId: Id, split = false): Promise<void> {
         return this.http.post(
             `${this.BASE}/poll/${encodeURIComponent(id)}/vote`,
             {

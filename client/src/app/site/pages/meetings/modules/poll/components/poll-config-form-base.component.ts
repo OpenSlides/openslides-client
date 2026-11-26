@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, signal } from '@angular/core';
+import { computed, Directive, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { PollState } from '@app/domain/models/poll';
@@ -6,7 +6,7 @@ import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 import { ViewMeetingPollSetting } from '../../../view-models/view-meeting-poll-setting';
 
-@Component({ template: `` })
+@Directive()
 export abstract class PollFormBaseComponent {
     public form: UntypedFormGroup;
 

@@ -28,7 +28,6 @@ import { PipesModule } from '@app/ui/pipes';
 
 import { MotionPollComponent } from './components/motion-poll/motion-poll.component';
 import { MotionPollDialogComponent } from './components/motion-poll-dialog/motion-poll-dialog.component';
-import { MotionPollFormComponent } from './components/motion-poll-form/motion-poll-form.component';
 import { MotionPollService } from './services/motion-poll.service/motion-poll.service';
 import { MotionPollServiceModule } from './services/motion-poll-service.module';
 
@@ -38,7 +37,6 @@ const MODULES = [MotionPollServiceModule];
     imports: [
         ...MODULES,
         MotionPollComponent,
-        MotionPollFormComponent,
         MotionPollDialogComponent,
         CustomIconComponent,
         CommonModule,

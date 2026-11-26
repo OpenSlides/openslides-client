@@ -19,6 +19,10 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
     }
 
     public get onehundredPercentBaseNum(): number | null {
+        if (this.hasSpecialResult()) {
+            return null;
+        }
+
         switch (this.onehundred_percent_base) {
             case 'yes_no':
                 return !this.allow_abstain
@@ -33,27 +37,27 @@ export class ViewPollConfigApproval extends BasePollConfigViewModel<PollConfigAp
             case 'cast':
                 return this.parsedResult().total_ballots;
             case 'entitled':
-                return this.poll?.entitled_user_ids?.length ?? null;
+                return this.parsedResult().entitled_users;
             case 'entitled_present':
-                return this.poll?.entitled_users.filter(u => u.present).length ?? null;
+                return this.parsedResult().entitled_users_present;
         }
 
         return null;
     }
 
-    private _totalVotes: number;
     public get totalVotes(): number | null {
-        if (!this._totalVotes) {
-            this._totalVotes = Big(this.parsedResult().yes || 0)
-                .plus(Big(this.parsedResult().no || 0))
-                .plus(Big(this.parsedResult().abstain || 0))
-                .toNumber();
-        }
-        return this._totalVotes;
+        return Big(this.parsedResult().yes || 0)
+            .plus(Big(this.parsedResult().no || 0))
+            .plus(Big(this.parsedResult().abstain || 0))
+            .toNumber();
     }
 
     protected getResultFromString(result: string): ApprovalPollResult {
         return new ApprovalPollResult(this, JSON.parse(result));
+    }
+
+    protected hasSpecialResult(): boolean {
+        return +this.parsedResult().yes < 0 || +this.parsedResult().no < 0 || +(this.parsedResult().abstain || 0) < 0;
     }
 }
 

@@ -17,15 +17,13 @@
                     <tr class="result-row" [class]="votingOption">
                         <!-- YNA/Valid etc -->
                         <td>
-                            @let label = votingLabel ? votingLabel : (votingOption | pollKeyVerbose | translate);
-
                             @if (icon) {
                                 <os-icon-container size="large" [icon]="icon">
-                                    {{ label }}
+                                    {{ votingLabel }}
                                 </os-icon-container>
                             } @else {
                                 <span>
-                                    {{ label }}
+                                    {{ votingLabel }}
                                 </span>
                             }
                         </td>
@@ -105,7 +103,7 @@
                         [ngTemplateOutlet]="resultRow"
                         [ngTemplateOutletContext]="{
                             amount: castedBallots(),
-                            percent: '100',
+                            percent: config.value().onehundred_percent_base === `cast` ? '100' : null,
                             votingLabel: 'Casted ballots' | translate,
                             votingOption: 'votesvalid'
                         }"

@@ -35,7 +35,7 @@ export class MotionAddPollButtonComponent {
             content_object_id: this.motion.fqid,
             content_object: this.motion,
             ...defaultPollData,
-            live_voting_enabled: this.meetingPollSettingsService.instant(`motion`, `enable_live_voting`)
+            live_voting_enabled: this.meetingPollSettingsService.signal(`motion`, `enable_live_voting`)()
         };
 
         this.pollDialog.open(dialogData);

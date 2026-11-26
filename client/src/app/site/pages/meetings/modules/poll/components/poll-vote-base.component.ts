@@ -1,11 +1,11 @@
-import { Component, computed, input, output } from '@angular/core';
+import { computed, Directive, input, output } from '@angular/core';
 import { BaseViewModel } from '@app/site/base/base-view-model';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 
 import { ViewPollOption } from '../../../pages/polls/view-models/poll-option';
 import { ViewUser } from '../../../view-models/view-user';
 
-@Component({ template: `` })
+@Directive()
 export abstract class PollVoteBaseComponent<T extends BaseViewModel> {
     public poll = input.required<ViewPoll>();
     public user = input.required<ViewUser>();

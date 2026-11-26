@@ -1,17 +1,5 @@
 import { inject, Service } from '@angular/core';
-import { OptionData } from '@app/domain/models/poll/generic-poll';
-import { BaseOnehundredPercentBase } from '@app/domain/models/poll/poll-config-types';
-import {
-    ABSTAIN_KEY,
-    isPollTableData,
-    NO_KEY,
-    PollTableData,
-    PollValues,
-    VOTE_MAJORITY,
-    VOTE_UNDOCUMENTED,
-    VotingResult,
-    YES_KEY
-} from '@app/domain/models/poll/poll-constants';
+import { VOTE_MAJORITY, VOTE_UNDOCUMENTED } from '@app/domain/models/poll/poll-constants';
 import { ViewPoll } from '@app/site/pages/meetings/pages/polls/view-models';
 import { OrganizationSettingsService } from '@app/site/pages/organization/services/organization-settings.service';
 import { ThemeService } from '@app/site/services/theme.service';
@@ -19,8 +7,6 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { ActiveMeetingService } from '../../../../services/active-meeting.service';
 import { MeetingSettingsService } from '../../../../services/meeting-settings.service';
-
-const PERCENT_DECIMAL_PLACES = 3;
 
 @Service()
 export abstract class PollService {
@@ -42,76 +28,6 @@ export abstract class PollService {
         this.organizationSettingsService
             .get(`enable_electronic_voting`)
             .subscribe(is => (this._isElectronicVotingEnabled = is));
-    }
-
-    public generateTableData(_poll: ViewPoll): PollTableData[] {
-        return [];
-        /*
-        const tableData: PollTableData[] = poll.options
-            .sort((a, b) => {
-                if (this.sortByVote) {
-                    let compareValue;
-                    if (poll.config?.strike_out) {
-                        // least no on top:
-                        compareValue = compareNumber(b.no, a.no);
-                    } else {
-                        // most yes on top
-                        compareValue = compareNumber(a.yes, b.yes);
-                    }
-
-                    // Equal votes, sort by weight to have equal votes correctly sorted.
-                    if (compareValue === 0 && a.weight && b.weight) {
-                        // least weight on top
-                        return compareNumber(b.weight, a.weight);
-                    } else {
-                        return compareValue;
-                    }
-                }
-
-                // PollData does not have weight, we need to rely on the order of things.
-                if (a.weight && b.weight) {
-                    // least weight on top
-                    return compareNumber(b.weight, a.weight);
-                } else {
-                    return 0;
-                }
-            })
-            .map(option => {
-                const title = option.getOptionTitle();
-                const pollTableEntry: PollTableData = {
-                    class: isSortedList(option.content_object) ? `list` : `user`,
-                    value: this.getVoteTableKeys(poll).map(
-                        key =>
-                            ({
-                                vote: key.vote,
-                                amount: option[key.vote as OptionDataKey] ?? 0,
-                                icon: key.icon,
-                                hide: key.hide,
-                                showPercent: key.showPercent
-                            }) as VotingResult
-                    ),
-                    votingOption: title.title
-                };
-                if (title.subtitle) {
-                    pollTableEntry.votingOptionSubtitle = title.subtitle;
-                }
-                if (isSortedList(option.content_object)) {
-                    pollTableEntry.votingOptions = option.content_object.entries
-                        .sort((a, b) => a.weight - b.weight)
-                        .map(entry => ({ title: entry.getTitle(), subtitle: entry.getSubtitle() }));
-                }
-
-                return pollTableEntry;
-            });
-        tableData.push(...this.formatVotingResultToTableData(this.getGlobalVoteKeys(poll), poll));
-        tableData.push(...this.formatVotingResultToTableData(this.getSumTableKeys(poll), poll));
-
-        return tableData;
-        */
-    }
-
-    public pollKeyVerbose(value: string): string {
-        return PollValues[value] || value;
     }
 
     public parseNumber(value?: number, maximumFractionDigits = 3): string {
@@ -143,122 +59,11 @@ export abstract class PollService {
         return false;
     }
 
-    /**
-     * returns the total number of votes depending on the selected percent base
-     */
-    protected getPercentBase(_poll: ViewPoll, _row?: OptionData): number {
-        /* TODO: Reenable
-        const base: PollPercentBase = poll.config?.onehundred_percent_base as PollPercentBase;
-        const totalByBase = 0;
-        const option = row ?? poll.options[0]; // Assuming a motion poll and the first option contains every vote
-        switch (base) {
-            case PollPercentBase.YN:
-                totalByBase = this.sumOptionsYN(option);
-                break;
-            case PollPercentBase.YNA:
-                totalByBase = this.sumOptionsYNA(option);
-                break;
-            case PollPercentBase.Y:
-                totalByBase = this.sumOptionsYNA(option);
-                break;
-            case PollPercentBase.Valid:
-                totalByBase = poll.votesvalid > 0 ? poll.votesvalid : 0;
-                break;
-            case PollPercentBase.Entitled:
-                totalByBase = poll.entitled_users_at_stop?.length || 0;
-                break;
-            case PollPercentBase.EntitledPresent:
-                totalByBase = poll.entitled_users_at_stop?.filter(x => x.present).length || 0;
-                break;
-            case PollPercentBase.Cast:
-                totalByBase = poll.votescast > 0 ? poll.votescast : 0;
-                break;
-            default:
-                break;
-        }
-        return totalByBase;
-                */
-        return 1;
-    }
-
-    public getVoteValueInPercent(
-        value: number,
-        { poll, row }: { poll: ViewPoll; row?: OptionData | PollTableData }
-    ): string {
-        const option: OptionData | undefined = isPollTableData(row) ? this.transformToOptionData(row) : row;
-        const totalByBase = this.getPercentBase(poll, option);
-        if (totalByBase && totalByBase > 0) {
-            const percentNumber = (value / totalByBase) * 100;
-            if (percentNumber >= 0) {
-                return `${this.parseNumber(percentNumber, PERCENT_DECIMAL_PLACES)} %`;
-            }
-        }
-        return ``;
-    }
-
-    public getVoteTableKeys(poll: ViewPoll): VotingResult[] {
-        const keys: VotingResult[] = [
-            {
-                vote: YES_KEY,
-                icon: `check_circle`,
-                showPercent: true
-            },
-            {
-                vote: NO_KEY,
-                icon: `cancel`,
-                showPercent: true
-            }
-        ];
-
-        if (poll.config?.allow_abstain) {
-            keys.push({
-                vote: ABSTAIN_KEY,
-                icon: `circle`,
-                showPercent: this.showAbstainPercent(poll)
-            });
-        }
-
-        return keys;
-    }
-
-    private showAbstainPercent(poll: ViewPoll): boolean {
-        const base: BaseOnehundredPercentBase = poll.config?.onehundred_percent_base;
-        return (
-            // TODO: YNA replacement
-            base === `valid` || base === `cast`
-        );
-    }
-
-    public showPercentOfValidOrCast(poll: ViewPoll): boolean {
-        const base: BaseOnehundredPercentBase = poll.config?.onehundred_percent_base;
-        return base === `valid` || base === `cast` || base === `entitled` || base === `entitled_present`;
-    }
-
     public isVoteDocumented(vote: number): boolean {
         return vote !== null && vote !== undefined && vote !== VOTE_UNDOCUMENTED;
     }
 
     public isMaxVotesPerOptionEnabled(): boolean {
         return this.enableMaxVotesPerOption;
-    }
-
-    private transformToOptionData(data: PollTableData): OptionData {
-        const yes = this.getVotingResultFromTableData(data, YES_KEY);
-        const no = this.getVotingResultFromTableData(data, NO_KEY);
-        const abstain = this.getVotingResultFromTableData(data, ABSTAIN_KEY);
-        return {
-            getOptionTitle: () => ({ title: data.votingOption, subtitle: data.votingOptionSubtitle }),
-            yes: yes?.amount,
-            no: no?.amount,
-            abstain: abstain?.amount
-        };
-    }
-
-    private getVotingResultFromTableData(data: PollTableData, key: `yes` | `no` | `abstain`): VotingResult | undefined {
-        if (data.votingOption === key) {
-            return data.value[0];
-        } else {
-            return data.value.find(vote => vote.vote === key);
-        }
     }
 }

@@ -4,6 +4,8 @@ import { isFqid } from '@app/infrastructure/utils/transform-functions';
 import { BasePollConfigViewModel } from './base-poll-config-view-model';
 
 export abstract class BasePollResult<C extends BasePollConfigViewModel = any, T = any> {
+    public entitled_users: number;
+    public entitled_users_present: number;
     public total_ballots: number;
     public valid?: number;
     public invalid?: number;

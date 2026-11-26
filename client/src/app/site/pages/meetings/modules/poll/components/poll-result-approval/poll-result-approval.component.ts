@@ -4,12 +4,11 @@ import { PollRequiredMajority, VOTE_MAJORITY } from '@app/domain/models/poll';
 import { ApprovalOnehundredPercentBase } from '@app/domain/models/poll/poll-config-approval';
 import { ThemeService } from '@app/site/services/theme.service';
 import { IconContainerComponent } from '@app/ui/modules/icon-container';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import Big from 'big.js';
 
 import { ViewPollConfigApproval } from '../../../../pages/polls/view-models/poll-config-approval';
 import { ApprovalPollResult } from '../../../../pages/polls/view-models/poll-result-approval';
-import { PollKeyVerbosePipe } from '../../pipes/poll-key-verbose/poll-key-verbose.pipe';
 import { PollParseNumberPipe } from '../../pipes/poll-parse-number/poll-parse-number.pipe';
 import { ChartComponent, ChartData } from '../chart/chart.component';
 import { PollResultBaseComponent } from '../poll-result-base.component';
@@ -27,25 +26,19 @@ interface ResultRow {
 
 @Component({
     selector: 'os-poll-result-approval',
-    imports: [
-        IconContainerComponent,
-        ChartComponent,
-        TranslatePipe,
-        PollKeyVerbosePipe,
-        PollParseNumberPipe,
-        NgTemplateOutlet
-    ],
+    imports: [IconContainerComponent, ChartComponent, TranslatePipe, PollParseNumberPipe, NgTemplateOutlet],
     templateUrl: './poll-result-approval.component.html',
     styleUrl: './poll-result-approval.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPollConfigApproval, ApprovalPollResult> {
+    private translate = inject(TranslateService);
     private themeService = inject(ThemeService);
 
     public shouldShowEntitled = signal<boolean>(false);
 
     public onehundredPercentBase = computed<ApprovalOnehundredPercentBase>(() => {
-        return this.config().onehundred_percent_base;
+        return this.config.value().onehundred_percent_base;
     });
 
     public resultOptions = computed<Results>(() => {
@@ -55,7 +48,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
         }
 
         const showPercent =
-            this.config().onehundredPercentBaseNum &&
+            this.config.value().onehundredPercentBaseNum &&
             this.onehundredPercentBase() !== `disabled` &&
             +results.yes !== VOTE_MAJORITY &&
             +results.no !== VOTE_MAJORITY &&
@@ -63,33 +56,36 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
         const rows = [
             {
                 key: `Y`,
+                votingLabel: this.translate.instant(`Yes`),
                 votingOption: `yes`,
                 icon: `check_circle`,
                 amount: +results.yes || 0,
                 percent: showPercent
                     ? Big(results.yes || 0)
-                          .div(this.config().onehundredPercentBaseNum)
+                          .div(this.config.value().onehundredPercentBaseNum)
                           .mul(100)
                           .toNumber()
                     : null
             },
             {
                 key: `N`,
+                votingLabel: this.translate.instant(`No`),
                 votingOption: `no`,
                 icon: `cancel`,
                 amount: +results.no || 0,
                 percent: showPercent
                     ? Big(results.no || 0)
-                          .div(this.config().onehundredPercentBaseNum)
+                          .div(this.config.value().onehundredPercentBaseNum)
                           .mul(100)
                           .toNumber()
                     : null
             }
         ];
 
-        if (this.config().allow_abstain) {
+        if (this.config.value().allow_abstain) {
             rows.push({
                 key: `A`,
+                votingLabel: this.translate.instant(`Abstain`),
                 votingOption: `abstain`,
                 icon: `circle`,
                 amount: +results.abstain || 0,
@@ -98,7 +94,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
                     this.onehundredPercentBase() !== `disabled` &&
                     showPercent
                         ? Big(results.abstain || 0)
-                              .div(this.config().onehundredPercentBaseNum)
+                              .div(this.config.value().onehundredPercentBaseNum)
                               .mul(100)
                               .toNumber()
                         : null
@@ -116,7 +112,9 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
 
         return [`yes`, `no`, `abstain`]
             .filter(
-                k => (k !== `abstain` || this.config().onehundred_percent_base !== `yes_no`) && (+results[k] || 0) > 0
+                k =>
+                    (k !== `abstain` || this.config.value().onehundred_percent_base !== `yes_no`) &&
+                    (+results[k] || 0) > 0
             )
             .map(key => {
                 return {
@@ -144,7 +142,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public totalVoteSum = computed<number>(() => {
-        return this.config().totalVotes!;
+        return this.config.value().totalVotes!;
     });
 
     public validBallots = computed<number | null>(() => {
@@ -152,31 +150,31 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             return null;
         }
 
-        return this.config().validBallots;
+        return this.config.value().validBallots;
     });
 
     public validBallotsPercent = computed<string | null>(() => {
         if (
-            !this.config().onehundredPercentBaseNum ||
+            !this.config.value().onehundredPercentBaseNum ||
             this.onehundredPercentBase() === `yes_no` ||
             this.onehundredPercentBase() === `disabled`
         ) {
             return null;
         }
 
-        return this.formatResultDecimal((this.validBallots() / this.config().onehundredPercentBaseNum) * 100);
+        return this.formatResultDecimal((this.validBallots() / this.config.value().onehundredPercentBaseNum) * 100);
     });
 
     public invalidBallots = computed<number | null>(() => {
-        return this.config().invalidBallots;
+        return this.config.value().invalidBallots;
     });
 
     public invalidBallotsPercent = computed<string | null>(() => {
-        if (!this.config().onehundredPercentBaseNum || this.onehundredPercentBase() !== `cast`) {
+        if (!this.config.value().onehundredPercentBaseNum || this.onehundredPercentBase() !== `cast`) {
             return null;
         }
 
-        return this.formatResultDecimal((this.invalidBallots() / this.config().onehundredPercentBaseNum) * 100);
+        return this.formatResultDecimal((this.invalidBallots() / this.config.value().onehundredPercentBaseNum) * 100);
     });
 
     public castedBallots = computed<number | null>(() => {
@@ -184,11 +182,11 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
             return null;
         }
 
-        return this.config().parsedResult()?.total_ballots;
+        return this.config.value().parsedResult()?.total_ballots;
     });
 
     public entitledUsers = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base !== `entitled`) {
+        if (this.config.value().onehundred_percent_base !== `entitled`) {
             return null;
         }
 
@@ -196,7 +194,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public presentEntitledUsers = computed<number | null>(() => {
-        if (this.config().onehundred_percent_base !== `entitled_present`) {
+        if (this.config.value().onehundred_percent_base !== `entitled_present`) {
             return null;
         }
 
@@ -204,14 +202,14 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     });
 
     public majorityReached = computed<boolean | undefined>(() => {
-        if (!this.config().onehundredPercentBaseNum) {
+        if (!this.config.value().onehundredPercentBaseNum) {
             return undefined;
         }
 
-        if (this.config().required_majority === PollRequiredMajority.AbsoluteMajority) {
-            return +this.results().yes > this.config().onehundredPercentBaseNum / 2;
-        } else if (this.config().required_majority === PollRequiredMajority.TwoThirdMajority) {
-            return +this.results().yes >= (this.config().onehundredPercentBaseNum * 2) / 3;
+        if (this.config.value().required_majority === PollRequiredMajority.AbsoluteMajority) {
+            return +this.results().yes > this.config.value().onehundredPercentBaseNum / 2;
+        } else if (this.config.value().required_majority === PollRequiredMajority.TwoThirdMajority) {
+            return +this.results().yes >= (this.config.value().onehundredPercentBaseNum * 2) / 3;
         }
 
         return undefined;

@@ -2,10 +2,9 @@
     <div class="poll-config">
         <os-poll-form
             [data]="pollData"
-            [isEVotingEnabled]="isEVotingEnabled"
             [optionAmount]="options().length"
             [optionEdit]="true"
-            [pollSettings]="pollSettings | async"
+            [pollSettings]="pollSettings()"
         ></os-poll-form>
     </div>
 

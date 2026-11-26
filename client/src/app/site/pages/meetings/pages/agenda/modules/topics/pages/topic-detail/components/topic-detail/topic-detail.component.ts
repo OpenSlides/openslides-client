@@ -27,7 +27,6 @@ import { AgendaItemControllerService } from '../../../../../../services/agenda-i
 import { TopicPollService } from '../../../../modules/topic-poll/services/topic-poll.service';
 import { TopicPollDialogService } from '../../../../modules/topic-poll/services/topic-poll-dialog.service';
 import { TopicControllerService } from '../../../../services/topic-controller.service/topic-controller.service';
-import { TopicPdfService } from '../../../../services/topic-pdf.service/topic-pdf.service';
 
 @Component({
     selector: `os-topic-detail`,
@@ -138,7 +137,6 @@ export class TopicDetailComponent extends BaseMeetingComponent implements OnInit
         private pollDialog: TopicPollDialogService,
         private topicPollService: TopicPollService,
         private pollController: PollControllerService,
-        private topicPdfService: TopicPdfService,
         private route: ActivatedRoute,
         private treeService: TreeService,
         public forwardService: AgendaForwardDialogService

@@ -86,7 +86,7 @@ export class PollPdfService {
      *
      * @returns the table as pdfmake object
      */
-    private createResultsTable(poll: ViewPoll): Content {
+    public createResultsTable(poll: ViewPoll): Content {
         const rows = this.createResultRows(poll);
         const pollTableBody: any[] = [
             [
