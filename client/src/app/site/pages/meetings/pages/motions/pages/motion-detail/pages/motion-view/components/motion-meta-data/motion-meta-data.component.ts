@@ -105,6 +105,13 @@ export class MotionMetaDataComponent extends BaseMotionDetailChildComponent impl
     }
 
     /**
+     * @returns the current state label (with extension)
+     */
+    public getStateLabel(motion: ViewMotion): string {
+        return this.repo.getExtendedStateLabel(motion);
+    }
+
+    /**
      * Custom recommender as set in the settings
      */
     public recommender: string | null = null;

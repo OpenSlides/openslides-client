@@ -362,10 +362,7 @@
                             }
                         </div>
                         <div class="status-text">
-                            {{ origin.state }}
-                            @if (origin.state_extension) {
-                                {{ origin.state_extension }}
-                            }
+                            {{ getStateLabel(origin) }}
                         </div>
                     </td>
                 </tr>

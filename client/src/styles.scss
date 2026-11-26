@@ -176,6 +176,12 @@
     }
 }
 
+.content-swapped {
+    .cursor-chip .mat-mdc-chip-action {
+        cursor: pointer;
+    }
+}
+
 .mat-mdc-chip:focus,
 .mat-mdc-basic-chip:focus {
     outline: none;
