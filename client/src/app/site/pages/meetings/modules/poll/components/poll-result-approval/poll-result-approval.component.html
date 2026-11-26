@@ -109,6 +109,17 @@
                         }"
                     />
                 }
+
+                @if (requiredMajority() !== null) {
+                    <ng-container
+                        [ngTemplateOutlet]="resultRow"
+                        [ngTemplateOutletContext]="{
+                            amount: requiredMajority(),
+                            percent: null,
+                            votingLabel: 'Required majority' | translate
+                        }"
+                    />
+                }
             </table>
         </div>
 
