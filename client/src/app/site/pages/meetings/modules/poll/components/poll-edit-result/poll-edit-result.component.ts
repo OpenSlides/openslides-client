@@ -209,8 +209,8 @@ export class PollEditResultComponent {
             ...(m.valid !== null ? { valid: m.valid } : {}),
             ...(m.invalid !== null ? { invalid: m.invalid } : {}),
             ...(m.total_ballots !== null ? { total_ballots: m.total_ballots } : {}),
-            ...(this.showAbstain() ? { empty: m.empty } : {}),
-            ...(this.showNota() ? { nota: m.nota } : {})
+            ...(this.showAbstain() && m.empty !== null ? { empty: m.empty } : {}),
+            ...(this.showNota() && m.nota !== null ? { nota: m.nota } : {})
         };
     }
 

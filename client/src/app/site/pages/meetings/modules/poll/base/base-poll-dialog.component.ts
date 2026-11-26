@@ -56,8 +56,6 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
     public dialogRef = inject(MatDialogRef<BasePollDialogComponent>);
     public pollData: ViewPoll = inject(MAT_DIALOG_DATA);
 
-    public currentPollData: ViewPoll = this.pollData;
-
     public constructor() {
         super();
         this.addKeyListener();

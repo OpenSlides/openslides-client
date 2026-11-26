@@ -193,7 +193,7 @@ export class PollFormComponent extends BaseComponent {
             additional = this.methodForm().getSerialzedAdditionalData();
         }
 
-        return { ...this.data, ...this.serializeForm(), ...additional };
+        return { ...this.data(), ...this.serializeForm(), ...additional };
     }
 
     public openVotingWarning(event: MouseEvent): void {

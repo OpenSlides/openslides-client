@@ -14,7 +14,7 @@
                 [configType]="pollForm().selectedMethod()"
                 [options]="analogPollOptions()"
                 [pollConfigData]="pollForm().methodConfig()"
-                [pollData]="currentPollData"
+                [pollData]="pollForm().getValues()"
             />
         </div>
     }

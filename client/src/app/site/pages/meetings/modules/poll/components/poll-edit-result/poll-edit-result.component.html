@@ -92,7 +92,13 @@
     @if (showNota()) {
         <div class="option">
             <mat-form-field class="option-amount">
-                <mat-label>{{ 'General rejection/General approval' | translate }}</mat-label>
+                <mat-label>
+                    @if (pollConfigDataLax().strike_out) {
+                        {{ 'General approval' | translate }}
+                    } @else {
+                        {{ 'General rejection' | translate }}
+                    }
+                </mat-label>
                 <input matInput type="number" [formField]="resultForm.nota" />
             </mat-form-field>
         </div>
