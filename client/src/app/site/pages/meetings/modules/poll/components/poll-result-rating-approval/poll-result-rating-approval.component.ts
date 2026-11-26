@@ -104,7 +104,7 @@ export class PollResultRatingApprovalComponent extends PollResultBaseComponent<
     });
 
     public validBallotsPercent = computed<string | null>(() => {
-        if (!this.config.value().onehundredPercentBaseNum) {
+        if (!this.config.value().onehundredPercentBaseNum || this.validBallots() === null) {
             return null;
         }
 

@@ -178,7 +178,8 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
         if (
             !this.config.value().onehundredPercentBaseNum ||
             this.config.value().onehundred_percent_base === 'no_general' ||
-            this.config.value().onehundred_percent_base === 'cast'
+            this.config.value().onehundred_percent_base === 'cast' ||
+            this.validBallots() === null
         ) {
             return null;
         }
@@ -191,11 +192,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
     });
 
     public invalidBallotsPercent = computed<string | null>(() => {
-        if (
-            !this.config.value().onehundredPercentBaseNum ||
-            this.config.value().onehundred_percent_base === 'no_general' ||
-            this.config.value().onehundred_percent_base === 'cast'
-        ) {
+        if (!this.config.value().onehundredPercentBaseNum || this.config.value().onehundred_percent_base !== 'cast') {
             return null;
         }
 

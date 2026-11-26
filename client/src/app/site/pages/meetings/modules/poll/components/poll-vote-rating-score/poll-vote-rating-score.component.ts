@@ -103,10 +103,10 @@ export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPoll
     private promptService = inject(PromptService);
 
     public ngOnInit(): void {
-        this.voteModel.update(m => {
-            m.options = Object.fromEntries(this.options().map(o => [o.id, 0]));
-            return m;
-        });
+        this.voteModel.update(m => ({
+            ...m,
+            options: Object.fromEntries(this.options().map(o => [o.id, 0]))
+        }));
     }
 
     public toggleAbstain(val: boolean): void {
