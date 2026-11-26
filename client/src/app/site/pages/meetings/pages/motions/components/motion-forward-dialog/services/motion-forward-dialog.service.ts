@@ -89,7 +89,9 @@ export class MotionForwardDialogService extends BaseDialogService<
 
         if (toForward.filter(motion => !motion.isAmendment()).length === 0) {
             this.snackbar.open(
-                this.translate.instant(`Items of the type motions, motion blocks and elections cannot be forwarded.`),
+                this.translate.instant(
+                    `Items of the type amendments, motion blocks and elections cannot be forwarded.`
+                ),
                 `Ok`
             );
             return;
