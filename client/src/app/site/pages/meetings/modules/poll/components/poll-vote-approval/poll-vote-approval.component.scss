@@ -4,7 +4,18 @@
 .vote-container {
     display: flex;
     justify-content: space-around;
+    align-items: center;
     padding: 10px 0;
+
+    &.has-option {
+        justify-content: space-between;
+        gap: 16px;
+
+        .vote-option-title {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+    }
 }
 
 .vote-button-area {

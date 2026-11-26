@@ -7,12 +7,13 @@ import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ViewPollConfigApproval } from '../../../../pages/polls/view-models/poll-config-approval';
 import { PollVoteBaseComponent } from '../poll-vote-base.component';
 import { PollVoteButtonComponent } from '../poll-vote-button/poll-vote-button.component';
+import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.component';
 
 @Component({
     selector: 'os-poll-vote-approval',
     templateUrl: './poll-vote-approval.component.html',
     styleUrl: './poll-vote-approval.component.scss',
-    imports: [PollVoteButtonComponent, TranslatePipe, MatIconModule, MatButtonModule],
+    imports: [PollVoteButtonComponent, PollVoteOptionComponent, TranslatePipe, MatIconModule, MatButtonModule],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PollVoteApprovalComponent extends PollVoteBaseComponent<ViewPollConfigApproval> {
