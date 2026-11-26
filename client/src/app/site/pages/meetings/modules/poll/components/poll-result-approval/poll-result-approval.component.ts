@@ -156,7 +156,7 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     public validBallotsPercent = computed<string | null>(() => {
         if (
             !this.config.value().onehundredPercentBaseNum ||
-            this.onehundredPercentBase() === `yes_no` ||
+            (this.onehundredPercentBase() === `yes_no` && this.config.value().allow_abstain) ||
             this.onehundredPercentBase() === `disabled` ||
             this.validBallots() === null
         ) {
