@@ -83,7 +83,7 @@
     @if (showAbstain()) {
         <div class="option">
             <mat-form-field class="option-amount">
-                <mat-label>Global abstain</mat-label>
+                <mat-label>{{ 'Global abstain' | translate }}</mat-label>
                 <input matInput type="number" [formField]="resultForm.empty" />
             </mat-form-field>
         </div>
@@ -92,7 +92,7 @@
     @if (showNota()) {
         <div class="option">
             <mat-form-field class="option-amount">
-                <mat-label>General rejection/General approval</mat-label>
+                <mat-label>{{ 'General rejection/General approval' | translate }}</mat-label>
                 <input matInput type="number" [formField]="resultForm.nota" />
             </mat-form-field>
         </div>
@@ -100,21 +100,21 @@
 
     <div class="option">
         <mat-form-field class="option-amount">
-            <mat-label>Valid votes</mat-label>
+            <mat-label>{{ 'Valid votes' | translate }}</mat-label>
             <input matInput type="number" [formField]="resultForm.valid" />
         </mat-form-field>
     </div>
 
     <div class="option">
         <mat-form-field class="option-amount">
-            <mat-label>Invalid votes</mat-label>
+            <mat-label>{{ 'Invalid votes' | translate }}</mat-label>
             <input matInput type="number" [formField]="resultForm.invalid" />
         </mat-form-field>
     </div>
 
     <div class="option">
         <mat-form-field class="option-amount">
-            <mat-label>Total ballots</mat-label>
+            <mat-label>{{ 'Total ballots' | translate }}</mat-label>
             <input matInput type="number" [formField]="resultForm.total_ballots" />
         </mat-form-field>
         @if (!usesMajority() && configType() !== 'rating_score') {
