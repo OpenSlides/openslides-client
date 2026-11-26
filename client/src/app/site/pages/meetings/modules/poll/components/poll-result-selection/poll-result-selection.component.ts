@@ -27,6 +27,7 @@ interface ResultRow {
     key: string;
     votingOption: string;
     color: string;
+    resultType: string;
     majority: boolean;
     amount: number;
     percent: number | null;
@@ -103,6 +104,7 @@ export class PollResultSelectionComponent extends PollResultBaseComponent<
                 option: option,
                 votingOption: optionText,
                 color: showPieChart ? colors[i] : null,
+                resultType: 'yes',
                 amount,
                 majority:
                     !this.config.value().strike_out &&
