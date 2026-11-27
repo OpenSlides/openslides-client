@@ -19,13 +19,15 @@ import {
 import { Projector } from '@app/domain/models/projector/projector';
 import { HttpService } from '@app/gateways/http.service';
 import { ViewProjector } from '@app/site/pages/meetings/pages/projectors';
+import { ProjectorLanguageService } from '@app/site/pages/meetings/pages/projectors/services/projector-language.service';
 import { ActiveMeetingService } from '@app/site/pages/meetings/services/active-meeting.service';
 import { ViewMeeting } from '@app/site/pages/meetings/view-models/view-meeting';
 import { BaseUiComponent } from '@app/ui/base/base-ui-component';
-import { _ } from '@ngx-translate/core';
+import { _, TranslateService } from '@ngx-translate/core';
 import { auditTime } from 'rxjs';
 
 const ASPECT_RATIO_FORM_KEY = `aspectRatio`;
+const PROJECTOR_LANGUAGE_FORM_KEY = `projectorLanguage`;
 
 interface ProjectorEditDialogConfig {
     projector?: ViewProjector;
@@ -88,6 +90,8 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      */
     public customAspectRatio = false;
 
+    public readonly projectorLanguages: Record<string, string>;
+
     public get projector(): ViewProjector | null {
         return this.data.projector || null;
     }
@@ -131,9 +135,12 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
         private dialogRef: MatDialogRef<ProjectorEditDialogComponent>,
         private cd: ChangeDetectorRef,
         private http: HttpService,
-        private activeMeeting: ActiveMeetingService
+        private activeMeeting: ActiveMeetingService,
+        protected translate: TranslateService,
+        private projectorLanguageService: ProjectorLanguageService
     ) {
         super();
+        this.projectorLanguages = this.projectorLanguageService.availableLanguages;
 
         if (data.projector) {
             this.previewProjector = new ViewProjector(data.projector.getModel());
@@ -161,7 +168,8 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             show_logo: [],
             show_clock: [],
             is_internal: [],
-            projectiondefault_ids: [[]]
+            projectiondefault_ids: [[]],
+            [PROJECTOR_LANGUAGE_FORM_KEY]: [``]
         });
 
         this.subscriptions.push(
@@ -184,7 +192,11 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             this.updateForm.patchValue(this.projector.projector);
             this.updateForm.patchValue({
                 name: this.projector.name,
-                aspectRatio: this.projector.aspectRatio
+                aspectRatio: this.projector.aspectRatio,
+                [PROJECTOR_LANGUAGE_FORM_KEY]: this.projectorLanguageService.getConfiguredLanguage(
+                    this.projector.id,
+                    this.translate.getCurrentLang() ?? `en`
+                )
             });
         }
     }
@@ -199,6 +211,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      * Apply changes and close the dialog
      */
     public async onSubmitProjector(): Promise<void> {
+        this.saveProjectorLanguage();
         this.dialogRef.close(this.fitUpdatePayload(this.updateForm.value));
     }
 
@@ -206,6 +219,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
      * Saves the current changes on the projector
      */
     public applyChanges(): void {
+        this.saveProjectorLanguage();
         const nextProjector = this.fitUpdatePayload(this.updateForm.value);
         if (this.data.applyChangesFn) {
             this.data.applyChangesFn(nextProjector);
@@ -220,7 +234,7 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
             const nextProjector = this.fitUpdatePayload(this.updateForm.value);
 
             const projectorHtml = await this.http.post(
-                `/system/projector/preview/${this.data.projector.id}`,
+                `/system/projector/preview/${this.data.projector.id}?lang=${this.updateForm.value[PROJECTOR_LANGUAGE_FORM_KEY]}`,
                 nextProjector,
                 {
                     responseType: `text`
@@ -309,6 +323,16 @@ export class ProjectorEditDialogComponent extends BaseUiComponent implements OnI
 
     private getDefaultProjectorIds(projectordefaultKey: string): number[] {
         return this._defaultProjectors[projectordefaultKey] || [];
+    }
+
+    private saveProjectorLanguage(): void {
+        if (!this.projector) {
+            return;
+        }
+        this.projectorLanguageService.setLanguage(
+            this.projector.id,
+            this.updateForm.value[PROJECTOR_LANGUAGE_FORM_KEY]
+        );
     }
 
     private fitUpdatePayload(contentForm: any): Partial<Projector> {

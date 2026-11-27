@@ -14,6 +14,14 @@
                         <span>{{ 'Required' | translate }}</span>
                     </mat-error>
                 </mat-form-field>
+                <mat-form-field>
+                    <mat-label>{{ 'Projector language' | translate }}</mat-label>
+                    <mat-select formControlName="projectorLanguage">
+                        @for (language of projectorLanguages | keyvalue; track language.key) {
+                            <mat-option [value]="language.key">{{ language.value }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
                 @if (!projector.used_as_reference_projector_meeting_id) {
                     <div>
                         <mat-checkbox formControlName="is_internal">
