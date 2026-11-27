@@ -9,7 +9,7 @@ import { ViewMotion } from '@app/site/pages/meetings/pages/motions';
 import { OperatorService } from '@app/site/services/operator.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 
 import { AmendmentParagraphs } from '../../../../../../../../../../../domain/models/motions/motion';
 import { AmendmentControllerService } from '../../../../../../services/common/amendment-controller.service/amendment-controller.service';
@@ -183,9 +183,10 @@ export class AmendmentCreateWizardComponent extends BaseMeetingComponent impleme
         const submitterMeetingUserId = this.operator.isInMeeting(this.activeMeetingId)
             ? [this.operator.user.getMeetingUser(this.activeMeetingId)?.id]
             : [];
+        const title = await firstValueFrom(this.translate.get('Amendment to', undefined, this.activeMeeting.language));
         const motionCreate = {
             ...this.contentForm.value,
-            title: this.translate.instant(`Amendment to`) + ` ` + this.motion.getNumberOrTitle(),
+            title: title + ` ` + this.motion.getNumberOrTitle(),
             parent_id: this.motion.id,
             category_id: this.operator.hasPerms(Permission.motionCanManage) ? this.motion.category_id : undefined,
             lead_motion_id: this.motion.id,
