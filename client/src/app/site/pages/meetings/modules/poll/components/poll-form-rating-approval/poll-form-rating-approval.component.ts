@@ -59,14 +59,14 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent<PollF
         });
 
         required(s.max_options_amount, { message: _('This field is required.') });
-        min(s.max_options_amount, 1, { message: _('Amount needs to be at least 1') });
+        min(s.max_options_amount, 1, { message: _('Amount needs to be at least 1.') });
         max(s.max_options_amount, () => this.optionAmount(), {
-            message: _('Amount must not exceed amount of available options'),
+            message: _('Amount must not exceed amount of available options.'),
             when: () => !!this.optionAmount()
         });
 
         required(s.min_options_amount, { message: _('This field is required.') });
-        min(s.min_options_amount, 0, { message: _('Amount needs to be at least 0') });
+        min(s.min_options_amount, 0, { message: _('Amount needs to be at least 0.') });
         validate(s.min_options_amount, ({ value, valueOf }) => {
             const minVal = Number(value());
             const maxVal = Number(valueOf(s.max_options_amount));
@@ -75,7 +75,7 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent<PollF
             }
             return minVal <= maxVal
                 ? null
-                : { kind: 'minGreaterThanMax', message: _('Amount must not exceed max amount of options') };
+                : { kind: 'minGreaterThanMax', message: _('Amount must not exceed max amount of options.') };
         });
 
         required(s.max_yes_amount, {
@@ -83,11 +83,11 @@ export class PollFormRatingApprovalComponent extends PollFormBaseComponent<PollF
             when: () => !!this.settings().enable_max_yes_votes
         });
         min(s.max_yes_amount, 1, {
-            message: _('Amount needs to be at least 1'),
+            message: _('Amount needs to be at least 1.'),
             when: () => !!this.settings().enable_max_yes_votes
         });
         max(s.max_yes_amount, () => this.optionAmount(), {
-            message: _('Amount must not exceed amount of available options'),
+            message: _('Amount must not exceed amount of available options.'),
             when: () => !!this.settings().enable_max_yes_votes && !!this.optionAmount()
         });
     });

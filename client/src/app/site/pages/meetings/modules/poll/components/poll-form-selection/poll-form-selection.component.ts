@@ -54,14 +54,14 @@ export class PollFormSelectionComponent extends PollFormBaseComponent<PollFormSe
         });
 
         required(s.max_options_amount, { message: _('This field is required.') });
-        min(s.max_options_amount, 1, { message: _('Amount needs to be at least 1') });
+        min(s.max_options_amount, 1, { message: _('Amount needs to be at least 1.') });
         max(s.max_options_amount, () => this.optionAmount(), {
-            message: _('Amount must not exceed amount of available options'),
+            message: _('Amount must not exceed amount of available options.'),
             when: () => !!this.optionAmount()
         });
 
         required(s.min_options_amount, { message: _('This field is required.') });
-        min(s.min_options_amount, 1, { message: _('Amount needs to be at least 1') });
+        min(s.min_options_amount, 1, { message: _('Amount needs to be at least 1.') });
         validate(s.min_options_amount, ({ value, valueOf }) => {
             const minVal = Number(value());
             const maxVal = Number(valueOf(s.max_options_amount));
@@ -70,7 +70,7 @@ export class PollFormSelectionComponent extends PollFormBaseComponent<PollFormSe
             }
             return minVal <= maxVal
                 ? null
-                : { kind: 'minGreaterThanMax', message: _('Amount must not exceed amount of max amount of votes') };
+                : { kind: 'minGreaterThanMax', message: _('Amount must not exceed amount of max amount of votes.') };
         });
     });
 
@@ -80,7 +80,7 @@ export class PollFormSelectionComponent extends PollFormBaseComponent<PollFormSe
             this.form?.allow_empty().value() ||
             this.form?.min_options_amount().value() === 0;
         return [
-            ...((canUseNoGeneral ? [[`no_general`, _('Sum of votes without general options')]] : []) as [
+            ...((canUseNoGeneral ? [[`no_general`, _('Sum of votes without general options.')]] : []) as [
                 SelectionOnehundredPercentBase,
                 string
             ][]),
@@ -96,9 +96,6 @@ export class PollFormSelectionComponent extends PollFormBaseComponent<PollFormSe
         ];
     });
 
-    public constructor() {
-        super();
-    }
 
     public getSerialzedForm(): Record<string, unknown> {
         const data: Record<string, unknown> = {

@@ -62,10 +62,10 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent<PollForm
         });
 
         required(s.max_vote_sum, { message: _('This field is required.') });
-        min(s.max_vote_sum, 1, { message: _('Amount needs to be at least 1') });
+        min(s.max_vote_sum, 1, { message: _('Amount needs to be at least 1.') });
 
         required(s.min_vote_sum, { message: _('This field is required.') });
-        min(s.min_vote_sum, 1, { message: _('Amount needs to be at least 1') });
+        min(s.min_vote_sum, 1, { message: _('Amount needs to be at least 1.') });
         validate(s.min_vote_sum, ({ value, valueOf }) => {
             const minVal = Number(value());
             const maxVal = Number(valueOf(s.max_vote_sum));
@@ -74,7 +74,7 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent<PollForm
             }
             return minVal <= maxVal
                 ? null
-                : { kind: 'minGreaterThanMax', message: _('Amount must not exceed max amount of votes') };
+                : { kind: 'minGreaterThanMax', message: _('Amount must not exceed max amount of votes.') };
         });
 
         required(s.max_options_amount, {
@@ -82,11 +82,11 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent<PollForm
             when: () => !!this.settings().enable_max_options_limit
         });
         min(s.max_options_amount, 1, {
-            message: _('Amount needs to be at least 1'),
+            message: _('Amount needs to be at least 1.'),
             when: () => !!this.settings().enable_max_options_limit
         });
         max(s.max_options_amount, () => this.optionAmount(), {
-            message: _('Amount must not exceed amount of available options'),
+            message: _('Amount must not exceed amount of available options.'),
             when: () => !!this.settings().enable_max_options_limit && !!this.optionAmount()
         });
 
@@ -95,7 +95,7 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent<PollForm
             when: () => !!this.settings().enable_max_options_limit
         });
         min(s.min_options_amount, 1, {
-            message: _('Amount needs to be at least 1'),
+            message: _('Amount needs to be at least 1.'),
             when: () => !!this.settings().enable_max_options_limit
         });
         validate(s.min_options_amount, ({ value, valueOf }) => {
@@ -109,7 +109,7 @@ export class PollFormRatingScoreComponent extends PollFormBaseComponent<PollForm
             }
             return minVal <= maxVal
                 ? null
-                : { kind: 'minGreaterThanMax', message: _('Amount must not exceed max amount of options') };
+                : { kind: 'minGreaterThanMax', message: _('Amount must not exceed max amount of options.') };
         });
     });
 

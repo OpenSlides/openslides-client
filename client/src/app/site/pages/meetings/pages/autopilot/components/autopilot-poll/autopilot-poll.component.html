@@ -3,7 +3,7 @@
     <!-- Title Area -->
     <div class="poll-title-area">
         <!-- Title -->
-        <span class="poll-title break-word">
+        <h2 class="poll-title break-word accessibility-h2 accessibility-h2-1">
             @if (isSameMeeting() && getDetailLink()) {
                 <a [routerLink]="getDetailLink()">
                     {{ poll().title | translate }}
@@ -11,12 +11,12 @@
             } @else {
                 {{ poll().title | translate }}
             }
-        </span>
+        </h2>
 
         <!-- Subtitle -->
         <div class="italic spacer-bottom-20">
             <!-- Type and State -->
-            <div class="type-and-state italic spacer-bottom-20 break-word">
+            <div aria-live="polite" class="type-and-state italic spacer-bottom-20 break-word" role="status">
                 <!-- State -->
                 <span class="break-word">
                     @if (poll().isEVoting && poll().canBeVotedFor()) {

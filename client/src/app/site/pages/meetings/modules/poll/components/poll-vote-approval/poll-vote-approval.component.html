@@ -1,4 +1,4 @@
-<div class="vote-container" [class.has-option]="poll().options?.length === 1">
+<div class="vote-container" role="row" [class.has-option]="poll().options?.length === 1">
     @if (poll().options?.length === 1) {
         <div class="vote-option-title" role="rowheader">
             <os-poll-vote-option [option]="poll().options[0]" />
