@@ -12,6 +12,10 @@ table {
         }
     }
 
+    .no-outline:focus {
+        outline: none;
+    }
+
     .clickable-cell {
         display: flex;
         cursor: pointer;

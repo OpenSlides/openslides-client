@@ -38,12 +38,16 @@
                         <td
                             *matCellDef="let perm"
                             #tooltip="matTooltip"
+                            class="no-outline"
                             mat-cell
                             matTooltipClass="pre-wrap"
                             matTooltipPosition="after"
+                            [attr.tabindex]="perm.help_text ? 0 : null"
                             [matTooltip]="perm.help_text | translate"
                             [ngClass]="{ 'has-help-text': perm.help_text }"
                             (click)="tooltip.toggle()"
+                            (keydown.enter)="tooltip.toggle()"
+                            (keydown.space)="$event.preventDefault(); tooltip.toggle()"
                             (mouseenter)="$event.stopImmediatePropagation()"
                             (mouseleave)="tooltip.hide()"
                         >
