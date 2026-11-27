@@ -156,8 +156,9 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
     public validBallotsPercent = computed<string | null>(() => {
         if (
             !this.config.value().onehundredPercentBaseNum ||
-            this.onehundredPercentBase() === `yes_no` ||
-            this.onehundredPercentBase() === `disabled`
+            (this.onehundredPercentBase() === `yes_no` && this.config.value().allow_abstain) ||
+            this.onehundredPercentBase() === `disabled` ||
+            this.validBallots() === null
         ) {
             return null;
         }
@@ -199,6 +200,21 @@ export class PollResultApprovalComponent extends PollResultBaseComponent<ViewPol
         }
 
         return this.poll().entitled_users?.filter(u => u.present).length;
+    });
+
+    public requiredMajority = computed<number | null>(() => {
+        const base = this.config.value().onehundredPercentBaseNum;
+        if (!base) {
+            return null;
+        }
+
+        if (this.config.value().required_majority === PollRequiredMajority.AbsoluteMajority) {
+            return Math.ceil(base / 2 - (base % 2) + 1);
+        } else if (this.config.value().required_majority === PollRequiredMajority.TwoThirdMajority) {
+            return Math.ceil((base * 2) / 3);
+        }
+
+        return null;
     });
 
     public majorityReached = computed<boolean | undefined>(() => {

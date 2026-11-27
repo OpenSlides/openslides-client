@@ -83,10 +83,10 @@ export class ViewPollConfigRatingApproval extends BasePollConfigViewModel<
     }
 
     protected hasSpecialResult(): boolean {
-        const result = this.parsedResult();
+        const result = this.parsedResult() || {};
         return (
             this.poll?.options?.some(
-                o => +result[o.id].yes < 0 || +result[o.id].no < 0 || +(result[o.id].abstain || 0) < 0
+                o => +(result[o.id]?.yes ?? 0) < 0 || +(result[o.id]?.no ?? 0) < 0 || +(result[o.id]?.abstain ?? 0) < 0
             ) || false
         );
     }

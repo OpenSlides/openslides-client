@@ -3,14 +3,22 @@
         <ng-container [ngTemplateOutlet]="pollArea" [ngTemplateOutletContext]="{ poll: poll, last: false }" />
     }
 }
-@if (lastPublishedPoll() && !hasProjectedModelOpenPolls() && !disableFinished()) {
-    <ng-container [ngTemplateOutlet]="pollArea" [ngTemplateOutletContext]="{ poll: lastPublishedPoll(), last: true }" />
+@if (
+    lastPublishedPoll.hasValue() &&
+    lastPublishedPoll.value() &&
+    !hasProjectedModelOpenPolls.value() &&
+    !disableFinished()
+) {
+    <ng-container
+        [ngTemplateOutlet]="pollArea"
+        [ngTemplateOutletContext]="{ poll: lastPublishedPoll.value(), last: true }"
+    />
 }
 
 <ng-template #pollArea let-last="last" let-poll="poll">
     <mat-card class="os-card">
         <mat-card-content>
-            <os-poll navigateTo="content_object" [poll]="poll" />
+            <os-autopilot-poll [poll]="poll" />
         </mat-card-content>
     </mat-card>
 </ng-template>

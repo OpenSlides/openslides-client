@@ -888,15 +888,6 @@ export const meetingSettings: SettingsGroup[] = fillInSettingsDefaults([
                         }
                     },
                     {
-                        key: `topic_poll_setting_enable_max_yes_votes`,
-                        subscriptionKey: {
-                            idField: `topic_poll_config_id`,
-                            field: `enable_max_yes_votes`
-                        },
-                        label: _(`Allow limiting the amount of yes votes in per candidate polls`),
-                        type: `boolean`
-                    },
-                    {
                         key: `topic_poll_setting_enable_cumulative_voting`,
                         subscriptionKey: {
                             idField: `topic_poll_config_id`,

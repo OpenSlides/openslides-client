@@ -12,6 +12,9 @@
                         <mat-form-field class="option-amount">
                             <mat-label>{{ option.title }}</mat-label>
                             <input matInput type="number" [formField]="resultForm.options[i].value.yes" />
+                            @for (error of resultForm.options[i].value.yes().errors(); track error) {
+                                <mat-error>{{ error.message | translate }}</mat-error>
+                            }
                         </mat-form-field>
 
                         <mat-checkbox class="option-majority" [formField]="resultForm.options[i].majority">
@@ -29,6 +32,9 @@
                                 <mat-form-field class="option-amount">
                                     <mat-label>{{ label }}</mat-label>
                                     <input matInput type="number" [formField]="resultForm.options[i].value[key]" />
+                                    @for (error of resultForm.options[i].value[key]().errors(); track error) {
+                                        <mat-error>{{ error.message | translate }}</mat-error>
+                                    }
                                 </mat-form-field>
 
                                 <div class="majority-container">
@@ -83,8 +89,11 @@
     @if (showAbstain()) {
         <div class="option">
             <mat-form-field class="option-amount">
-                <mat-label>Global abstain</mat-label>
+                <mat-label>{{ 'Global abstain' | translate }}</mat-label>
                 <input matInput type="number" [formField]="resultForm.empty" />
+                @for (error of resultForm.empty().errors(); track error) {
+                    <mat-error>{{ error.message | translate }}</mat-error>
+                }
             </mat-form-field>
         </div>
     }
@@ -92,30 +101,48 @@
     @if (showNota()) {
         <div class="option">
             <mat-form-field class="option-amount">
-                <mat-label>General rejection/General approval</mat-label>
+                <mat-label>
+                    @if (pollConfigDataLax().strike_out) {
+                        {{ 'General approval' | translate }}
+                    } @else {
+                        {{ 'General rejection' | translate }}
+                    }
+                </mat-label>
                 <input matInput type="number" [formField]="resultForm.nota" />
+                @for (error of resultForm.nota().errors(); track error) {
+                    <mat-error>{{ error.message | translate }}</mat-error>
+                }
             </mat-form-field>
         </div>
     }
 
     <div class="option">
         <mat-form-field class="option-amount">
-            <mat-label>Valid votes</mat-label>
+            <mat-label>{{ 'Valid votes' | translate }}</mat-label>
             <input matInput type="number" [formField]="resultForm.valid" />
+            @for (error of resultForm.valid().errors(); track error) {
+                <mat-error>{{ error.message | translate }}</mat-error>
+            }
         </mat-form-field>
     </div>
 
     <div class="option">
         <mat-form-field class="option-amount">
-            <mat-label>Invalid votes</mat-label>
+            <mat-label>{{ 'Invalid votes' | translate }}</mat-label>
             <input matInput type="number" [formField]="resultForm.invalid" />
+            @for (error of resultForm.invalid().errors(); track error) {
+                <mat-error>{{ error.message | translate }}</mat-error>
+            }
         </mat-form-field>
     </div>
 
     <div class="option">
         <mat-form-field class="option-amount">
-            <mat-label>Total ballots</mat-label>
+            <mat-label>{{ 'Total ballots' | translate }}</mat-label>
             <input matInput type="number" [formField]="resultForm.total_ballots" />
+            @for (error of resultForm.total_ballots().errors(); track error) {
+                <mat-error>{{ error.message | translate }}</mat-error>
+            }
         </mat-form-field>
         @if (!usesMajority() && configType() !== 'rating_score') {
             <button

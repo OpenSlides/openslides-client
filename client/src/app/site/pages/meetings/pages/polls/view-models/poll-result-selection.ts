@@ -20,7 +20,7 @@ export class SelectionPollResult extends BasePollResult<ViewPollConfigSelection,
             const options = config.poll?.options;
             if (options) {
                 for (const option of options) {
-                    this[option.id.toString()] = Big(validVotes)
+                    this[option.id.toString()] = Big(validVotes || 0)
                         .sub(Big(this[option.id.toString()] || 0))
                         .toString();
                 }

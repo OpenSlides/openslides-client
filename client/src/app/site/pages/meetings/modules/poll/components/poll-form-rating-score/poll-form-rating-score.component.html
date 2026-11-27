@@ -1,18 +1,21 @@
-<form [formGroup]="form">
+<form [formRoot]="form">
     <div class="poll-preview-meta-info-form">
         @if (!pollStarted()) {
             <div class="info-grid">
                 <mat-form-field>
                     <mat-label>{{ 'Min amount of votes' | translate }}</mat-label>
-                    <input formControlName="min_vote_sum" matInput type="number" />
-                    @if (form.get('min_options_amount').hasError('minGreaterThanMax')) {
-                        <mat-error>{{ 'Amount must not exceed max amount of votes' | translate }}</mat-error>
+                    <input matInput type="number" [formField]="form.min_vote_sum" />
+                    @for (error of form.min_vote_sum().errors(); track error) {
+                        <mat-error>{{ error.message | translate }}</mat-error>
                     }
                 </mat-form-field>
 
                 <mat-form-field>
                     <mat-label>{{ 'Max amount of votes' | translate }}</mat-label>
-                    <input formControlName="max_vote_sum" matInput type="number" />
+                    <input matInput type="number" [formField]="form.max_vote_sum" />
+                    @for (error of form.max_vote_sum().errors(); track error) {
+                        <mat-error>{{ error.message | translate }}</mat-error>
+                    }
                 </mat-form-field>
             </div>
 
@@ -20,22 +23,17 @@
                 <div class="info-grid">
                     <mat-form-field>
                         <mat-label>{{ 'Min amount of options voted' | translate }}</mat-label>
-                        <input formControlName="min_options_amount" matInput min="1" type="number" />
-                        @if (form.get('min_options_amount').hasError('minGreaterThanMax')) {
-                            <mat-error>{{ 'Amount must not exceed max amount of options' | translate }}</mat-error>
+                        <input matInput type="number" [formField]="form.min_options_amount" />
+                        @for (error of form.min_options_amount().errors(); track error) {
+                            <mat-error>{{ error.message | translate }}</mat-error>
                         }
                     </mat-form-field>
 
                     <mat-form-field>
                         <mat-label>{{ 'Max amount of options voted' | translate }}</mat-label>
-                        <input formControlName="max_options_amount" matInput type="number" />
-                        @if (form.get('max_options_amount').hasError('min')) {
-                            <mat-error>{{ 'Amount needs to be at least 1' | translate }}</mat-error>
-                        }
-                        @if (form.get('max_options_amount').hasError('max')) {
-                            <mat-error>
-                                {{ 'Amount must not exceed amount of available options' | translate }}
-                            </mat-error>
+                        <input matInput type="number" [formField]="form.max_options_amount" />
+                        @for (error of form.max_options_amount().errors(); track error) {
+                            <mat-error>{{ error.message | translate }}</mat-error>
                         }
                     </mat-form-field>
                 </div>
@@ -45,12 +43,12 @@
                 <div></div>
                 <mat-form-field>
                     <mat-label>{{ 'Max votes per option' | translate }}</mat-label>
-                    <input formControlName="max_votes_per_option" matInput type="number" />
+                    <input matInput type="number" [formField]="form.max_votes_per_option" />
                 </mat-form-field>
             </div>
 
             <div class="margin-bottom-15">
-                <mat-checkbox formControlName="allow_empty">
+                <mat-checkbox [formField]="form.allow_empty">
                     {{ 'General abstain' | translate }}
                 </mat-checkbox>
             </div>
@@ -59,17 +57,20 @@
         <div class="margin-bottom-15 info-grid">
             <mat-form-field>
                 <mat-label>{{ '100% base' | translate }}</mat-label>
-                <mat-select formControlName="onehundred_percent_base" panelClass="percent-base-panel" required>
-                    @for (option of validPercentBases(); track option) {
+                <mat-select panelClass="percent-base-panel" [formField]="form.onehundred_percent_base">
+                    @for (option of validPercentBases(); track option[0]) {
                         <mat-option [value]="option[0]">
                             {{ option[1] | translate }}
                         </mat-option>
                     }
                 </mat-select>
+                @for (error of form.onehundred_percent_base().errors(); track error) {
+                    <mat-error>{{ error.message | translate }}</mat-error>
+                }
             </mat-form-field>
             <mat-form-field>
                 <mat-label>{{ 'Required majority' | translate }}</mat-label>
-                <mat-select formControlName="required_majority" panelClass="required-majority-panel">
+                <mat-select panelClass="required-majority-panel" [formField]="form.required_majority">
                     <mat-option value="no_majority">
                         {{ 'no_majority' | translateKey: 'poll_required_majority' }}
                     </mat-option>
@@ -83,14 +84,14 @@
                         {{ 'simple_majority' | translateKey: 'poll_required_majority' }}
                     </mat-option>
                 </mat-select>
-                @if (form.get('required_majority').getRawValue() === 'absolute_majority') {
+                @if (form.required_majority().value() === 'absolute_majority') {
                     <mat-hint
                         [innerText]="
                             'Indicates if a majority of more than 50% was reached, dependent on the 100%-base'
                                 | translate
                         "
                     ></mat-hint>
-                } @else if (form.get('required_majority').getRawValue() === 'two_third_majority') {
+                } @else if (form.required_majority().value() === 'two_third_majority') {
                     <mat-hint
                         [innerText]="
                             'Indicates if a majority of two-thirds or more was reached, dependent on the 100%-base'

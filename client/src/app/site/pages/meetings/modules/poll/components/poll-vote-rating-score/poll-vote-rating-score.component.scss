@@ -68,11 +68,17 @@
 }
 
 .vote-input {
-    width: 120px;
+    width: 180px;
 }
 
 .submit-area {
     display: flex;
     justify-content: center;
     padding: 10px 10px 0;
+}
+
+.global-errors {
+    text-align: center;
+    padding-top: 8px;
+    font-size: 12px;
 }

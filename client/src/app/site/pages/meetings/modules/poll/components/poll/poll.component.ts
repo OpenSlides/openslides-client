@@ -68,6 +68,30 @@ export class PollComponent extends BaseMeetingComponent {
         return this.poll().meeting_id === this.currentMeetingId();
     });
 
+    public seePollsPermission = computed(() => {
+        if (this.poll().isMotionPoll) {
+            return this.permission.motionCanSeePolls;
+        } else if (this.poll().isAssignmentPoll) {
+            return this.permission.assignmentCanSeePolls;
+        } else if (this.poll().isTopicPoll) {
+            return this.permission.agendaItemCanSeePolls;
+        }
+
+        return null;
+    });
+
+    public managePermission = computed(() => {
+        if (this.poll().isMotionPoll) {
+            return this.permission.motionCanManagePolls;
+        } else if (this.poll().isAssignmentPoll) {
+            return this.permission.assignmentCanManagePolls;
+        } else if (this.poll().isTopicPoll) {
+            return this.permission.agendaItemCanManagePolls;
+        }
+
+        return null;
+    });
+
     public getDetailLink = computed(() => {
         if (this.navigateTo() === `poll`) {
             return `/${this.poll().meeting_id}/polls/${this.poll().id}`;

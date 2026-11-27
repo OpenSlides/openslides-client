@@ -17,7 +17,7 @@
         <div class="italic spacer-bottom-20">
             <!-- Type and State -->
             <div class="type-and-state italic spacer-bottom-20 break-word">
-                <span *osPerms="permission.motionCanManagePolls; and: poll().isEVoting">
+                <span *osPerms="managePermission(); and: poll().isEVoting">
                     <os-icon-container
                         class="poll-type break-word"
                         color="primary"
@@ -44,12 +44,12 @@
                             ({{ 'anonymized' | translate }})
                         }
                     } @else if (poll().isFinished && !poll().published) {
-                        <span *osPerms="permission.motionCanManagePolls">
+                        <span *osPerms="seePollsPermission()">
                             {{ poll().state | translateKey: 'poll_state' }}
                             ({{ 'unpublished' | translate }})
                         </span>
 
-                        <span *osPerms="permission.motionCanManagePolls; complement: true">
+                        <span *osPerms="seePollsPermission(); complement: true">
                             {{ 'Counting of votes is in progress ...' | translate }}
                         </span>
                     } @else {
@@ -61,7 +61,7 @@
     </div>
 
     <!-- Dot Menu -->
-    <span *osPerms="permission.motionCanManagePolls; and: isSameMeeting()" class="poll-actions">
+    <span *osPerms="managePermission(); and: isSameMeeting()" class="poll-actions">
         <button mat-icon-button [matMenuTriggerFor]="pollDetailMenu">
             <mat-icon class="icon-18">more_horiz</mat-icon>
         </button>
@@ -69,7 +69,7 @@
 </div>
 
 <!-- Change state button -->
-<div *osPerms="permission.motionCanManagePolls">
+<div *osPerms="managePermission()">
     @if (pollStateAction() && !hideChangeState()) {
         <button
             class="poll-state-action"
@@ -146,7 +146,7 @@
 <!-- More Menu -->
 <mat-menu #pollDetailMenu="matMenu">
     @if (allowEdit()) {
-        <button *osPerms="permission.motionCanManagePolls" mat-menu-item (click)="dialogOpened.emit()">
+        <button *osPerms="managePermission()" mat-menu-item (click)="dialogOpened.emit()">
             <mat-icon>edit</mat-icon>
             <span>{{ 'Edit' | translate }}</span>
         </button>
@@ -161,7 +161,7 @@
         <mat-icon>picture_as_pdf</mat-icon>
         <span>{{ 'Ballot papers' | translate }}</span>
     </button>
-    <div *osPerms="permission.motionCanManagePolls">
+    <div *osPerms="managePermission()">
         <mat-divider></mat-divider>
 
         <!-- Reset Button -->

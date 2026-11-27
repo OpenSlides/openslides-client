@@ -1,6 +1,6 @@
 import { NgTemplateOutlet } from '@angular/common';
 import { Component, computed, effect, input, signal, untracked } from '@angular/core';
-import { applyEach, disabled, form, FormField, schema } from '@angular/forms/signals';
+import { applyEach, disabled, form, FormField, min, schema } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -21,7 +21,7 @@ import { PollConfigApproval } from '@app/domain/models/poll/poll-config-approval
 import { PollConfigRatingApproval } from '@app/domain/models/poll/poll-config-rating-approval';
 import { PollConfigRatingScore } from '@app/domain/models/poll/poll-config-rating-score';
 import { PollConfigSelection } from '@app/domain/models/poll/poll-config-selection';
-import { TranslatePipe } from '@ngx-translate/core';
+import { _, TranslatePipe } from '@ngx-translate/core';
 
 type PollConfigUnion = PollConfigApproval & PollConfigRatingApproval & PollConfigRatingScore & PollConfigSelection;
 
@@ -72,14 +72,18 @@ export class PollEditResultComponent {
 
     private readonly model = signal<PollEditResultModel>({
         options: [],
-        empty: 0,
-        nota: 0,
-        valid: 0,
-        invalid: 0,
-        total_ballots: 0
+        empty: null,
+        nota: null,
+        valid: null,
+        invalid: null,
+        total_ballots: null
     });
 
     private optionSchema = schema<OptionFormEntry>(option => {
+        min(option.value.yes, 0, { message: _(`Value must not be negative.`) });
+        min(option.value.no, 0, { message: _(`Value must not be negative.`) });
+        min(option.value.abstain, 0, { message: _(`Value must not be negative.`) });
+
         disabled(option.value.yes, {
             when: ({ valueOf }) => valueOf(option.majority) || valueOf(option.majority_value) === YES_KEY
         });
@@ -93,6 +97,11 @@ export class PollEditResultComponent {
 
     public readonly resultForm = form(this.model, s => {
         applyEach(s.options, this.optionSchema);
+        min(s.empty, 0, { message: _(`Value must not be negative.`) });
+        min(s.nota, 0, { message: _(`Value must not be negative.`) });
+        min(s.valid, 0, { message: _(`Value must not be negative.`) });
+        min(s.invalid, 0, { message: _(`Value must not be negative.`) });
+        min(s.total_ballots, 0, { message: _(`Value must not be negative.`) });
     });
 
     public usesMajority = computed(() => {
@@ -209,8 +218,8 @@ export class PollEditResultComponent {
             ...(m.valid !== null ? { valid: m.valid } : {}),
             ...(m.invalid !== null ? { invalid: m.invalid } : {}),
             ...(m.total_ballots !== null ? { total_ballots: m.total_ballots } : {}),
-            ...(this.showAbstain() ? { empty: m.empty } : {}),
-            ...(this.showNota() ? { nota: m.nota } : {})
+            ...(this.showAbstain() && m.empty !== null ? { empty: m.empty } : {}),
+            ...(this.showNota() && m.nota !== null ? { nota: m.nota } : {})
         };
     }
 

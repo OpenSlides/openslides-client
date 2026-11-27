@@ -1,11 +1,11 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { applyEach, disabled, form, FormField, FormRoot, max, min, validate } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { _, TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { ViewPollBallot } from '../../../../pages/polls/view-models/poll-ballot';
 import { ViewPollConfigRatingScore } from '../../../../pages/polls/view-models/poll-config-rating-score';
@@ -23,111 +23,100 @@ import { PollVoteOptionComponent } from '../poll-vote-option/poll-vote-option.co
         MatIconModule,
         MatButtonModule,
         TranslatePipe,
-        FormsModule
+        FormRoot,
+        FormField
     ],
     templateUrl: './poll-vote-rating-score.component.html',
-    styleUrl: './poll-vote-rating-score.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    styleUrl: './poll-vote-rating-score.component.scss'
 })
-export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPollConfigRatingScore> {
-    public ballots = signal<ViewPollBallot[]>([]);
-    public selectedOptionValues = signal<Map<number, number>>(new Map());
-
-    public selectionInvalid = computed<boolean>(() => {
-        let totalAmount = 0;
-        let maxAmount = 0;
-        this.selectedOptionValues().forEach(value => {
-            totalAmount += value;
-            maxAmount = maxAmount < value ? value : maxAmount;
-        });
-
-        return (
-            maxAmount > this.config().max_votes_per_option ||
-            totalAmount > this.config().max_vote_sum ||
-            totalAmount < this.config().min_vote_sum ||
-            this.selectedOptionValues().size > this.config().max_options_amount ||
-            this.selectedOptionValues().size < this.config().min_options_amount
-        );
+export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPollConfigRatingScore> implements OnInit {
+    public voteModel = signal<{
+        abstain: boolean;
+        options: Record<string, number>;
+    }>({
+        abstain: false,
+        options: {}
     });
 
+    public voteForm = form(this.voteModel, schemaPath => {
+        validate(schemaPath.options, ({ value }) => {
+            const totalAmount = Object.values(value()).reduce((a, c) => a + c, 0);
+            if (totalAmount > this.config().max_vote_sum) {
+                return { kind: 'invalid_total_amount', message: _('You exceeded the maximum amount of votes.') };
+            } else if (totalAmount < this.config().min_vote_sum) {
+                return {
+                    kind: 'invalid_total_amount',
+                    message: _('You must provide more than the minimum amount of votes.')
+                };
+            }
+
+            return null;
+        });
+
+        validate(schemaPath.options, ({ value }) => {
+            const selectedOptions = Object.values(value()).reduce((a, c) => (c > 0 ? a + 1 : a), 0);
+            if (this.config().max_options_amount && selectedOptions > this.config().max_options_amount) {
+                return { kind: 'invalid_selected_options', message: _('You exceeded the maximum amount of options.') };
+            } else if (selectedOptions < this.config().min_options_amount) {
+                return {
+                    kind: 'invalid_selected_options',
+                    message: _('You must select more than the minimum amount of options.')
+                };
+            }
+
+            return null;
+        });
+
+        applyEach(schemaPath.options, option => {
+            min(option, 0, {
+                message: _('Negative votes not allowed.')
+            });
+            max(option, () => this.config().max_votes_per_option || undefined, {
+                message: _('Too many votes on one option.')
+            });
+
+            disabled(option, {
+                when: ({ valueOf }) => valueOf(schemaPath.abstain)
+            });
+        });
+    });
+
+    public ballots = signal<ViewPollBallot[]>([]);
+
     public availableVotes = computed<number>(() => {
-        if (this.selectedOptionValues().has(0) || this.selectedOptionValues().has(-1)) {
+        if (this.voteForm.abstain().value()) {
             return 0;
         }
 
-        let totalVotes = 0;
-
-        const voteValues = this.selectedOptionValues().values();
-        for (const val of voteValues) {
-            totalVotes += +val;
-        }
-
+        const totalVotes = Object.values(this.voteForm.options().value()).reduce((a, c) => a + c, 0);
         const maxVotes = this.config()?.max_vote_sum ?? Infinity;
         return maxVotes - totalVotes;
     });
 
     public availableOptions = computed<number>(() => {
         const maxOptionVotes = this.config()?.max_options_amount ?? Infinity;
-
-        return maxOptionVotes - this.selectedOptionValues().size;
+        const selectedOptions = Object.values(this.voteForm.options().value()).reduce((a, c) => (c > 0 ? a + 1 : a), 0);
+        return maxOptionVotes - selectedOptions;
     });
 
     private translate = inject(TranslateService);
     private promptService = inject(PromptService);
 
-    public getOptionMax(optionId: number): string {
-        const maxPerOption = this.config().max_votes_per_option.toString();
-        if (
-            !this.selectedOptionValues().has(optionId) &&
-            this.config().max_options_amount &&
-            this.selectedOptionValues().size > this.config().max_options_amount
-        ) {
-            return `0`;
-        }
-
-        return maxPerOption || '';
+    public ngOnInit(): void {
+        this.voteModel.update(m => ({
+            ...m,
+            options: Object.fromEntries(this.options().map(o => [o.id, 0]))
+        }));
     }
 
-    public getOptionVote(optionId: number): number {
-        return this.selectedOptionValues().get(optionId) || 0;
-    }
-
-    public setOptionVote(optionId: number, amount: string, el?: HTMLInputElement): void {
-        const isGeneralOption = optionId < 1;
-        const selected = new Map(this.selectedOptionValues());
-        if (isGeneralOption) {
-            selected.clear();
-            selected.set(optionId, 1);
-        } else if (selected.has(optionId) && +amount === 0) {
-            selected.delete(optionId);
-        } else {
-            selected.delete(0);
-
-            const current = +selected.get(optionId) || 0;
-            if (
-                +amount - current > this.availableVotes() ||
-                (!selected.has(optionId) &&
-                    this.config().max_options_amount &&
-                    selected.size >= this.config().max_options_amount) ||
-                +amount > this.config().max_votes_per_option
-            ) {
-                if (el) {
-                    el.value = `${selected.get(optionId) || 0}`;
-                }
-
-                return;
-            }
-            selected.set(optionId, +amount);
+    public toggleAbstain(val: boolean): void {
+        this.voteForm.abstain().value.set(val);
+        if (val) {
+            this.submitVote();
         }
-        this.selectedOptionValues.set(selected);
     }
 
     public async submitVote(): Promise<void> {
-        const selected = this.selectedOptionValues();
-        if (selected.size === 0) {
-            return;
-        }
-
         const title = this.translate.instant(`Submit selection now?`);
         const content = this.translate.instant(`Your decision cannot be changed afterwards.`);
 
@@ -136,12 +125,11 @@ export class PollVoteRatingScoreComponent extends PollVoteBaseComponent<ViewPoll
             return;
         }
 
-        if (selected.has(0)) {
-            this.voted.emit({});
-        } else if (selected.has(-1)) {
-            this.voted.emit(`nota`);
+        if (this.voteForm.abstain().value()) {
+            this.voted.emit(null);
+            return;
         } else {
-            this.voted.emit(Object.fromEntries(selected));
+            this.voted.emit(Object.fromEntries(Object.entries(this.voteForm.options().value()).filter(e => e[1])));
         }
     }
 }

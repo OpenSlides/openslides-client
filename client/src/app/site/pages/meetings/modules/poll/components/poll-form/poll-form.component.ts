@@ -1,6 +1,5 @@
 import { KeyValuePipe } from '@angular/common';
 import { Component, computed, effect, inject, input, signal, viewChild } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
@@ -61,8 +60,7 @@ interface PollForm {
         SearchSelectorModule,
         DirectivesModule,
         PipesModule,
-        KeyValuePipe,
-        ReactiveFormsModule
+        KeyValuePipe
     ]
 })
 export class PollFormComponent extends BaseComponent {
@@ -195,7 +193,7 @@ export class PollFormComponent extends BaseComponent {
             additional = this.methodForm().getSerialzedAdditionalData();
         }
 
-        return { ...this.data, ...this.serializeForm(), ...additional };
+        return { ...this.data(), ...this.serializeForm(), ...additional };
     }
 
     public openVotingWarning(event: MouseEvent): void {
@@ -283,14 +281,8 @@ export class PollFormComponent extends BaseComponent {
         }
 
         const data = this.data();
-        if (data && this.form) {
-            for (const field of Object.keys(data.config)) {
-                const ctrl = this.methodForm().form.get(field);
-                const val = data.config[field];
-                if (ctrl && val !== undefined) {
-                    ctrl.patchValue(val);
-                }
-            }
+        if (data?.config) {
+            configForm.patchValue(data.config);
         }
     }
 
@@ -302,15 +294,11 @@ export class PollFormComponent extends BaseComponent {
 
         const mode = this.form.method_preselection().value().split(`.`)[1];
         if (this.selectedMethod() === `approval` || this.selectedMethod() === `rating_approval`) {
-            this.methodForm()
-                .form.get(`allow_abstain`)
-                .patchValue(mode === `yes_no_abstain`);
+            configForm.patchValue({ allow_abstain: mode === `yes_no_abstain` });
         }
 
         if (this.selectedMethod() === `selection`) {
-            this.methodForm()
-                .form.get(`strike_out`)
-                .patchValue(mode === `no`);
+            configForm.patchValue({ strike_out: mode === `no` });
         }
     }
 }

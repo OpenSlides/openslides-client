@@ -4,7 +4,7 @@ import { login, logout } from '../../helpers/auth';
 import { createMeeting, deleteCommittees, deleteMeetings, os4request } from '../../helpers/request';
 import { MeetingMotionDetailPage } from '../../page-objects/meeting/motion/detail';
 
-test.describe(`motion history mode test`, () => {
+test.describe(`motion poll test`, () => {
     const ADMIN_ID = 1;
     let meeting: { id: number; committeeId: number; name: string };
     let motion: { id: number; sequential_number: number };

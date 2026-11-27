@@ -11,7 +11,7 @@
                 configType="approval"
                 [options]="analogPollOptions()"
                 [pollConfigData]="approvalFormValue"
-                [pollData]="currentPollData"
+                [pollData]="pollForm().getValues()"
             />
         </div>
     }

@@ -45,7 +45,10 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
             return false;
         }
 
-        return this.pollForm().isValid();
+        return (
+            this.pollForm().isValid() &&
+            (!this.isAnalogPoll() || !this.pollResultForm() || this.pollResultForm().resultForm().valid())
+        );
     });
 
     public isAnalogPoll = computed(() => {
@@ -55,8 +58,6 @@ export abstract class BasePollDialogComponent extends BaseUiComponent {
     protected formBuilder = inject(UntypedFormBuilder);
     public dialogRef = inject(MatDialogRef<BasePollDialogComponent>);
     public pollData: ViewPoll = inject(MAT_DIALOG_DATA);
-
-    public currentPollData: ViewPoll = this.pollData;
 
     public constructor() {
         super();
