@@ -3,6 +3,7 @@ import { _ } from '@ngx-translate/core';
 export const committeeHeadersAndVerboseNames = {
     name: _(`Title`),
     description: _(`Description`),
+    identity_key: _(`Committee Key`),
     organization_tags: _(`Tags`),
     forward_to_committees: _(`Can forward motions to committee`),
     managers: _(`Administrators`),

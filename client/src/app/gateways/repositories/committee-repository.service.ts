@@ -124,6 +124,7 @@ export class CommitteeRepositoryService extends BaseRepository<ViewCommittee, Co
     private getPartialCommitteePayload(committee: any): any {
         const payload = {
             description: committee.description,
+            identity_key: committee.identity_key,
             organization_tag_ids: committee.organization_tag_ids === null ? [] : committee.organization_tag_ids,
             manager_ids: committee.manager_ids,
             forward_to_committee_ids:

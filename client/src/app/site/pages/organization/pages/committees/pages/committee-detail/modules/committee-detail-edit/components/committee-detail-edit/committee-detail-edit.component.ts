@@ -268,6 +268,7 @@ export class CommitteeDetailEditComponent extends BaseComponent implements OnIni
         const partialForm: any = {
             name: [``, Validators.required],
             description: [``],
+            identity_key: [``],
             organization_tag_ids: [[]],
             manager_ids: [[]],
             forward_to_committee_ids: [[]],

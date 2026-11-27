@@ -31,6 +31,10 @@
                     <input data-cy="committeeDescription" formControlName="description" matInput />
                 </mat-form-field>
                 <mat-form-field>
+                    <mat-label>{{ 'Committee Key' | translate }}</mat-label>
+                    <input data-cy="committeeKey" formControlName="identity_key" matInput />
+                </mat-form-field>
+                <mat-form-field>
                     <mat-label>{{ 'Tags' | translate }}</mat-label>
                     <os-repo-search-selector
                         formControlName="organization_tag_ids"

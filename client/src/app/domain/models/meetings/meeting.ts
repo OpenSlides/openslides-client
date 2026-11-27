@@ -207,6 +207,9 @@ export class Settings {
     // SSO
     public external_id!: string;
 
+    // IdM
+    public enable_idm_matching: boolean;
+
     // Structure Level
     public structure_level_ids: Id[]; // (structure_level/meeting_id)
 
@@ -319,6 +322,7 @@ export class Meeting extends BaseModel<Meeting> {
         `template_for_organization_id`,
         `enable_anonymous`,
         `custom_translations`,
+        `enable_idm_matching`,
         `conference_show`,
         `conference_auto_connect`,
         `conference_los_restriction`,

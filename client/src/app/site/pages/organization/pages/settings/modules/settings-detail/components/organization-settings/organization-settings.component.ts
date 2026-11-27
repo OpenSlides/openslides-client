@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, signal, viewChild } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { availableTranslations } from '@app/domain/definitions/languages';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Selectable } from '@app/domain/interfaces';
 import { objectToFormattedString } from '@app/infrastructure/utils';
 import { createEmailValidator } from '@app/infrastructure/utils/validators/email';
@@ -11,6 +11,25 @@ import { ViewOrganization } from '@app/site/pages/organization/view-models/view-
 import { OperatorService } from '@app/site/services/operator.service';
 import { TimeZoneService } from '@app/site/services/time-zone.service';
 import { _ } from '@ngx-translate/core';
+
+enum MappingItemType {
+    STRUCTURE_LEVEL = `structure_level`,
+    NUMBER = `number`,
+    VOTE_WEIGHT = `vote_weight`,
+    PRESENT = `present`,
+    COMMENT = `comment`
+}
+
+/**
+ * Determine type for Mapping Choices items
+ */
+const MappingTypeChoices = [
+    { key: MappingItemType.STRUCTURE_LEVEL, name: _(`Structure level`) },
+    { key: MappingItemType.NUMBER, name: _(`Participant number`) },
+    { key: MappingItemType.VOTE_WEIGHT, name: _(`Vote weight`) },
+    { key: MappingItemType.PRESENT, name: _(`Present Status`) },
+    { key: MappingItemType.COMMENT, name: _(`Comment`) }
+];
 
 @Component({
     selector: `os-organization-settings`,
@@ -23,7 +42,37 @@ export class OrganizationSettingsComponent extends BaseComponent {
     public timeZoneInput = viewChild<ElementRef<HTMLInputElement>>('timeZoneInput');
 
     public readonly pageTitle = _(`Settings`);
-    public readonly translations = availableTranslations;
+
+    public translations: Record<string, string> = {
+        start: `Start`,
+        end: `End`,
+        inter: `Between`
+    };
+
+    public mappingChoices = MappingTypeChoices;
+
+    public mapperForm = new FormGroup({
+        id: new FormControl<number | null>(null),
+        group_external_ids: new FormControl<string[]>([``]),
+        weight: new FormControl<number | null>(null),
+        idm_committee_management_key: new FormControl<string>(``),
+        idm_organization_management_key: new FormControl<string>(``)
+    });
+
+    public conditionForm = new FormGroup({
+        mapper_id: new FormControl<number | null>(null),
+        idm_field: new FormControl<string>(``),
+        regex: new FormControl<string>(``)
+    });
+
+    public mappingForm = new FormGroup({
+        mapper_id: new FormControl<number | null>(null),
+        idm_field: new FormControl<string>(``),
+        os_field: new FormControl<MappingItemType | null>(null),
+        default_value: new FormControl<string>(``),
+        allow_update: new FormControl<boolean>(false),
+        override_default: new FormControl<boolean>(false)
+    });
 
     public orgaSettingsForm: UntypedFormGroup | null = null;
 
@@ -76,11 +125,10 @@ export class OrganizationSettingsComponent extends BaseComponent {
 
     public onSubmit(): void {
         const { ...payload }: any = this.orgaSettingsForm!.value;
-        if (this.operator.isSuperAdmin) {
-            payload.saml_attr_mapping = payload.saml_attr_mapping
-                ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
-                : null;
-        }
+        payload.saml_attr_mapping = payload.saml_attr_mapping
+            ? JSON.stringify(JSON.parse(payload.saml_attr_mapping as string))
+            : null;
+        console.log(payload);
         for (const key of Object.keys(payload)) {
             if (this.orgaSettingsForm.get(key).pristine) {
                 delete payload[key];
@@ -129,7 +177,17 @@ export class OrganizationSettingsComponent extends BaseComponent {
                 restrict_editing_same_level_committee_admins: [
                     this._currentOrgaSettings.restrict_editing_same_level_committee_admins ?? false
                 ],
-                restrict_edit_forward_committees: [this._currentOrgaSettings.restrict_edit_forward_committees ?? false]
+                restrict_edit_forward_committees: [this._currentOrgaSettings.restrict_edit_forward_committees ?? false],
+                saml_login_button_text: [this._currentOrgaSettings.saml_login_button_text],
+                saml_attr_mapping: [
+                    this._currentOrgaSettings.saml_attr_mapping &&
+                    typeof this._currentOrgaSettings.saml_attr_mapping !== `string`
+                        ? JSON.stringify(this._currentOrgaSettings.saml_attr_mapping)
+                        : this._currentOrgaSettings.saml_attr_mapping
+                ],
+                saml_metadata_idp: [this._currentOrgaSettings.saml_metadata_idp],
+                saml_metadata_sp: [this._currentOrgaSettings.saml_metadata_sp],
+                saml_private_key: [this._currentOrgaSettings.saml_private_key]
             };
             if (this.operator.isSuperAdmin) {
                 rawSettingsForm = {
@@ -140,17 +198,7 @@ export class OrganizationSettingsComponent extends BaseComponent {
                     enable_chat: [this._currentOrgaSettings.enable_chat],
                     limit_of_meetings: [this._currentOrgaSettings.limit_of_meetings ?? 0],
                     limit_of_users: [this._currentOrgaSettings.limit_of_users ?? 0],
-                    saml_enabled: [this._currentOrgaSettings.saml_enabled ?? false],
-                    saml_login_button_text: [this._currentOrgaSettings.saml_login_button_text],
-                    saml_attr_mapping: [
-                        this._currentOrgaSettings.saml_attr_mapping &&
-                        typeof this._currentOrgaSettings.saml_attr_mapping !== `string`
-                            ? JSON.stringify(this._currentOrgaSettings.saml_attr_mapping)
-                            : this._currentOrgaSettings.saml_attr_mapping
-                    ],
-                    saml_metadata_idp: [this._currentOrgaSettings.saml_metadata_idp],
-                    saml_metadata_sp: [this._currentOrgaSettings.saml_metadata_sp],
-                    saml_private_key: [this._currentOrgaSettings.saml_private_key]
+                    saml_enabled: [this._currentOrgaSettings.saml_enabled ?? false]
                 };
             }
         } else {
