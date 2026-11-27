@@ -127,6 +127,15 @@
                 <mat-icon>clear</mat-icon>
                 <span>{{ 'Deselect all' | translate }}</span>
             </button>
+            <div *osPerms="permission.agendaItemCanManage">
+                @if (selectedRows.length) {
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item (click)="addToAgenda(selectedRows)">
+                        <mat-icon>add</mat-icon>
+                        <span>{{ 'Add to agenda' | translate }}</span>
+                    </button>
+                }
+            </div>
             <mat-divider></mat-divider>
             <!-- Add to projector queue -->
             <os-projector-button

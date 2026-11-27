@@ -1,4 +1,5 @@
 import { inject, Service } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Id, Ids } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
@@ -6,8 +7,10 @@ import { Selectable } from '@app/domain/interfaces/selectable';
 import { AgendaItemType } from '@app/domain/models/agenda/agenda-item';
 import { Action, ActionService } from '@app/gateways/actions';
 import { ActionRequest } from '@app/gateways/actions/action-utils';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
 import { SpinnerService } from '@app/site/modules/global-spinner';
 import { ListOfSpeakersControllerService } from '@app/site/pages/meetings/pages/agenda/modules/list-of-speakers/services';
+import { ActiveMeetingIdService } from '@app/site/pages/meetings/services/active-meeting-id.service';
 import { ModelRequestService } from '@app/site/services/model-request.service';
 import { ChoiceService } from '@app/ui/modules/choice-dialog';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
@@ -19,6 +22,7 @@ import {
     AGENDA_LIST_ITEM_MINIMAL_SUBSCRIPTION,
     getAgendaListMinimalSubscriptionConfig
 } from '../../../../agenda/agenda.subscription';
+import { AddItemToAgendaDialog } from '../../../../agenda/pages/agenda-add-item/agenda-add-item.component';
 import { AgendaItemControllerService } from '../../../../agenda/services/agenda-item-controller.service/agenda-item-controller.service';
 import {
     getParticipantMinimalSubscriptionConfig,
@@ -36,8 +40,10 @@ import { ViewMotion } from '../../../view-models/view-motion';
 
 @Service()
 export class MotionMultiselectService {
+    public dialog = inject(MatDialog);
     private repo = inject(MotionControllerService);
     private translate = inject(TranslateService);
+    private activeMeetingId = inject(ActiveMeetingIdService);
     private promptService = inject(PromptService);
     private choiceService = inject(ChoiceService);
     private userRepo = inject(ParticipantControllerService);
@@ -337,6 +343,63 @@ export class MotionMultiselectService {
                 });
             }
         }
+    }
+
+    public async addToAgenda(motions: ViewMotion[]): Promise<void> {
+        if (!motions.length) return;
+
+        const sortedMotions = [...motions].sort((a, b) =>
+            a.number.localeCompare(b.number, undefined, {
+                numeric: true,
+                sensitivity: 'base'
+            })
+        );
+
+        this.dialog
+            .open(AddItemToAgendaDialog, {
+                data: {
+                    meetingId: this.activeMeetingId,
+                    isMultiSelect: true,
+                    excludedIds: motions.map(motion => motion.agenda_item_id).filter((id): id is number => !!id)
+                },
+                ...infoDialogSettings
+            })
+            .afterClosed()
+            .subscribe(async result => {
+                if (!result) return;
+                const promises: Promise<any>[] = [];
+                // The distinction between items in agenda and not in agenda is needed since two different actions
+                // are performed by the backend:
+                //      "agenda_item.create" (requires fqid) and
+                //      "agenda_item.update" (requires id)
+                // In case of updating an existing item: "agenda_item.assign" and "agenda_item.update" are triggered
+                const itemsToUpdate = sortedMotions
+                    .filter(motion => !!motion.agenda_item_id)
+                    .map(motion => this.agendaRepo.getViewModelList().find(item => item.id === motion.agenda_item_id))
+                    .filter(item => !!item);
+                if (sortedMotions.some(motion => !motion.agenda_item_id)) {
+                    const action = this.agendaRepo.addToAgenda(
+                        { type: result.agenda_type, parent_id: result.agenda_parent_id },
+                        ...sortedMotions.filter(motion => !motion.agenda_item_id)
+                    );
+                    action.setSendActionFn(req => this.actionService.sendRequests(req, true));
+                    promises.push(action.resolve());
+                }
+                if (itemsToUpdate.length) {
+                    const action = this.agendaRepo.assignToParent({
+                        ids: itemsToUpdate.map(item => item.id),
+                        parent_id: result.agenda_parent_id
+                    });
+                    action.setSendActionFn(req => this.actionService.sendRequests(req, true));
+                    promises.push(this.agendaRepo.bulkSetAgendaType(itemsToUpdate as any, result.agenda_type));
+                    promises.push(action.resolve());
+                }
+                if (promises.length) {
+                    this.spinnerService.show(`${motions.length} ${this.translate.instant(this.messageForSpinner)}`, {
+                        hideAfterPromiseResolved: () => Promise.all(promises)
+                    });
+                }
+            });
     }
 
     /**

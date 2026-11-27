@@ -573,6 +573,14 @@
                         <mat-icon>sort</mat-icon>
                         <span>{{ 'Move to agenda item' | translate }} ...</span>
                     </button>
+                    <div *osPerms="permission.agendaItemCanManage">
+                        @if (selectedRows.length) {
+                            <button mat-menu-item (click)="multiselectService.addToAgenda(selectedRows)">
+                                <mat-icon>add</mat-icon>
+                                <span>{{ 'Add to agenda' | translate }}</span>
+                            </button>
+                        }
+                    </div>
                     <button
                         mat-menu-item
                         [disabled]="!selectedRows.length"

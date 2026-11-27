@@ -1,13 +1,18 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Permission } from '@app/domain/definitions/permission';
 import { PROJECTIONDEFAULT } from '@app/domain/models/projector/projection-default';
+import { ActionService } from '@app/gateways/actions';
+import { infoDialogSettings } from '@app/infrastructure/utils/dialog-settings';
+import { SpinnerService } from '@app/site/modules/global-spinner/services/spinner.service';
 import { BaseMeetingListViewComponent } from '@app/site/pages/meetings/base/base-meeting-list-view.component';
+import { AddItemToAgendaDialog } from '@app/site/pages/meetings/pages/agenda/pages/agenda-add-item/agenda-add-item.component';
+import { AgendaItemControllerService } from '@app/site/pages/meetings/pages/agenda/services';
 import { MultiProjectionBuildDescriptor } from '@app/site/pages/meetings/view-models';
 import { OperatorService } from '@app/site/services/operator.service';
 import { ViewPortService } from '@app/site/services/view-port.service';
 import { PromptService } from '@app/ui/modules/prompt-dialog';
-import { TranslateService } from '@ngx-translate/core';
 
 import { getAssignmentDetailSubscriptionConfig } from '../../../../assignments.subscription';
 import { AssignmentPhases } from '../../../../definitions/index';
@@ -36,25 +41,24 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
      */
     public filterProps = [`title`, `candidates`, `assignment_related_users`, `tags`, `candidateAmount`];
 
+    private messageForSpinner = this.translate.instant(`Assignments are in process. Please wait ...`);
+
     public get canManageAssignments(): boolean {
         return this.operator.hasPerms(Permission.assignmentCanManage);
     }
 
-    public constructor(
-        protected override translate: TranslateService,
-        public repo: AssignmentControllerService,
-        private promptService: PromptService,
-        public filterService: AssignmentFilterListService,
-        public sortService: AssignmentSortListService,
-        private pdfService: AssignmentExportService,
-        protected route: ActivatedRoute,
-        private operator: OperatorService,
-        public vp: ViewPortService
-    ) {
-        super();
-        this.canMultiSelect = true;
-        this.listStorageIndex = ASSIGNMENT_LIST_STORAGE_INDEX;
-    }
+    public repo = inject(AssignmentControllerService);
+    public filterService = inject(AssignmentFilterListService);
+    public sortService = inject(AssignmentSortListService);
+    public dialog = inject(MatDialog);
+    public vp = inject(ViewPortService);
+    protected route = inject(ActivatedRoute);
+    private promptService = inject(PromptService);
+    private pdfService = inject(AssignmentExportService);
+    private operator = inject(OperatorService);
+    private itemRepo = inject(AgendaItemControllerService);
+    private spinnerService = inject(SpinnerService);
+    private actionService = inject(ActionService);
 
     /**
      * Init function.
@@ -62,6 +66,8 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
      */
     public ngOnInit(): void {
         super.setTitle(`Elections`);
+        this.canMultiSelect = true;
+        this.listStorageIndex = ASSIGNMENT_LIST_STORAGE_INDEX;
     }
 
     /**
@@ -116,6 +122,60 @@ export class AssignmentListComponent extends BaseMeetingListViewComponent<ViewAs
         if (await this.promptService.open(title)) {
             await this.repo.delete(...this.selectedRows);
         }
+    }
+
+    public async addToAgenda(assignments: ViewAssignment[]): Promise<void> {
+        if (!assignments.length) return;
+        const originalOrder = this.listComponent.source.map(item => item.assignment.id) ?? [];
+        const sortedAssignments = [...assignments].sort(
+            (a, b) => originalOrder.indexOf(a.id) - originalOrder.indexOf(b.id)
+        );
+        this.dialog
+            .open(AddItemToAgendaDialog, {
+                data: {
+                    meetingId: this.activeMeetingId,
+                    isMultiSelect: true,
+                    excludedIds: sortedAssignments.map(a => a.agenda_item_id).filter((id): id is number => !!id)
+                },
+                ...infoDialogSettings
+            })
+            .afterClosed()
+            .subscribe(async result => {
+                if (!result) return;
+                const promises: Promise<any>[] = [];
+                // The distinction between items in agenda and not in agenda is needed since two different actions
+                // are performed by the backend:
+                //      "agenda_item.create" (requires fqid)
+                //      "agenda_item.update" (requires id)
+                // In case of updating an existing item: "agenda_item.assign" and "agenda_item.update" are triggered
+                const itemsToUpdate = sortedAssignments
+                    .filter(a => a.agenda_item_id)
+                    .map(a => this.itemRepo.getViewModelList().find(item => item.id === a.agenda_item_id))
+                    .filter(item => !!item);
+                if (sortedAssignments.some(a => !a.agenda_item_id)) {
+                    const action = this.itemRepo.addToAgenda(
+                        { type: result.agenda_type, parent_id: result.agenda_parent_id },
+                        ...sortedAssignments.filter(a => !a.agenda_item_id)
+                    );
+                    action.setSendActionFn(req => this.actionService.sendRequests(req, true));
+                    promises.push(action.resolve());
+                }
+                if (itemsToUpdate.length) {
+                    const action = this.itemRepo.assignToParent({
+                        ids: itemsToUpdate.map(item => item.id),
+                        parent_id: result.agenda_parent_id
+                    });
+                    action.setSendActionFn(req => this.actionService.sendRequests(req, true));
+                    promises.push(this.itemRepo.bulkSetAgendaType(itemsToUpdate, result.agenda_type));
+                    promises.push(action.resolve());
+                }
+                if (promises.length) {
+                    this.spinnerService.show(
+                        `${assignments.length} ${this.translate.instant(this.messageForSpinner)}`,
+                        { hideAfterPromiseResolved: () => Promise.all(promises) }
+                    );
+                }
+            });
     }
 
     public addToProjectorQueue(): MultiProjectionBuildDescriptor {
