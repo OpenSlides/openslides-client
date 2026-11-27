@@ -2,6 +2,7 @@
 
 export const meetingSettingsDefaults: Record<string, any> = {
     name: 'OpenSlides',
+    enable_idm_matching: false,
     enable_anonymous: false,
     users_pdf_wlan_encryption: 'WPA',
     agenda_enable_numbering: true,
