@@ -42,4 +42,8 @@ table {
     .raised-cell {
         z-index: 3 !important;
     }
+
+    .no-outline:focus {
+        outline: none;
+    }
 }
