@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
 import { Fqid, Id } from '@app/domain/definitions/key-types';
 import { Identifiable } from '@app/domain/interfaces';
@@ -31,7 +31,7 @@ type IdMap = Record<number, number>;
 })
 export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUserViewModel<M>, M extends BaseModel>
     extends BaseUiComponent
-    implements OnInit
+    implements OnInit, OnChanges
 {
     public get motion(): ViewMotion {
         return this._motion;
@@ -153,6 +153,14 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
                 }
             })
         );
+    }
+
+    public ngOnChanges(changes: SimpleChanges<MotionManageMotionMeetingUsersComponent<V, M>>): void {
+        if (changes.loadSecondSelectorValues && this.loadSecondSelectorValues && !this.isSecondSelectorValuesFilled) {
+            this.loadSecondSelectorValues().then(items => {
+                this.secondSelectorValues = items;
+            });
+        }
     }
 
     public async onSave(): Promise<void> {
