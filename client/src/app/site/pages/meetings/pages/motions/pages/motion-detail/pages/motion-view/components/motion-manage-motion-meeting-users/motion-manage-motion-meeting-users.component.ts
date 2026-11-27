@@ -155,12 +155,8 @@ export class MotionManageMotionMeetingUsersComponent<V extends BaseHasMeetingUse
         );
     }
 
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (
-            changes['loadSecondSelectorValues'] &&
-            typeof this.loadSecondSelectorValues === 'function' &&
-            !this.isSecondSelectorValuesFilled
-        ) {
+    public ngOnChanges(changes: SimpleChanges<MotionManageMotionMeetingUsersComponent<V, M>>): void {
+        if (changes.loadSecondSelectorValues && this.loadSecondSelectorValues && !this.isSecondSelectorValuesFilled) {
             this.loadSecondSelectorValues().then(items => {
                 this.secondSelectorValues = items;
             });
