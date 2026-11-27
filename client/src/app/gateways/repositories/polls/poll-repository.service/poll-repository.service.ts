@@ -139,10 +139,32 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
             payload = this.updateOtherStateAnalogPoll(update, poll);
         }
         const optionUpdatePayload = this.getAnalogOptions(option, true);
+        const processedOptions = this.compareAnalogPollOptions(optionUpdatePayload, poll);
         return this.sendActionsToBackend([
             { action: PollAction.UPDATE, data: [payload] },
-            { action: PollAction.UPDATE_OPTION, data: optionUpdatePayload }
+            ...(processedOptions.length > 0 ? [{ action: PollAction.UPDATE_OPTION, data: processedOptions }] : [])
         ]);
+    }
+
+    private compareAnalogPollOptions(updatedOptions: any[], poll: ViewPoll): any {
+        // Mapping needed to solve the name missmatch with backend
+        const fieldMap: Record<string, string> = {
+            Y: 'yes',
+            A: 'abstain',
+            N: 'no'
+        };
+        return updatedOptions.flatMap((current: Record<string, any>) => {
+            const originalOption = poll.options?.find((original: any) => original.id === current['id']);
+            if (!originalOption) return [];
+            const changedValues = Object.fromEntries(
+                Object.entries(current).filter(([field, value]) => {
+                    if (field === 'id' || value === undefined) return false;
+                    if (!fieldMap[field]) return false;
+                    return Number(value) !== Number(originalOption[fieldMap[field]]);
+                })
+            );
+            return Object.keys(changedValues).length ? [{ id: current['id'], ...changedValues }] : [];
+        });
     }
 
     private async updateElectronicPoll(update: any, poll: Poll): Promise<void> {
@@ -173,51 +195,70 @@ export class PollRepositoryService extends BaseMeetingRelatedRepository<ViewPoll
     }
 
     private getUpdateCreatedAnalogPollPayload(update: any, poll: Poll): any {
+        const updatedFields: string[] = [
+            'publish_immediately',
+            'allow_multiple_votes_per_candidate',
+            'description',
+            'max_votes_amount',
+            'min_votes_amount',
+            'max_votes_per_option',
+            'onehundred_percent_base',
+            'pollmethod',
+            'title'
+        ];
+        const voteValues = Object.entries(this.getAnalogPollVotesValues(update)).filter(
+            ([field, value]) => value !== undefined && value !== poll[field as keyof Poll]
+        );
         const payload = {
             id: poll.id,
-            publish_immediately: update.publish_immediately,
-            allow_multiple_votes_per_candidate: update.allow_multiple_votes_per_candidate,
-            description: update.description,
-            max_votes_amount: update.max_votes_amount,
-            min_votes_amount: update.min_votes_amount,
-            max_votes_per_option: update.max_votes_per_option,
-            onehundred_percent_base: update.onehundred_percent_base,
-            pollmethod: update.pollmethod,
-            title: update.title,
-            ...this.getAnalogPollVotesValues(update)
+            ...Object.fromEntries(
+                updatedFields
+                    .filter(field => field in update && update[field] !== poll[field])
+                    .map(field => [field, update[field]])
+            ),
+            ...Object.fromEntries(voteValues)
         };
         return payload;
     }
 
     private updateOtherStateAnalogPoll(update: any, poll: Poll): any {
+        const updatedFields: string[] = ['publish_immediately', 'description', 'onehundred_percent_base', 'title'];
         const payload: any = {
             id: poll.id,
-            publish_immediately: update.publish_immediately,
-            description: update.description,
-            onehundred_percent_base: update.onehundred_percent_base,
-            title: update.title,
+            ...Object.fromEntries(
+                updatedFields
+                    .filter(field => field in update && update[field] !== poll[field])
+                    .map(field => [field, update[field]])
+            ),
             ...this.getAnalogPollVotesValues(update)
         };
         return payload;
     }
 
     private async updateCreatedElectronicPoll(update: any, poll: Poll): Promise<void> {
+        const updatedFields: string[] = [
+            'entitled_group_ids',
+            'allow_multiple_votes_per_candidate',
+            'description',
+            'max_votes_amount',
+            'min_votes_amount',
+            'max_votes_per_option',
+            'onehundred_percent_base',
+            'pollmethod',
+            'title',
+            'backend',
+            'global_abstain',
+            'global_no',
+            'global_yes',
+            'live_voting_enabled'
+        ];
         const payload = {
             id: poll.id,
-            entitled_group_ids: update.entitled_group_ids,
-            allow_multiple_votes_per_candidate: update.allow_multiple_votes_per_candidate,
-            description: update.description,
-            max_votes_amount: update.max_votes_amount,
-            min_votes_amount: update.min_votes_amount,
-            max_votes_per_option: update.max_votes_per_option,
-            onehundred_percent_base: update.onehundred_percent_base,
-            pollmethod: update.pollmethod,
-            title: update.title,
-            backend: update.backend,
-            global_abstain: update.global_abstain,
-            global_no: update.global_no,
-            global_yes: update.global_yes,
-            live_voting_enabled: update.live_voting_enabled
+            ...Object.fromEntries(
+                updatedFields
+                    .filter(field => field in update && update[field] !== poll[field])
+                    .map(field => [field, update[field]])
+            )
         };
         return this.sendActionToBackend(PollAction.UPDATE, payload);
     }
