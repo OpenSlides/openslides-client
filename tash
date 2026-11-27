@@ -1,0 +1,42 @@
+[1mdiff --git a/client/src/app/gateways/export/html-to-pdf.service/html-to-pdf.service.ts b/client/src/app/gateways/export/html-to-pdf.service/html-to-pdf.service.ts[m
+[1mindex 9bbfbccbc..04a208a38 100644[m
+[1m--- a/client/src/app/gateways/export/html-to-pdf.service/html-to-pdf.service.ts[m
+[1m+++ b/client/src/app/gateways/export/html-to-pdf.service/html-to-pdf.service.ts[m
+[36m@@ -342,13 +342,15 @@[m [mexport class HtmlToPdfService {[m
+      */[m
+     protected createListParagraph(data: CreateSpecificParagraphPayload): any {[m
+         let children: Element[] | Content[] = this.parseChildren(data.element, data.styles);[m
+[32m+[m[32m        console.log(`children`, children);[m
+         const list = this.create(data.nodeName);[m
+ [m
+         // Fixes nested lists being placed inside `text` elements[m
+         if ([m
+             children.length === 1 &&[m
+             (children[0] as any)?.text?.length &&[m
+[31m-            (children[0] as any)?.text.find((el: any) => !!el.ul)[m
+[32m+[m[32m            ((children[0] as any)?.text.find((el: any) => !!el.ul) ||[m
+[32m+[m[32m                (children[0] as any)?.text.find((el: any) => !!el.ol))[m
+         ) {[m
+             children = [{ stack: (children[0] as any).text }];[m
+         }[m
+[36m@@ -362,6 +364,7 @@[m [mexport class HtmlToPdfService {[m
+         }[m
+         const newParagraph = list;[m
+         newParagraph[data.nodeName] = children;[m
+[32m+[m[32m        console.log(`children `, newParagraph);[m
+         return newParagraph;[m
+     }[m
+ [m
+[1mdiff --git a/client/src/app/site/pages/meetings/pages/agenda/services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service.ts b/client/src/app/site/pages/meetings/pages/agenda/services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service.ts[m
+[1mindex 9b3dcf0bf..4db5b0681 100644[m
+[1m--- a/client/src/app/site/pages/meetings/pages/agenda/services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service.ts[m
+[1m+++ b/client/src/app/site/pages/meetings/pages/agenda/services/agenda-pdf-catalog-export.service/agenda-pdf-catalog-export.service.ts[m
+[36m@@ -570,7 +570,7 @@[m [mexport class AgendaPdfCatalogExportService {[m
+             case `header1`:[m
+                 return { bold: true, fontSize: 16 };[m
+             case `header2`:[m
+[31m-                return { fontSize: 14 };[m
+[32m+[m[32m                return { bold: true, fontSize: 14 };[m
+             case `header3`:[m
+                 return { fontSize: 12 };[m
+             case `italics`:[m
