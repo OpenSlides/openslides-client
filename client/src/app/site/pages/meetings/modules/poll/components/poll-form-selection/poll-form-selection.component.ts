@@ -96,7 +96,6 @@ export class PollFormSelectionComponent extends PollFormBaseComponent<PollFormSe
         ];
     });
 
-
     public getSerialzedForm(): Record<string, unknown> {
         const data: Record<string, unknown> = {
             ...this.model()
